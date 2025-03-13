@@ -1,0 +1,261 @@
+﻿@model TrungGianBDYCModel
+
+<div id="thong-tin-chung-TS">
+	<div class="font-weight-bold mb-2">Thông tin chung:</div>
+	<div class="row">
+		<div class="col-sm-6 pb-4">
+			<table>
+                <tbody>
+                    @if (Model.DU_AN_ID > 0)
+                    {
+                        <tr>
+                            <td class="pr-3">Tên dự án:</td>
+                            <td>
+                                @Model.TenDuAn
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="pr-3">Tên đơn vị:</td>
+                        <td>
+                            @Model.TenDonVi
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="pr-3">Lý do tăng:</td>
+                        <td>
+                            @Model.TenLyDoBienDong
+                        </td>
+                    </tr>
+                    @if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT
+                  && Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.NHA
+                  && Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC
+                  && Model.MaLyDoBienDong == enum_LY_DO_BIEN_DONG.MUA_SAM)
+                    {
+                       <tr>
+                           <td class="pr-3">Phương thức mua sắm:</td>
+                           <td>
+                               @Model.TenPhuongThucMuaSam
+                           </td>
+                       </tr>
+                   @if (Model.PHUONG_THUC_MUA_SAM_ID == (int)enumPHUONG_THUC_MUA_SAM.TapTrung)
+                      {
+                       <tr>
+                           <td class="pr-3">Đơn vị mua sắm tập trung:</td>
+                           <td>
+                               @Model.TenDonViMuaSam
+                           </td>
+                       </tr>
+                       }
+
+                    }
+                    @if (Model.TrungGianBDYCChiTietModel.HINH_THUC_MUA_SAM_ID > 0)
+                    {
+                        <tr>
+                            <td class="pr-3">Hình thức mua sắm:</td>
+                            <td>
+                                @Model.TenHinhThucMuaSam
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pr-3">Giá mua trên hóa đơn:</td>
+                            <td>
+                                @Model.GIA_MUA_TIEP_NHAN.ToVNStringNumber() đ
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="pr-3">Được miễn thuế:</td>
+                        <td>
+                            <label class="custom-control custom-checkbox">
+                                @if (Model.IS_MIEN_THUE == true)
+                                {
+                                    <input type="checkbox" name="IS_MIEN_THUE" id="IS_MIEN_THUE" class="custom-control-input" checked>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" name="IS_MIEN_THUE" id="IS_MIEN_THUE" class="custom-control-input">
+                                }
+                                <span class="custom-control-label"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        @if (Model.NGAY_BIEN_DONG.Value.Year < 2018)
+                        {
+                            <td class="pr-3">Ngày kê khai:</td>
+                        }
+                        else
+                        {
+                            <td class="pr-3">Ngày tăng:</td>
+                        }
+                        <td>
+                            @Model.NGAY_BIEN_DONG.toDateVNString()
+                        </td>
+                    </tr>
+                    @if (Model.taiSanOtoModel.TenChucDanh != null)
+                    {
+
+                        <tr>
+                            <td class="pr-3">Chức danh sử dụng:</td>
+                            <td class="">@Model.taiSanOtoModel.TenChucDanh</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="pr-3">Số loại:</td>
+                        <td class="">@Model.taiSanOtoModel.TenDongXe</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Tải trọng:</td>
+                        <td class="">@Model.taiSanOtoModel.TAI_TRONG.ToVNStringNumber() (tấn)</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Số khung:</td>
+                        <td>@Model.taiSanOtoModel.SO_KHUNG</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Dung tích xi lanh:</td>
+                        <td class="">@Model.taiSanOtoModel.DUNG_TICH.ToVNStringNumber() (cc)</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Ngày đăng ký:</td>
+                        <td class="">@Model.taiSanOtoModel.NGAY_DANG_KY.toDateVNString()</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Năm sản xuất:</td>
+                        <td>@Model.NamSanXuat</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-3">Ngày đưa vào sử dụng</td>
+                        <td>
+                            @Model.NGAY_SU_DUNG.toDateVNString()
+                        </td>
+                    </tr>
+                </tbody>
+			</table>
+		</div>
+		<div class="col-sm-6 pb-4">
+			<table>
+				<tbody>
+					<tr>
+						<td class="pr-3">Mã tài sản</td>
+						<td>@Model.TAI_SAN_MA</td>
+					</tr>
+					@if (Model.GIA_MUA_TIEP_NHAN > 0)
+					{
+						<tr>
+							<td class="pr-3">Giá mua trên hóa đơn:</td>
+							<td class="">@Model.GIA_MUA_TIEP_NHAN.ToVNStringNumber() đ</td>
+						</tr>
+					}
+					@if (Model.IS_MIEN_THUE.GetValueOrDefault(false))
+					{
+						<tr>
+							<td class="pr-3">Số thuế được miễn:</td>
+							<td class="">@Model.MIEN_THUE_SO_TIEN.ToVNStringNumber() đ</td>
+						</tr>
+					}
+						<tr>
+							<td class="pr-3">Loại xe:</td>
+							<td>
+								@Model.TenLoaiTaiSan
+							</td>
+						</tr>
+						@if (Model.TenNhanXe != null)
+						{
+
+							<tr>
+								<td class="pr-3">Nhãn xe:</td>
+								<td>@Model.TenNhanXe</td>
+							</tr>
+						}
+						<tr>
+							<td class="pr-3">Biển kiểm soát:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OTO_BIEN_KIEM_SOAT</td>
+						</tr>
+						@if (Model.TrungGianBDYCChiTietModel.OTO_SO_CHO_NGOI > 0)
+						{
+							<tr>
+								<td class="pr-3">Số chỗ ngồi:</td>
+								<td class="">@Model.TrungGianBDYCChiTietModel.OTO_SO_CHO_NGOI.ToVNStringNumber() (chỗ)</td>
+							</tr>
+						}
+						@if (@Model.taiSanOtoModel.SO_CAU_XE > 0)
+						{
+							<tr>
+								<td class="pr-3">Số cầu:</td>
+								<td class="">@Model.taiSanOtoModel.SO_CAU_XE</td>
+							</tr>
+						}
+						<tr>
+							<td class="pr-3">Số máy:</td>
+							<td>@Model.taiSanOtoModel.SO_MAY</td>
+						</tr>
+						<tr>
+							<td class="pr-3">GCN đăng ký xe số:</td>
+							<td>@Model.taiSanOtoModel.GCN_DANG_KY</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Cơ quan cấp đăng ký:</td>
+							<td>@Model.taiSanOtoModel.CO_QUAN_CAP_DANG_KY</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Nước sản xuất:</td>
+							<td>
+								@Model.TenNuocSanXuat
+							</td>
+						</tr>
+					</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<hr />
+
+<div class="font-weight-bold mb-2">Hiện trạng sử dụng:</div>
+<div class="form-group row ">
+	@foreach (var obj in Model.TrungGianBDYCChiTietModel.lstHienTrang)
+	{
+		@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+	}
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Giá trị, hao mòn/ khấu hao</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+
+				<tr>
+					<td class="pr-3">Nguyên giá:</td>
+					<td class="text-sm-right">@Model.NGUYEN_GIA.ToVNStringNumber() đ</td>
+				</tr>
+				<tr>
+					<td class="pr-3 font-weight-bold">Trong đó:</td>
+					<td class="text-sm-right"></td>
+				</tr>
+				@if (Model.lstNguonVonModel != null && Model.lstNguonVonModel.Count > 0)
+				{
+					foreach (var itemNV in Model.lstNguonVonModel)
+					{
+						<tr>
+							<td class="pr-3">@itemNV.TEN:</td>
+							<td class="text-sm-right">@itemNV.GiaTri.ToVNStringNumber() đ</td>
+						</tr>
+					}
+				}
+				<tr>
+					<td class="pr-3 ">GTCL:</td>
+					<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI.ToVNStringNumber() đ</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,90 @@
+﻿@model DeNghiXuLyModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Đơn vị sử dụng:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="MA_DON_VI" asp-disabled="true" />
+    </div>
+    <div class="col-sm-6">
+        <nop-editor asp-for="TEN_DON_VI" asp-disabled="true" />
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Số phiếu:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="SO_PHIEU" />
+        <br />
+        <span asp-validation-for="SO_PHIEU"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Ngày đề nghị:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGAY_DE_NGHI" />
+        <br />
+        <span asp-validation-for="NGAY_DE_NGHI"></span>
+    </div>
+</div>
+@*<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Ngày đề nghị:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGAY_DE_NGHI" />
+        <br />
+        <span asp-validation-for="NGAY_DE_NGHI"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Ngày xử lý:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGAY_XU_LY" />
+        <br />
+        <span asp-validation-for="NGAY_XU_LY"></span>
+    </div>
+</div>*@
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Nội dung:</label>
+    <div class="col-sm-10">
+        <nop-textarea asp-for="NOI_DUNG" />
+    </div>
+</div>
+@if (Model.ID > 0)
+{
+    <div class="gs-form-group mb-4" style="margin-top:25px;">
+        <h6>Danh sách tài sản đề nghị xử lý</h6>
+        <div id="view_ListTaiSan">
+            <script>
+                    $(document).ready(function () {
+                        LoadViewTaiSan();
+                    });
+                    function LoadViewTaiSan() {
+                        ShowViewLoading("#view_ListTaiSan");
+                        $.ajax({
+                            type: "GET",
+                            url: "/DeNghiXuLyTaiSan/_List?DE_NGHI_XU_LY_ID=@Model.ID",
+                            success: function (data) {
+                                $("#view_ListTaiSan").html(data);
+                            }
+                        });
+                }
+                $(document).on({
+                    'show.bs.modal': function () {
+                        var zIndex = 1040 + (10 * $('.modal:visible').length);
+                        $(this).css('z-index', zIndex);
+                        setTimeout(function () {
+                            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                        }, 0);
+                    },
+                    'hidden.bs.modal': function () {
+                        if ($('.modal:visible').length > 0) {
+                            // restore the modal-open class to the body element, so that scrolling works
+                            // properly after de-stacking a modal.
+                            setTimeout(function () {
+                                $(document.body).addClass('modal-open');
+                            }, 0);
+                        }
+                    }
+                }, '.modal');
+            </script>
+        </div>
+    </div>
+}
+
+

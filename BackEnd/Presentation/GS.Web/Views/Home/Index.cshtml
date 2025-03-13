@@ -1,0 +1,203 @@
+﻿@{ 
+    Layout = null;
+    @model  LoginModel;
+}
+<!DOCTYPE html>
+<html lang="en" class="default-style">
+
+<!-- Mirrored from uxpowered.com/Themes/AppWork/Content/html-demo/pages_authentication_login-v2.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Oct 2018 10:59:25 GMT -->
+<head>
+	<title>Quản lý đăng ký tài sản</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+
+	<link href="~/lib/robotofont/fonts.googleapis.css?v=3" rel="stylesheet" />
+	<!-- Icon fonts -->
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/fontawesome.css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/ionicons.css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/linearicons.css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/open-iconic.css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/pe-icon-7-stroke.css">
+	<!-- Core stylesheets -->
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/theme-corporate.css" class="theme-settings-theme-css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/uikit.css">
+	@*<link rel="stylesheet" href="assets/css/demo.css">*@
+	<script src="/Themes/AppWork/Content/assets/vendor/js/material-ripple.js"></script>
+	<script src="/Themes/AppWork/Content/assets/vendor/js/layout-helpers.js"></script>
+	<!-- Theme settings -->
+	<!-- This file MUST be included after core stylesheets and layout-helpers.js in the <head> section -->
+	@*<script src="/Themes/AppWork/Content/assets/vendor/js/theme-settings.js"></script>
+		<script>window.themeSettings = new ThemeSettings({
+		  cssPath: '/Themes/AppWork/Content/assets/vendor/css/rtl/',
+		  themesPath: '/Themes/AppWork/Content/assets/vendor/css/rtl/'
+		});</script>*@
+	<!-- Core scripts -->
+	<script src="/Themes/AppWork/Content/assets/vendor/js/pace.js"></script>
+	<script src="/lib/jquery/jquery-3.3.1.min.js"></script>
+	<!-- Libs -->
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+	<!-- Page -->
+	<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/pages/authentication.css">
+</head>
+<body>
+    @*<div class="page-loader">
+        <div class="bg-primary"></div>
+    </div>*@
+    <!-- Content -->
+    <div class="authentication-wrapper authentication-2 ui-bg-cover ui-bg-overlay-container px-4" style="background-image: url('/Themes/AppWork/Content/assets/img/bg/blur-26347-27038-hd-wallpapers.jpg');">
+        <div class="row ">
+            <!-- Logo -->
+            <div class="col-md-12">
+                <h1 class="text-center"><img src="/Themes/AppWork/Content/assets/img/bg/logo-BTC-removebg.png" alt="Chania"></h1>
+            </div>
+            <!-- / Logo -->
+            <div class="col-md-12">
+                <h2 class="text-center textTLE">BỘ TÀI CHÍNH <br> <span>PHẦN MỀM QUẢN LÝ TÀI SẢN CÔNG</span></h2>
+            </div>
+            <div class="boxlog">
+                    <div class="box-login">
+                        <form asp-controller="Home" asp-action="Index" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" role="form" class="form-signin">
+                            <div class="panel text-center">
+                                <h2>Đăng nhập hệ thống</h2>
+                            </div>
+                            <div id="Login">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon addon"><i class="fas fa-user"></i></span>
+                                        <input asp-for="Username" type="text" class="form-control from100" placeholder="Tên đăng nhập" />
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon addon"><i class="fas fa-key"></i></span>
+                                        <input asp-for="Password" type="Password" class="form-control from100" placeholder="Mật khẩu" />
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary bo100">Đăng nhập</button>
+                                </div>
+                                <div class="form-group" style="color:red; text-align:center;padding-top:10px;">
+                                    @Html.DisplayFor(t => t.messageResult)
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    
+            </div>
+        </div>
+    </div>
+        <!-- / Content -->
+        <!-- Core scripts -->
+        <script src="/Themes/AppWork/Content/assets/vendor/libs/popper/popper.js"></script>
+        <script src="/Themes/AppWork/Content/assets/vendor/js/bootstrap.js"></script>
+        <script src="/Themes/AppWork/Content/assets/vendor/js/sidenav.js"></script>
+        <!-- Libs -->
+        <script src="/Themes/AppWork/Content/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+        <style>
+            .textTLE span {
+                color: #fff;
+                text-transform: uppercase;
+                text-align: center;
+                font-weight: 700;
+                font-size: 34px;
+                text-shadow: 2px 2px 4px #000000;
+            }
+            .textTLE {
+                color: #ffeb02;
+                font-size: 25px;
+                text-align: center;
+                text-transform: uppercase;
+                text-shadow: 2px 2px 4px #000000;
+                margin-bottom: 5px;
+            }
+           
+            .box1 {
+                border: solid 1px #ccc;
+                border-radius: 4px;
+                height: 6px;
+                width: 80px;
+                background: #fff;
+                margin-left: 140px;
+            }
+
+            .boxlog form h3 {
+                color: #292929;
+            }
+
+            .boxlog {
+                border-radius: 8px;
+                border: solid 1px #d4d4d4;
+                background: #f7f7f7 none repeat scroll 0 0;
+                margin: auto;
+                width: 400px;
+                padding: 8px;
+                line-height: 50px;
+            }
+            .panel {
+                background: url(/Themes/AppWork/Content/assets/img/bg/bg-t.png) no-repeat left bottom #2673b4;
+                border-radius: 7px 7px 0 0;
+                padding: 10px;
+                height: 40px;
+            }
+            #Login {
+                padding: 20px;
+            }
+            .main-div {
+                background: #ffffff none repeat scroll 0 0;
+                box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+                border-radius: 14px;
+                border: solid 8px #fff;
+                margin-bottom: 10px;
+            }
+            .box-login {
+                border: solid 1px #2673b4;
+                border-radius: 10px;
+            }
+            .panel h2 {
+                font-size: 21px;
+                margin: 0 0 8px 0;
+                text-transform: uppercase;
+                color: #fff;
+                text-shadow: 1px 1px 2px #000000;
+                margin-bottom: 0;
+            }
+            .input-group-addon:not(:last-child) {
+                border-right: 1px solid rgba(0,0,0,.15);
+                border-left: 0;
+            }
+            .addon {
+                padding: 6px 12px 6px 20px;
+                font-weight: 400;
+                line-height: 2.4;
+                color: #555;
+                text-align: center;
+                background-color: #eee;
+                border-left: 1px solid #ccc !important;
+                border-right: none !important;
+                border-top: 1px solid #ccc;
+                border-bottom: 1px solid #ccc;
+                border-top-left-radius: 30px;
+                border-bottom-left-radius: 30px;
+            }
+            .from100 {
+                border-top-right-radius: 30px !important;
+                border-bottom-right-radius: 30px !important;
+            }
+            .bo100 {
+                border-radius: 30px;
+                text-transform: uppercase;
+                border: solid 1px #2673b4;
+            }
+        </style>
+</body>
+
+</html>

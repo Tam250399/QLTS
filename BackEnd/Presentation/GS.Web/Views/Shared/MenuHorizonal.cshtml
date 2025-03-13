@@ -1,0 +1,21 @@
+﻿@model SiteMapNode
+@using GS.Web.Framework.Menu
+
+@foreach (var item in Model.ChildNodes.Where(x => x.Visible))
+{
+    string url = null;
+    if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
+    {
+        url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
+    }
+    else if (!string.IsNullOrEmpty(item.Url))
+    {
+        url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
+    }
+    string cssActive = item.ContainsSystemName(Html.GetActiveMenuItemSystemName())?"active":"";
+
+    <text>
+        <li class="nav-item @cssActive"> <a class="nav-link" href="@url"><i class="@item.IconClass mr-1"></i>@item.Title</a></li>
+    </text>
+}
+

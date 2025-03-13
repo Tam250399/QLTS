@@ -1,0 +1,34 @@
+﻿@model TaiSanNhatKyModel
+
+    <div class="gs-form-group mb-4" style="margin-top:25px;">
+        <h6>Thông tin nhật ký</h6>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Mã tài sản:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.MA_TAI_SAN</label>
+            <label class="col-form-label col-sm-2 text-sm-right">Mã tài sản đồng bộ:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.MA_TAI_SAN_DB</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Nhóm tài sản:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.LOAI_HINH_TAI_SAN_TEN</label>
+            <label class="col-form-label col-sm-2 text-sm-right">Trạng thái đồng bộ:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.TRANG_THAI_TEN</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Ngày đồng bộ:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.NGAY_DONG_BO.toDateVNString()</label>
+            <label class="col-form-label col-sm-2 text-sm-right">Ngày cập nhập:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.NGAY_CAP_NHAT.toDateVNString()</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Dang sách Id biến động chờ đồng bộ:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.BD_IDS</label>
+            <label class="col-form-label col-sm-2 text-sm-right">Danh sách Id biến động đang đồng bộ:</label>
+            <label class="col-form-label col-sm-4 text-sm-left">@Model.BD_IDS_DANG_DB</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Kết quả:</label>
+            <label class="col-form-label col-sm-10 text-sm-left">@Model.RESPONSE</label>
+        </div>
+    </div>
+

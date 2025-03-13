@@ -1,0 +1,185 @@
+﻿@model DonViSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh mục đơn vị";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CCKTTienDoDangKy");
+}
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Thuộc cấp:</label>
+        <div class="col-sm-10">
+            @*<nop-select asp-items="Model.dllCapDonVi" asp-for="CapDonViSearch" />*@
+            <nop-select asp-for="SelectedCapDonVis" id="SelectedCapDonVis" asp-items="Model.dllCapDonVi" asp-multiple="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Loại tài sản:</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="LOAI_TAI_SAN_ID" asp-filter="true" asp-items="Model.DDLLoaiTaiSan"  asp-arrow="true" >
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-11 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách đơn vị chưa nhập tài sản</span>
+        </div>
+    </div>
+    <div class="col-sm-1 text-right">
+        <a id="ExportDanhMuc"  class="btn btn-sm btn-outline-primary">
+            Xuất excel
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            @*function genUrlExport() {
+                                var url = "/DonVi/ExportDonViChuaNhapTaiSan?donViId=" + parseInt($('#@Html.IdFor(model => model.donViId)').val())
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LoaiTaiSanId=" + $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val();
+                                $("#ExportDanhMuc").attr('href', url);
+                            };
+                            genUrlExport();
+                            $("#KeySearch,#LoaiDonViSearch,#CapDonViSearch,#donViId,#LoaiTaiSanId").change(function () {
+                                genUrlExport();
+                            });*@
+                            $("#ExportDanhMuc").click(function () {
+                                var listCapDonVisKendo = $('#SelectedCapDonVis').data("kendoMultiSelect");
+                                let listCapDonVis = [];
+                                if (listCapDonVisKendo) {
+                                    listCapDonVis = listCapDonVisKendo.value();
+                                }
+                                var url = "/DonVi/ExportDonViChuaNhapTaiSan?donViId=" + parseInt($('#@Html.IdFor(model => model.donViId)').val())
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LOAI_TAI_SAN_ID=" + $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val()
+                                    + "&SelectedCapDonVis=" + listCapDonVis;
+                                console.log(url);
+                                window.open(url, "_blank");
+                            });
+                            function SearchData() {
+                                var listCapDonVisKendo = $('#SelectedCapDonVis').data("kendoMultiSelect");
+                                let listCapDonVis = [];
+                                if (listCapDonVisKendo) {
+                                    listCapDonVis = listCapDonVisKendo.value();
+                                }
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDonViSearch: $('#@Html.IdFor(model => model.LoaiDonViSearch)').val(),
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+                                    donViId: $('#@Html.IdFor(model => model.donViId)').val(),
+                                    LOAI_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val(),
+                                    SelectedCapDonVis: listCapDonVis
+                                };
+                                console.log(_data);
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                var record = 0;
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListDonViChuaNhapTaiSan", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page: @(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 35,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'MA', title: 'Mã đơn vị',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TEN', title: 'Tên đơn vị',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    { field: 'TEN_DON_VI_CHA', title: 'Tên đơn vị cha' },
+                                    { field: 'DIA_CHI', title: 'Địa Chỉ' },
+
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

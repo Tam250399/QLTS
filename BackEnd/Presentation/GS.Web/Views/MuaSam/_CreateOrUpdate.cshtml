@@ -1,0 +1,264 @@
+﻿@model MuaSamModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+</div>
+<style>
+	#DataTables_Table_1 thead th {
+		font-weight: bold;
+		text-align: center;
+	}
+
+	#DataTables_Table_1 tr td {
+		max-height: 35px;
+		padding: 4px 4px 4px 4px;
+	}
+</style>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left">Mã đơn vị sử dụng:</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="DVSDTS_Ma" asp-disabled="true" />
+		<span asp-validation-for="DVSDTS_Ma"></span>
+	</div>
+	<label class="col-form-label col-sm-2 text-sm-left">Tên đơn vị sử dụng:</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="DVSDTS_Ten" asp-disabled="true" />
+		<span asp-validation-for="DVSDTS_Ten"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Ngày đăng ký:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="NGAY_DANG_KY" />
+		<span asp-validation-for="NGAY_DANG_KY"></span>
+	</div>
+</div>
+@*<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-right">NAM:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="NAM" />
+			<span asp-validation-for="NAM"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-right">NGAY_TAO:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="NGAY_TAO" />
+			<span asp-validation-for="NGAY_TAO"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-right">NGUOI_TAO_ID:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="NGUOI_TAO_ID" />
+			<span asp-validation-for="NGUOI_TAO_ID"></span>
+		</div>
+	</div>*@
+<!--#region hiển thị danh sách tài sản mua sắm  -->
+<div class="gs-form-group" style="margin-top:20px;">
+	<h6>
+		Danh sách tài sản
+	</h6>
+	<div class="text-right row" style="margin-bottom: 5px;">
+		<div class="col-sm-10"></div>
+		<div class="col-sm-2 text-right">
+			<button type="button" idVaiTro="@Model.ID" class="btn btn-sm btn-primary" data-toggle="modal" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;" data-target="#globalModalIframe" data-src="/MuaSam/_CreateMuaSamChiTiet?muaSamId=@Model.ID" data-title="Thêm tài sản">Thêm mới</button>
+		</div>
+	</div>
+
+	<div class="grid-mua-sam-chi-tiet" id="grid-mua-sam-chi-tiet">
+	</div>
+</div>
+<!--#endregion -->
+<script>
+		$(document).ready(function () {
+			createOrUpdateMuaSamJs = new CreateOrUpdateMuaSamJs();
+		})
+
+        function updateTaiSan(muaSamId, idTaiSanMuaSam) {
+            //var _url = "@(Url.Action("_ListTaiSan", "MuaSam"))?idKhaiThac=" + idKhaiThac + "&idTaiSan=" + idTaiSan;
+			var _url = "@(Url.Action("_CreateMuaSamChiTiet", "MuaSam"))?muaSamId=" + muaSamId + "&idTaiSanMuaSam=" + idTaiSanMuaSam;
+            OpenModalManual("Sửa tài sản được mua sắm", _url, 80);
+        };
+
+	class CreateOrUpdateMuaSamJs {
+
+		constructor() {
+			this.initEvents();
+			this.initForms();
+			this.loadMuaSamChiTietGrid();
+		}
+
+		/**
+		 * Function chưa các sự kiện trên form nhập kế hoạch mua sắm
+		 * */
+		initEvents() {
+			$(document).on('click', '.btnAddMSCT', this.createMuaSamChiTiet.bind(this));
+			$(document).on('click', '.btnSaveMSCT', this.editMuaSamChiTiet.bind(this));
+			$(document).on('click', '#btnDeleteMuaSam', this.deleteMuaSam);
+			$(document).on('click', '#btnSaveMuaSam', this.editMuaSam.bind(this));
+			$(document).on('click', '#btnCreateMuaSam', this.editMuaSam.bind(this));
+			$(document).on('change', '#SO_LUONG', this.tinhGiaTienMuaSamCT);
+			$(document).on('change', '#DON_GIA', this.tinhGiaTienMuaSamCT);
+
+		}
+
+		initForms() {
+
+		}
+
+		loadMuaSamChiTietGrid() {
+			var muaSamId = @Model.ID;
+			var listMuaSamChiTietsURL = "/MuaSam/_ListMuaSamChiTiet?muaSamId=" + muaSamId;
+			var listMSCTRequest = ajaxGet(listMuaSamChiTietsURL);
+			listMSCTRequest.done(function (result) {
+				$("#grid-mua-sam-chi-tiet").append(result);
+			})
+				.fail(function (jqXHR, textStatus, errorThrown) {
+					// If fail
+					console.log(textStatus + ': ' + errorThrown);
+				});
+		}
+
+
+		createMuaSamChiTiet() {
+			//bind this: CreateOrUpdateMuaSamChiTiet
+			var createOrUpdateMuaSam = this;
+			var dataRequest = createOrUpdateMuaSam.addDataMuaSamChiTiet();
+			var createMSCTRequest = ajaxPost(dataRequest, '/MuaSam/CreateMuaSamChiTiet', false);
+			createMSCTRequest.done(function (res) {
+				if (CheckValidMessageReturn(res)) {
+					if (res.Code == "00") {
+						ShowSuccessMessage(res.Message);
+						HideModalManual();
+						$('#list-mua-sam-chi-tiet').data('kendoGrid').dataSource.page(1);
+					}
+					if (res.Code == "01") {
+						ShowErrorMessage(res.Message);
+					}
+				}
+			}).fail(function (xhr, ajaxOptions, thrownError) {
+				console.log(ajaxOptions + ": " + thrownError);
+			});
+		}
+
+		deleteMuaSam() {
+			bootbox.confirm({
+				message: "Bạn có chắc chắn xóa kế hoạch mua sắm này?",
+				className: 'bootbox-sm',
+				buttons: {
+					confirm: {
+						label: 'Đồng ý',
+					},
+					cancel: {
+						label: 'Hủy',
+					},
+				},
+				callback: function (result) {
+					if (result) {
+						var _url = "@(Url.Action("Delete", "MuaSam"))?id=" + @Model.ID;
+						var deleteMuaSamRequest = ajaxDelete(_url, false);
+						deleteMuaSamRequest.done(function (result) {
+							if (result.Code == '00') {
+								ShowSuccessMessage(result.Message);
+								location.href = '/MuaSam/List';
+							} else if (result.Code == '01') {
+								ShowErrorMessage(result.Message);
+								//location.href = '/MuaSam/List';
+							}
+						}).fail(function (jqXHR, textStatus, errorThrown) {
+							// If fail
+							console.log(textStatus + ': ' + errorThrown);
+						});
+					}
+				},
+			});
+		}
+
+		editMuaSam() {
+			var _url = "@(Url.Action("Edit", "MuaSam"))";
+			var createOrUpdateMuaSam = this;
+			var dataRequest = createOrUpdateMuaSam.addDataMuaSam();
+			var editMuaSamRequest = ajaxPost(dataRequest, '/MuaSam/Edit', false);
+			editMuaSamRequest.done(function (res) {
+				if (CheckValidMessageReturn(res)) {
+					if (res.Code == '00') {
+						ShowSuccessMessage(res.Message);
+						location.href = '/MuaSam/List';
+					}
+					if (res.Code == '01') {
+						ShowErrorMessage(res.Message);
+					}
+				}
+			}).fail(function (xhr, ajaxOptions, thrownError) {
+				console.log(ajaxOptions + ": " + thrownError);
+			});
+		}
+
+		addDataMuaSam() {
+			var _data = {
+				ID: $("#ID").val(),
+				NGAY_DANG_KY: $("#NGAY_DANG_KY").val(),
+
+			}
+			return _data;
+		}
+
+		editMuaSamChiTiet() {
+			var createOrUpdateMuaSam = this;
+			var dataRequest = createOrUpdateMuaSam.addDataMuaSamChiTiet();
+			var editMSCTRequest = ajaxPost(dataRequest, '/MuaSam/EditMuaSamChiTiet', false);
+			editMSCTRequest.done(function (res) {
+				if (CheckValidMessageReturn(res)) {
+					if (res.Code == '00') {
+						ShowSuccessMessage(res.Message);
+						HideModalManual();
+						$('#list-mua-sam-chi-tiet').data('kendoGrid').dataSource.page(1);
+					}
+					if (res.Code == '01') {
+						ShowErrorMessage(res.Message);
+					}
+				}
+			}).fail(function (xhr, ajaxOptions, thrownError) {
+				console.log(ajaxOptions + ": " + thrownError);
+			});
+		}
+
+		addDataMuaSamChiTiet() {
+			//var SO_LUONG = $("#SO_LUONG").val();
+			//var DON_GIA = $("#DON_GIA").val();
+			//var nguyengia = 0;
+			//if (SO_LUONG > 0 && DON_GIA > 0) {
+			//	nguyengia = (parseInt(SO_LUONG) * parseInt(DON_GIA))
+			//}
+			var _data = {
+				ID: $("#idMSCT_popup").val(),
+				MUA_SAM_ID: $("#MUA_SAM_ID_popup").val(),
+				LOAI_TAI_SAN_ID: $("#LOAI_TAI_SAN_ID").val(),
+				TEN_TAI_SAN: $("#TEN_TAI_SAN").val(),
+				HINH_THUC_MUA_SAM_ID: $("#HINH_THUC_MUA_SAM_ID").val(),
+				DAC_DIEM: $("#DAC_DIEM").val(),
+				SO_LUONG: $("#SO_LUONG").val(),
+				DON_GIA: $("#DON_GIA").val(),
+				THOI_GIAN_DU_KIEN: $("#THOI_GIAN_DU_KIEN").val(),
+				DU_TOAN_DUOC_DUYET: $("#DU_TOAN_DUOC_DUYET").val(),
+				IS_TAI_SAN_NGUON_VIEN_TRO: $("#IS_TAI_SAN_NGUON_VIEN_TRO").val(),
+				DE_XUAT: $("#DE_XUAT").val(),
+				GHI_CHU: $("#GHI_CHU").val(),
+
+			}
+			return _data;
+		}
+
+		tinhGiaTienMuaSamCT() {
+			var sl = $("#SO_LUONG").val();
+			var dg = $("#DON_GIA").val();
+			if (sl > 0 && dg > 0) {
+				var thanh_tien = sl * dg;
+				$("#THANH_TIEN").data("kendoNumericTextBox").value(thanh_tien);
+				$("#DU_TOAN_DUOC_DUYET").data("kendoNumericTextBox").value(thanh_tien);
+			}
+		}
+	}
+</script>
+

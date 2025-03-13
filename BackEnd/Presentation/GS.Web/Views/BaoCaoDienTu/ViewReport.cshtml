@@ -1,0 +1,32 @@
+﻿@model BaoCaoDienTuModel
+@using DevExpress.AspNetCore
+
+@{
+    Layout = "_AppWorkReport";
+}
+<div class="gs-form-group">
+    @Html.DevExpress().WebDocumentViewer("WebDocumentViewer1").Height("1000px").Bind(Model.ReportOnline)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("div[class='dx-shadow dxd-border-secondary dxrd-tab-panel-right']").hide();
+            var x = $("div[class='dxrd-toolbar-item']");
+            $(x).each(function () {
+                if ($(this).find("div[class*='dxrd-image-search']").length > 0)
+                    $(this).hide();
+            });
+        });
+    </script>
+    <div style="text-align: center">
+        Tệp đính kèm:
+        @if (Model.GUID != null)
+        {
+            <a class="btn btn-sm btn-outline-secondary btn-download" target="_blank" href="DownloadFile?downloadGuid=@Model.GUID">Tải về</a>
+        }
+    </div>
+    <div style="margin-bottom:3px; text-align: right">
+        <button onclick="window.location.href = '/BaoCaoDienTu/List';" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Đóng
+        </button>
+    </div>
+</div>

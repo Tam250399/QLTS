@@ -1,0 +1,224 @@
+@model SuaChuaBaoDuongSearchModel
+@{
+    //page title
+    ViewBag.Title = "Sửa chữa CCDC";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("SuaChuaCongCuDungCu");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Loại CCDC:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="CongCuId" asp-items="Model.DDLCongCu" asp-filter="true" asp-placeholder="Chọn CCDC" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ phận sử dụng:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="BoPhanId" asp-items="Model.DDLDonViBoPhan" asp-filter="true" asp-placeholder="Chọn đơn vị bộ phận" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ ngày:</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="NgayTu" />
+            <span asp-validation-for="NgayTu"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Đến ngày:</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="NgayDen" />
+            <span asp-validation-for="NgayDen"></span>
+        </div>
+    </div>
+    <script>
+        function CheckVali() {
+            var check = true;
+            if (!checkValidateDateFormat("#NgayTu", "NgayTu", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateDateFormat("#NgayDen", "NgayDen", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateFromDateToDate("#NgayTu", "#NgayDen", "NgayTu", "Ngày phải bé hơn ngày đến")) {
+                check = false;
+            }
+            return check;
+        }
+    </script>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách công cụ sửa chữa</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="1100" data-title="Thêm mới" data-src="/SuaChuaBaoDuong/_ChonTaiSan" style="margin:10px;">
+			<i class="ion ion-md-add"></i>&nbsp; Thêm mới
+		</button>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {                            
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    CongCuId: $('#@Html.IdFor(model => model.CongCuId)').val(),
+                                    BoPhanId: $('#@Html.IdFor(model => model.BoPhanId)').val(),
+                                    NgayTu: $('#@Html.IdFor(model => model.NgayTu)').val(),
+                                    NgayDen: $('#@Html.IdFor(model => model.NgayDen)').val(),
+                                    Page: $("#items-grid").data("kendoGrid").dataSource.page(),
+                                    PageSize: $("#items-grid").data("kendoGrid").dataSource.pageSize(), 
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                 if (CheckVali()) {
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    record = 0;
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "SuaChuaBaoDuong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page: @(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+                                    { field: 'MaCongCuText', title: 'Mã CCDC' },
+                                    { field: 'TenCongCuText', title: 'Tên CCDC' },
+                                    { field: 'NhomCongCuText', title: 'Nhóm CCDC' },
+                                    { field: 'BoPhanSuDungText', title: 'Bộ phận sử dụng' },
+                                    { field: 'DonGiaText', title: 'Giá trị sửa chữa' },
+                                    { field: 'SO_LUONG_SUA_CHUA', title: 'Số lượng sửa chữa' },
+                                    { field: 'NgaySuaChuaText', title: 'Ngày sửa chữa' },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"></i>Sửa</a>&nbsp;<a class="btn btn-sm btn-outline-danger" onclick=Delete(#=ID#)>Xóa</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function Delete(ID) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    console.log(ID);
+                    $.ajax({
+                        url: "/SuaChuaBaoDuong/DeleteFromList?id=" + ID,
+                        type: "POST",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                ShowSuccessMessage(data.Message);
+                                var pageindex = $('#items-grid').data('kendoGrid').dataSource.page();
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(pageindex);
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        },
+                        error: function (data) {
+
+                        }
+                    })
+                }
+            }
+        })
+    }
+</script>
+
+

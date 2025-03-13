@@ -1,0 +1,1041 @@
+﻿@model TaiSanModel
+
+<input asp-for="ID" type="hidden" id="IdTaiSanNha" />
+<input asp-for="taisannhaModel.TAI_SAN_DAT_ID" type="hidden" />
+<input asp-for="strTaiSanNguonVonIds" type="hidden" id="strNguonVonNhaIds" />
+<input asp-for="DON_VI_ID" type="hidden" id="DonViId" />
+<input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" id="lhtsId" />
+<input asp-for="DU_AN_ID" type="hidden" id="du-an-id-popup" />
+<div class=" card-header row" style="border-bottom:none; padding:5px">
+	<div class="col-10"> </div>
+	<div class="col-2">
+		<button type="button" id="btnSaveNhaOnPopup" class="btn btn-sm btn-outline-primary btnAddNha" style="float:right;margin-right:5px;">
+			<i class="fas fa-save"></i>
+			Lưu
+		</button>
+	</div>
+</div>
+<div class="gs-form-group  ">
+	<h6>Thông tin chung</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  ">Đơn vị</label>
+		<div class="col-sm-4 d-none">
+			<nop-editor asp-for="DonViMa" asp-disabled="true" />
+		</div>
+		<div class="col-sm-10">
+			<nop-editor asp-for="DonViTen" asp-disabled="true" />
+		</div>
+	</div>
+	@if (Model.isCreateTSDA != null && Model.isCreateTSDA.Value == true)
+	{
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-required">Dự án</label>
+			<div class="col-sm-10">
+				<app-select asp-for="DU_AN_ID" asp-items="Model.DuAnAvailable" asp-filter="true" />
+				<span asp-validation-for="DU_AN_ID"></span>
+			</div>
+		</div>
+	}
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2   text-required">Tên ngôi nhà</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="TEN" id="TenTaiSanNha" placeholder="Tên tài sản..." maxlength="255" />
+			<span asp-validation-for="TEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 font-weight-bold">Khuôn viên đất</label>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Số nhà, Đường(phố)</label>
+		<div class="col-sm-9">
+			<nop-editor asp-for="taisannhaModel.NHA_DIA_CHI" readonly="true" />
+			<span asp-validation-for="taisannhaModel.NHA_DIA_CHI"></span>
+		</div>
+		<script>
+			$(document).ready(function () {
+				$("#NHA_DIA_CHI").change(checkdiachi);
+				checkdiachi();
+			})
+			/**
+			* check dia chi trống
+			* */
+			function checkdiachi() {
+				var diachi = $("#NHA_DIA_CHI").val();
+				if (diachi === "") {
+					$("#checkdiachi").show();
+					$("#btnAddNha").prop("disabled", true);
+					$(".btnAddNha").prop("disabled", true);
+				}
+				else {
+					$("#checkdiachi").hide();
+					$("#btnAddNha").prop("disabled", false);
+					$(".btnAddNha").prop("disabled", false);
+				}
+			}
+		</script>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Lý do tăng</label>
+		<div class="col-sm-4">
+			<app-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" id="LyDoBienDongNha" asp-filter="true" />
+			<span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required  lblNgayTang_popUpNha">Ngày tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGAY_NHAP" id="NgayKeKhaiNha" /><br />
+			<span asp-validation-for="NGAY_NHAP" id="NgayKeKhaiNhaValid"></span>
+		</div>
+	</div>
+	<div class="form-group row d-none hinh-thuc-mua-sam-row-nhaPopup">
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Hình thức mua sắm</label>
+		<div class="col-sm-4">
+			<app-select asp-for="HinhThucMuaSamId" id="HinhThucMuaSamIdNhaPopup" asp-items="Model.HinhThucMuaSamAvailable" asp-filter="true" />
+			<span asp-validation-for="HinhThucMuaSamId" class="HinhThucMuaSamIdNhaPopup"></span>
+		</div>
+		<label class="col-form-label col-sm-2">Giá mua trên hóa đơn</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="GIA_MUA_TIEP_NHAN" id="giaMuaTiepNhanNhaPopup" asp-dvt="c" asp-min-number="0" />
+			<span asp-validation-for="GIA_MUA_TIEP_NHAN"></span>
+		</div>
+	</div>
+	<div class="form-group row d-none">
+		<label class="col-form-label col-sm-2">Mục đích được giao</label>
+		<div class="col-sm-4">
+			<app-select asp-for="nvYeuCauChiTietModel.MUC_DICH_SU_DUNG_ID" asp-items="Model.MucDichDuocGiaoAvailable" asp-filter="true" id="MucDichSuDungId" />
+			<span asp-validation-for="nvYeuCauChiTietModel.MUC_DICH_SU_DUNG_ID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Cấp nhà</label>
+		<div class="col-sm-4">
+			<app-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.LoaiTaiSanAvailable" id="LoaiTaiSanId" asp-filter="true" />
+			<span asp-validation-for="LOAI_TAI_SAN_ID" id="LoaiTaiSanIdValid"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required">Số tầng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="taisannhaModel.NHA_SO_TANG" asp-min-number="0" />
+			<span asp-validation-for="taisannhaModel.NHA_SO_TANG"></span>
+		</div>
+	</div>
+	<script>
+         var PopUpID = "";
+            $(".modal").each(function (index) {
+                if ($(this).data('bs.modal') && $(this).data('bs.modal')._isShown) {
+                    PopUpID = $(this).attr("id");
+                    return;
+                }
+            });
+           $(document).ready(function () {
+               $("#LoaiTaiSanId").kendoDropDownList({
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    //filter: "contains",
+                   template: function (e) {
+                        if (e.Disabled) {
+                            return '<span class="k-state-default" style="color: red;">'+e.Text+'</span>';
+                        } else {
+                            return '<span class="k-state-default">'+e.Text+'</span>';
+                        }
+                   },
+                    select: function (e) {
+                        if (e.dataItem.Disabled) {
+                            e.preventDefault();
+                        }
+                    },
+                   dataSource: JSON.parse(String.raw`@Html.Raw(((Model.LoaiTaiSanAvailable).toStringJson()))`),
+                   popup: {
+                    appendTo: PopUpID==""? $("body"):$("#" + PopUpID)
+                }
+               }).data("kendoDropDownList");
+           });
+	</script>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Diện tích XD</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="taisannhaModel.DIEN_TICH_XAY_DUNG" asp-dvt="m2" asp-min-number="0" />
+            <span asp-validation-for="taisannhaModel.DIEN_TICH_XAY_DUNG"></span>
+        </div>
+		<label class="col-form-label col-sm-2 text-required">Diện tích sàn SD</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="taisannhaModel.DIEN_TICH_SAN_XAY_DUNG" asp-dvt="m2" asp-min-number="0" />
+            <span asp-validation-for="taisannhaModel.DIEN_TICH_SAN_XAY_DUNG"></span>
+            <span id="alertDienTich" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn SD không được nhỏ hơn diện tích XD </span>
+            <span id="checkhientrangmaxPopup" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn SD phải bằng tổng hiện trạng SD</span>
+            <span id="checkhientrangminPopup" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn SD phải bằng tổng hiện trạng SD</span>
+        </div>
+	</div>
+	<div class="form-group row">
+
+		<label class="col-form-label col-sm-2 text-required">Năm xây dựng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="taisannhaModel.NAM_XAY_DUNG" asp-min-number="0" />
+			<span asp-validation-for="taisannhaModel.NAM_XAY_DUNG"></span>
+			<span id="checkNamXayDung" class="field-validation-error text-danger" style="display:none ;color:red">Năm xây dựng phải nhỏ hơn hoặc bằng năm sử dụng</span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required lblNgaySuDung_popUpNha">Ngày đưa vào sử dụng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGAY_SU_DUNG" id="NgaySuDungNha" />
+			<br />
+			<span asp-validation-for="NGAY_SU_DUNG"></span>
+			<span id="checkdateminNha" class="field-validation-error text-danger" style="display:none ;color:red"> Ngày sử dụng phải nhỏ hơn hoặc bằng ngày kê khai </span>
+			<span id="checkdatenullNha" class="field-validation-error text-danger" style="display:none ;color:red"> Ngày sử dụng không được để trống </span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Bộ phận sử dụng</label>
+		<div class="col-sm-4">
+			<app-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.BoPhanSuDungAvailable" id="BoPhanSuDungId" asp-filter="true" />
+		</div>
+		<div class="col-sm-1" style="padding-left: -5px;">
+			<button type="button" title="Thêm trực tiếp" class="btn icon-btn btn-sm btn-outline-primary" id="btnThemBoPhan" style="margin:3px 0px 0px 2px;">
+				<span class="ion ion-md-add"></span>
+			</button>
+			@*<button type="button" title="thêm pop-up" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="400" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin:3px 0px 0px 2px;">
+					<span class="ion ion-md-add"></span>
+				</button>*@
+			<button type="button" title="Lưu" class="btn icon-btn btn-sm btn-outline-success" id="btnLuuBoPhan" style="margin:3px 0px 0px 2px;">
+				<span class="ion ion-md-save"></span>
+			</button>
+			<button type="button" title="Hủy" class="btn icon-btn btn-sm btn-outline-danger" id="btnHuyBoPhan" style="margin:3px 0px 0px 2px;">
+				<span class="ion ion-md-close"></span>
+			</button>
+		</div>
+	</div>
+	<div class="row form-group" style="padding-top: 6px;">
+		<div class="col-sm-8" id="frmThemDonViBoPhan" style="display:none">
+			<div class="gs-form-group" style=" border-width:1px">
+				<h6>Thêm mới phòng ban, bộ phận</h6>
+				<div class="">
+					<input asp-for="ID" type="hidden" id="phongBanId" />
+					<input asp-for="DON_VI_ID" type="hidden" />
+					<input asp-for="MA" type="hidden" id="phongBanMa" />
+					<div class="form-group row">
+						@*<label class="col-form-label col-sm-2 ">Đơn vị:</label>
+							<div class="col-sm-4">
+								<nop-editor asp-for="DonViTen" asp-disabled="true" />
+							</div>*@
+						<label class="col-form-label col-sm-2  text-required">Tên phòng ban, bộ phận</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="phongBanTen" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-form-label col-sm-2 ">Địa chỉ:</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="phongBanDiaChi" />
+						</div>
+						<label class="col-form-label col-sm-2 ">Điện thoại:</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="phongBanDienThoai" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-form-label col-sm-2 ">Fax:</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="phongBanFax" />
+						</div>
+						<label class="col-form-label col-sm-2 ">Trực thuộc phòng ban, bộ phận:</label>
+						<div class="col-sm-4">
+							<nop-select asp-items="Model.BoPhanSuDungAvailable" asp-for="BoPhanChaId" id="phongBanParentId" asp-filter="true" />
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+        <script>
+			$(document).ready(function () {
+				$('#frmThemDonViBoPhan').hide();
+				$('#btnLuuBoPhan').hide();
+				$('#btnHuyBoPhan').hide();
+                let spanValidateNG10m = $('#span_NguyenGiaNha10m')
+                if (@Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.NHA) && @Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.OTO)) {
+                    if (spanValidateNG10m) {
+                        spanValidateNG10m.html(' Nguyên giá của TSCĐ phải >= 10.000.000');
+                        spanValidateNG10m.hide();
+                    }
+                }
+
+				$("#btnThemBoPhan").click(function () {
+					//$('#_FrmThemMoiBoPhan').modal('show');
+					$('#frmThemDonViBoPhan').show('fast');
+					$('#btnLuuBoPhan').show();
+					$('#btnHuyBoPhan').show();
+					$('#btnThemBoPhan').hide();
+				});
+				$("#btnLuuBoPhan").click(function () {
+					var url = "/DonViBoPhan/_Create";
+					var _data = {
+						DON_VI_ID: $("#DON_VI_ID").val(),
+						TEN_DON_VI: $("#TEN_DON_VI").val(),
+						MA: $("#phongBanMa").val(),
+						TEN: $("#phongBanTen").val(),
+						DIA_CHI: $("#phongBanDiaChi").val(),
+						DIEN_THOAI: $("#phongBanDienThoai").val(),
+						FAX: $("#phongBanFax").val(),
+						PARENT_ID: $("#phongBanParentId").val()
+					};
+					console.log(_data);
+					var phongBan = ajaxPost(_data, url, false);
+					phongBan.done(function (result) {
+						if (CheckValidMessageReturn(result)) {
+							if (result.Code == "00") {
+								// ShowSuccessMessage(result.Message);
+								var phongBanModel = result.ObjectInfo;
+								$("#BoPhanSuDungId").kendoDropDownList({
+									dataSource: phongBanModel.dllDonViBoPhan,
+									dataTextField: "Text",
+									dataValueField: "Value",
+									text: phongBanModel.TEN,
+									value: phongBanModel.ID
+								});
+								$('#frmThemDonViBoPhan').hide('fast');
+								$('#btnLuuBoPhan').hide();
+								$('#btnHuyBoPhan').show();
+								$('#btnThemBoPhan').show();
+								$("#phongBanTen").val('');
+								$("#phongBanDiaChi").val('');
+								$("#phongBanDienThoai").val('');
+								var bophancha = $('#phongBanParentId').data('kendoDropDownList');
+								bophancha.value('');
+							}
+						} else {
+							//alert(result.ObjectInfo)
+							$(".TEN").hide();
+						}
+
+					})
+						.fail(function (jqXHR, textStatus, errorThrown) {
+							// If fail
+							console.log(textStatus + ': ' + errorThrown);
+						});
+				});
+				$("#btnHuyBoPhan").click(function () {
+					//$('#_FrmThemMoiBoPhan').modal('show');
+					$('#frmThemDonViBoPhan').hide('fast');
+					$('#btnLuuBoPhan').hide();
+					$('#btnHuyBoPhan').hide();
+					$('#btnThemBoPhan').show();
+				});
+			})
+        </script>
+	</div>
+	<div class="modal fade" id="_FrmThemMoiBoPhan" data-backdrop="static" style="z-index: 1090 !important;" data-keyboard="false">
+		<div class="modal-dialog" style="width: 50%; height: auto; max-width: 100%;" id="content">
+			<form class="modal-content">
+				<div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+					<h5 class="modal-title">
+						Danh Sách công văn
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+				</div>
+				<div class="modal-body" id="ChuyenDonVaoCongVan" style="padding:0.5625rem !important;background-color: #fff !important">
+
+
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div class="form-group row d-none">
+		<label class="col-form-label col-sm-2  ">Ghi chú</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="GHI_CHU" id="ghiChuNha" maxlength="500" />
+		</div>
+	</div>
+</div>
+@await Html.PartialAsync("_GiaTriTaiSanNhaTrenDat", Model)
+
+<div class="gs-form-group ">
+	<h6>
+		Hiện trạng sử dụng
+	</h6>
+	<div id="hienTrangNhaPopup">
+		<div class="form-group row ">
+			@foreach (var obj in Model.taisannhaModel.lstHienTrang)
+			{
+				@await Html.PartialAsync("_HienTrangSuDungOnPopup", obj)
+			}
+		</div>
+	</div>
+</div>
+
+<h6 class="card-footer">
+	<button type="button" class="btn btn-sm btn-outline-primary btnAddNha" style="float:right;margin-right:5px;">
+		<i class="fas fa-save" style="margin-right:5px;"></i>
+		Lưu
+	</button>
+</h6>
+<script>
+	$(document).ready(function () {
+		let dpkNgayNhap = $('#NgayKeKhaiNha').data("kendoDatePicker");
+		if (@Model.isTangMoi.ToString().ToLower() == false) {
+			dpkNgayNhap.enable(false);
+		}
+		//load ngày kê khai về ngày chốt tài sản năm đó neu ly do là "đăng ký lần đầu"
+		$("#LyDoBienDongNha").change(loadNgayKeKhaiNha);
+        $("#NgayKeKhaiNha").change(loadNgayKeKhaiNha);
+		$("#LoaiTaiSanId").change(getThongTinHM_nhaPopup);
+		$("#LyDoBienDongNha").change(displayFieldsWhenLyDoBienDongChangeNhaPopup);
+		displayFieldsWhenLyDoBienDongChangeNhaPopup();
+        getThongTinHM_nhaPopup();
+		//kiểm tra giá trị tổng nguyên giá nhà
+        //$(document).on("change", "#ListNguonVonNha input", checkGiaTriPerm2_nhaPopup);
+        $(document).on("change", "#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG", checkGiaTriPerm2_nhaPopup);
+        //multiSelectNguonVon();
+		var loaitsId = $("#LoaiTaiSanId").val();
+
+
+        //bind thong tin khau hao hao mon
+        if (loaitsId > 0) {
+            getThongTinKHHMNha();
+        };
+        $("#LoaiTaiSanId").change(getThongTinKHHMNha);
+        $("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG").change(compareDienTichSanXayDung);
+        $("#taisannhaModel_DIEN_TICH_XAY_DUNG").change(compareDienTichSanXayDung);
+        //-----Kiểm tra giá trị hiện trạng sử dụng và diện tích sàn xây dựng
+        $("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG").change(compareDientich);
+        $(".HienTrangOnPopup").change(compareDientich);
+        //----
+        $(".btnAddNha").click(createOrUpdateNha);
+        $("#NgaySuDungNha").change(tinhGiaTriKhauHaoHaoMon);
+		$("#nha_TongNguyenGia").change(tinhGiaTriKhauHaoHaoMon);
+        $("#LoaiTaiSanId").change(tinhGiaTriKhauHaoHaoMon);
+        $("#NgayBatDauTinhKhauHao").change(tinhGiaTriKhauHaoHaoMon);
+        $("#nvYeuCauChiTietModel_KH_GIA_TINH_KHAU_HAO").change(tinhGiaTriKhauHaoHaoMon);
+        $("#nvYeuCauChiTietModel_KH_THANG_CON_LAI").change(tinhGiaTriKhauHaoHaoMon);
+
+        //kiem tra gia tri con lai voi nguyen gia
+		$("#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup").change(function () {
+            var tongNguyenGiaNha = ConvertToNumber("#nha_TongNguyenGia");
+			var giaTriConLaiNha = ConvertToNumber("#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup");
+            if (giaTriConLaiNha>tongNguyenGiaNha) {
+                $("#validation-giaTriConLai").show();
+                 $(".btnAddNha").prop("disabled", true)
+            } else {
+                $("#validation-giaTriConLai").hide();
+                $(".btnAddNha").prop("disabled", false)
+            }
+        });
+        // Check hao mòn luỹ kế so vs nguyên giá
+        $(document).on('change','#NVYeuCauChiTietModel_HM_LUY_KE',function(){
+        var Tongnguyengia = ConvertToNumber("#TongNguyenGia");
+        var Giatriconlai = ConvertToNumber("#NVYeuCauChiTietModel_HM_LUY_KE");
+            if (Giatriconlai > Tongnguyengia) {
+                $("#checklkhm").show();
+            }
+            else {
+               $("#checklkhm").hide();
+            }
+        })
+          //so sánh ngày nhập ngày sử dụng
+        $("#NgayKeKhaiNha").change(CompareDate);
+        $("#NgaySuDungNha").change(CompareDate);
+
+         ////tính lại giá trị hao mòn sau khi thay đổi luỹ kế hoặc giá trị còn lại
+        $(document).on('change', '#nvYeuCauChiTietModel_HM_LUY_KE', function () {
+            var giaTriConLai = changegiatrisautinhtoan("#nha_TongNguyenGia", "#nvYeuCauChiTietModel_HM_LUY_KE");
+			$("#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup").data("kendoNumericTextBox").value(giaTriConLai);
+        });
+		$(document).on('change', '#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup', function () {
+			var giaTriConLai = changegiatrisautinhtoan("#nha_TongNguyenGia", "#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup");
+            $("#nvYeuCauChiTietModel_HM_LUY_KE").data("kendoNumericTextBox").value(giaTriConLai);
+        });
+
+		                //------xử lý sự kiện form nguồn vốn
+		$("#nha_TongNguyenGia").change(function () {
+			var val = $(this).val();
+			CheckNguyenGiaNha();
+
+			$("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").value(val);
+			$("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox").value(0);
+			if (@Model.IsBanQuanLyDuAn.ToString().ToLower() == true) {
+				$("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)").data("kendoNumericTextBox").value(0);
+				$("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)").data("kendoNumericTextBox").value(0);
+			}
+		});
+		                //---------------------------
+        let txtTongNG = $("#nha_TongNguyenGia").data("kendoNumericTextBox");
+        let txtNguonVonKhac = $("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox");
+		let txtNguonVonNS = $("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox");
+		if (@Model.IsBanQuanLyDuAn.ToString().ToLower() == true) {
+			let txtNguonVonVienTroPhiCP = $("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)").data("kendoNumericTextBox");
+			let txtNguonVonODA = $("#NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)").data("kendoNumericTextBox");
+
+			if (txtTongNG && txtNguonVonKhac && txtNguonVonNS && txtNguonVonVienTroPhiCP && txtNguonVonODA) {
+				txtNguonVonVienTroPhiCP.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVTPCP > 0) {
+						if (nguonVTPCP > nguonNS) {
+							showInvalidMessage('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+							createOrUpdateTaiSanJS.checkValid = true;
+							createOrUpdateTaiSanJS.fullValid.VTPCP_And_NguonVon = true;
+						} else {
+							hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)');
+							createOrUpdateTaiSanJS.checkValid = false;
+							createOrUpdateTaiSanJS.fullValid.VTPCP_And_NguonVon = false;
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonVienTroPhiCP.value(0);
+						txtNguonVonNS.value(tongNG - nguonVonODA - nguonVonKhac);
+						hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)');
+						createOrUpdateTaiSanJS.checkValid = false;
+						createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = false;
+					}
+				})
+				txtNguonVonODA.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonODA > 0) {
+						if (nguonVonODA > nguonNS) {
+							showInvalidMessage('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+							createOrUpdateTaiSanJS.checkValid = true;
+							createOrUpdateTaiSanJS.fullValid.ODA_And_NguonVon = true;
+						} else {
+							hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)');
+							createOrUpdateTaiSanJS.checkValid = false;
+							createOrUpdateTaiSanJS.fullValid.ODA_And_NguonVon = false;
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac);
+						hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)');
+						createOrUpdateTaiSanJS.checkValid = false;
+						createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = false;
+					}
+				})
+
+				txtNguonVonKhac.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonKhac > 0) {
+						if (nguonVonKhac > nguonNS) {
+							showInvalidMessage('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+							createOrUpdateTaiSanJS.checkValid = true;
+							createOrUpdateTaiSanJS.fullValid.ODA_And_NguonVon = true;
+						} else {
+							hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+							createOrUpdateTaiSanJS.checkValid = false;
+							createOrUpdateTaiSanJS.fullValid.ODA_And_NguonVon = false;
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+						hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+						createOrUpdateTaiSanJS.checkValid = false;
+						createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = false;
+					}
+				})
+			}
+		} else {
+			if (txtNguonVonKhac && txtNguonVonNS && txtTongNG) {
+				txtNguonVonKhac.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					if (tongNG > 0 && nguonVonKhac > 0) {
+						if (nguonVonKhac > tongNG) {
+							showInvalidMessage('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+							createOrUpdateTaiSanJS.checkValid = true;
+							createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = true;
+						} else {
+							hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+							createOrUpdateTaiSanJS.checkValid = false;
+							createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = false;
+							var newNguonNS = parseInt(tongNG - nguonVonKhac);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonKhac.value(0);
+						txtNguonVonNS.value(tongNG);
+						hideValmsg('NguonVonNha_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+						createOrUpdateTaiSanJS.checkValid = false;
+						createOrUpdateTaiSanJS.fullValid.NS_And_NguonVon = false;
+					}
+				})
+			}
+		}
+    })
+
+    /**
+     * Description: validate ngay su dung va ngay ke khai
+     * */
+     function CompareDate() {
+            var ngaynhap = $("#NgayKeKhaiNha").data("kendoDatePicker").value();
+            var ngaysudung = $("#NgaySuDungNha").data("kendoDatePicker").value();
+            if (ngaysudung != null) {
+                if (ngaysudung > ngaynhap) {
+                    $("#checkdateminNha").show();
+                    $("#checkdatenullNha").hide();
+                    $(".btnAddNha").prop("disabled", true)
+                }
+                else {
+                    $("#checkdateminNha").hide();
+                    $("#checkdatenullNha").hide();
+                    $(".btnAddNha").prop("disabled", false)
+                }
+            }
+            $(document).on('click focusout', '#NgaySuDungNha', CompareDate);
+        }
+    /**
+     * Description: bind thong tin khau hao hao mon loai tai san
+     **/
+    function getThongTinKHHMNha() {
+        var getLoaiTaiSanByIdURL = "/TaiSan/GetThongTinLoaiTaiSan?loaiTaiSanId=" + $("#LoaiTaiSanId").val();
+        var loaiTaiSan = ajaxGet(getLoaiTaiSanByIdURL);
+        loaiTaiSan.done(function (result) {
+                if (result.Code == 00 && result.ObjectInfo != null) {
+                    var loaiTS = result.ObjectInfo;
+                    $("#HM_TiLeNha").val(loaiTS.HM_TyLe);
+                    if (loaiTS.KH_TY_LE == null) {
+                         loaiTS.KH_TY_LE = 0;
+                    }
+                    $("#KH_TiLeNha").val(loaiTS.KH_TyLe);
+                }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            // If fail
+                 console.log(textStatus + ': ' + errorThrown);
+        });
+    }
+    //validate nam xay dung
+    $("#taisannhaModel_NAM_XAY_DUNG").change(checknam);
+    $("#NgaySuDungNha").change(checknam);
+	$(document).on("focusout", "#NgaySuDungNha", checknam);
+        function checknam() {
+            var namXayDungNha = ConvertToNumber("#taisannhaModel_NAM_XAY_DUNG");
+            var ngaysudung = $("#NgaySuDungNha").data("kendoDatePicker").value();
+            if (ngaysudung != null && namXayDungNha <= ngaysudung.getFullYear()) {
+                $("#checkNamXayDung").hide();
+                $(".btnAddNha").prop("disabled", false);
+            } else {
+
+                $("#checkNamXayDung").show();
+                $(".btnAddNha").prop("disabled", true);
+            }
+        }
+
+
+    /**
+     * Description: compare dien tich xay dung và dien tich san xay dung
+     * */
+    function compareDienTichSanXayDung() {
+        var dienTichXD = ConvertToNumber("#taisannhaModel_DIEN_TICH_XAY_DUNG");
+        var dienTichSanXD = ConvertToNumber("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG");
+        if (dienTichXD > dienTichSanXD) {
+            $("#alertDienTich").show();
+            $(".btnAddNha").prop("disabled", true);
+        } else{
+            $("#alertDienTich").hide();
+            $(".btnAddNha").prop("disabled", false);
+        }
+    }
+    /**
+     * Description: function thực hiện so sánh tổng hiện trạng với diện tích sàn xây dựng
+     * */
+        function compareDientich() {
+            var total = 0;
+            $(".HienTrangOnPopup").each(function () {
+                var _hientrangId = $(this).data("idhientrang");
+                var _Value = ConvertToNumber("#hienTrangNhaPopup #HienTrang_" + _hientrangId);
+                total=total+_Value
+            });
+            var tonghientrang = total.toFixed(2);
+            var gt = ConvertToNumber("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG");
+            if (tonghientrang != gt) {
+                if (tonghientrang > gt) {
+                    $("#checkhientrangmaxPopup").show();
+                    $("#checkhientrangminPopup").hide();
+                    $(".btnAddNha").prop("disabled", true)
+                }
+                if (tonghientrang < gt) {
+                    $("#checkhientrangminPopup").show();
+                    $("#checkhientrangmaxPopup").hide();
+                    $(".btnAddNha").prop("disabled", true)
+                }
+            }
+            else {
+                $("#checkhientrangmaxPopup").hide();
+                $("#checkhientrangminPopup").hide();
+                $(".btnAddNha").prop("disabled", false)
+            }
+        }
+
+
+	function createOrUpdateNha() {
+        if (CheckNguyenGiaNha()) {
+            $.ajax({
+                url: "/TaiSan/CreateOrUpdateNha",
+                type: "POST",
+                data: addDataNhaDat(),
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        if (data.Code = "00") {
+                            HideModalManual();
+                            ShowSuccessMessage(data.Message);
+                            //appendNhaToList(data.ObjectInfo.TAI_SAN_ID);
+                            //$('#list-TSnha-by-datId').data('kendoGrid').dataSource.page(1);
+                            location.href = '/TaiSan/List';
+                        }
+                    }
+                    else {
+                        if (data.Code = "01") {
+                            ShowErrorMessage("Dữ liệu chưa phù hợp. Mời kiểm tra lại dữ liệu");
+                            $(".LOAI_TAI_SAN_ID").hide();
+                            $(".TEN").hide();
+                            $(".nguyen-gia-ts").hide();
+                            $(".valid-ngay-sd-ts").hide();
+                            $(".valid-ngay-nhap-ts").hide();
+                            $(".LY_DO_BIEN_DONG_ID").hide();
+                            $(".MUC_DICH_SU_DUNG_ID").hide();
+                            $(".HINH_THUC_MUA_SAM_ID").hide();
+                            $(".valid-ngay-su-dung").hide();
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(ajaxOptions + ": " + thrownError);
+                }
+            });
+        }
+        
+
+    }
+
+	function addDataNhaDat() {
+		var lyDoTangId = $("#LyDoBienDongNha").val();
+		let data;
+		getMaByIdLyDoTangGiam(lyDoTangId).done((maLyDo) => {
+			var _lstNguonVonNha = [];
+			$(".NguonVonNha").each(function () {
+				var nguonvonNhaId = $(this).data("idnguonvonnha");
+				var _tennguonvon = $(this).data("tennguonvon");
+				var _ValueNguonVonNha = ConvertToNumber("#NguonVonNha_" + nguonvonNhaId);
+				_lstNguonVonNha.push({
+					ID: nguonvonNhaId,
+					GiaTri: _ValueNguonVonNha,
+					TEN: _tennguonvon
+				});
+			});
+			//Hien trang
+			var _lstHienTrangNha = [];
+			$(".HienTrangOnPopup").each(function () {
+				var _hientrangId = $(this).data("idhientrang");
+				var _tenhientrang = $(this).data("tenhientrang");
+				var _kieudulieuid = $(this).data("kieudulieuid");
+				switch (_kieudulieuid) {
+					case 1:
+						var _Value = $(".HienTrangOnPopup #HienTrang_" + _hientrangId).val();
+						_lstHienTrangNha.push({
+							HienTrangId: _hientrangId,
+							GiaTriNumber: _Value,
+							TenHienTrang: _tenhientrang,
+							KieuDuLieuId: _kieudulieuid,
+						});
+						break;
+					case 2:
+						var _Value = $("#HienTrang_" + _hientrangId).prop("checked") ? true : false;
+						_lstHienTrangNha.push({
+							HienTrangId: _hientrangId,
+							GiaTriCheckbox: _Value,
+							TenHienTrang: _tenhientrang,
+							KieuDuLieuId: _kieudulieuid,
+						});
+						break;
+				}
+			});
+
+			var _data = {
+				ID: $("#IdTaiSanNha").val(),
+				MA: $("#LoaiTaiSanId").val() + $("#IdTaiSanNha").val(),
+				TEN: $("#TenTaiSanNha").val(),
+				LOAI_TAI_SAN_ID: $("#LoaiTaiSanId").val(),
+				DU_AN_ID: $("#du-an-id-popup").val(),
+				isTangMoi: @Model.isTangMoi.ToString().ToLower(),
+				LOAI_HINH_TAI_SAN_ID: $("#lhtsId").val(),
+				//NUOC_SAN_XUAT_ID: $("#NuocSanXuatId").val(),
+				LY_DO_BIEN_DONG_ID: $("#LyDoBienDongNha").val(),
+				NAM_SAN_XUAT: $("#taisannhaModel_NAM_XAY_DUNG").val(),
+				QUYET_DINH_SO: $("#QuyetDinhSoNha").val(),
+				QUYET_DINH_NGAY: $("#QuyetDinhNgayNha").val(),
+				CHUNG_TU_SO: $("#ChungTuSoNha").val(),
+				CHUNG_TU_NGAY: $("#ChungTuNgayNha").val(),
+				DON_VI_BO_PHAN_ID: $("#BoPhanSuDungId").val(),
+				GHI_CHU: $("#ghiChuNha").val(),
+				DON_VI_ID: $("#DonViId").val(),
+				NGAY_NHAP: $("#NgayKeKhaiNha").val(),
+				NGAY_SU_DUNG: $("#NgaySuDungNha").val(),
+				SelectedNguonVonIds: $("#NguonVonNhas").val(),
+				lstNguonVonModel: _lstNguonVonNha,
+				DU_AN_ID: $('#@Html.IdFor(c=>c.DU_AN_ID)').val(),
+				nvYeuCauChiTietModel: {
+					//HINH_THUC_MUA_SAM_ID: $("#HinhThucMuaSamIdNhaPopup").val(),
+					MUC_DICH_SU_DUNG_ID: $("#MucDichSuDungId").val(),
+					NGUYEN_GIA: $("#nha_TongNguyenGia").val(),
+					HM_SO_NAM_CON_LAI: $("#nvYeuCauChiTietModel_HM_SO_NAM_CON_LAI").val(),
+					HM_TY_LE_HAO_MON: $("#nvYeuCauChiTietModel_HM_TY_LE_HAO_MON").val(),
+					//HM_LUY_KE: $("#nvYeuCauChiTietModel_HM_LUY_KE").val(),
+					HM_GIA_TRI_CON_LAI: $("#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup").val(),
+					KH_NGAY_BAT_DAU: $("#nvYeuCauChiTietModel_KH_NGAY_BAT_DAU").val(),
+					PHUONG_PHAP_TINH_KHAU_HAO_ID: $("#nvYeuCauChiTietModel_PHUONG_PHAP_TINH_KHAU_HAO_ID").val(),
+					KH_TY_LE_NGUYEN_GIA_KHAU_HAO: $("#nvYeuCauChiTietModel_KH_TY_LE_NGUYEN_GIA_KHAU_HAO_nhaPopup").val(),
+					KH_THANG_CON_LAI: $("#nvYeuCauChiTietModel_KH_THANG_CON_LAI").val(),
+					KH_GIA_TINH_KHAU_HAO: $("#nvYeuCauChiTietModel_KH_GIA_TINH_KHAU_HAO").val(),
+					KH_GIA_TRI_TRICH_THANG: $("#nvYeuCauChiTietModel_KH_GIA_TRI_TRICH_THANG").val(),
+					KH_LUY_KE: $("#nvYeuCauChiTietModel_KH_LUY_KE").val(),
+					KH_CON_LAI: $("#nvYeuCauChiTietModel_KH_CON_LAI").val(),
+					NHA_SO_TANG: $("#taisannhaModel_NHA_SO_TANG").val(),
+					lstHienTrang: _lstHienTrangNha,
+				},
+				taisannhaModel: {
+					TAI_SAN_DAT_ID: $("#taisannhaModel_TAI_SAN_DAT_ID").val(),
+					DIEN_TICH_XAY_DUNG: $("#taisannhaModel_DIEN_TICH_XAY_DUNG").val(),
+					DIEN_TICH_SAN_XAY_DUNG: $("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG").val(),
+					NAM_XAY_DUNG: $("#taisannhaModel_NAM_XAY_DUNG").val(),
+					NHA_SO_TANG: $("#taisannhaModel_NHA_SO_TANG").val(),
+					NGAY_SU_DUNG: $("#NgaySuDungNha").val(),
+					NHA_DIA_CHI: $("#taisannhaModel_NHA_DIA_CHI").val(),
+					HS_QUYET_DINH_BAN_GIAO: $("#QUYET_DINH_BAN_GIAO").val(),
+					HS_QUYET_DINH_BAN_GIAO_NGAY: $("#QUYET_DINH_BAN_GIAO_NGAY").val(),
+					HS_BIEN_BAN_NGHIEM_THU: $("#BIEN_BAN_NGHIEM_THU").val(),
+					HS_BIEN_BAN_NGHIEM_THU_NGAY: $("#BIEN_BAN_NGHIEM_THU_NGAY").val(),
+					HS_PHAP_LY_KHAC: $("#PHAP_LY_KHAC").val(),
+					HS_PHAP_LY_KHAC_NGAY: $("#PHAP_LY_KHAC_NGAY").val(),
+				}
+			}
+			if ((@Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) && maLyDo == '@(enum_LY_DO_BIEN_DONG.KIEM_KE_PHAT_HIEN_THUA)') {
+				_data.HM_TY_LE = $('#HM_TY_LE_nhaPopup').val();
+				_data.HM_SO_NAM_CON_LAI = $('#HM_SO_NAM_CON_LAI_nhaPopup').val();
+			}
+			if (maLyDo == '@(enum_LY_DO_BIEN_DONG.MUA_SAM)') {
+				_data.nvYeuCauChiTietModel.HINH_THUC_MUA_SAM_ID = $('#HinhThucMuaSamIdNhaPopup').val();
+			}
+			data = _data;
+		});
+        return data;
+    }
+
+	function addDataTinhToanNhaTheoDat() {
+		var data = {
+			LoaiHinhTaiSanId: $("#lhtsId").val(),
+			TS_NgayBatDauTinh: $("#NgaySuDungNha").val(),
+			TS_NgayKetThucTinh: $("#NgayKeKhaiNha").val(),
+			LoaiTaiSanId: $("#LoaiTaiSanId").val(),
+			KH_NgayBatDau: $("#NgaySuDungNha").val(),
+			TS_NguyenGia: $("#nha_TongNguyenGia").val(),
+			KH_ThangConLai: $("#nvYeuCauChiTietModel_KH_THANG_CON_LAI").val(),
+			TS_TyLeNguyenGiaTrichKH: $("#nvYeuCauChiTietModel_KH_TY_LE_NGUYEN_GIA_KHAU_HAO_nhaPopup").val(),
+
+		}
+
+		return data;
+	}
+   function tinhGiaTriKhauHaoHaoMon() {
+	   var url = "/TaiSan/TinhToanGiaTriTS";
+	   var data = addDataTinhToanNhaTheoDat();
+	   var tinhToanGiaTriTS = ajaxPost(data, url, true);
+	   tinhToanGiaTriTS.done(function (result) {
+		   if (result.Code == "00") {
+			   var data = result.ObjectInfo;
+			   //declare
+			   let hmGTCL = $("#nvYeuCauChiTietModel_HM_GIA_TRI_CON_LAI_nhaPopup").data("kendoNumericTextBox");
+			   let khlk = $("#nvYeuCauChiTietModel_KH_LUY_KE").data("kendoNumericTextBox");
+			   let khthangconlai = $("#nvYeuCauChiTietModel_KH_THANG_CON_LAI").data("kendoNumericTextBox");
+			   let khConLai = $("#nvYeuCauChiTietModel_KH_CON_LAI").data("kendoNumericTextBox");
+			   let khGiaTriTrichThang = $("#nvYeuCauChiTietModel_KH_GIA_TRI_TRICH_THANG").data("kendoNumericTextBox");
+			   //bind du lieu hao mon
+			   switch (data.DON_VI_CHE_DO_HACH_TOAN_ID) {
+				   case 2://enumCHE_DO_HACH_TOAN.HAO_MON_VA_KHAU_HAO
+					   // 1: (int)GS.Core.Domain.DanhMuc.enumCHE_DO_HACH_TOAN.HAO_MON
+					   //bind du lieu khau hao
+					   if (khlk)
+						   khlk.value(data.KH_LuyKe);
+					   if (khthangconlai)
+						   khthangconlai.value(data.KH_ThangConLai);
+					   if (khConLai)
+						   khConLai.value(data.KH_GiaTriConLai);
+					   if (khGiaTriTrichThang)
+						   khGiaTriTrichThang.value(data.KH_GiaTriTrichMotThang);
+					   if (hmGTCL)
+						   hmGTCL.value(data.HM_GiaTriConLai);
+					   break;
+				   case 3://enumCHE_DO_HACH_TOAN.KHAU_HAO
+					   //$("#nvYeuCauChiTietModel_HM_LUY_KE").data("kendoNumericTextBox").value(data.HM_LuyKe);
+					   $("#nvYeuCauChiTietModel_HM_LUY_KE").val(data.HM_LuyKe);
+					   if (hmGTCL)
+						   hmGTCL.value(data.HM_GiaTriConLai);
+					   if (khlk)
+						   khlk.value(data.KH_LuyKe);
+					   if (khthangconlai)
+						   khthangconlai.value(data.KH_ThangConLai);
+					   if (khConLai)
+						   khConLai.value(data.KH_GiaTriConLai);
+					   if (khGiaTriTrichThang)
+						   khGiaTriTrichThang.value(data.KH_GiaTriTrichMotThang);;
+					   break
+				   case 1: //enumCHE_DO_HACH_TOAN.HAO_MON
+				   default:
+					   //$("#nvYeuCauChiTietModel_HM_LUY_KE").data("kendoNumericTextBox").value(data.HM_LuyKe);
+					   $("#nvYeuCauChiTietModel_HM_LUY_KE").val(data.HM_LuyKe);
+
+					   if (hmGTCL)
+						   hmGTCL.value(data.HM_GiaTriConLai);
+					   break;
+			   }
+		   } else if (result.Code == "01") {
+			   console.log("Error " + result.Code + ": " + result.ObjectInfo);
+		   }
+	   }).fail(function (jqXHR, textStatus, errorThrown) {
+		   // If fail
+		   console.log(textStatus + ': ' + errorThrown);
+	   });
+        }
+     /*
+     * khi chọn lý do biến động bằng đăng ký lần đầu ngày nhập tự động chuyển về 31/12 của năm đăng ký
+     */
+
+	function loadNgayKeKhaiNha() {
+        var lydodangky = $("#LyDoBienDongNha").val();
+        var toDay = new Date();
+        if (lydodangky == 4) { //4: id lý do "Đăng ký lần đầu"
+            let ngayKeKhaiNha = $("#NgayKeKhaiNha").data("kendoDatePicker").value();
+			if (ngayKeKhaiNha) {
+				var namkekhai = ngayKeKhaiNha.getFullYear();
+				if (namkekhai < toDay.getFullYear()) {
+					var ngaynhapmoi = ("31/12/" + namkekhai).toString();
+					$("#NgayKeKhaiNha").val(ngaynhapmoi);
+				}
+			}
+
+        }
+	}
+		/**
+     * Description: Check giá trị một m2 nhà > 30.000.000/m2
+     * */
+    function checkGiaTriPerm2_nhaPopup() {
+		var tongNguyenGia = $("#nha_TongNguyenGia").val();
+        var dienTichSanXD = $("#taisannhaModel_DIEN_TICH_SAN_XAY_DUNG").val();
+        if (tongNguyenGia!=null && dienTichSanXD > 0 && tongNguyenGia / dienTichSanXD > 30000000) {
+            showInvalidMessage("taisannhaModel.DIEN_TICH_SAN_XAY_DUNG", "Giá trị nhập vào quá 30.000.000/m², đề nghị kiểm tra lại!");
+        } else {
+            hideValmsg("taisannhaModel.DIEN_TICH_SAN_XAY_DUNG");
+		}
+	}
+                /**
+             * Lấy thông tin tỷ lệ hao mòn theo loại tài sản
+             * */
+    function getThongTinHM_nhaPopup() {
+        var loaiTaiSanId = 0;
+        if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.VO_HINH) || @Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+            loaiTaiSanId = $("#LOAI_TAI_SAN_DON_VI_ID").val();
+        }
+        else {
+			loaiTaiSanId = $("#LoaiTaiSanId").val();
+        }
+        if (loaiTaiSanId > 0) {
+            var getLoaiTaiSanByIdURL = "/TaiSan/GetThongTinLoaiTaiSan?loaiTaiSanId=" + loaiTaiSanId + "&loaiHinhTaiSanId=@Model.LOAI_HINH_TAI_SAN_ID";
+            var loaiTaiSan = ajaxGet(getLoaiTaiSanByIdURL, true);
+            loaiTaiSan.done(function (result) {
+                if (result.Code == "00" && result.ObjectInfo != null) {
+                    var loaiTS = result.ObjectInfo;
+                    var hm_tyLe = $("#HM_TY_LE_nhaPopup").data("kendoNumericTextBox");
+                    var kh_tyLe = $("#KH_TiLe_nhaPopup").data("kendoNumericTextBox");
+                    if (hm_tyLe) {
+                        if (loaiTS.HM_TY_LE == null) {
+                            loaiTS.HM_TY_LE = 0;
+                        }
+                        hm_tyLe.value(loaiTS.HM_TY_LE);
+					}
+					if (kh_tyLe) {
+						if (loaiTS.KH_TY_LE == null) {
+							loaiTS.KH_TY_LE = 0;
+						}
+						kh_tyLe.value(loaiTS.KH_TY_LE);
+					}
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                // If fail
+                console.log(textStatus + ': ' + errorThrown);
+            });
+        } else
+            return null;
+    }
+	/**
+        * khi thay đổi giá trị lý do tăng thì ẩn hiện một số trường dữ liệu có liên quan
+        * */
+	function displayFieldsWhenLyDoBienDongChangeNhaPopup() {
+		var lyDoTangId = $("#LyDoBienDongNha").val();
+		getMaByIdLyDoTangGiam(lyDoTangId).done((maLyDo) => {
+			//lý do "Mua sắm", "Mua mới"
+			if (maLyDo == '@(enum_LY_DO_BIEN_DONG.MUA_SAM)') {
+				$(".hinh-thuc-mua-sam-row-nhaPopup").removeClass('d-none');
+			} else {
+				$(".hinh-thuc-mua-sam-row-nhaPopup").addClass('d-none');
+			}
+			//Lý do "Kiểm kê phát hiện thừa"
+			if (@Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+				if (maLyDo == '@(enum_LY_DO_BIEN_DONG.KIEM_KE_PHAT_HIEN_THUA)') {
+					$(".gtts-so-nam-con-lai-row-nhaPopup").removeClass('d-none');
+					$(".gtts-hm-ty-le-nhaPopup").addClass('d-none');
+				} else {
+					$(".gtts-so-nam-con-lai-row-nhaPopup").addClass('d-none');
+					$(".gtts-hm-ty-le-nhaPopup").removeClass('d-none');
+				}
+			}
+		});
+           /**
+            * Validate giá trị nhà >= 10.000.000
+            * */
+
+		
+            
+	}
+	function CheckNguyenGiaNha() {
+        let val = parseInt($("#nha_TongNguyenGia").val()); ;
+        if (isNaN(val)) {
+			val = 0;
+        }
+       
+        let spnaValidateTS10M = $('#span_NguyenGiaNha10m');
+
+        if (spnaValidateTS10M) {
+            if (val < 1) {
+                spnaValidateTS10M.show()
+				$("#btnAddNha").prop("disabled", true);
+				return false
+            } else {
+                spnaValidateTS10M.hide();
+				$("#btnAddNha").prop("disabled", false);
+				return true;
+            }
+        }
+		return true;
+    }
+</script>

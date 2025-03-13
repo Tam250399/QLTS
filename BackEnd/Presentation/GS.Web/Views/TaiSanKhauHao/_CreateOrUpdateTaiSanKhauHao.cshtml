@@ -1,0 +1,72 @@
+﻿@model TaiSanKhauHaoModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="taisankhauhaoID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="NgayBatDauMin" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Ngày bắt đầu:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGAY_BAT_DAU" asp-disabled="@(!Model.IsEnableNgayKH)"/>
+       <br /> <span asp-validation-for="NGAY_BAT_DAU"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right">Ngày kết thúc:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGAY_KET_THUC" asp-disabled="@(!Model.IsEnableNgayKH)" />
+        <br /> <span asp-validation-for="NGAY_KET_THUC"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tỷ lệ khấu hao:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="TY_LE_KHAU_HAO" />
+        <span asp-validation-for="TY_LE_KHAU_HAO"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right">Số tháng khấu hao:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="SO_THANG_KHAU_HAO" />
+        <span asp-validation-for="SO_THANG_KHAU_HAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tỷ lệ nguyên giá khấu hao:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TY_LE_NGUYEN_GIA_KHAU_HAO" asp-disabled="true" />
+        <span asp-validation-for="TY_LE_NGUYEN_GIA_KHAU_HAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10">
+    </div>
+    <div class="col-sm-2">
+        <button id="" name="save" class="btn  btn-sm btn-outline-primary btnUpdateKhauHao" style="float:right; margin-right: 5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+    </div>
+</div>
+@*Rằng buộc tỷ lệ nguyên giá khấu hao*@
+<script>
+    $(document).ready(function () {
+        $('#@Html.IdFor(c => c.TY_LE_KHAU_HAO)').on('change', function () {
+            caculteTyLeNguyenGiaKH()
+        })
+        $('#@Html.IdFor(c => c.SO_THANG_KHAU_HAO)').on('change', function () {
+            caculteTyLeNguyenGiaKH()
+        })
+
+    })
+    function caculteTyLeNguyenGiaKH() {        
+           let tyLeKhauHao = parseFloat($('#@Html.IdFor(c => c.TY_LE_KHAU_HAO)').val());
+            let thangKhauHao = parseInt($('#@Html.IdFor(c => c.SO_THANG_KHAU_HAO)').val());
+            let tyLeNguyenGiaKH = 0;
+            if (tyLeKhauHao && thangKhauHao && (thangKhauHao > 0) ) {
+                tyLeNguyenGiaKH = +(tyLeKhauHao / thangKhauHao).toFixed(2);
+
+        }
+        var inputKendo = $('#@Html.IdFor(c => c.TY_LE_NGUYEN_GIA_KHAU_HAO)').data("kendoNumericTextBox");
+        if (inputKendo) {
+            inputKendo.value(tyLeNguyenGiaKH)
+        }
+    }
+</script>

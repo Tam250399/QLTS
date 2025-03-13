@@ -1,0 +1,205 @@
+﻿@model TaiSanSearchModel;
+<input asp-for="donviId" type="hidden" />
+<input asp-for="Loai_Ly_Do_ID" type="hidden" />
+<input asp-for="IsDanhSachTaiSanDuAn" type="hidden" />
+<div class="popupChonTaiSan">
+    <style>
+        .link_href {
+            color: #007bff !important;
+        }
+
+            .link_href:hover {
+                cursor: pointer !important;
+                text-decoration: underline !important;
+            }
+    </style>
+
+    @await Html.PartialAsync("_SearchBoxCanhBao", Model)
+
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-5">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="chon-tai-san-btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body" style="max-height:400px;">
+                        <div id="items-grid-chon-tai-san" style="max-height:400px;"></div>
+                        <script>
+							var recordChonTS = 0;
+							listID = [];
+							$(document).ready(function () {
+								$("#chon-tai-san-keysearch").keydown(function (event) {
+									if (event.keyCode === 13) {
+										$("#chon-tai-san-btnSearch").click();
+										return false;
+									}
+								});
+								function SearchData() {
+									var _data = {
+										KeySearch: $('#chon-tai-san-keysearch').val(),
+										LOAI_HINH_TAI_SAN_ID: $('#chon-tai-san-loai-hinh').val(),
+                                        StrDonViId: $('#@Html.IdFor(c => c.StrDonViId)').val()
+									};
+									addAntiForgeryToken(_data);
+									return _data;
+								}
+								$("#chon-tai-san-btnSearch").click(function () {
+									if (checkValidateDateFormat('#chon-tai-san-todate', 'Todate', 'Phải nhập đúng định dạng ngày') &&
+										checkValidateDateFormat('#chon-tai-san-fromdate', 'Fromdate', 'Phải nhập đúng định dạng ngày') &&
+										checkValidateFromDateToDate('#chon-tai-san-fromdate', '#chon-tai-san-todate', 'Todate', 'Từ ngày phải nhỏ hơn đến ngày')) {
+										var grid = $('#items-grid-chon-tai-san').data('kendoGrid');
+										recordChonTS = 0;
+										grid.dataSource.page(1); //new search. Set page size to 1
+										return false;
+									}
+									return false;
+
+								});
+								$("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+									if (event.keyCode === 13) {
+										$("#chon-tai-san-btnSearch").click();
+										return false;
+									}
+								});
+								var grid_chonts = $("#items-grid-chon-tai-san").kendoGrid({
+									dataSource: {
+										type: "json",
+										transport: {
+											read: {
+												url: "@Html.Raw(Url.Action("ListTaiSanOtoSaiSoChoNgoi", "TaiSan"))",
+												type: "POST",
+												dataType: "json",
+												data: SearchData
+											}
+										},
+										schema: {
+											data: "Data",
+											total: "Total",
+											errors: "Errors"
+										},
+										error: function (e) {
+											display_kendoui_grid_error(e);
+											// Cancel the changes
+											this.cancelChanges();
+										},
+										page: @(Model.Page),
+										pageSize: @(Model.PageSize),
+										serverPaging: true,
+										serverFiltering: true,
+										serverSorting: true
+									},
+									pageable: {
+										refresh: true,
+										input: true,
+										pageSizes: [@(Model.AvailablePageSizes)],
+									@await Html.PartialAsync("_GridPagerMessages")
+									},
+									editable: {
+										confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+										mode: "inline"
+									},
+									scrollable: true,
+
+									height: 350,
+									columns: [
+										{
+											title: "STT",
+											template: "#= ++recordChonTS#",
+											width: 50,
+											headerAttributes: { style: "text-align:center" },
+											attributes: { style: "text-align:center" },
+										},
+										{
+											field: "MA",
+											title: "Mã tài sản",
+                                            headerAttributes: { style: "text-align:center; width: 15%" },
+                                            attributes: { style: " width: 15%" },
+
+
+										},
+										{
+											field: "TEN",
+											title: "Tên TS",
+											width: 300,
+                                            headerAttributes: { style: "text-align:center; width: 20%" },
+                                            attributes: { style: "text-align:left; width: 20%" },
+										},
+										{
+											field: "TenLoaiTaiSan",
+											title: "Loại TS",
+                                            headerAttributes: { style: "text-align:center; width: 10%" },
+                                            attributes: { style: "text-align:left; width: 10%" },
+										},
+
+										//{
+										//	field: "strNguyenGiaVN",
+										//	title: "Nguyên giá",
+										//	headerAttributes: { style: "text-align:center" },
+										//	attributes: { style: "text-align: right" }
+										//},
+                                        {
+                                            field: "NGAY_SU_DUNG",
+                                            title: "Ngày sử dụng",
+                                            type: "Date",
+                                            format: "{0:dd/MM/yyyy}",
+                                            headerAttributes: { style: "text-align:center; width: 12%" },
+                                            attributes: { style: "text-align:center; width: 12%" },
+										},
+										{
+                                            field: "@Html.IdFor(c => c.TenDonVi)",
+                                            title: "Tên đơn vị",
+                                            headerAttributes: { style: "text-align:center; width: 10%" },
+                                            attributes: { style: "text-align:left; width: 10%" },
+                                        },
+										{
+                                            field: "TenLoaiDonVi",
+											title: "Loại đơn vị",
+                                            headerAttributes: { style: "text-align:center; width: 10%" },
+                                            attributes: { style: "text-align:left; width: 10%" },
+										},
+										{
+											field: "Ma",
+											title: "Thao tác",
+                                            width: 140,
+                                            attributes: { style: "text-align:center" },
+											template: function (item) {
+												var btnViewHtml = "<button class='btn  btn-sm btn-info ' Onclick='OpenViewTaiSan(&#39;" + item.GUID + "&#39;,&#39;" + item.TEN + "&#39;)' title='Xem'>Xem</button>";
+                                                var btnCapNhat = `<a class='btn icon-btn btn-sm btn-outline-secondary' style= "width: 50px !important;" href='/ThayDoiThongTin/ThayDoiThongTinSoChoNgoiOto?guidTS=${item.GUID}'> Cập nhật </a>`;
+												return `${btnViewHtml} &nbsp; ${btnCapNhat}`;
+
+                                            }
+										}
+
+									],
+									dataBinding: function () {
+										recordChonTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+									}
+								}).data("kendoGrid");
+							});
+
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*function open popup xem thông tin tài sản*@
+<script>
+
+                        function OpenViewTaiSan(guid, tsTen) {
+                            var _url = "@(Url.Action("_ViewThongTinTaiSan", "TaiSan"))?guid=" + guid;
+                            var titlePopup = "Thông tin tài sản: " + tsTen;
+                            OpenModalManual(titlePopup, _url,80);
+                        }
+</script>

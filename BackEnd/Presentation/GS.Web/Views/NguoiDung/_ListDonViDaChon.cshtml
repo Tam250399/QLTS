@@ -1,0 +1,15 @@
+﻿@model DonViModel
+@if(@Model.ID > 0)
+{
+    <tr role="row" data-idDonVi="@Model.ID" id="goDonVi_@Model.ID" class="listDonVi">
+        <td>
+            @Model.MA
+        </td>
+        <td>
+            @Model.TEN
+        </td>
+        <td style="width:100px">
+            <a href="javascript:void(0);" data-id="@Model.ID" onclick="RemoveDonVi(this)" class="btn btn-danger"><i class="fas fa-trash" style="margin-right:5px;"></i>Gỡ</a>
+        </td>
+    </tr>
+}

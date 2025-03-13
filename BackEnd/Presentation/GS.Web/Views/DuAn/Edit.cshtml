@@ -1,0 +1,69 @@
+@model DuAnModel
+@{
+	//page title
+	ViewBag.Title = "Dự án";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhMucDuAn");
+}
+<form asp-controller="DuAn" asp-action="Edit" method="post">
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Sửa thông tin dự án
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="List">Quay lại danh sách</a>
+			</small>
+			<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/DuAn/List';" style="float:right; margin-right: 5px;">
+				<i class="ion ion-ios-close-circle-outline"></i>
+				Đóng
+			</button>
+			<span class="btn btn-sm btn-danger" onclick="GS_Delete('Bạn có chắc chắn muốn xóa Dự án này không?',deleteDuAn,@Model.ID)" title="Xóa" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash">&nbsp;Xóa</i>
+			</span>
+			@*<span id="item-delete" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+					<i class="fas fa-trash"></i>
+					Xóa
+				</span>*@
+			@*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+					<i class="far fa-save"></i>
+					Lưu và tiếp tục sửa
+				</button>*@
+			<button type="submit" name="save" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h6>
+		<div class="card-body">
+
+			@await Html.PartialAsync("_CreateOrUpdate", Model)
+
+		</div>
+	</div>
+</form>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+
+<script>
+
+	function deleteDuAn(ID) {
+		$.ajax({
+			url: "/DuAn/Delete/" + ID,
+			type: "POST",
+			contentType: "application/json;charset=UTF-8",
+			dataType: "json",
+
+			success: function (data) {
+				if (data.Code == '00') {
+					document.location.href = 'List',
+						ShowSuccessMessage(data.Message);
+				} else {
+					ShowErrorMessage(data.Message);
+				}
+			},
+
+		});
+
+	}
+
+
+</script>

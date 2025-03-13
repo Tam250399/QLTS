@@ -1,0 +1,28 @@
+﻿@model String
+@{
+    var _idClient = Html.IdForModel();
+    var _disable = "";
+    var htmlAttributes = new Dictionary<string, object>();
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        object _idclientOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+        object _disableOut;
+        if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+        {
+            _disable = _disableOut.ToString();
+        }
+    }
+}
+<input id="@_idClient" name="@_idClient" type="text" value="@Model" placeholder="Biển kiểm soát" class="form-control" style="width:100%;"/>
+<script>
+    $(document).ready(function () {
+        $("#@_idClient").kendoMaskedTextBox({
+            mask: "aaaa-aaaaa"
+        }).data("kendoNumericTextBox");
+    });
+</script>

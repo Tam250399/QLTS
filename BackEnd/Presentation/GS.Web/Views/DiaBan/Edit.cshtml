@@ -1,0 +1,85 @@
+@model DiaBanModel
+@{
+    //page title
+    ViewBag.Title = "Sửa địa bàn";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDiaBan");
+}
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin địa bàn
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                @*<a asp-action="List">Quay lại danh sách</a>*@
+                @Html.ActionLink("Quay lại danh sách", "List", "DiaBan", new { pageIndex = Model.pageIndex }, null)
+            </small>
+            @*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>*@
+            <button class="btn btn-danger" type="button" onclick="GS_Delete('Bạn có chắc chắn muốn xóa địa bàn này không ?',deleteDiaBan,@Model.ID)" title="Xóa" style="float:right; margin-right:5px;"><i class="fas fa-trash"></i> Xóa</button>
+
+            <button name="save" class="btn btn-outline-primary" style="float:right;margin-right:5px; " id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+<script>
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                var _data = {
+                    ID:$('#@Html.IdFor(c => c.ID)').val(),
+                    MA: $('#@Html.IdFor(c => c.MA)').val(),
+                    TEN: $('#@Html.IdFor(c => c.TEN)').val(),
+                    MO_TA: $('#@Html.IdFor(c => c.MO_TA)').val(),
+                    TRANG_THAI_ID: $('#@Html.IdFor(c => c.TRANG_THAI_ID)').val(),
+                    PARENT_ID: $('#@Html.IdFor(c => c.PARENT_ID)').val(),
+                    LOAI_DIA_BAN_ID: $('#@Html.IdFor(c => c.LOAI_DIA_BAN_ID)').val(),
+                    QUOC_GIA_ID: $('#@Html.IdFor(c => c.QUOC_GIA_ID)').val(),
+                    pageIndex: $('#@Html.IdFor(c => c.pageIndex)').val()
+                };
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/DiaBan/Edit",
+                data: _data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        location.href = "@(string.Format(@"/DiaBan/List?pageIndex={0}", Model.pageIndex))";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                   ShowErrorMessage(data.Message);
+                     alert('error');
+                }
+            });
+            });
+        });
+    function deleteDiaBan(ID) {
+        $.ajax({
+            url: "/DiaBan/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (data) {
+                if (data.Code == '00') {
+                    document.location.href = 'List',
+                        ShowSuccessMessage(data.Message);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+            },
+
+        });
+
+    }
+</script>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+

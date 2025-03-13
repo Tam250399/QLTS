@@ -1,0 +1,338 @@
+@model TaiSanModel
+@{
+	if (Model.isCreateTSDA == true)
+	{
+		//page title
+		ViewBag.Title = "Tài sản dự án";
+		//active menu item (system name)
+		Html.SetActiveMenuItemSystemName("TangTaiSanDuAn");
+	}
+	else
+	{
+		if (Model.isTangMoi == true)
+		{
+			//page title
+			ViewBag.Title = "Tài sản";
+			//active menu item (system name)
+			Html.SetActiveMenuItemSystemName("TangMoiTaiSan");
+		}
+		else
+		{
+			//page title
+			ViewBag.Title = "Nhập số dư đầu kỳ";
+			//active menu item (system name)
+			Html.SetActiveMenuItemSystemName("NhapSoDuDauKyTaiSan");
+		}
+	}
+	var _trangthaiYeuCauId = Decimal.ToInt32(Model.YeuCauStatusId ?? 0);
+}
+<input asp-for="YeuCauId" type="hidden" />
+<div class="card mb-4">
+	@*@if (_trangthaiYeuCauId == (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.CHO_DUYET)
+		{
+			<h6 class="card-header" id="headerDuyet">
+				<small>
+					<i class="fa fa-arrow-circle-left"></i>
+					<a asp-action="ListYeuCauDuyetTaiSan">Quay lại danh sách duyệt tài sản</a>
+				</small>
+
+				<button type="button" class="btn btn-success btnDuyetTS" style="float:right; margin-right: 5px;">
+					<i class="fas fa-save"></i>
+					Duyệt
+				</button>
+			</h6>
+		}
+		else*@
+	@if (_trangthaiYeuCauId == (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+	{
+		<h6 class="card-header" id="headerEdit">
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="List">Quay lại danh sách</a>
+			</small>
+		</h6>
+	}
+	else
+	{
+<h6 class="card-header" id="headerEdit">
+    @switch (Model.LOAI_HINH_TAI_SAN_ID)
+    {
+        case (int)enumLOAI_HINH_TAI_SAN.ALL:
+            if (Model.isTSQL)
+            {
+                <text>Cập nhật (Tài sản quản lý như TSCĐ)</text>
+            }
+            else
+            {
+                <text>Cập nhật</text>
+            }
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.DAT:
+            <text>Cập nhật tài sản đất</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.NHA:
+            <text>Cập nhật tài sản nhà</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
+            <text>Cập nhật tài sản kiến trúc</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.OTO:
+            <text>Cập nhật tài sản ô tô</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
+            if (Model.isTSQL)
+            {
+                <text>Cập nhật PTVT khác (Tài sản quản lý như TSCĐ)</text>
+            }
+            else
+            {
+                <text>Cập nhật PTVT khác</text>
+            }
+
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
+            if (Model.isTSQL)
+            {
+                <text>Cập nhật máy móc thiết bị (Tài sản quản lý như TSCĐ)</text>
+            }
+            else
+            {
+                <text>Cập nhật máy móc thiết bị</text>
+            }
+
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
+            if (Model.isTSQL)
+            {
+                <text>Cập nhật cây lâu năm, súc vật làm việc (Tài sản quản lý như TSCĐ)</text>
+            }
+            else
+            {
+                <text>Cập nhật cây lâu năm, súc vật làm việc</text>
+            }
+
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
+            if (Model.isTSQL)
+            {
+                <text>Cập nhật tài sản hữu hình khác (Tài sản quản lý như TSCĐ)</text>
+            }
+            else
+            {
+                <text>Cập nhật tài sản hữu hình khác</text>
+            }
+
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.VO_HINH:
+            <text>Cập nhật tài sản vô hình</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.DAC_THU:
+            <text>Cập nhật tài sản đặc thù</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_TOAN_DAN_KHAC:
+            <text>Cập nhật tài sản toàn dân khác</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_TOAN_DAN_DAT:
+            <text>Cập nhật tài sản toàn dân khác</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_TOAN_DAN_NHA:
+            <text>Cập nhật tài sản toàn dân khác</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_TOAN_DAN_OTO:
+            <text>Cập nhật tài sản toàn dân khác</text>
+            break;
+        case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_TOAN_DAN_TAI_SAN_KHAC:
+            <text>Cập nhật tài sản toàn dân khác</text>
+            break;
+        default:
+            <text>Cập nhật</text>
+            break;
+    }
+    <small>
+        <i class="fa fa-arrow-circle-left"></i>
+        <a asp-action="List">Quay lại danh sách</a>
+    </small>
+    @if (Model.isCreateTSDA == true)
+    {
+        <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSan/List?pageIndex=0&amp;isDanhSachTSDA=true';" style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSan/List';" style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+    }
+    <span id="item-delete" onclick="createOrUpdateTaiSanJS.xoaTaiSanVuaNhap(@Model.ID)" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+        <i class="fas fa-trash"></i>
+        Xóa
+    </span>
+    @*@if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+        {
+            <button type="button" id="btnSaveContinue" class="btn btn-sm btn-primary btnSave" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu và thêm nhà
+            </button>
+        }*@
+    <button type="button" id="btnSave" class="btn btn-sm btn-outline-primary btnSave" style="float:right; margin-right: 5px;">
+        <i class="fas fa-save"></i>
+        Lưu
+    </button>
+</h6>
+
+	}
+	<div class="card-body">
+		@await Html.PartialAsync("_CreateOrUpdate", Model)
+	</div>
+	<div class="card-footer">
+		@if (_trangthaiYeuCauId == (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+		{
+			<h6 class="card-footer">
+				<small>
+					<i class="fa fa-arrow-circle-left"></i>
+					<a asp-action="List">Quay lại danh sách</a>
+				</small>
+			</h6>
+		}
+		else
+		{
+    <h6 class="card-footer">
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        @if (Model.isCreateTSDA == true)
+        {
+            <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSan/List?pageIndex=0&amp;isDanhSachTSDA=true';" style="float:right; margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </button>}
+        else
+        {
+            <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSan/List';" style="float:right; margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </button>
+        }
+        <span id="item-delete" onclick="createOrUpdateTaiSanJS.xoaTaiSanVuaNhap(@Model.ID)" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>
+        <button type="button" id="btnSave" class="btn btn-sm btn-outline-primary btnSave" style="float:right; margin-right: 5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+
+    </h6>
+
+		}
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		createOrUpdateTaiSanJS = new CreateOrUpdateTaiSanJS();
+		let valueCheck = $('input[name=isQuanLyDatName]:checked').val();
+        //nếu là quản lý đất thì cho chọn đất
+        if (valueCheck == "true") {
+            //bắt phải chọn đất
+            createOrUpdateTaiSanJS.fullValid.DiaChi_TS_Nha = false;
+            $('#div_ChonDat').show();
+            $('#div_ChonDiaBan').hide();
+            $("#taisannhaModel_NHA_DIA_CHI").prop('disabled', true);
+            if (!($("#taisannhaModel_TAI_SAN_DAT_ID").val() > 0)) {
+                $("#taisannhaModel_TAI_SAN_DAT_ID").val('');
+                $("#btnGoDat").hide();
+            }
+            else {
+                $("#btnGoDat").show();
+            }
+            $("#isQuanLyDatLabel").text('Thuộc khuôn viên đất');
+            $('#checkdiachi').text('Phải chọn khuôn viên đất')
+
+        } else {
+
+            //cho nhập địa chỉ đất
+            $('#div_ChonDat').hide();
+            $('#div_ChonDiaBan').show();
+            $("#isQuanLyDatLabel").text('Địa chỉ nhà');
+            let IdXa = $('#taisannhaModel_NHA_XaId').val();
+            //if (IdXa <= 0) {
+            //    createOrUpdateTaiSanJS.fullValid.DiaChi_TS_Nha = true;
+            //    //showInvalidMessage('taisannhaModel.NHA_XaId', 'Bạn phải chọn thông tin xã!');
+            //}
+        }
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT)) {
+			$(".btnAdd").click(createOrUpdateTaiSanJS.updateTaiSanDat.bind(createOrUpdateTaiSanJS));
+
+		} else {
+			$(".btnAdd").click(createOrUpdateTaiSanJS.updateTaiSan.bind(createOrUpdateTaiSanJS));
+        }
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT)) {
+			$(".btnSave").click(createOrUpdateTaiSanJS.updateTaiSanDat.bind(createOrUpdateTaiSanJS));
+
+		} else {
+			$(".btnSave").click(createOrUpdateTaiSanJS.updateTaiSan.bind(createOrUpdateTaiSanJS));
+		}
+		//$(".btnSave").click(createOrUpdateTaiSanJS.updateTaiSan.bind(createOrUpdateTaiSanJS));
+		//check có phải đất lưu và thêm nhà
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)) {
+			if (@Model.ContinueAndAddNha.ToString().ToLower())
+			{
+				setTimeout(function () {
+					$('html, body').animate({
+						scrollTop: $(document).find(".ds-nha-tren-dat").offset().top
+					 }, 100);
+				}, 1600)
+
+			}
+		}
+		//$(".btnSave").click(function () {
+		//	$("#LOAI_TAI_SAN_ID").each(checknullvalidlatepopup);
+		//	$("#TEN").each(checknullvalidlatepopup);
+		//	$("#LY_DO_BIEN_DONG_ID").each(checknullvalidlatepopup);
+		//	$("#nvYeuCauChiTietModel_MUC_DICH_SU_DUNG_ID").each(checknullvalidlatepopup);
+		//	$("#nvYeuCauChiTietModel_HINH_THUC_MUA_SAM_ID").each(checknullvalidlatepopup);
+		//		function checknullvalidlatepopup() {
+		//			checknullvalid("LOAI_TAI_SAN_ID");
+		//			checknullvalid("TEN");
+		//			checknullvalid("valid-ngay-sd-ts");
+		//			checknullvalid("valid-ngay-nhap-ts");
+		//			checknullvalid("nguyen-gia-ts");
+		//			checknullvalid("LY_DO_BIEN_DONG_ID");
+		//			checknullvalid("MUC_DICH_SU_DUNG_ID");
+		//			checknullvalid("HINH_THUC_MUA_SAM_ID");
+		//		};
+		//		function checknullvalid(id) {
+		//			var valid = $("#" + id).val();
+		//			if (valid = "0") {
+		//			$("."+id).show();
+		//			}
+		//			else {
+		//			$("."+id).hide();
+		//			}
+		//		};
+		//})
+
+
+    });
+
+
+	function checkdiaban() {
+		var diabanid = 0;
+		if ($("#TinhId").val() > 0)
+			diabanid = $("#TinhId").val();
+		if ($("#HuyenId").val() > 0)
+			diabanid = $("#HuyenId").val();
+		if ($("#XaId").val() > 0)
+			diabanid = $("#XaId").val();
+		return diabanid;
+
+	};
+	$(".btnDuyetTS").click(function () {
+		DuyetTaiSan(@Model.YeuCauId);
+	});
+</script>
+

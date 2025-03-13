@@ -1,0 +1,104 @@
+﻿@model TrungGianBDYCModel
+<div class="font-weight-bold mb-2">Thông tin chi tiết:</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Số quyết định:</td>
+					<td>
+						@Model.QUYET_DINH_SO
+					</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Chứng từ/hóa đơn số:</td>
+					<td>@Model.CHUNG_TU_SO</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Lý do giảm:</td>
+					<td>@Model.TenLyDoBienDong</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Ngày quyết định:</td>
+					<td class="text-sm-right">
+						@Model.QUYET_DINH_NGAY.toDateVNString()
+					</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Chứng từ ngày:</td>
+					<td class="text-sm-right">@Model.CHUNG_TU_NGAY.toDateVNString()</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Ngày giảm:</td>
+					<td class="text-sm-right">@Model.NGAY_BIEN_DONG.toDateVNString()</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				@switch (Model.LY_DO_BIEN_DONG_ID)
+				{
+					case (int)enumLY_DO_GIAM_TOAN_BO.DIEU_CHUYEN:
+						<tr>
+							<td class="pr-3">Đơn vị nhận điều chuyển:</td>
+							<td>
+								@Model.TrungGianBDYCChiTietModel.DonViNhanDieuChuyenTen
+							</td>
+						</tr>
+						break;
+					default:
+						break;
+				}
+				@if (Enum.GetValues(typeof(enumLY_DO_GIAM_THU_TIEN)).Cast<enumLY_DO_GIAM_THU_TIEN>().Select(p => (decimal?)p).Contains(Model.LY_DO_BIEN_DONG_ID))
+				{
+					<tr>
+						<td class="pr-3">Hình thức:</td>
+						<td>@Model.TenPhuongAnXuLy</td>
+					</tr>
+					if (Model.TrungGianBDYCChiTietModel.IS_BAN_THANH_LY)
+					{
+						<tr>
+							<td class="pr-3">Tình trạng:</td>
+							<td>Đã thực hiện bán, thanh lý</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Thu từ giảm:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.PHI_THU.ToVNStringNumber() vnd</td>
+						</tr>
+					}
+					else
+					{
+						<tr>
+							<td class="pr-3">Tình trạng:</td>
+							<td>Chưa thực hiện bán thanh lý</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12 mb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Diễn Giải:</td>
+					<td>
+						@Model.GHI_CHU
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

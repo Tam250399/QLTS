@@ -1,0 +1,367 @@
+﻿@model DuAnModel
+	<div class="popup-DuAn">
+		<input asp-for="ID" type="hidden" />
+		<input asp-for="DON_VI_ID" type="hidden" />
+		<input asp-for="HINH_THUC_ID" type="hidden" />
+		<input asp-for="NGUON_VON" type="hidden" />
+		<input asp-for="KIEU" type="hidden" />
+		<input asp-for="CO_QUAN_TAI_CHINH" type="hidden" />
+		<input asp-for="MA_LOAI_DU_AN" type="hidden" />
+		<input asp-for="MA_NHOM_DU_AN" type="hidden" />
+		<input asp-for="TEN_NHOM_DU_AN" type="hidden" />
+		<input asp-for="MA_HT" type="hidden" />
+		<input asp-for="TEN_HT" type="hidden" />
+		<input asp-for="HT_QUANLY" type="hidden" />
+		<input asp-for="HIEU_LUC" type="hidden" />
+		<input asp-for="MA_DVQHNS" type="hidden" />
+		<input asp-for="MA_DU_AN_CU" type="hidden" />
+		<input asp-for="TRANG_THAI_ID" type="hidden" />
+		<input asp-for="DON_VI_CU_ID" type="hidden" />
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Mã dự án:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="MA" />
+				<span asp-validation-for="MA"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Tên dự án:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="TEN" />
+				<span asp-validation-for="TEN"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			@*<label class="col-form-label col-sm-2 text-sm-right">Loại dự án:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="LOAI_DU_AN_ID" />
+					<span asp-validation-for="LOAI_DU_AN_ID"></span>
+				</div>*@
+			<label class="col-form-label col-sm-2 text-sm-left">Số quyết định:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="SO_QUYET_DINH_PHE_DUYET" />
+				<span asp-validation-for="SO_QUYET_DINH_PHE_DUYET"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Tổng kinh phí:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="TONG_KINH_PHI" asp-dvt="c" />
+				<span asp-validation-for="TONG_KINH_PHI"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Nguồn NSNN:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGUON_NS" asp-dvt="c" />
+				<span asp-validation-for="NGUON_NS"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Nguồn ODA:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGUON_ODA" asp-dvt="c" />
+				<span asp-validation-for="NGUON_ODA"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Nguồn viện trợ:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGUON_VIEN_TRO" asp-dvt="c" />
+				<span asp-validation-for="NGUON_VIEN_TRO"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Nguồn khác:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGUON_KHAC" asp-dvt="c" />
+				<span asp-validation-for="NGUON_KHAC"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Ngày bắt đầu:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGAY_BAT_DAU" />
+				<br />
+				<span asp-validation-for="NGAY_BAT_DAU"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Ngày kết thúc:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NGAY_KET_THUC" />
+				<br />
+				<span asp-validation-for="NGAY_KET_THUC"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Chủ đầu tư:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="CHU_DAU_TU" />
+				<span asp-validation-for="CHU_DAU_TU"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Địa điểm:</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="DIA_DIEM" />
+				<span asp-validation-for="DIA_DIEM"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Mô tả:</label>
+			<div class="col-sm-10">
+				<nop-textarea asp-for="GHI_CHU" type="textaria" />
+				<span asp-validation-for="GHI_CHU"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-10">
+			</div>
+			<div class="col-sm-2">
+				<a id="btnSaveDuAn" class="btn btn-success" style="float:right;margin-right:5px;color:white; ">
+					<i class="fas fa-save" style="margin-right:5px;"></i>
+					Lưu
+				</a>
+			</div>
+		</div>
+
+		@*<div class="form-group row">
+
+				<label class="col-form-label col-sm-2 text-sm-right">Nguồn vốn:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="NGUON_VON" asp-dvt="c" />
+					<span asp-validation-for="NGUON_VON"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Kiểu:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="KIEU" />
+					<span asp-validation-for="KIEU"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Cơ quan tài chính:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="CO_QUAN_TAI_CHINH" />
+					<span asp-validation-for="CO_QUAN_TAI_CHINH"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Mã nhóm dự án:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MA_NHOM_DU_AN" />
+					<span asp-validation-for="MA_NHOM_DU_AN"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Tên nhóm dự án:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="TEN_NHOM_DU_AN" />
+					<span asp-validation-for="TEN_NHOM_DU_AN"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">HT quản lý:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="HT_QUANLY" />
+					<span asp-validation-for="HT_QUANLY"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Mã HT:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MA_HT" />
+					<span asp-validation-for="MA_HT"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Tên HT:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="TEN_HT" />
+					<span asp-validation-for="TEN_HT"></span>
+				</div>
+
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Đơn vị ID:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="DON_VI_ID" />
+					<span asp-validation-for="DON_VI_ID"></span>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Hiệu lực:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="HIEU_LUC" />
+					<span asp-validation-for="HIEU_LUC"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Trạng thái Id:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="TRANG_THAI_ID" />
+					<span asp-validation-for="TRANG_THAI_ID"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Mã dự án cũ:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MA_DU_AN_CU" />
+					<span asp-validation-for="MA_DU_AN_CU"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Mã ĐVQHNS(DMDC):</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MA_DVQHNS" />
+					<span asp-validation-for="MA_DVQHNS"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Đơn vị cũ ID:</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="DON_VI_CU_ID" />
+					<span asp-validation-for="DON_VI_CU_ID"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+
+			</div>*@
+	</div>
+	<script>
+		$(document).ready(function () {
+			//------xử lý sự kiện form nguồn vốn
+			$("#NGUON_NS").data("kendoNumericTextBox").readonly();
+			//---------------------------
+			$("#TONG_KINH_PHI").change(function () {
+				var val = $(this).val();
+				$("#NGUON_NS").data("kendoNumericTextBox").value(val);
+				$("#NGUON_KHAC").data("kendoNumericTextBox").value(0);
+				$("#NGUON_VIEN_TRO").data("kendoNumericTextBox").value(0);
+				$("#NGUON_ODA").data("kendoNumericTextBox").value(0);
+			});
+			//--------------------
+			let txtTongNG = $("#TONG_KINH_PHI").data("kendoNumericTextBox");
+			let txtNguonVonKhac = $("#NGUON_KHAC").data("kendoNumericTextBox");
+			let txtNguonVonNS = $("#NGUON_NS").data("kendoNumericTextBox");
+			let txtNguonVonVienTroPhiCP = $("#NGUON_VIEN_TRO").data("kendoNumericTextBox");
+			let txtNguonVonODA = $("#NGUON_ODA").data("kendoNumericTextBox");
+
+			if (txtTongNG && txtNguonVonKhac && txtNguonVonNS && txtNguonVonVienTroPhiCP && txtNguonVonODA) {
+				txtNguonVonVienTroPhiCP.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVTPCP > 0) {
+						if (nguonVTPCP > nguonNS) {
+							showInvalidMessage('NGUON_VIEN_TRO', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+						} else {
+							hideValmsg('NGUON_VIEN_TRO');
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonVienTroPhiCP.value(0);
+						txtNguonVonNS.value(tongNG - nguonVonODA - nguonVonKhac);
+						hideValmsg('NGUON_VIEN_TRO');
+					}
+				})
+				txtNguonVonODA.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonODA > 0) {
+						if (nguonVonODA > nguonNS) {
+							showInvalidMessage('NGUON_ODA', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+						} else {
+							hideValmsg('NGUON_ODA');
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac);
+						hideValmsg('NGUON_ODA');
+					}
+				})
+
+				txtNguonVonKhac.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonKhac > 0) {
+						if (nguonVonKhac > nguonNS) {
+							showInvalidMessage('NGUON_KHAC', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+						} else {
+							hideValmsg('NGUON_KHAC');
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+						hideValmsg('NGUON_KHAC');
+					}
+				})
+			}
+			//---------------
+			//
+			$("#btnSaveDuAn").click(function () {
+				var url = "/DuAn/_Create";
+				var _data = {
+					DON_VI_ID: $(".popup-DuAn #DON_VI_ID").val(),
+					HINH_THUC_ID: $(".popup-DuAn #HINH_THUC_ID").val(),
+					NGUON_VON: $(".popup-DuAn #NGUON_VON").val(),
+					KIEU: $(".popup-DuAn #KIEU").val(),
+					CO_QUAN_TAI_CHINH: $(".popup-DuAn #CO_QUAN_TAI_CHINH").val(),
+					MA_LOAI_DU_AN: $(".popup-DuAn #MA_LOAI_DU_AN").val(),
+					MA_NHOM_DU_AN: $(".popup-DuAn #MA_NHOM_DU_AN").val(),
+					TEN_NHOM_DU_AN: $(".popup-DuAn #TEN_NHOM_DU_AN").val(),
+					MA_HT: $(".popup-DuAn #MA_HT").val(),
+					TEN_HT: $(".popup-DuAn #TEN_HT").val(),
+					HT_QUANLY: $(".popup-DuAn #HT_QUANLY").val(),
+					HIEU_LUC: $(".popup-DuAn #HIEU_LUC").val(),
+					MA_DVQHNS: $(".popup-DuAn #MA_DVQHNS").val(),
+					MA_DU_AN_CU: $(".popup-DuAn #MA_DU_AN_CU").val(),
+					TRANG_THAI_ID: $(".popup-DuAn #TRANG_THAI_ID").val(),
+					DON_VI_CU_ID: $(".popup-DuAn #DON_VI_CU_ID").val(),
+					MA: $(".popup-DuAn #MA").val(),
+					TEN: $(".popup-DuAn #TEN").val(),
+					SO_QUYET_DINH_PHE_DUYET: $(".popup-DuAn #SO_QUYET_DINH_PHE_DUYET").val(),
+					TONG_KINH_PHI: $(".popup-DuAn #TONG_KINH_PHI").val(),
+					NGUON_NS: $(".popup-DuAn #NGUON_NS").val(),
+					NGUON_ODA: $(".popup-DuAn #NGUON_ODA").val(),
+					NGUON_VIEN_TRO: $(".popup-DuAn #NGUON_VIEN_TRO").val(),
+					NGUON_KHAC: $(".popup-DuAn #NGUON_KHAC").val(),
+					NGAY_BAT_DAU: $(".popup-DuAn #NGAY_BAT_DAU").val(),
+					NGAY_KET_THUC: $(".popup-DuAn #NGAY_KET_THUC").val(),
+					CHU_DAU_TU: $(".popup-DuAn #CHU_DAU_TU").val(),
+					GHI_CHU: $(".popup-DuAn #GHI_CHU").val(),
+				};
+				var duAn = ajaxPost(_data, url, false);
+				duAn.done(function (result) {
+					if (CheckValidMessageReturn(result)) {
+						if (result.Code == "00") {
+							ShowSuccessMessage(result.Message);
+							var duAnModel = result.ObjectInfo;
+							HideModalManual();
+							$("#DU_AN_ID").kendoDropDownList({
+								dataSource: duAnModel.dllDuAn,
+								dataTextField: "Text",
+								dataValueField: "Value",
+								text: duAnModel.TEN,
+								value: duAnModel.ID
+							});
+						}
+					} else {
+						//alert(result.ObjectInfo)
+						$(".TEN").hide();
+					}
+
+				})
+					.fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+			});
+		})
+
+
+	</script>
+

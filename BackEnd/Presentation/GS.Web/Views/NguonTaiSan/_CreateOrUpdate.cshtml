@@ -1,0 +1,11 @@
+﻿@model NguonTaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Tên:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+

@@ -1,0 +1,26 @@
+﻿@model NhanHienThiModel
+
+<input asp-for="ID" type="hidden" />
+<div class="content">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-2">
+                <app-label asp-for="MA" />
+            </div>
+            <div class="col-md-10">
+                <nop-editor asp-for="MA" asp-required="true" />
+                <span asp-validation-for="MA"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-2">
+                <app-label asp-for="GIA_TRI" />
+            </div>
+            <div class="col-md-10">
+                <nop-editor asp-for="GIA_TRI" />
+            </div>
+        </div>
+    </div>
+</div>

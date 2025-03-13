@@ -1,0 +1,543 @@
+﻿@model TaiSanSearchModel
+@{
+	//page title
+	ViewBag.Title = "Chuyển đổi tài sản";
+	//active menu item (system name)
+
+}
+<style>
+	.sw-theme-default .step-anchor li.active .sw-number,
+	.sw-theme-default .step-anchor li.active .sw-icon,
+	.sw-theme-default .step-anchor li.active .sw-done-icon,
+	.sw-theme-default .step-anchor li.active .text-muted,
+	.sw-theme-default .step-anchor li.active > a {
+		border-color: hsl(207, 65%, 43%) !important;
+		color: hsl(207, 65%, 43%) !important;
+		border-width: medium;
+	}
+</style>
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        Chuyển loại tài sản xe ô tô chuyên dùng theo Nghị định 04/2019/NĐ-CP
+    </h5>
+</div>
+
+<div id="smartwizard-1" class="smartwizard-example">
+	<ul>
+		<li>
+			<a href="#smartwizard-1-step-1" class="mb-3">
+				<span class="sw-number">1</span>
+				<div class="text-muted small">BƯỚC 1</div>
+				Chọn tài sản cần chuyển đổi
+			</a>
+		</li>
+		<li>
+            <a href="#smartwizard-1-step-2" class="mb-3">
+                <span class="sw-number">2</span>
+                <div class="text-muted small">BƯỚC 2</div>
+                Chọn loại tài sản xe ô tô chuyên dùng theo Nghị định 04/2019/NĐ-CP
+            </a>
+		</li>
+
+	</ul>
+
+	<div class="mb-3">
+		<div id="smartwizard-1-step-1" class="card animated fadeIn">
+            <div class="card-body">
+                <div class="ui-bordered px-4 pt-4 mb-4">
+                    <div class="row">
+                        <div class="col-12 row">
+                            <div class="col-md-10">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+                                    <div class="col-sm-10">
+                                        <nop-editor asp-for="KeySearch" id="KeySearchTS" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-sm btn-primary btn-block" id="btnSearchTS">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="ExportDanhSach">Xuất excel</button>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="form-horizontal">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="items-grid"></div>
+                                            <script>
+												var record = 0;
+												var recordLTS = 0;
+												$(document).ready(function () {
+													$("#ExportDanhSach").click(function () {
+														var url ="/TaiSan/ExportTaiSanOto?KeySearch="+ $('#KeySearchTS').val();
+														window.open(url, "_blank");
+													});
+                                                    function SearchData() {
+                                                        record = 0;
+														var _data = {
+															KeySearch: $('#KeySearchTS').val(),
+														};
+														addAntiForgeryToken(_data);
+														return _data;
+													}
+													$("#btnSearchTS").click(function () {
+														var grid = $('#items-grid').data('kendoGrid');
+														grid.dataSource.page(1); //new search. Set page size to 1
+														record = 0;
+														return false;
+													});
+													$("#KeySearchTS").keydown(function (event) {
+														if (event.keyCode === 13) {
+															$("#btnSearchTS").click();
+															return false;
+														}
+													});
+													var grid_chonts = $("#items-grid").kendoGrid({
+														dataSource: {
+															type: "json",
+															transport: {
+																read: {
+																	url: "@Html.Raw(Url.Action("CapNhapTaiSanChuyenDung", "TaiSan"))",
+																	type: "POST",
+																	dataType: "json",
+																	data: SearchData
+																},
+																update: {
+																	url: "@Html.Raw(Url.Action("EditLoaiTaiSanXeChuyenDung", "TaiSan"))",
+																	type: "POST",
+																	dataType: "json",
+																	data: addAntiForgeryToken
+																},
+															},
+															dataBinding: function () {
+																record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+															},
+															schema: {
+																data: "Data",
+																total: "Total",
+																errors: "Errors",
+																model: {
+																	id: "ID",
+																	fields: {
+																		MA: { editable: false, type: "string" },
+																		TEN: { editable: false, type: "string" },
+																		LOAI_TAI_SAN_ID: { editable: true, type: "number", validation: { required: true, min: 1 } },
+																		ID: { editable: false, type: "number" }
+																	}
+																}
+															},
+															requestEnd: function (e) {
+
+																if (e.type == "update" || e.type == "create" || e.type == "destroy") {
+																	if (e.response.Code == 0) {
+																		ShowSuccessMessage("Cập nhật thành công");
+																	}
+																	else {
+																		ShowErrorMessage("Có lỗi xảy ra");
+																	}
+																	this.read();
+																}
+															},
+															error: function (e) {
+																display_kendoui_grid_error(e);
+																// Cancel the changes
+																this.cancelChanges();
+															},
+															pageSize: @(Model.PageSize),
+															serverPaging: true,
+															serverFiltering: true,
+															serverSorting: true
+														},
+														pageable: {
+															refresh: true,
+															pageSizes: [@(Model.AvailablePageSizes)],
+															@await Html.PartialAsync("_GridPagerMessages")
+														},
+														editable: {
+															confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+															mode: "inline"
+														},
+														scrollable: false,
+														columns: [
+															{
+																title: "STT",
+																template: "#= ++record#",
+																width: 47,
+																headerAttributes: { style: "text-align:center" },
+																attributes: { style: "text-align:center" },
+															},
+															{
+																field: "MA",
+																title: "Mã tài sản",
+																width:"20%"
+															}, {
+																field: "TEN",
+																title: "Tên tài sản",
+																template: function (dataItem) {
+                                                                    return "<a class='link_href' Onclick='OpenViewTaiSan(&#39;" + dataItem.GUID + "&#39;,&#39;" + dataItem.TEN + "&#39;)' >" + dataItem.TEN +"</a>";
+										                        }
+                                                            },
+                                                            {
+                                                                field: "TenDonVi",
+                                                                title: "Đơn vị quản lý"
+                                                            },{
+																width: "20%",
+																field: "LOAI_TAI_SAN_ID",
+																title: "Loại tài sản",
+																editor: categoryDropDownEditor,
+																template: "#=TenLoaiTaiSan#"
+															},
+															{
+																title: 'Select All',
+																field: 'SelectAll',
+																headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+																template: function (dataItem) {
+																	return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+																},
+																width: 50,
+																attributes: {
+																	style: "text-align: center;"
+																},
+															},
+														]
+													}).data("kendoGrid");
+													$('#header-chb').change(function (ev) {
+														var checked = ev.target.checked;
+														$('.row-checkbox').each(function (idx, item) {
+															if (checked) {
+																if (!($(item).closest('tr').is('.k-state-selected'))) {
+																	$(item).click();
+																}
+															} else {
+																if ($(item).closest('tr').is('.k-state-selected')) {
+																	$(item).click();
+																}
+															}
+														});
+													});
+
+													grid_chonts.table.on("click", ".row-checkbox", selectRow);
+													$('#header-chb').change(function (ev) {
+														var checked = ev.target.checked;
+														$('.row-checkbox').each(function (idx, item) {
+															if (checked) {
+																if (!($(item).closest('tr').is('.k-state-selected'))) {
+																	$(item).click();
+																}
+															} else {
+																if ($(item).closest('tr').is('.k-state-selected')) {
+																	$(item).click();
+																}
+															}
+														});
+													});
+													var checkedIds = {};
+													function selectRow() {
+														var checked = this.checked,
+															row = $(this).closest("tr"),
+															grid_chonts = $("#items-grid").data("kendoGrid"),
+															dataItem = grid_chonts.dataItem(row);
+														checkedIds[dataItem.ID] = checked;
+														if (checked) {
+															//-select the row
+															row.addClass("k-state-selected");
+															var checkHeader = true;
+															var ListItem = [];
+															var ind = 0;
+															$.each(grid_chonts.items(), function (index, item) {
+																if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+																	ListItem.push(item);
+																}
+															});
+															for (var i = 0; i < ListItem.length; i++) {
+																if (!$(ListItem[i]).hasClass("k-state-selected")) {
+																	checkHeader = false;
+																	break;
+																}
+															}
+															$("#header-chb")[0].checked = checkHeader;
+															$('#GiamNhieu').show();
+														}
+														else {
+															//-remove selection
+															row.removeClass("k-state-selected");
+															$("#header-chb")[0].checked = false;
+															var allSelected = $("#items-grid tr.k-state-selected");
+															if (allSelected.length > 0) {
+																$('#GiamNhieu').show();
+
+															} else {
+																$('#GiamNhieu').hide();
+															}
+														}
+													}
+													function onDataBound(e) {
+														//onDataBoundFixed(this);
+														var view = this.dataSource.view();
+														for (var i = 0; i < view.length; i++) {
+															if (checkedIds[view[i].ID]) {
+																this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+																	.addClass("k-state-selected")
+																	.find(".k-checkbox")
+																	.attr("checked", "checked");
+															}
+														}
+													}
+												});
+
+												function categoryDropDownEditor(container, options) {
+
+													let ddl = $('<input required name="' + options.field + '"/>')
+														.appendTo(container)
+														.kendoDropDownList({
+															autoBind: false,
+															dataTextField: "Text",
+															dataValueField: "Value",
+															select: function (e) {
+																if (e.dataItem.Disabled) {
+																	e.preventDefault();
+																}
+															},
+															dataSource: {
+																type: "json",
+																transport: {
+																	read: "@Url.Action("GetDDLLoaiTaiSan", "LoaiTaiSan")"
+																}
+															},
+
+														});
+												}
+												function ChuyenDoiTaiSan(idLTS) {
+													bootbox.confirm({
+														message: "Bạn có chắc chắn chuyển đổi loại tài sản?",
+														className: 'bootbox-sm',
+														buttons: {
+															confirm: {
+																label: 'Đồng ý',
+															},
+															cancel: {
+																label: 'Hủy',
+															},
+														},
+														callback: function (result) {
+															//tạm thời khóa sau mở ra sau
+                                                            if (result) {
+																let allSelected = $("#items-grid tr.k-state-selected");
+																let allSelectedModels = [];
+																let strTaiSanId = "";
+																$.each(allSelected, function (e) {
+																	let row = $(this);
+																	let grid_chonts = $("#items-grid").data("kendoGrid");
+																	let dataItem = grid_chonts.dataItem(row);
+																	allSelectedModels.push(dataItem.ID);
+																})
+																//nếu có nhiều hơn 1 tài sản đủ điều kiện
+																if (allSelectedModels.length > 0) {
+																	strTaiSanId = allSelectedModels.join(",");
+																	let dt = {
+																		strTaiSanId: strTaiSanId,
+																		idLTS: idLTS
+																	}
+																	ajaxPost(dt, '@Url.Action("EditLoaiTaiSanXeChuyenDung", "TaiSan")').done(() => {
+																		ShowSuccessMessage("Thành công");
+																		var grid = $('#items-grid').data('kendoGrid');
+																		grid.dataSource.page(1); //new search. Set page size to 1
+																		let smtz = $('.smartwizard-example').smartWizard("prev");
+																	})
+
+																}
+																else {
+																	ShowErrorMessage("Chưa chọn tài sản");
+																}
+															}
+														},
+													});
+												}
+												function OpenViewTaiSan(guid, tsTen) {
+                                                    var _url = "@(Url.Action("_ViewThongTinTaiSan", "TaiSan"))?guid=" + guid;
+                                                    var titlePopup = "Thông tin tài sản: " + tsTen;
+                                                    OpenModalManual(titlePopup, _url,80);
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div id="smartwizard-1-step-2" class="card animated fadeIn">
+			<div class="card-body">
+				<div class="ui-bordered px-4 pt-4 mb-4">
+					<div class="row">
+						<div class="col-12 row">
+							@*<div class="col-md-10">
+								<div class="form-group row">
+									<label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+									<div class="col-sm-10">
+										<nop-editor asp-for="KeySearch" id="KeySearchLTS" />
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<button type="button" class="btn btn-sm btn-primary btn-block" id="btnSearchLTS">Tìm kiếm</button>
+							</div>*@
+						</div>
+					</div>
+
+				</div>
+				<div class="content">
+					<div class="form-horizontal">
+						<div class="panel-group">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-12">
+											<div id="lts-items-grid"></div>
+                                            <script>
+												$(document).ready(function () {
+													function SearchDataLTS() {
+														var _data = {
+															KeySearch: $('#KeySearchLTS').val(),
+															Id: @((int)enumLoaiTaiSanOto.CHUYEN_DUNG),
+															IsHasNoChildren:true
+														};
+														addAntiForgeryToken(_data);
+														return _data;
+													}
+													$("#btnSearchLTS").click(function () {
+														var grid = $('#lts-items-grid').data('kendoGrid');
+														grid.dataSource.page(1); //new search. Set page size to 1
+														recordLTS = 0;
+														return false;
+													});
+													$("#KeySearchLTS").keydown(function (event) {
+														if (event.keyCode === 13) {
+															$("#btnSearchLTS").click();
+															return false;
+														}
+													});
+													$("#lts-items-grid").kendoGrid({
+														dataSource: {
+															type: "json",
+															transport: {
+																read: {
+																	url: "@Html.Raw(Url.Action("ListChonLoaiTaiSan", "LoaiTaiSan"))",
+																	type: "POST",
+																	dataType: "json",
+																	data: SearchDataLTS
+																}
+															},
+															schema: {
+																data: "Data",
+																total: "Total",
+																errors: "Errors"
+															},
+															error: function (e) {
+																display_kendoui_grid_error(e);
+																// Cancel the changes
+																this.cancelChanges();
+															},
+															pageSize: 100,
+															serverPaging: true,
+															serverFiltering: true,
+															serverSorting: true
+														},
+														pageable: {
+															refresh: true,
+															pageSizes: [@(Model.AvailablePageSizes)],
+															@await Html.PartialAsync("_GridPagerMessages")
+														},
+														editable: {
+															confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+															mode: "inline"
+														},
+														scrollable: false,
+														dataBound: function () {
+															let grid = this;
+															grid.tbody.find("tr.k-master-row").each(function (index) {
+																grid.expandRow(this);
+															});
+														},
+														dataBinding: function () {
+															recordLTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+														},
+														columns: [
+															{
+																title: "STT",
+																template: "#= ++recordLTS#",
+																width: 47,
+																headerAttributes: { style: "text-align:center" },
+																attributes: { style: "text-align:center" },
+															},
+															{
+																field: 'MA',
+																title: 'Mã loại tài sản',
+																width: "20%",
+																template: '#=CountSub>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+CountSub+"</span>)":MA#'
+															},
+															{
+																field: 'TEN',
+																title: 'Tên loại tài sản',
+																template: '#if(isDisabled){} else{# <a  class="link_href" href="javascript:void(0);" onclick="ChuyenDoiTaiSan(#=ID#)">#=TEN#</a>#}#'
+															}
+														]
+													});
+												});
+												
+                                            </script>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.link_href {
+		color: #007bff !important;
+	}
+</style>
+
+<script>
+	$(function () {
+		//let smtz = $('.smartwizard-example').smartWizard("prev");
+		$('.smartwizard-example').smartWizard({
+			autoAdjustHeight: false,
+			backButtonSupport: false,
+			useURLhash: false,
+			showStepURLhash: false,
+			lang: { // Language variables for button
+				previous: "Bước trước",
+				next: "Bước kế tiếp ",
+			},
+			transitionEffect: "fade",
+			toolbarSettings: {
+				toolbarPosition: "both",
+			}
+		});
+
+	});
+
+</script>

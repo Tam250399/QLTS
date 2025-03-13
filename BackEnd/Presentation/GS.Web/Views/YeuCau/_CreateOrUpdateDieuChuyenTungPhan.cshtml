@@ -1,0 +1,667 @@
+﻿@model YeuCauModel
+
+<input asp-for="LOAI_HINH_TAI_SAN_ID" id="LOAI_HINH_TAI_SAN_ID_2" type="hidden" />
+<input asp-for="TAI_SAN_MA" id="TAI_SAN_MA_2" type="hidden" />
+<input asp-for="TaiSanGuid" id="TaiSanGuid_2" type="hidden" />
+<input asp-for="TAI_SAN_ID" id="TAI_SAN_ID_2" type="hidden" />
+<input asp-for="LOAI_BIEN_DONG_ID" id="LOAI_BIEN_DONG_ID_2" type="hidden" />
+<input asp-for="NGAY_SU_DUNG" id="NGAY_SU_DUNG_2" type="hidden" />
+<input asp-for="DON_VI_ID" id="DON_VI_ID_2" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<div class="gs-form-group  ">
+	<h6>Thông tin điều chuyển một phần</h6>
+	<div class="form-group row">
+        <label class="col-form-label col-sm-2  ">Quyết định xử lý số</label>
+		<div class="col-md-6">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Số</span>
+				</div>
+				<nop-editor asp-for="CHUNG_TU_SO" />
+			</div>
+		</div>
+		<div class="col-md-4">
+			<nop-editor asp-for="CHUNG_TU_NGAY" placeholder="Ngày" /><br />
+			<span asp-validation-for="CHUNG_TU_NGAY"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required">Lý do biến động</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" />
+			<span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required">Ngày giảm</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGAY_BIEN_DONG" /><br />
+			<span asp-validation-for="NGAY_BIEN_DONG"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Diễn giải</label>
+		<div class="col-sm-10">
+			<nop-textarea asp-for="GHI_CHU" />
+		</div>
+	</div>
+
+</div>
+
+<div class="gs-form-group">
+	<h6>Giá trị điều chuyển</h6>
+	<div id="ListNguonVon">
+		@if (Model.lstNguonVonBD != null)
+		{
+			@foreach (var _nv in Model.lstNguonVonBD)
+			{
+				@await Html.PartialAsync("_NguonVonBD", _nv);
+			}
+		}
+	</div>
+
+
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<label class="col-form-label col-sm-2  text-required ">Tổng giá trị điều chuyển</label>
+		<div class="col-sm-4 gs-mg-top-bot-10">
+			<nop-editor asp-for="NGUYEN_GIA" asp-dvt="c" id="TongNguyenGia" asp-disabled="true">
+				<span asp-validation-for="NGUYEN_GIA"></span>
+		</div>
+	</div>
+</div>
+
+
+<div class="gs-form-group">
+	<h6>Nguyên giá/Khấu hao/Hao mòn</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Nguyên giá ban đầu</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="YCCTModel.NGUYEN_GIA_CU" asp-disabled="true" asp-dvt="c" />
+		</div>
+		<label class="col-form-label col-sm-2">Nguyên giá sau điều chuyển</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="YCCTModel.NGUYEN_GIA_SAU_BD" asp-disabled="true" asp-dvt="c" />
+			<span id="err-check-ng-giam" style="color:red; display: none;">Nguyên giá giảm không được lớn hơn nguyên giá ban đầu</span>
+		</div>
+	</div>
+	@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT)
+	{
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 gtcl">GTCL ban đầu</label>
+			<div class="col-sm-4 gtcl">
+				<nop-editor asp-for="YCCTModel.HM_GIA_TRI_CON_LAI_CU" asp-disabled="true" asp-dvt="c" />
+			</div>
+			<label class="col-form-label col-sm-2 gtcl">GTCL sau điều chuyển</label>
+			<div class="col-sm-4 gtcl">
+				<nop-editor asp-for="YCCTModel.HM_GIA_TRI_CON_LAI" asp-disabled="true" asp-dvt="c" />
+			</div>
+		</div>
+	}
+</div>
+
+<div id="dieu-chuyen-mot-phan-dien-tich">
+	<!-- BEGIN region biến động diện tích cho loại tài sản có diện tích --------->
+	@{
+		if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA)
+		{
+			<div class="row form-group">
+				<div class="col-md-4">
+					<div class="gs-form-group">
+						<h6>Diện tích ban đầu</h6>
+						<div class="form-group row">
+							<label class="col-form-label col-sm-4 ">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD_CU" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>
+						<div class="form-group row">
+                            <label class="col-form-label col-sm-4 ">Diện tích sàn sử dụng</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD_CU" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="gs-form-group">
+						<h6 class=" text-required">Diện tích điều chuyển</h6>
+						<div class="form-group row">
+							<label class="col-form-label col-sm-4">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD" asp-min-number="0" asp-disabled="false" asp-dvt="m2" />
+								<span id="err-check-nha-dtxd-giam" style="color:red; display: none;">Diện tích XD giảm không được lớn hơn diện tích XD ban đầu</span>
+							</div>
+						</div>
+						<div class="form-group row">
+                            <label class="col-form-label col-sm-4 text-required">Diện tích sàn sử dụng</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD" asp-min-number="0" asp-disabled="false" asp-dvt="m2" />
+								<span asp-validation-for="YCCTModel.NHA_TONG_DIEN_TICH_XD"></span>
+								<span id="err-check-nha-dt-giam" style="color:red; display: none;">Diện tích giảm không được lớn hơn diện tích ban đầu</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="gs-form-group  ">
+						<h6>Diện tích sau điều chuyển</h6>
+						<div class="form-group row">
+							<label class="col-form-label col-sm-4">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>
+						<div class="form-group row">
+                            <label class="col-form-label col-sm-4 ">Diện tích sàn sử dụng</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+                                <span id="checkhientrangmax" class="field-validation-error text-danger" style="display: none;color: red"> Diện tích sàn sử dụng phải bằng Tổng hiện trạng sử dụng</span>
+                                <span id="checkhientrangmin" class="field-validation-error text-danger" style="display: none;color: red"> Diện tích sàn sử dụng phải bằng Tổng hiện trạng sử dụng</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		}
+		else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+		{
+			<div class="row form-group">
+				<div class="col-md-4">
+					<div class="gs-form-group">
+						<h6>Diện tích ban đầu</h6>
+						<div class="form-group row">
+							<div class="col-sm-12">
+								<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH_CU" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="gs-form-group">
+						<div class="form-group row">
+							<h6 class="text-required">Diện tích điều chuyển</h6>
+							<div class="col-sm-12">
+								<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH" asp-min-number="0" asp-disabled="false" asp-dvt="m2" />
+								<span asp-validation-for="YCCTModel.DAT_TONG_DIEN_TICH"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="gs-form-group">
+						<div class="form-group row">
+							<h6>Diện tích sau khi điều chuyển</h6>
+
+							<div class="col-sm-12">
+								<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+                                <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn sử dụng phải bằng Tổng hiện trạng sử dụng</span>
+                                <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn sử dụng phải bằng Tổng hiện trạng sử dụng</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		}
+		else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC)
+		{
+			if (Model.YCCTModel.VKT_CHIEU_DAI_CU > 0)
+			{
+				<div class="row form-group">
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<h6>Chiều dài ban đầu</h6>
+							<div class="form-group row">
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_CHIEU_DAI_CU" asp-disabled="true" asp-dvt="m" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6 class="text-required">Chiều dài điều chuyển</h6>
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_CHIEU_DAI" asp-min-number="0" asp-max-number="@(Model.YCCTModel.VKT_CHIEU_DAI_CU-1)" asp-disabled="false" asp-dvt="m" />
+									<span asp-validation-for="YCCTModel.VKT_CHIEU_DAI"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6>Chiều dài sau khi điều chuyển</h6>
+
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_CHIEU_DAI_SAU_BD" asp-disabled="true" asp-dvt="m" />
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+			else if (Model.YCCTModel.VKT_DIEN_TICH_CU > 0)
+			{
+				<div class="row form-group">
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<h6>Diện tích ban đầu</h6>
+							<div class="form-group row">
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_DIEN_TICH_CU" asp-disabled="true" asp-dvt="m2" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6 class="text-required">Diện tích điều chuyển</h6>
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_DIEN_TICH" asp-min-number="0" asp-max-number="@(Model.YCCTModel.VKT_DIEN_TICH_CU-1)" asp-disabled="false" asp-dvt="m2" />
+									<span asp-validation-for="YCCTModel.VKT_DIEN_TICH"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6>Diện tích sau khi điều chuyển</h6>
+
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_DIEN_TICH_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+			else if (Model.YCCTModel.VKT_THE_TICH_CU > 0)
+			{
+				<div class="row form-group">
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<h6>Thể tích ban đầu</h6>
+							<div class="form-group row">
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_THE_TICH_CU" asp-disabled="true" asp-dvt="m3" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6 class="text-required">Thể tích điều chuyển</h6>
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_THE_TICH" asp-min-number="0" asp-max-number="@(Model.YCCTModel.VKT_THE_TICH_CU-1)" asp-disabled="false" asp-dvt="m3" />
+									<span asp-validation-for="YCCTModel.VKT_THE_TICH"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="gs-form-group">
+							<div class="form-group row">
+								<h6>Thể tích sau khi điều chuyển</h6>
+
+								<div class="col-sm-12">
+									<nop-editor asp-for="YCCTModel.VKT_THE_TICH_SAU_BD" asp-disabled="true" asp-dvt="m3" />
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+
+		}
+	}
+	<!-- END region biến động diện tích cho loại tài sản có diện tích --------->
+	@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA || Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+	{
+		<div class="gs-form-group hien-trang-su-dung ">
+			<h6>Phân bổ lại hiện trạng sử dụng</h6>
+			<div class="form-group row ">
+				@foreach (var obj in Model.YCCTModel.lstHienTrang)
+				{
+					@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+				}
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="gs-form-group hien-trang-su-dung d-none">
+			<h6>Phân bổ lại hiện trạng sử dụng</h6>
+			<div class="form-group row ">
+				@foreach (var obj in Model.YCCTModel.lstHienTrang)
+				{
+					@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+				}
+			</div>
+		</div>
+	}
+
+
+	<div id="DonViNhanDieuChuyen">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-required">Đơn vị nhận điều chuyển</label>
+			<div class="col-sm-8">
+				<nop-editor asp-for="DonViNhanDieuChuyenTen" asp-disabled="true" />
+			</div>
+			<div class="col-sm-2" style="text-align:right">
+				<button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/GiamDieuChuyen/_ChonDonViDieuChuyen?isStayInPage=true">
+					<i class="fab fa-sistrix"></i>
+					Chọn đơn vị
+				</button>
+			</div>
+			@Html.HiddenFor(c => c.DonViNhanDieuChuyenId)
+			<span asp-validation-for="DonViNhanDieuChuyenId"></span>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		$("#TongNguyenGia").data("kendoNumericTextBox").bind("change", function () {
+				if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+					let _data = {
+							ngayBD: $('#NGAY_BIEN_DONG').val(),
+							TAI_SAN_ID: $('#TAI_SAN_ID_2').val(),
+							nguyenGiaBienDong: $('#TongNguyenGia').val(),
+							loaiBienDongId:@Model.LOAI_BIEN_DONG_ID,
+						}
+					let _url = "/YeuCau/CalculateGTCL";
+					ajaxPost(_data, _url, true).done(function (val) {
+						$('#YCCTModel_HM_GIA_TRI_CON_LAI_CU').data('kendoNumericTextBox').value(val.TS_GTCLTruocBD);
+						$('#YCCTModel_HM_GIA_TRI_CON_LAI').data('kendoNumericTextBox').value(val.TS_GTCLSauBD);
+
+					});
+
+			}
+			TinhNguyenGia();
+		});
+		// input DonViCha
+
+		//multiselect LoaiNguonVon
+  //      changeLyDoBienDong();
+		//$("#LY_DO_BIEN_DONG_ID").change(function () {
+		//	changeLyDoBienDong();
+		//})
+		let nbdDP = $("#NGAY_BIEN_DONG").data("kendoDatePicker");
+		if (nbdDP) {
+			nbdDP.bind("change", function () {
+				validator();
+				if (@Model.LOAI_HINH_TAI_SAN_ID != @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)) {
+					let _data = {
+						ngayBD: $('#NGAY_BIEN_DONG').val(),
+						TAI_SAN_ID: $('#TAI_SAN_ID_2').val(),
+						nguyenGiaBienDong: $('#TongNguyenGia').val(),
+						loaiBienDongId:@Model.LOAI_BIEN_DONG_ID,
+					}
+					let _url = "/YeuCau/CalculateGTCL";
+					ajaxPost(_data, _url, true).done(function (val) {
+						$('#YCCTModel_HM_GIA_TRI_CON_LAI_CU').data('kendoNumericTextBox').value(val.TS_GTCLTruocBD);
+						$('#YCCTModel_HM_GIA_TRI_CON_LAI').data('kendoNumericTextBox').value(val.TS_GTCLSauBD);
+					});
+					TinhNguyenGia();
+				}
+			})
+		}
+
+		$('#YCCTModel_DAT_TONG_DIEN_TICH, #YCCTModel_NHA_DIEN_TICH_XD, #YCCTModel_NHA_TONG_DIEN_TICH_XD, #YCCTModel_VKT_CHIEU_DAI, #YCCTModel_VKT_DIEN_TICH, #YCCTModel_VKT_THE_TICH').change(function () {
+            if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT))
+			{
+				let DT_After = $('#YCCTModel_DAT_TONG_DIEN_TICH_SAU_BD').data('kendoNumericTextBox');
+                var res = ConvertToNumber('#YCCTModel_DAT_TONG_DIEN_TICH_CU') - ConvertToNumber('#YCCTModel_DAT_TONG_DIEN_TICH');
+			    if (res < 0)
+				    res = 0
+			    DT_After.value(res);
+			}
+			else if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA))
+			{
+                let DT_After = $('#YCCTModel_NHA_DIEN_TICH_XD_SAU_BD').data('kendoNumericTextBox');
+                var res = ConvertToNumber('#YCCTModel_NHA_DIEN_TICH_XD_CU') - ConvertToNumber('#YCCTModel_NHA_DIEN_TICH_XD');
+			    if (res < 0)
+				    res = 0
+				DT_After.value(res);
+                let DT_After_san = $('#YCCTModel_NHA_TONG_DIEN_TICH_XD_SAU_BD').data('kendoNumericTextBox');
+                var res_san = ConvertToNumber('#YCCTModel_NHA_TONG_DIEN_TICH_XD_CU') - ConvertToNumber('#YCCTModel_NHA_TONG_DIEN_TICH_XD');
+			    if (res_san < 0)
+				    res_san = 0
+			    DT_After_san.value(res_san);
+			}
+			else if(@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC)) {
+				//chiều dài
+				let CD_After = $('#YCCTModel_VKT_CHIEU_DAI_SAU_BD').data('kendoNumericTextBox');
+				if (CD_After) {
+                    var res = ConvertToNumber('#YCCTModel_VKT_CHIEU_DAI_CU') - ConvertToNumber('#YCCTModel_VKT_CHIEU_DAI');
+					if (res < 0)
+						res = 0
+					CD_After.value(res);
+				}
+				//diện tích
+				let DT_After = $('#YCCTModel_VKT_DIEN_TICH_SAU_BD').data('kendoNumericTextBox');
+				if (DT_After) {
+                    var res = ConvertToNumber('#YCCTModel_VKT_DIEN_TICH_CU') - ConvertToNumber('#YCCTModel_VKT_DIEN_TICH');
+					if (res < 0)
+						res = 0
+					DT_After.value(res);
+				}
+				//thể tích
+				let TT_After = $('#YCCTModel_VKT_THE_TICH_SAU_BD').data('kendoNumericTextBox');
+				if (TT_After) {
+                    var res = ConvertToNumber('#YCCTModel_VKT_THE_TICH_CU') - ConvertToNumber('#YCCTModel_VKT_THE_TICH');
+					if (res < 0)
+						res = 0
+					TT_After.value(res);
+				}
+			}
+			validator();
+
+		});
+
+		//$('#YCCTModel_DAT_TONG_DIEN_TICH, #YCCTModel_NHA_DIEN_TICH_XD, #YCCTModel_NHA_TONG_DIEN_TICH_XD, #YCCTModel_VKT_CHIEU_DAI, #YCCTModel_VKT_DIEN_TICH, #YCCTModel_VKT_THE_TICH').change();
+		$(".HienTrang").change(validator);
+		TinhNguyenGia();
+		validator();
+		TTNG();
+	});
+
+	function TTNG() {
+		var TotalNguyenGia = 0;
+		$(".NguonVon").each(function () {
+			var nguonvonId = $(this).data("idnguonvon");
+			var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+			TotalNguyenGia = parseFloat(TotalNguyenGia) + parseFloat(_ValueNguonVon);
+		});
+		$("#TongNguyenGia").data("kendoNumericTextBox").value(TotalNguyenGia);
+	}
+	function changeLyDoBienDong() {
+		let lydobdID = $('#LY_DO_BIEN_DONG_ID').val();
+		getMaByIdLyDoTangGiam(lydobdID).done((maLyDo) => {
+			if (maLyDo == '@(enum_LY_DO_BIEN_DONG.DIEU_CHUYEN_MOT_PHAN)') {
+				$('#dieu-chuyen-mot-phan-dien-tich').show();
+			} else {
+				$('#dieu-chuyen-mot-phan-dien-tich').hide();
+			}
+		});
+	}
+    // khi deselect nguon von
+    function DeselectNguonVon(e) {
+        var _NguonVonId = e.dataItem.Value;
+		$("#TaiSanNguonvon_" + _NguonVonId).remove();
+		TinhTongNguyenGia();
+		TinhNguyenGia();
+
+    }
+    //khi chon loai nguon von thi ve _NguonVon
+    function loadNguonVon(e,TaiSanId) {
+        var NguonVonId = e.dataItem.Value;
+        $.ajax({
+            url: "/TaiSan/_NguonVon?NguonVonId=" + NguonVonId + "&TaiSanId=" + TaiSanId,
+            type: "GET",
+            success: function (data) {
+                $("#ListNguonVon").append(data);
+
+            },
+            error: function () {
+                console.log("error");
+            },
+        });
+	}
+	function TinhNguyenGia() {
+		validator();
+		let NguyeGia_After = $('#YCCTModel_NGUYEN_GIA_SAU_BD').data('kendoNumericTextBox');
+			var res = parseFloat($('#YCCTModel_NGUYEN_GIA_CU').val()) - parseFloat($('#TongNguyenGia').val());
+			if (res < 0)
+				res = 0
+		NguyeGia_After.value(res);
+		@*if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT))
+		{
+			let GTCL_After = $('#YCCTModel_HM_GIA_TRI_CON_LAI').data('kendoNumericTextBox');
+			var res = parseFloat($('#YCCTModel_HM_GIA_TRI_CON_LAI_CU').val())- parseFloat($('#TongNguyenGia').val());
+			if (res < 0)
+				res = 0
+			GTCL_After.value(res);
+		}*@
+
+	}
+	function CompareDientich() {
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT) || @Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.NHA)) {
+			var total = 0;
+			$(".HienTrang").each(function () {
+				var _hientrangId = $(this).data("idhientrang");
+				var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+				total = total + _Value
+
+			});
+			var tonghientrang = total.toFixed(2);
+        @if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+		{
+            <text>
+			var gt = ConvertToNumber("#YCCTModel_DAT_TONG_DIEN_TICH_SAU_BD");
+            </text>
+		}
+		else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA) {
+            <text>
+			var gt = ConvertToNumber("#YCCTModel_NHA_TONG_DIEN_TICH_XD_SAU_BD");
+            </text>
+		}
+			if (tonghientrang != gt) {
+				if (tonghientrang > gt) {
+					throwError("#checkhientrangmax", true);
+					throwError("#checkhientrangmin", false);
+				}
+				if (tonghientrang < gt) {
+					throwError("#checkhientrangmax", false);
+					throwError("#checkhientrangmin", true);
+				}
+				return false;
+			}
+			else {
+				throwError("#checkhientrangmax", false);
+				throwError("#checkhientrangmin", false);
+				return true;
+			}
+		}
+
+	}
+	function validator() {
+		res = true;
+		if (CompareDientich() == false) {
+			res = false;
+		}
+		if (check_NG_Giam_Smaller_Than_NG() == false) {
+			res = false;
+		}
+		if (check_DT_Giam_Smaller_Than_DT() == false) {
+			res = false;
+		}
+		if (checkValidateDateFormat('#NGAY_BIEN_DONG', 'NGAY_BIEN_DONG', 'Phải nhập đúng định dạng ngày') == false) {
+			res = false;
+		}
+		disabledBtnSave(!res);
+		return res;
+	}
+	function check_NG_Giam_Smaller_Than_NG() {
+		let ng_BD = parseFloat($('#YCCTModel_NGUYEN_GIA_CU').val());
+		let ng_Giam = parseFloat($('#TongNguyenGia').val());
+		//throw error
+		if (ng_Giam >= ng_BD) {
+			throwError('#err-check-ng-giam', true)
+			return false;
+		}
+		//remove error
+		else {
+			throwError('#err-check-ng-giam', false)
+			return true;
+		}
+	}
+	function check_DT_Giam_Smaller_Than_DT() {
+		@if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+		{
+            <text>
+		let dat_dt = parseFloat($('#YCCTModel_DAT_TONG_DIEN_TICH_CU').val());
+		let dat_dt_giam = parseFloat($('#YCCTModel_DAT_TONG_DIEN_TICH').val());
+		//throw error
+		if (dat_dt_giam > dat_dt) {
+			throwError('#err-check-dat-dt-giam', true);
+			return false;
+		}
+
+		//remove error
+		else {
+			throwError('#err-check-dat-giam', false)
+			return true;
+		}
+
+            </text>
+		}
+        else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA) {
+            <text>
+		let nha_dt_xd = parseFloat($('#YCCTModel_NHA_DIEN_TICH_XD_CU').val());
+		let nha_dt = parseFloat($('#YCCTModel_NHA_TONG_DIEN_TICH_XD_CU').val());
+		let nha_dt_xd_giam = parseFloat($('#YCCTModel_NHA_DIEN_TICH_XD').val());
+		let nha_dt_giam = parseFloat($('#YCCTModel_NHA_TONG_DIEN_TICH_XD').val());
+		let res = true;
+		//throw error
+		if (nha_dt_giam > nha_dt) {
+			res = false;
+			throwError('#err-check-nha-dt-giam', true);
+		}
+		//remove error
+		else {
+			throwError('#err-check-nha-dt-giam', false);
+		}
+
+
+		if (nha_dt_xd_giam > nha_dt_xd) {
+			res = false;
+			throwError('#err-check-nha-dtxd-giam', true);
+		}
+		//remove error
+		else {
+			throwError('#err-check-nha-dtxd-giam', false);
+		}
+		return res;
+
+            </text>
+        }
+	}
+	function throwError(el, isThrowError) {
+		if (isThrowError)
+			$(el).show();
+		else
+			$(el).hide();
+		disabledBtnSave(isThrowError)
+	}
+	function disabledBtnSave(status) {
+		$("#btnSave").prop("disabled", status);
+		$(".btnAdd").prop("disabled", status);
+	}
+</script>

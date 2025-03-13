@@ -1,0 +1,117 @@
+﻿@model TaiSanTdModel
+
+@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN_TOAN_DAN.DAT)
+{
+    await Html.RenderPartialAsync("_Dat", Model);
+}
+else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN_TOAN_DAN.NHA)
+{
+    await Html.RenderPartialAsync("_Nha", Model);
+}
+else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN_TOAN_DAN.OTO)
+{
+    await Html.RenderPartialAsync("_Oto", Model);
+}
+else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN_TOAN_DAN.TAI_SAN_KHAC)
+{
+    await Html.RenderPartialAsync("_TaiSanKhac", Model);
+}
+
+
+
+
+
+@*<div class="form-navs">
+        <div class="nav-tabs-top" style="width:100%">
+            <ul class="nav nav-tabs" >
+                <li class="nav-item" style="width:20%;">
+                    <a class="a-the-ts nav-link  active show" data-toggle="tab" href="#navs-dat" onclick="ViewDat()" id="nav-dat">Đất</a>
+                </li>
+                <li class="nav-item" style="width:20%">
+                    <a class="a-the-ts nav-link" data-toggle="tab" href="#navs-nha" onclick="ViewNha()"  id="nav-nha">Nhà</a>
+                </li>
+                <li class="nav-item" style="width:20%">
+                    <a class="a-the-ts nav-link" data-toggle="tab" href="#navs-oto" onclick="ViewOto()"  id="nav-oto">Ô tô</a>
+                </li>
+                <li class="nav-item" style="width:20%">
+                    <a class="a-the-ts nav-link" data-toggle="tab" href="#navs-khac" onclick="ViewTaiSanKhac()"  id="nav-khac">Tài sản khác</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active show view-taisan" id="navs-dat">
+
+                </div>
+                <div class="tab-pane fade view-taisan" id="navs-nha">
+
+                </div>
+                <div class="tab-pane fade view-taisan" id="navs-oto">
+
+                </div>
+                <div class="tab-pane fade view-taisan" id="navs-khac">
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+@*<script>
+         $(document).ready(function () {
+             ViewDat();
+         });
+        function ViewDat() {
+             $.ajax({
+                type: "GET",
+                url: "/TaiSanTd/_Dat?QuyetDinhId=@Model.QUYET_DINH_TICH_THU_ID",
+                 success: function (data) {
+                     $(".view-taisan").html(null);
+                     $(".a-the-ts").css("color", "black");
+                     $("#nav-dat").css("color", "red");
+                     $("#navs-dat").html(data);
+                }
+            });
+        }
+        function ViewNha() {
+             $.ajax({
+                type: "GET",
+                url: "/TaiSanTd/_Nha?QuyetDinhId=@Model.QUYET_DINH_TICH_THU_ID",
+                success: function (data) {
+                    $(".view-taisan").html(null);
+                    $(".a-the-ts").css("color", "black");
+                    $("#nav-nha").css("color", "red");
+                    $("#navs-nha").html(data);
+                }
+            });
+        }
+        function ViewOto() {
+             $.ajax({
+                type: "GET",
+                url: "/TaiSanTd/_Oto?QuyetDinhId=@Model.QUYET_DINH_TICH_THU_ID",
+                success: function (data) {
+                    $(".view-taisan").html(null);
+                    $(".a-the-ts").css("color", "black");
+                    $("#nav-oto").css("color", "red");
+                    $("#navs-oto").html(data);
+                }
+            });
+        }
+        function ViewTaiSanKhac() {
+             $.ajax({
+                type: "GET",
+                url: "/TaiSanTd/_TaiSanKhac?QuyetDinhId=@Model.QUYET_DINH_TICH_THU_ID",
+                success: function (data) {
+                    $(".view-taisan").html(null);
+                    $(".a-the-ts").css("color", "black");
+                    $("#nav-khac").css("color", "red");
+                   $("#navs-khac").html(data);
+                }
+            });
+        }
+    </script>
+    <style>
+        .form-navs {
+            padding: 5px;
+            background-color: #fff;
+            border-color: #84b2e0 !important;
+            position: relative;
+            margin-bottom: 1rem !important;
+        }
+    </style>*@

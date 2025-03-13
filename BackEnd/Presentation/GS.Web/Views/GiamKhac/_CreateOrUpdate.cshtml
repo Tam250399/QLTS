@@ -1,0 +1,82 @@
+﻿@model GiamDieuChuyenModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="stringMapId" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="IsDieuChuyenNgoai" type="hidden" />
+
+<table class="table card-table">
+    <thead class="thead-light">
+        <tr>
+            <th>Mã CCDC</th>
+            <th>Tên CCDC</th>
+            <th>Số lượng có thể giảm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Nhóm CCDC</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var map in Model.ListCongCuDieuChuyenModel)
+        {
+            <tr class="listCongCuModel" data-guid="@map.MapId">
+                <td>@map.MaCongCu</td>
+                <td>@map.TenCongCu</td>
+                <td style="text-align:center" id="SoLuongCoTheChuyen_@map.MapId">@map.SoLuongCoTheChuyen</td>
+                <td>
+                    <nop-editor asp-for="@map.SoLuongDieuChuyen" id="SoLuongDieuChuyen_@map.MapId" />
+                    <span id="err_SO_LUONG_@map.MapId" style="display:none;" class="field-validation-error">Số lượng không hợp lệ</span>
+                </td>
+                <td>@map.DonGiaText</td>
+                <td>@map.NhomCongCuText</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin điều chuyển</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_QUYET_DINH" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_QUYET_DINH" />
+        </div>
+    </div>
+    <div class="form-group row">
+
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Lý do giảm</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiXuatNhapId" asp-items="Model.DDLLoaiXuatNhap" />
+            <span id="err_LoaiXuatNhapId" style="display:none;" class="field-validation-error">Chọn lý do giảm</span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày giảm</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="NGAY_DIEU_CHUYEN" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_CHUNG_TU" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_CHUNG_TU" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ghi chú</label>
+        <div class="col-sm-10">
+            <app-textarea asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+<style>
+    th {
+        text-align:left !important;
+    }
+</style>

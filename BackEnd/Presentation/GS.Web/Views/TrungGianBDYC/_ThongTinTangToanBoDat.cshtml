@@ -1,0 +1,282 @@
+﻿@model TrungGianBDYCModel
+
+
+<div id="thong-tin-chung-TS">
+	<div class="font-weight-bold mb-2">Thông tin chung:</div>
+	<div class="row">
+		<div class="col-sm-6 pb-4">
+			<table>
+				<tbody>
+					@if (Model.DU_AN_ID > 0)
+					{
+						<tr>
+							<td class="pr-3">Tên dự án:</td>
+							<td>
+								@Model.TenDuAn
+							</td>
+						</tr>
+					}
+					<tr>
+						<td class="pr-3">Tên đơn vị:</td>
+						<td>
+							@Model.TenDonVi
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Địa chỉ:</td>
+						<td>
+							@Model.TAI_SAN_TEN
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Quốc gia:</td>
+						<td>
+							@Model.TenQuocGia
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Quận/ Huyện:</td>
+						<td>
+							@Model.TenHuyen
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Lý do tăng đất:</td>
+						<td>
+							@Model.TenLyDoBienDong
+						</td>
+					</tr>
+					@if (Model.TrungGianBDYCChiTietModel.HINH_THUC_MUA_SAM_ID > 0)
+					{
+						<tr>
+							<td class="pr-3">Hình thức mua sắm:</td>
+							<td>
+								@Model.TenHinhThucMuaSam
+							</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Giá mua trên hóa đơn:</td>
+							<td>
+								@Model.GIA_MUA_TIEP_NHAN.ToVNStringNumber() đ
+							</td>
+						</tr>
+					}
+					<tr>
+						@if (Model.NGAY_BIEN_DONG.Value.Year < 2018)
+						{
+							<td class="pr-3">Ngày kê khai:</td>
+						}
+						else
+						{
+							<td class="pr-3">Ngày tăng:</td>
+						}
+						<td>
+							@Model.NGAY_BIEN_DONG.toDateVNString()
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-6 pb-4">
+			<table>
+				<tbody>
+					<tr>
+						<td class="pr-3"><br /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="pr-3">Mã tài sản:</td>
+						<td>@Model.TAI_SAN_MA</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Tỉnh/ Thành phố:</td>
+						<td>
+							@Model.TenTinh
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Xã/ Phường:</td>
+						<td>
+							@Model.TenXa
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Mục đích sử dụng:</td>
+						<td>
+							@Model.TenLoaiTaiSan
+						</td>
+					</tr>
+					@*<tr>
+						<td class="pr-3">Ngày đưa vào sử dụng:</td>
+						<td>
+							@Model.NGAY_SU_DUNG.toDateVNString()
+						</td>
+					</tr>*@
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Diện tích khuôn viên, hiện trạng sử dụng</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Diện tích:</td>
+					<td class="">@Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH.ToVNStringNumber() (m<sup>2</sup>)</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="font-weight-bold mb-2">Hiện trạng sử dụng:</div>
+<div class="form-group row ">
+	@foreach (var obj in Model.TrungGianBDYCChiTietModel.lstHienTrang)
+	{
+		@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+	}
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Giá trị quyền sử dụng đất</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Giá trị QSD đất:</td>
+					<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.DAT_GIA_TRI_QUYEN_SD_DAT.ToVNStringNumber() đ</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Nguyên giá:</td>
+					<td class="text-sm-right">@Model.NGUYEN_GIA.ToVNStringNumber() đ</td>
+				</tr>
+				<tr>
+					<td class="pr-3 font-weight-bold">Trong đó:</td>
+					<td class="text-sm-right"></td>
+				</tr>
+				@if (Model.lstNguonVonModel != null && Model.lstNguonVonModel.Count > 0)
+				{
+					foreach (var itemNV in Model.lstNguonVonModel)
+					{
+						<tr>
+							<td class="pr-3">@itemNV.TEN:</td>
+							<td class="text-sm-right">@itemNV.GiaTri.ToVNStringNumber() đ</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Hồ sơ giấy tờ:</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				@if (!(string.IsNullOrEmpty(@Model.TrungGianBDYCChiTietModel.HS_CNQSD_SO) && Model.TrungGianBDYCChiTietModel.HS_CNQSD_NGAY == null))
+				{
+					<tr>
+						<td class="pr-3">Giấy CNQSD đất:</td>
+						<td>Số&nbsp;@Model.TrungGianBDYCChiTietModel.HS_CNQSD_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_CNQSD_NGAY.toDateVNString()</td>
+					</tr>
+				}
+				@if (!(string.IsNullOrEmpty(@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_SO) && Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_NGAY == null))
+				{
+					<tr>
+						<td class="pr-3">Quyết định giao đất:</td>
+						<td>Số&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_NGAY.toDateVNString()</td>
+					</tr>
+				}
+				@if (!(string.IsNullOrEmpty(@Model.TrungGianBDYCChiTietModel.HS_PHAP_LY_KHAC) && Model.TrungGianBDYCChiTietModel.HS_PHAP_LY_KHAC_NGAY == null))
+				{
+					<tr>
+						<td class="pr-3">Hồ sơ pháp lý khác:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_PHAP_LY_KHAC</td>
+					</tr>
+				}
+
+
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				@if (!(string.IsNullOrEmpty(@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_SO) && Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_NGAY == null))
+				{
+					<tr>
+						<td class="pr-3">Quyết định cho thuê đất:</td>
+						<td>Số&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_NGAY.toDateVNString()</td>
+					</tr>
+				}
+				@if (!(string.IsNullOrEmpty(@Model.TrungGianBDYCChiTietModel.HS_HOP_DONG_CHO_THUE_SO) && Model.TrungGianBDYCChiTietModel.HS_HOP_DONG_CHO_THUE_NGAY == null))
+				{
+					<tr>
+						<td class="pr-3">Hợp đồng cho thuê đất:</td>
+						<td>Số&nbsp;@Model.TrungGianBDYCChiTietModel.HS_HOP_DONG_CHO_THUE_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_HOP_DONG_CHO_THUE_NGAY.toDateVNString()</td>
+					</tr>
+				}
+
+
+			</tbody>
+		</table>
+	</div>
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Thông tin nhà trên đất: @(Model.taisanDatModel.ListTaiSanNhaTrenDat != null ? Model.taisanDatModel.ListTaiSanNhaTrenDat.Count() : 0) tài sản nhà</div>
+<div class="list-tai-san-tren-dat">
+	<script>
+				function chiTietYeuCauBienDong(yeucauId, trangThaiId) {
+					var _url = "@(Url.Action("_ThongTinYeuCauBienDongNhaTrenDat", "TrungGianBDYC"))?Id=" + yeucauId + '&trangThaiId=' + trangThaiId;
+					//HideModalManual();
+					OpenModalManual("Thông tin biến động", _url,72);
+				}
+	</script>
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th class="text-sm-center font-weight-bold">STT</th>
+				<th class="text-sm-center font-weight-bold">Mã nhà</th>
+				<th class="text-sm-center font-weight-bold">Tên nhà</th>
+				<th class="text-sm-center font-weight-bold">Cấp hạng nhà</th>
+				<th class="text-sm-center font-weight-bold">Nguyên giá</th>
+				<th class="text-sm-center font-weight-bold">Diện tích</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.taisanDatModel.ListTaiSanNhaTrenDat != null)
+			{
+				var record = 1;
+				@foreach (var item in Model.taisanDatModel.ListTaiSanNhaTrenDat)
+				{
+					<tr>
+						<td class="text-sm-center">@(record++)</td>
+						<td><a href="javascript:chiTietYeuCauBienDong(@item.YeuCauId,@item.TRANG_THAI_ID)">@item.MA</a></td>
+						<td>@item.TEN</td>
+						<td>@item.TenLoaiTaiSan</td>
+						<td class="text-sm-right">@item.NguyenGiaTaiSan.ToVNStringNumber() đ</td>
+						<td class="text-sm-right">@item.strDienTichSanVN m²</td>
+					</tr>
+				}
+			}
+		</tbody>
+		<tfoot></tfoot>
+	</table>
+</div>

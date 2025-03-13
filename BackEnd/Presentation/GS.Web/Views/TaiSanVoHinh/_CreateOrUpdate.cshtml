@@ -1,0 +1,18 @@
+@model TaiSanVoHinhModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">TAI_SAN_ID:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="TAI_SAN_ID" />
+<span asp-validation-for="TAI_SAN_ID"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">THONG_SO_KY_THUAT:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="THONG_SO_KY_THUAT" />
+<span asp-validation-for="THONG_SO_KY_THUAT"></span>
+</div>
+</div>
+

@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý đăng ký tài sản</title>
+    <link rel="stylesheet" href="../../lib/kendo/css/kendo.default-v2.min.css" >
+    <!-- Bootstrap anpx-->
+    <link href="../../Themes/TSCV1/Content/css/bootstrap-4.0.0.css" rel="stylesheet" >
+    <link href="../../Themes/TSCV1/Content/css/style.css" rel="stylesheet" type="text/css" >
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="/lib/robotofont/fonts.googleapis.css?v=2" rel="stylesheet"  />
+
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/fonts/fontawesome.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/fonts/ionicons.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/fonts/linearicons.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/fonts/open-iconic.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/fonts/pe-icon-7-stroke.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/css/rtl/appwork.css?v=1" class="theme-settings-appwork-css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/css/rtl/colors.css" class="theme-settings-colors-css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/css/rtl/uikit.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/libs/spinkit/spinkit.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.css" >
+    <link rel="stylesheet" href="../../Themes/AppWork/Content/assets/vendor/libs/smartwizard/smartwizard.css" >
+
+    <link rel="stylesheet" href="../../lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" >
+
+    <link rel="stylesheet" href="../../lib/kendo/custom/kendo.custom.css" >
+
+    <link href="../../css/app/styles.css?v=2" rel="stylesheet" class="gs-settings-custom-css" >
+
+ 
+
+</head>
+
+<body class="bg-xam">
+    <!-- body code goes here -->
+    <header class="container-fluid d-none d-md-block" style="background-color: #f8f9fa !important;">
+
+        <div class="row pa-TB10">
+            <div class="col-md-6">
+                <a class="logo" href="../../AppWork/Index"><img src="../../Themes/TSCV1/Content/images/logo.png" height="60" alt=""></a>
+                <div class="slogan">
+                    <h5>BỘ TÀI CHÍNH</h5>
+                    <h4>PHẦN MỀM QUẢN LÝ TÀI SẢN CÔNG</h4>
+                </div>
+            </div>
+        </div>
+    </header><!--end header-->
+    <div class="bg-primary">
+        <div class="">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand d-lg-none" href="#"><img src="../../Themes/TSCV1/Content/images/logo_mobile.png" height="40" alt=""></a><span class="text-mobli d-lg-none">PHẦN MỀM QUẢN LÝ TÀI SẢN CÔNG</span>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                    <ul class="navbar-nav mr-auto">
+                          <li class="nav-item "> <a class="nav-link" href="/AppWork"><i class="fas fa-home mr-1"></i>Trang chủ</a></li>
+                        <!--nav mobile-->
+                        <div class="dropdown-divider bo-t"></div>
+                    </ul>
+                  
+                </div>
+
+            </nav><!--end nav-->
+        </div>
+    </div>
+
+
+
+
+   
+    <div id="wrapper" style="min-height:50px;position:relative" class="">
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="box mb-3" style="min-height:410px; text-align:center">
+                <label style="color: #ff8400; font-size:70px;font-weight: bold;font-style: italic;">502</label>
+                <br/>
+                <label style="font-size:40px;">Hệ thống bị gián đoạn<br/> Vui lòng nhấn F5 hoặc nhấn vào <a href="/AppWork">đây</a> để quay lại trang chủ</label>
+            </div>
+            <footer class="box">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-U">Bộ Tài Chính</h5>
+                            <p class="mb-0">
+                                <i class="fas fa-map-marker-alt mr-2"></i>Số 28 Trần Hưng Đạo - Quận Hoàn Kiếm - Hà Nội<br>
+                                <i class="fas fa-phone-volume mr-2"></i>2220.2828-2888<br>
+                                <i class="far fa-envelope mr-2"></i>support@mof.gov.vn<br>
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-right1">
+                            Đường dây nóng <strong>2220.2828-2888</strong>
+                        </div>
+                        <div id="call-support" onclick="toggleCallSupport()" class="call-show" style=" position: fixed; bottom: 5px; right: 0; height: 50px; z-index: 9999; padding-right: 5px; background-color: #dd4b39">
+                            <label style="position: relative; display: block; color:#fff">
+                                <a title="">
+                                    <span style="margin: 0 5px 0 -25px; display: inline-block; vertical-align: middle; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; background-position: center; background-color: #dd4b39; font-size: 24px; color: white; border: 3px solid #dd4b39;">
+                                        <i style="transform: rotate( 95deg ); margin-left: 2px; margin-top: 2px; border-radius: 50%; border: 2px solid #fff; padding: 8px; height: 40px; width: 40px; font-size: 18px;" class="fa fa-phone" aria-hidden="true"></i>
+                                    </span>
+                                    <p style="display: inline-block; vertical-align: middle; color: #fff; font-size: 12px; margin:0px">
+                                        Hỗ trợ PM Kho CSDLQG: <strong>(024)-7301 9666 nhánh 1</strong>
+                                        <br />
+                                        Hỗ trợ PM QLTSC: <strong>1900.636.618 nhánh 4</strong>
+                                    </p>
+                                </a>
+                                <i></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div> <!-- /#page-content-wrapper -->
+    </div> <!-- /#wrapper -->
+
+</body>
+</html>

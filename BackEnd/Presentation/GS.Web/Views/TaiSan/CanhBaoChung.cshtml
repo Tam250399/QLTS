@@ -1,0 +1,41 @@
+﻿@model List<CauHinhCanhBaoTaiSan>
+@{
+    ViewData["Title"] = "Cảnh báo dữ liệu tài sản";
+    Html.SetActiveMenuItemSystemName("ThayDoiThongTin");
+}
+
+<div class="card mb-4" id="div_main">
+    <h6 class="card-header">
+        @ViewBag.Title
+    </h6>
+    <div class="card-body">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                if (item.CountAlert == 0)
+                {
+                    continue;
+                }
+                <div class="col-md">
+                    <div class="card mb-3">
+                        <div class="card-header with-elements">
+                            <span class="card-header-title mr-2">@T(item.DisplayName)</span>
+                            @if (!item.IsHideCount)
+                            {
+                                <div class="card-header-elements">
+                                    <span class="badge badge-danger badge-pill">@item.CountAlert</span>
+                                </div>
+                            }
+
+                            <div class="card-header-elements ml-md-auto">
+                                <a class="btn btn-danger" href="@item.ActionUrl">@T(item.DisplayName + ".btn")</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

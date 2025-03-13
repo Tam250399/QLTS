@@ -1,0 +1,227 @@
+﻿@model modelThuocTinh
+@using GS.Core.Domain.ThuocTinhs
+<div class="viewDuLieu" id="viewDuLieu_@Model.GUID">
+    <div class="viewTong_@Model.is_viewtong" style="padding-right:0px;">
+        @if (Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.OBJ)
+        {
+            <div class="form-group row" id="div_@Model.GUID">
+                <div class="col-sm-1"></div>
+                <label class="col-form-label col-sm-2 text-sm-right">Loại dữ liệu con:</label>
+                <div>
+                    <input @*class="LoaiObject"*@ id="@Model.GUID" asp-for="GUID" value="@Model.GuidParrent" hidden />
+                </div>
+                <div class="col-sm-8">
+                    <nop-select asp-for="LoaiDuLieuId" asp-items="Model.ddlLoaiDuLieu" id="LoaiDuLieuId_@Model.GUID" />
+                    <span asp-validation-for="LoaiDuLieuId" id="LoaiDuLieu_Vali_@Model.GUID"></span>
+                </div>
+                <div class="col-sm-1"><a href="javascript:void(0)" onclick='XoaViewDuLieu("@Model.GUID")'>Xóa</a></div>
+            </div>
+            if (Model.THUOC_TINH != null && Model.THUOC_TINH.Count() > 0)
+            {
+                foreach (var tt in Model.THUOC_TINH)
+                {
+                    @await Html.PartialAsync("_LoaiThuocTinh", tt);
+                }
+            }
+        }
+        else if (Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.NB || Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.ST || Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.DT)
+        {
+            <div class="form-group row">
+                @*nếu là phần tử con thì dịch vào trong*@
+                @if (!Model.GuidParrent.Equals(Guid.Empty))
+                {
+                    <div class="col-sm-1"></div>
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên dữ liệu con:</label>
+                    <div><input class="LoaiObject" id="@Model.GUID" asp-for="GUID" value="@Model.GuidParrent" hidden /></div>
+                    <input id="LoaiDuLieuCon_@Model.GUID" asp-for="LoaiDuLieuIdParrent" value="@Model.LoaiDuLieuIdParrent" hidden />
+                    <div class="col-sm-2">
+                        <nop-editor asp-for="NAME" id="NAME_TT_@Model.GUID" />
+                        <span asp-validation-for="NAME" id="NAME_TT_Vali_@Model.GUID"></span>
+                    </div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Giá trị mặc định</label>
+                    <div class="col-sm-2">
+                        <nop-editor asp-for="ValueTT" id="Value_TT_@Model.GUID" />
+                        <span asp-validation-for="ValueTT" id="Value_TT_Vali_@Model.GUID"></span>
+                    </div>
+                    <label class="col-form-label col-sm-3 text-sm-right">Bắt buộc:</label>
+                    <div class="col-sm-1 col-form-label">
+                        <input class="vali-check" type="checkbox" value="true" id="Vali_@Model.GUID" onclick="CheckVali()" />
+                    </div>
+                }
+                else
+                {
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên:</label>
+                    <div><input class="LoaiObject" id="@Model.GUID" asp-for="GUID" value="@Model.GuidParrent" hidden /></div>
+                    <input id="LoaiDuLieuCon_@Model.GUID" asp-for="LoaiDuLieuIdParrent" value="@Model.LoaiDuLieuIdParrent" hidden />
+                    <div class="col-sm-3">
+                        <nop-editor asp-for="NAME" id="NAME_TT_@Model.GUID" />
+                        <span asp-validation-for="NAME" id="NAME_TT_Vali_@Model.GUID"></span>
+                    </div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Giá trị mặc định</label>
+                    <div class="col-sm-2">
+                        <nop-editor asp-for="ValueTT" id="Value_TT_@Model.GUID" />
+                        <span asp-validation-for="ValueTT" id="Value_TT_Vali_@Model.GUID"></span>
+                    </div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Thứ tự:</label>
+                    <div class="col-sm-1">
+                        <nop-editor asp-for="SapXep" id="SapXep_@Model.GUID" />
+                        <span asp-validation-for="SapXep" id="SapXep_Vali_@Model.GUID"></span>
+                    </div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Bắt buộc:</label>
+                    <div class="col-sm-1 col-form-label">
+                        <input class="vali-check" type="checkbox" value="true" id="Vali_@Model.GUID" onclick="CheckVali()" />
+                    </div>
+                }
+
+            </div>
+        }
+        else if (Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.RD)
+        {
+            @*nếu là phần tử con thì mới hiện tên nhóm*@
+            @if (!Model.GuidParrent.Equals(Guid.Empty))
+            {
+                <div class="form-group row">
+                    <div class="col-sm-1"></div>
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên dữ liệu con:</label>
+                    <div class="col-sm-6">
+                        <nop-editor asp-for="NAME" id="NAME_@Model.GUID" />
+                        <span asp-validation-for="NAME" id="NAME_@Model.GUID"></span>
+                    </div>
+                    <div class="col-sm-1"></div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Bắt buộc:</label>
+                    <div class="col-sm-1 col-form-label">
+                        <input class="vali-check" type="checkbox" value="true" id="Vali_@Model.GUID" onclick="CheckVali()" />
+                    </div>
+                </div>
+            }
+            <div class="form-group row">
+                <div class="col-sm-1"></div>
+                <label class="col-form-label col-sm-2 text-sm-right">Tên giá trị 1:</label>
+                <div>
+                    <input class="LoaiObject" id="@Model.GUID" asp-for="GUID" value="@Model.GuidParrent" hidden />
+                    <input id="LoaiDuLieuCon_@Model.GUID" asp-for="LoaiDuLieuIdParrent" value="@Model.LoaiDuLieuIdParrent" hidden />
+                    <input asp-for="stt" id="STT1_@Model.GUID" value="1" hidden />
+                </div>
+                <div class="col-sm-2">
+                    <nop-editor asp-for="NAME" id="NAME_TT1_@Model.GUID" />
+                    <span asp-validation-for="NAME" id="NAME_TT1_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Giá trị 1:</label>
+                <div class="col-sm-2">
+                    <nop-editor asp-for="ValueTT" id="Value_TT1_@Model.GUID" />
+                    <span asp-validation-for="ValueTT" id="Value_TT1_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Mặc định:</label>
+                <div class="col-sm-1 col-form-label">
+                    <input type="radio" name="Default_@Model.GuidParrent" id="Default_TT1_@Model.GUID" checked=@(Model.Is_Default) />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-1"></div>
+                <label class="col-form-label col-sm-2 text-sm-right">Tên giá trị 2:</label>
+                <div class="col-sm-2">
+                    <nop-editor asp-for="NAME" id="NAME_TT2_@Model.GUID" />
+                    <span asp-validation-for="NAME" id="NAME_TT2_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Giá trị 2:</label>
+                <div class="col-sm-2">
+                    <nop-editor asp-for="ValueTT" id="Value_TT2_@Model.GUID" />
+                    <span asp-validation-for="ValueTT" id="Value_TT2_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Mặc định:</label>
+                <div class="col-sm-1 col-form-label">
+                    <input type="radio" name="Default_@Model.GuidParrent" id="Default_TT2_@Model.GUID" checked=@(Model.Is_Default) />
+                </div>
+            </div>
+        }
+        else
+        {
+            @*nếu là phần tử con thì mới hiện tên nhóm*@
+            @if (!Model.GuidParrent.Equals(Guid.Empty) && Model.stt == 1)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-1"></div>
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên dữ liệu con:</label>
+                    <div class="col-sm-6">
+                        <nop-editor asp-for="NAME" id="NAME_@Model.GUID" />
+                        <span asp-validation-for="NAME" id="NAME_@Model.GUID"></span>
+                    </div>
+                    <div class="col-sm-1"></div>
+                    <label class="col-form-label col-sm-1 text-sm-right">Bắt buộc:</label>
+                    <div class="col-sm-1 col-form-label">
+                        <input class="vali-check" type="checkbox" value="true" id="Vali_@Model.GUID" onclick="CheckVali()" />
+                    </div>
+                </div>
+            }
+            @*nếu là phần tử con đầu tiền thì lấy Guid chính nó*@
+            @if (Model.stt == 1)
+            {
+                <input class="stt_@Model.GUID" asp-for="stt" id="STT_@Model.GUID" value="@Model.stt" hidden />
+            }
+            @*nếu là không phải phần tử con đầu tiền thì lấy Guid cha*@
+            else
+            {
+                <input class="stt_@Model.GuidParrent" asp-for="stt" id="STT_@Model.GUID" value="@Model.stt" hidden />
+            }
+            <div class="form-group row" id="div_@Model.GUID">
+                <div class="col-sm-1"></div>
+                <label class="col-form-label col-sm-2 text-sm-right">Tên @Model.stt:</label>
+                <div><input class="LoaiObject" id="@Model.GUID" asp-for="GUID" value="@Model.GuidParrent" hidden /></div>
+                <input id="LoaiDuLieuCon_@Model.GUID" asp-for="LoaiDuLieuIdParrent" value="@Model.LoaiDuLieuIdParrent" hidden />
+                <div class="col-sm-2">
+                    <nop-editor asp-for="NAME" id="NAME_TT_@Model.GUID" />
+                    <span asp-validation-for="NAME" id="NAME_TT_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Giá trị @Model.stt:</label>
+                <div class="col-sm-2">
+                    <nop-editor asp-for="ValueTT" id="Value_TT_@Model.GUID" />
+                    <span asp-validation-for="ValueTT" id="Value_TT_Vali_@Model.GUID"></span>
+                </div>
+                <label class="col-form-label col-sm-1 text-sm-right">Mặc định:</label>
+                <div class="col-sm-1 col-form-label">
+
+                    @if (Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.MS || Model.LoaiDuLieuIdParrent == (int)enumLoaiDuLieuCauHinh.CB)//nếu là mutiselect hoặc combo box thì có thể chọn mặc định nhiều giá trị
+                    {
+                        <input type="checkbox" name="Default_@Model.GuidParrent" id="Default_TT_@Model.GUID" checked=@(Model.Is_Default) />
+                    }
+                    else
+                    {
+                        <input type="radio" name="Default_@Model.GuidParrent" id="Default_TT_@Model.GUID" checked=@(Model.Is_Default) />
+                    }
+                </div>
+                @*nếu là phần tử con đầu tiền mới có nút thêm*@
+                @if (Model.stt == 1)
+                {
+                    <div class="col-sm-1 text-sm-right">
+                        <a href="javascript:void(0)" onclick='AddViewDuLieu("@Model.GUID")'>Thêm</a>
+                    </div>
+                }
+            </div>
+        }
+        <div id="viewDuLieuCon_@Model.GUID"></div>
+        <script>
+            $(document).ready(function () {
+                $(".viewTong_True").each(function () {
+                    $(this).addClass("gs-form-group");
+                });
+            });
+            $("#LoaiDuLieuId_@Model.GUID").change(function () {
+                AddViewDuLieuByObj("@Model.GUID");
+            });
+            function XoaViewDuLieu(ID) {
+                $("#viewDuLieu_" + ID).empty();
+            };
+            //kiểm tra xem nếu all phần tử được check thì check nút all
+            function CheckVali() {
+                var check = $(".vali-check");
+                var checked = $(".vali-check:checkbox:checked");
+                if (check.length == checked.length) {
+                    $("#Vali_NHOM").prop('checked', true);
+                }
+                else {
+                    $("#Vali_NHOM").prop('checked', false);
+                }
+            };
+        </script>
+    </div>
+</div>

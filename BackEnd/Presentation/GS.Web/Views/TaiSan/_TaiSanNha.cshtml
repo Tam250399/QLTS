@@ -1,0 +1,464 @@
+﻿@model TaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="strTaiSanNguonVonIds" type="hidden" />
+<input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="YeuCauId" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+
+<div class="gs-form-group ">
+    <h6>Thông tin chung</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Đơn vị</label>
+        <div class="col-sm-4 d-none">
+            <nop-editor asp-for="DonViMa" asp-disabled="true" />
+        </div>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DonViTen" asp-disabled="true" />
+        </div>
+    </div>
+    @if (Model.isCreateTSDA != null && Model.isCreateTSDA.Value == true)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Dự án</label>
+            <div class="col-sm-10">
+                <div class="d-flex w-100">
+                    <div class="flex-grow-1 w-100">
+                        <app-select asp-for="DU_AN_ID" asp-items="Model.DuAnAvailable" asp-filter="true" />
+                        <span asp-validation-for="DU_AN_ID"></span>
+                    </div>
+                    <div class="">
+                        <button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="600" data-title="Thêm mới dự án" data-src="/DuAn/_Create" style="margin:3px 0px 0px 2px;">
+                            <span class="ion ion-md-add"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2   text-required">Tên ngôi nhà</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN" placeholder="Tên tài sản..." maxlength="255" />
+            <span asp-validation-for="TEN" class="TEN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 "></label>
+        <div class="col-sm-6 row" style="padding-left:20px">
+            @if (Model.taisannhaModel.isQuanLyDat)
+            {
+                <label class="custom-control custom-radio">
+                    <input name="isQuanLyDatName" type="radio" class="custom-control-input isQuanLyDatClass" value="true" checked>
+                    <span class="custom-control-label">Có quản lý đất</span>
+                </label>
+                <label class="custom-control custom-radio">
+                    <input name="isQuanLyDatName" type="radio" class="custom-control-input isQuanLyDatClass" value="false">
+                    <span class="custom-control-label">Không quản lý đất</span>
+                </label>
+            }
+            else
+            {
+                <label class="custom-control custom-radio">
+                    <input name="isQuanLyDatName" type="radio" class="custom-control-input isQuanLyDatClass" value="true">
+                    <span class="custom-control-label">Có quản lý đất</span>
+                </label>
+                <label class="custom-control custom-radio">
+                    <input name="isQuanLyDatName" type="radio" class="custom-control-input isQuanLyDatClass" value="false" checked>
+                    <span class="custom-control-label">Không quản lý đất</span>
+                </label>
+            }
+        </div>
+    </div>
+    <div class="form-group row">
+
+        <input asp-for="taisannhaModel.TAI_SAN_DAT_ID" type="hidden" />
+        <label class="col-form-label col-sm-2 text-required " id="isQuanLyDatLabel">Thuộc khuôn viên đất</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="taisannhaModel.NHA_DIA_CHI" title="Nhập địa chỉ hoặc chọn đất"  />
+            <span asp-validation-for="taisannhaModel.NHA_DIA_CHI" data-valmsg-for="taisannhaModel.NHA_DIA_CHI"></span>
+            <span id="checkdiachi" class="field-validation-error text-danger" style="display:none ;color:red">Mời nhập địa chỉ hoặc chọn đất.</span>
+        </div>
+        <div class="align-items-center col-sm-2 " id="div_ChonDat">
+            <a id="btnChonDat" type="button" class="btn btn-xs btn-outline-primary" href="javascript:createOrUpdateTaiSanJS.chonTaiSanDatPopup();">
+                <i class="ion ion-md-add" style="margin-right:5px;"></i>Chọn đất
+            </a>
+            <a id="btnGoDat" type="button" class=" btn btn-xs btn-outline-danger disabled" href="javascript:void(0);">
+                <i class="ion ion-md-trash" style="margin-right:5px;"></i>Bỏ chọn đất
+            </a>
+        </div>
+    </div>
+    <div id="div_ChonDiaBan">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Quốc gia</label>
+            <div class="col-sm-4">
+                <app-select asp-for="taisannhaModel.NHA_QuocGiaId" asp-items="Model.taisannhaModel.AvailableQuocGia" asp-filter="true" />
+                <span asp-validation-for="taisannhaModel.NHA_QuocGiaId" class="check-QuocGiaId" data-valmsg-for="taisannhaModel.NHA_QuocGiaId"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required">Tỉnh/Thành phố</label>
+            <div class="col-sm-4">
+                <app-select asp-for="taisannhaModel.NHA_TinhId" asp-items="Model.taisannhaModel.AvailableTinh" asp-filter="true" />
+                <span asp-validation-for="taisannhaModel.NHA_TinhId" class="check-TinhId" data-valmsg-for="taisannhaModel.NHA_TinhId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Quận/Huyện</label>
+            <div class="col-sm-4">
+                <app-select asp-for="taisannhaModel.NHA_HuyenId" asp-items="Model.taisannhaModel.AvailableHuyen" asp-filter="true" />
+                <span asp-validation-for="taisannhaModel.NHA_HuyenId" class="check-HuyenId" data-valmsg-for="taisannhaModel.NHA_HuyenId"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required">Xã/Phường</label>
+            <div class="col-sm-4">
+                <app-select asp-for="taisannhaModel.NHA_XaId" asp-items="Model.taisannhaModel.AvailableXa" asp-filter="true" />
+                <span asp-validation-for="taisannhaModel.NHA_XaId" data-valmsg-for="taisannhaModel.NHA_XaId"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Lý do tăng</label>
+        <div class="col-sm-4">
+            <app-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" asp-filter="true" />
+            <span asp-validation-for="LY_DO_BIEN_DONG_ID" class="LY_DO_BIEN_DONG_ID"></span>
+        </div>
+
+        @if (Model.isTangMoi == true)
+        {
+            <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày tăng</label>
+        }
+        else
+        {
+            <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày kê khai</label>
+        }
+
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_NHAP" /><br />
+            <span asp-validation-for="NGAY_NHAP" class="valid-ngay-nhap-ts"></span>
+        </div>
+    </div>
+    <div class="form-group row d-none hinh-thuc-mua-sam-row">
+        <label class="col-form-label col-sm-2" style="margin-top:3px;">Hình thức mua sắm</label>
+        <div class="col-sm-4">
+            <app-select asp-for="HinhThucMuaSamId" asp-items="Model.HinhThucMuaSamAvailable" asp-filter="true" />
+            <span asp-validation-for="HinhThucMuaSamId" class="HinhThucMuaSamId"></span>
+        </div>
+        <label class="col-form-label col-sm-2">Giá mua trên hóa đơn</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="GIA_MUA_TIEP_NHAN" id="giaMuaTiepNhan" asp-dvt="c" asp-min-number="0" />
+            <span asp-validation-for="GIA_MUA_TIEP_NHAN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Cấp nhà</label>
+        <div class="col-sm-4">
+
+            <app-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+            <span asp-validation-for="LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+        </div>
+        <script>
+			$(document).ready(function () {
+				$("#LOAI_TAI_SAN_ID").kendoDropDownList({
+					dataTextField: "Text",
+					dataValueField: "Value",
+					template: function (e) {
+						if (e.Disabled) {
+							return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+						} else {
+							return '<span class="k-state-default">' + e.Text + '</span>';
+						}
+					},
+					select: function (e) {
+						if (e.dataItem.Disabled) {
+							e.preventDefault();
+						}
+					},
+					dataSource: JSON.parse(String.raw`@Html.Raw(((Model.LoaiTaiSanAvailable).toStringJson()))`),
+				}).data("kendoDropDownList");
+			});
+        </script>
+        <label class="col-form-label col-sm-2 text-required">Số tầng</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="taisannhaModel.NHA_SO_TANG" asp-min-number="0" />
+            <span asp-validation-for="taisannhaModel.NHA_SO_TANG" data-valmsg-for="taisannhaModel.NHA_SO_TANG"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Diện tích XD</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="taisannhaModel.DIEN_TICH_XAY_DUNG" asp-min-number="0" asp-dvt="m2" />
+            <span asp-validation-for="taisannhaModel.DIEN_TICH_XAY_DUNG" data-valmsg-for="taisannhaModel.DIEN_TICH_XAY_DUNG"></span>
+            <span id="checkdientichmax" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích xây dựng không được lớn hơn tổng diện tích sàn XD </span>
+        </div>
+        <label class="col-form-label col-sm-2 text-required">DT sàn sử dụng</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="taisannhaModel.DIEN_TICH_SAN_XAY_DUNG" asp-min-number="0" asp-dvt="m2" />
+            <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red">tổng diện tích sàn XD  không được lớn hơn tổng hiện trạng </span>
+            <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red">tổng diện tích sàn XD  không được nhỏ hơn tổng hiện trạng</span>
+            <span asp-validation-for="taisannhaModel.DIEN_TICH_SAN_XAY_DUNG" data-valmsg-for="taisannhaModel.DIEN_TICH_SAN_XAY_DUNG"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required ">Năm xây dựng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="taisannhaModel.NAM_XAY_DUNG" asp-min-number="0" />
+            <span asp-validation-for="taisannhaModel.NAM_XAY_DUNG" data-valmsg-for="taisannhaModel.NAM_XAY_DUNG"></span>
+            <span id="checkNamXayDung" class="field-validation-error text-danger" style="display:none ;color:red">Năm xây dựng phải nhỏ hơn hoặc bằng  năm sử dụng</span>
+        </div>
+        <label class="col-form-label col-sm-2 lblNgaySuDung  text-required">Ngày đưa vào sử dụng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_SU_DUNG" />
+            <span asp-validation-for="NGAY_SU_DUNG"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Bộ phận sử dụng</label>
+        <div class="col-sm-4 d-flex ">
+            <div class="flex-sm-grow-1">
+                <app-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.BoPhanSuDungAvailable" asp-filter="true" />
+                <span asp-validation-for="DON_VI_BO_PHAN_ID"></span>
+            </div>
+            <div class="">
+                <button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="400" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin:3px 0px 0px 2px;">
+                    <span class="ion ion-md-add"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@await Html.PartialAsync("_GiaTriTaiSan", Model)
+<div class="gs-form-group ">
+	<h6>
+		Hiện trạng sử dụng
+	</h6>
+	<div class="form-group row ">
+		@foreach (var obj in Model.taisannhaModel.lstHienTrang)
+		{
+			@await Html.PartialAsync("_HienTrangSuDung", obj)
+		}
+	</div>
+</div>
+
+
+<script>
+     
+	$(function () {
+		if ($("#checktinhkhauhao").is(":checked")) { $("#tinhkhauhao").show(); }
+		$(function () {
+			$("#checktinhkhauhao").click(function () {
+				if ($(this).is(":checked")) {
+					$("#tinhkhauhao").show('fast');
+				} else {
+					$("#tinhkhauhao").hide('fast');
+				}
+			});
+		});
+
+		//validate nam xay dung
+		$("#taisannhaModel_NAM_XAY_DUNG").change(function () {
+			
+			var namXayDungNha = ConvertToNumber("#taisannhaModel_NAM_XAY_DUNG");
+			var ngaysudung = $("#NGAY_SU_DUNG").data("kendoDatePicker").value();
+			if (ngaysudung != null && namXayDungNha <= ngaysudung.getFullYear()) {
+				$("#checkNamXayDung").hide();
+				if (createOrUpdateTaiSanJS) {
+					createOrUpdateTaiSanJS.fullValid.NamXayDung = false;
+				}
+			} else {
+				if (createOrUpdateTaiSanJS) {
+					createOrUpdateTaiSanJS.fullValid.NamXayDung = true;
+				}
+				$("#checkNamXayDung").show();
+			}
+		})
+
+		//-----------
+		//check diện tích xây dựng với tổng diện tích sàn
+		$("#DIEN_TICH_SAN_XAY_DUNG").change(CompareDientich);
+		$("#DIEN_TICH_XAY_DUNG").change(CompareDientich);
+		// check địa bàn không được để trống
+		$("#XaId").each(checknullDiaban);
+		$("#XaId").change(checknullDiaban);
+		//gỡ đất
+		//$("#btnGoDat").click(function () {
+		//	$("#btnGoDat").addClass('disabled');
+		//	$("#taisannhaModel_TAI_SAN_DAT_ID").val(null);
+		//	$("#taisannhaModel_NHA_DIA_CHI").val(null);
+		//	$("#taisannhaModel_NHA_DIA_CHI").prop("disabled", false);
+		//	checkdiachi();
+		//})
+		$('.isQuanLyDatClass').change();
+
+	})
+	function CompareDientich() {
+		var dientichXD = ConvertToNumber("#DIEN_TICH_XAY_DUNG");
+		var dientichsanXD = ConvertToNumber("#DIEN_TICH_SAN_XAY_DUNG");
+
+		if (dientichXD > dientichsanXD) {
+			$("#checkdientichmax").show();
+			$("#btnSave").prop("disabled", true);
+			$(".btnAdd").prop("disabled", true);
+		}
+		else {
+			$("#checkdientichmax").hide();
+			$("#btnSave").prop("disabled", false);
+			$(".btnAdd").prop("disabled", false);
+		}
+	}
+	function CompareHientrangNha() {
+		var total = 0;
+		$(".HienTrang").each(function () {
+			var _hientrangId = $(this).data("idhientrang");
+			var a = $("#HienTrang_" + _hientrangId).val();
+			var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+			total = total + _Value;
+		});
+		var tonghientrangNha = total.toFixed(2);
+		var dientichxaydung = ConvertToNumber("#DIEN_TICH_SAN_XAY_DUNG");
+		if (tonghientrangNha != dientichxaydung) {
+			if (tonghientrangNha > dientichxaydung) {
+				$("#checkhientrangmax").show();
+				$("#checkhientrangmin").hide();
+				$("#btnSave").prop("disabled", true);
+				$(".btnAdd").prop("disabled", true);
+			}
+			if (tonghientrangNha < dientichxaydung) {
+				$("#checkhientrangmin").show();
+				$("#checkhientrangmax").hide();
+				$("#btnSave").prop("disabled", true);
+				$(".btnAdd").prop("disabled", true);
+			}
+		}
+		else {
+			$("#checkhientrangmin").hide();
+			$("#checkhientrangmax").hide();
+			$("#btnSave").prop("disabled", false);
+			$(".btnAdd").prop("disabled", false);
+		}
+	}
+	/**
+	 * check Địa bàn
+	 * */
+	function checknullDiaban() {
+		var DiaBanid = $("#XaId").val();
+		if (DiaBanid <= 0) {
+			$("#checkdiaban").show();
+			$("#btnSave").prop("disabled", true);
+			$(".btnAdd").prop("disabled", true);
+		}
+		else {
+			$("#checkdiaban").hide();
+			$("#btnSave").prop("disabled", false);
+			$(".btnAdd").prop("disabled", false);
+		}
+	}
+	/**
+	 * check dia chi trống
+	 * */
+	function checkdiachi() {
+		var diachi = $("#NHA_DIA_CHI").val();
+		if (diachi === "") {
+			$("#checkdiachi").show();
+			$("#btnSave").prop("disabled", true);
+			$(".btnAdd").prop("disabled", true);
+		}
+		else {
+			$("#checkdiachi").hide();
+			$("#btnSave").prop("disabled", false);
+			$(".btnAdd").prop("disabled", false);
+		}
+    }
+    $("#taisannhaModel_NHA_QuocGiaId").change(function () {
+        var quocgiaId = $("#taisannhaModel_NHA_QuocGiaId").val();
+		var _str = "-- Chọn tỉnh/thành phố --";
+		var _data = {
+			QuocGiaId: quocgiaId,
+			str: _str,
+			CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.TINH),
+		}
+		$.ajax({
+			url: "/TaiSan/GetDataSource",
+			type: "POST",
+			data: _data,
+			success: function (result) {
+                var dropdownlistTinh = $("#taisannhaModel_NHA_TinhId").data("kendoDropDownList");
+				dropdownlistTinh.setDataSource(new kendo.data.DataSource({ data: result }));
+                $("#taisannhaModel_NHA_TinhId").val(0);
+                var text = $("#taisannhaModel_NHA_TinhId option:first-child").text();
+				$("#taisannhaModel_NHA_TinhId").parent().find(".k-input").text(text);
+				$("#taisannhaModel_NHA_HuyenId").val(0);
+				var text = $("#taisannhaModel_NHA_HuyenId option:first-child").text();
+				$("#taisannhaModel_NHA_HuyenId").parent().find(".k-input").text(text);
+				$("#taisannhaModel_NHA_XaId").val(0);
+				var text = $("#taisannhaModel_NHA_XaId option:first-child").text();
+                $("#taisannhaModel_NHA_XaId").parent().find(".k-input").text(text);
+			}
+        });
+        //$("#taisannhaModel_NHA_TinhId").change();
+		//$("#taisannhaModel_NHA_HuyenId").change();
+	});
+    $("#taisannhaModel_NHA_TinhId").change(function () {
+		$("#taisannhaModel_NHA_HuyenId").val(0);
+		var quocgiaId = $("#taisandatModel_QuocGiaId").val();
+		var _ParentId = $("#taisannhaModel_NHA_TinhId").val();
+        var _str = "-- Chọn quận/huyện --";
+		var _data = {
+			QuocGiaId: quocgiaId,
+			ParentId: _ParentId,
+			CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.HUYEN),
+			str: _str
+		}
+		$.ajax({
+			url: "/TaiSan/GetDataSource",
+			type: "POST",
+			data: _data,
+			success: function (result) {
+				var dropdownlistHuyen = $("#taisannhaModel_NHA_HuyenId").data("kendoDropDownList");
+				dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+				$("#taisannhaModel_NHA_HuyenId").val(0);
+				var text = $("#taisannhaModel_NHA_HuyenId option:first-child").text();
+				$("#taisannhaModel_NHA_HuyenId").parent().find(".k-input").text(text);
+				$("#taisannhaModel_NHA_XaId").val(0);
+				var text = $("#taisannhaModel_NHA_XaId option:first-child").text();
+                $("#taisannhaModel_NHA_XaId").parent().find(".k-input").text(text);
+			}
+		});
+        //$("#taisannhaModel_NHA_HuyenId").change();
+    });
+    $("#taisannhaModel_NHA_HuyenId").change(function () {
+		$("#taisannhaModel_NHA_XaId").val(0);
+		var quocgiaId = $("#taisandatModel_QuocGiaId").val();
+		var _ParentId = $("#taisannhaModel_NHA_HuyenId").val();
+		var _str = "-- Chọn xã/phường --";
+		var _data = {
+			QuocGiaId: quocgiaId,
+			ParentId: _ParentId,
+			CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.XA),
+			str: _str
+		}
+		$.ajax({
+			url: "/TaiSan/GetDataSource",
+			type: "POST",
+			data: _data,
+			success: function (result) {
+				//$("#XaId").kendoDropDownList({
+				//    autoBind: false,
+				//    dataTextField: "Text",
+				//    dataValueField: "Value",
+				//    dataSource: result
+				//}).data("kendoDropDownList");
+				var dropdownlistXa = $("#taisannhaModel_NHA_XaId").data("kendoDropDownList");
+				dropdownlistXa.setDataSource(new kendo.data.DataSource({ data: result }));
+				dropdownlistXa.select(0);
+				//$("#taisannhaModel_NHA_XaId").val(0);
+				//var text = $("#taisannhaModel_NHA_XaId option:first-child").text();
+				//$("#taisannhaModel_NHA_XaId").parent().find(".k-input").text(text);
+			}
+		});
+    });
+	function Comparesongay() {
+		checknull("QUYET_DINH_BAN_GIAO", "QUYET_DINH_BAN_GIAO_NGAY");
+		checknull("BIEN_BAN_NGHIEM_THU", "BIEN_BAN_NGHIEM_THU_NGAY");
+		checknull("PHAP_LY_KHAC", "PHAP_LY_KHAC_NGAY");
+	}
+</script>

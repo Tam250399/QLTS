@@ -1,0 +1,538 @@
+﻿@model NguoiDungSearchModel
+
+@inject IWorkContext workContext
+@{
+    //page title
+    ViewBag.Title = "Người dùng";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NguoiDungDuyet");
+    var currentCustomer = workContext.CurrentCustomer;
+}
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class=" row">
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Từ khoá:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="KeySearch" placeholder="Tên...." />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Bộ/Tỉnh:</label>
+                <div class="col-sm-4">
+                    <nop-select asp-filter="true" asp-for="DonViBoTinhId" asp-items="Model.ddlDonViBoTinh" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Đơn vị trực thuộc:</label>
+                <div class="col-sm-4">
+                    <nop-select asp-filter="true" asp-for="DonViQuanHuyenId" asp-items="Model.ddlDonViQuanHuyen" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Trạng thái:</label>
+                <div class="col-md-4">
+                    <app-select asp-for="TrangThaiId" asp-items="Model.ddlTrangThai" asp-filter="true" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-header clearfix row">
+    <div class="col-sm-8">
+        <div class="tle1" >
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài khoản chờ duyệt</span>
+        </div>
+        
+    </div>
+    <div class="col-sm-4 custom-control row text-right mb-1 m-0" style="">
+        <button type="button" class="btn btn-outline-success" style="display:none;" id="btnDuyetAll">Duyệt tất cả</button>
+        <button type="button" class="btn btn-outline-danger" style="display:none;" id="btnXoaAll">Xóa tất cả</button>
+        <button type="button" class="btn btn-outline-danger" style="display:none;" id="btnHuyDuyetAll">Hủy duyệt tất cả</button>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            updateSpanList();
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    TrangThaiId: $('#@Html.IdFor(model => model.TrangThaiId)').val(),
+                                    Tendaydu: $('#@Html.IdFor(model => model.Tendaydu)').val(),
+                                    Macanbo: $('#@Html.IdFor(model => model.Macanbo)').val(),
+									DonViBoTinhId: $('#@Html.IdFor(model => model.DonViBoTinhId)').val(),
+									DonViQuanHuyenId: $('#@Html.IdFor(model => model.DonViQuanHuyenId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                updateSpanList();
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            var grid = $("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("ListYeuCauDuyetNguoiDung", "NguoiDung"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									input: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+								@await Html.PartialAsync("_GridPagerMessages")
+								},
+								dataBinding: function () {
+									record_taiKhoan = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								scrollable: false,
+								dataBound: onDataBound,
+								columns: [
+									{
+                                        field: "TEN_DANG_NHAP",
+                                        title: "Tên đăng nhập",
+                                        template: function (dataItem) {
+                                            return "<a href='javascript:ChiTietTaiKhoan(" + dataItem.ID + ")'>" + dataItem.TEN_DANG_NHAP + "</a>";
+										}
+                                    },
+                                    {
+                                        field: "TEN_DAY_DU",
+                                        title: "Tên đầy đủ"
+                                    }, {
+                                        field: "MA_CAN_BO",
+                                        title: "Mã cán bộ   "
+                                    }, {
+                                        field: "EMAIL",
+                                        title: "Email"
+                                    }, {
+                                        field: "MOBILE",
+                                        title: "Số điện thoại"
+                                    }, {
+                                        field: "Ten_TRANG_THAI",
+                                        title: "Trạng thái",
+                                        template: function (dataItem) {
+                                            if (dataItem.TRANG_THAI_ID == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.Lock)) {
+                                                return "<span style='color: red;'>" + dataItem.Ten_TRANG_THAI + "</span>";
+                                            } else {
+                                                return dataItem.Ten_TRANG_THAI;
+                                            }
+                                        }
+                                    }, {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        //width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                       template: function (dataItem) {
+                                           if (dataItem.TRANG_THAI_ID == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.choduyet)) {
+                                               btnduyet = `<button ` + ' type="button" class="btn btn-sm  btn-outline-success" Onclick="DuyetTaiKhoan(' + kendo.htmlEncode(dataItem.ID) + ')"  title="Duyệt">Duyệt</button>' + '&nbsp;';
+                                               btnxoa = `<button ` + ' type="button" class="btn btn-sm  btn-outline-danger" Onclick="XoaTaiKhoan(' + kendo.htmlEncode(dataItem.ID) + ')"  title="Xóa">Xóa</button>' + '&nbsp;'
+                                               return btnduyet + btnxoa;
+                                                    //+ `<button ` + 'class="btn btn-sm btn-outline-danger" Onclick="khongduyet(' + kendo.htmlEncode(dataItem.ID) + ')" title="Từ chối">Từ chối</button>';
+
+											}
+											else if (dataItem.TRANG_THAI_ID == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.ok)) {
+                                                return `<button ` + ' type="button" class="btn btn-sm  btn-outline-danger" Onclick="HuyDuyetTaiKhoan(' + kendo.htmlEncode(dataItem.ID) + ')"  title="Hủy duyệt">Hủy duyệt</button>' + '&nbsp;';
+                                                //return '';
+											}
+											else {
+
+												return '';
+											}
+										}
+                                    },
+									{
+										title: 'Select All',
+										headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+										template: function (dataItem) {
+												return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+
+										},
+										width: 50,
+										attributes: {
+											style: "text-align: center;"
+										},
+									},
+								]
+							}).data("kendoGrid");
+							//bind click event to the checkbox
+							grid.table.on("click", ".row-checkbox", selectRow);
+							$('#header-chb').change(function (ev) {
+								var checked = ev.target.checked;
+								$('.row-checkbox').each(function (idx, item) {
+									if (checked) {
+										if (!($(item).closest('tr').is('.k-state-selected'))) {
+											$(item).click();
+										}
+									} else {
+										if ($(item).closest('tr').is('.k-state-selected')) {
+											$(item).click();
+										}
+									}
+								});
+							});
+                        });
+                        $("#btnDuyetAll").click(function () {
+                            var allSelected = $("#items-grid tr.k-state-selected");
+                            var allSelectedModels = [];
+                            var strTaiKhoanId = "";
+                            $.each(allSelected, function (e) {
+                                var row = $(this);
+                                var grid = row.closest(".k-grid").data("kendoGrid");
+                                var dataItem = grid.dataItem(row);
+                                allSelectedModels.push(dataItem.ID);
+                            });
+                            strTaiKhoanId = allSelectedModels.join("-");
+                            DuyetTaiKhoan(strTaiKhoanId);
+                            //bỏ tích check all
+                            $('#header-chb').prop('checked', false)
+                            $('#header-chb').change()
+                        });
+                        $("#btnHuyDuyetAll").click(function () {
+                            var allSelected = $("#items-grid tr.k-state-selected");
+                            var allSelectedModels = [];
+                            var strTaiKhoanId = "";
+                            $.each(allSelected, function (e) {
+                                var row = $(this);
+                                var grid = row.closest(".k-grid").data("kendoGrid");
+                                var dataItem = grid.dataItem(row);
+                                allSelectedModels.push(dataItem.ID);
+                            });
+                            strTaiKhoanId = allSelectedModels.join("-");
+                            HuyDuyetTaiKhoan(strTaiKhoanId);
+                            //bỏ tích check all
+                            $('#header-chb').prop('checked', false)
+                            $('#header-chb').change()
+                        });
+                        var checkedIds = {};
+                            //on click of the checkbox:
+                        function selectRow() {
+                                var checked = this.checked,
+                                    row = $(this).closest("tr"),
+                                    grid = $("#items-grid").data("kendoGrid"),
+                                    dataItem = grid.dataItem(row);
+                                checkedIds[dataItem.ID] = checked;
+                                if (checked) {
+                                    //-select the row
+                                    row.addClass("k-state-selected");
+                                    var checkHeader = true;
+                                    var ListItem = [];
+                                    var ind=0;
+                                    $.each(grid.items(), function (index, item) {
+                                        if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+                                            ListItem.push(item);
+                                        }
+                                    });
+                                    for (var i = 0; i < ListItem.length; i++) {
+                                        if (!$(ListItem[i]).hasClass("k-state-selected")) {
+                                            checkHeader = false;
+                                            break;
+                                        }
+                                    }
+                                    $("#header-chb")[0].checked = checkHeader;
+                                    let TrangThaiId = $('#TrangThaiId').val();
+                                        if (TrangThaiId) {
+                                            if (TrangThaiId == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.choduyet)) {
+                                                $("#btnDuyetAll").show();
+                                                $("#btnXoaAll").show();
+                                            }
+                                            else if (TrangThaiId == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.ok)) {
+                                                $("#btnDuyetAll").hide();
+                                                $("#btnXoaAll").hide();
+                                                $("#btnHuyDuyetAll").text('Hủy duyệt tất cả');
+                                                $("#btnHuyDuyetAll").show();
+                                            }
+                                        }
+                                        else {
+                                            $("#btnDuyetAll").show();
+                                            $("#btnXoaAll").show();
+                                            $("#btnHuyDuyetAll").show();
+                                        }
+                                }
+                                else {
+                                    //-remove selection
+                                    row.removeClass("k-state-selected");
+                                    $("#header-chb")[0].checked = false;
+                                    var allSelected = $("#items-grid tr.k-state-selected");
+                                    if (allSelected.length > 0) {
+                                        let TrangThaiId = $('#TrangThaiId').val();
+                                        if (TrangThaiId) {
+                                            if (TrangThaiId == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.choduyet)) {
+                                                $("#btnDuyetAll").show();
+                                                $("#btnXoaAll").show();
+                                            }
+                                            else if (TrangThaiId == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.ok)) {
+                                                $("#btnDuyetAll").hide();
+                                                $("#btnXoaAll").hide();
+                                                $("#btnHuyDuyetAll").text('Bỏ duyệt tất cả');
+                                                $("#btnHuyDuyetAll").show();
+                                            }
+
+                                        }
+                                        else {
+                                            $("#btnDuyetAll").show();
+                                            $("#btnXoaAll").show();
+                                            $("#btnHuyDuyetAll").show();
+                                        }
+
+                                    } else {
+                                        $("#btnDuyetAll").hide();
+                                        $("#btnXoaAll").hide();
+                                        $("#btnHuyDuyetAll").hide();
+                                    }
+                                }
+                            }
+                        function onDataBound(e) {
+                                    //onDataBoundFixed(this);
+                                    var view = this.dataSource.view();
+                                    for (var i = 0; i < view.length; i++) {
+                                        if (checkedIds[view[i].ID]) {
+                                            this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                                                .addClass("k-state-selected")
+                                                .find(".k-checkbox")
+                                                .attr("checked", "checked");
+                                        }
+                                }
+                        }
+                        function DuyetTaiKhoan(strTaiKhoanIds) {
+                            bootbox.confirm({
+                                message: "Bạn có chắc chắn duyệt không?",
+                                className: 'bootbox-sm',
+                                buttons: {
+                                    confirm: {
+                                        label: 'Đồng ý',
+                                    },
+                                    cancel: {
+                                        label: 'Hủy',
+                                    },
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+                                        var _data = {
+                                            strTaiKhoanIds: strTaiKhoanIds,
+                                        }
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            data: _data,
+                                            url: "/NguoiDung/DuyetTaiKhoan",
+                                            success: function (msg) {
+                                                if (msg.Code == "00") {
+                                                    ShowSuccessMessage(msg.Message);
+                                                    var grid = $('#items-grid').data('kendoGrid');
+                                                    if (grid)
+                                                        grid.dataSource.page(grid.dataSource.page());
+                                                    hideThrobber();
+                                                }
+                                                else {
+                                                    ShowErrorMessage(msg.Message);
+                                                    hideThrobber();
+                                                }
+                                            },
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                                hideThrobber();
+                                            },
+                                            traditional: true
+                                        });
+                                    }
+                                },
+                            });
+                        }
+                        function HuyDuyetTaiKhoan(strTaiKhoanIds) {
+                            bootbox.confirm({
+                                message: "Bạn có chắc chắn hủy duyệt không?",
+                                className: 'bootbox-sm',
+                                buttons: {
+                                    confirm: {
+                                        label: 'Đồng ý',
+                                    },
+                                    cancel: {
+                                        label: 'Hủy',
+                                    },
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+                                        var _data = {
+                                            strTaiKhoanIds: strTaiKhoanIds,
+                                        }
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            data: _data,
+                                            url: "/NguoiDung/HuyDuyetTaiKhoan",
+                                            success: function (msg) {
+                                                if (msg.Code == "00") {
+                                                    ShowSuccessMessage(msg.Message);
+                                                    var grid = $('#items-grid').data('kendoGrid');
+                                                    if (grid)
+                                                        grid.dataSource.page(grid.dataSource.page());
+                                                    hideThrobber();
+                                                }
+                                                else {
+                                                    ShowErrorMessage(msg.Message);
+                                                    hideThrobber();
+                                                }
+                                            },
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                                hideThrobber();
+                                            },
+                                            traditional: true
+                                        });
+                                    }
+                                },
+                            });
+                        }
+                        function updateSpanList() {
+							var trangThai = $("#TrangThaiId").val();
+							if (trangThai == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.choduyet)) {
+								$("#name-list").text("Danh sách tài khoản chờ duyệt");
+								$(".tle1").css("color", "#2673b4");
+							}
+							else if (trangThai == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.ok)) {
+								$("#name-list").text("Danh sách tài khoản đã duyệt");
+								$(".tle1").css("color", "#02BC77");
+
+							}
+                        }
+                        $(function () {
+                            let ddlDonViBoTinh = $("#DonViBoTinhId").data("kendoDropDownList");
+							ddlDonViBoTinh?.bind("change", ddlDonViBoTinh_change);
+                        })
+						function ddlDonViBoTinh_change() {
+                            let value = this.value();
+                            let _data= {
+								donViChaId: value
+							}
+                            let _url = '@Url.Action("GetDonViConFromDonViCha","DonVi")'
+							ajaxPost(_data, _url).done(function (res) {
+								if (res.Code=="00") {
+                                    let ddlDonViQuanHuyen = $("#DonViQuanHuyenId").data("kendoDropDownList");
+                                    ddlDonViQuanHuyen?.setDataSource(res.ObjectInfo);
+                                    ddlDonViQuanHuyen?.select(0);
+								}
+							});
+                        }
+                        $("#btnXoaAll").click(function () {
+                            var allSelected = $("#items-grid tr.k-state-selected");
+                            var allSelectedModels = [];
+                            var strTaiKhoanId = "";
+                            $.each(allSelected, function (e) {
+                                var row = $(this);
+                                var grid = row.closest(".k-grid").data("kendoGrid");
+                                var dataItem = grid.dataItem(row);
+                                allSelectedModels.push(dataItem.ID);
+                            });
+                            strTaiKhoanId = allSelectedModels.join("-");
+                            XoaTaiKhoan(strTaiKhoanId);
+                            //bỏ tích check all
+                            $('#header-chb').prop('checked', false)
+                            $('#header-chb').change()
+                        });
+                        function XoaTaiKhoan(strTaiKhoanIds) {
+                            bootbox.confirm({
+                                message: "Bạn có chắc chắn xóa không?",
+                                className: 'bootbox-sm',
+                                buttons: {
+                                    confirm: {
+                                        label: 'Đồng ý',
+                                    },
+                                    cancel: {
+                                        label: 'Hủy',
+                                    },
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+                                        var _data = {
+                                            strTaiKhoanIds: strTaiKhoanIds,
+                                        }
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            data: _data,
+                                            url: "/NguoiDung/XoaTaiKhoan",
+                                            success: function (msg) {
+                                                if (msg.Code == "00") {
+                                                    ShowSuccessMessage(msg.Message);
+                                                    var grid = $('#items-grid').data('kendoGrid');
+                                                    if (grid)
+                                                        grid.dataSource.page(grid.dataSource.page());
+                                                    hideThrobber();
+                                                }
+                                                else {
+                                                    ShowErrorMessage(msg.Message);
+                                                    hideThrobber();
+                                                }
+                                            },
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                                hideThrobber();
+                                            },
+                                            traditional: true
+                                        });
+                                    }
+                                },
+                            });
+                        }
+                        function ChiTietTaiKhoan(TaiKhoanId) {
+                            var _url = "@(Url.Action("_ThongTinTaiKhoan", "NguoiDung"))?Id=" + TaiKhoanId;
+							OpenModalManual("Thông tin tài khoản", _url,72);
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

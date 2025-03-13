@@ -1,0 +1,110 @@
+﻿@model DonViSearchModel
+
+<input asp-for="nguoiDungId" type="hidden" />
+<h5>Phân quyền bảo mật theo đơn vị</h5>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="form-group row" style="margin-top: 8px;margin-bottom: 8px;text-align: right;">
+                <label class="col-form-label col-sm-4 text-sm-right">Từ khoá:</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã...." />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="padding-top: 10px">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="ThemDonVi-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    nguoiDungId:$('#@Html.IdFor(model => model.nguoiDungId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#ThemDonVi-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+
+                            $("#ThemDonVi-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_AddDonVi", "NguoiDung"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: 5,
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    //confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns:
+                                    [
+                                     {
+                                            field: "MA",
+                                            title: "Mã đơn vị"
+                                     }, {
+                                            field: "TEN",
+                                            title: "Tên đơn vị"
+
+                                     },{
+                                        field: "ID",
+                                        title: "Chọn",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '#if(isSelected == true){#<i class="fas fa-check d-block"></i>#}else{#<a data-id="#=ID#" class="btn btn-sm btn-outline-secondary" href="javascript:void(0);" onclick="loadDonVi(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>#}#',
+                                     }
+                                    ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

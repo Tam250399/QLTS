@@ -1,0 +1,88 @@
+@model ThuChiModel
+@{
+    //page title
+    ViewBag.Title = "Sửa thu chi";
+    //active menu item (system name)
+    //Html.SetActiveMenuItemSystemName("DanhSachThuChiTSTD");
+}
+@*<form asp-controller="ThuChi" asp-action="Create" method="post">
+    </form>*@
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa Quản lý thu, chi
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu và tiếp tục sửa
+        </button>*@
+        <button id="btnSave" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        <div class="gs-form-group">
+            <h6>Thông tin kết quả xử lý</h6>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left text-required">Chọn QĐ phê duyệt PAXL:</label>
+                <div class="col-sm-10">
+                    <nop-select asp-for="SelectedXuLyIds" id="SelectedXuLyIds" asp-items="Model.DDLKetQuaXuLy" asp-disabled="true" asp-multiple="true" />
+                </div>
+            </div>
+            <div id="view_deatil_KQ"></div>
+        </div>
+        <div id="view_create"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+       
+        $.ajax({
+            type: "GET",
+            async:false,
+            url: "/ThuChi/_ThuChiTable?ListXuLyString=" + "@Model.LIST_XU_LY_ID" + "&AddColumn=false",
+            success: function (data) {
+                $("#view_create").html(data);
+            }
+        });
+        $('span.k-widget.k-maskedtextbox').css('width', 120);
+        
+    });
+    function LoadDetail() {
+        var kq = $("#@Html.IdFor(c=>c.XU_LY_ID)").val();
+        if (kq > 0) {
+            $.ajax({
+                type: "GET",
+                url: "/ThuChi/_ThuChiTable?KetQuaId=" + kq+"&AddColumn=false",
+                success: function (data) {
+                    $("#view_create").html(data);
+                }
+            });
+        }
+        else {
+             $("#view_create").empty();
+        }
+    }
+    $("#btnSave").click(function () {
+        if ($("#SelectedXuLyIds").val().length > 0) {
+            if ($("#SelectedXuLyIds").val().length == 1 && $("#SelectedXuLyIds").val().includes("")) {
+                ShowErrorMessage("Chọn QĐ phê duyệt PAXL");
+            } else {
+                // loại bỏ Giá trị trống
+                var list = $("#SelectedXuLyIds").val().filter(function (item) { return item != '' })
+                $('#SelectedXuLyIds').data("kendoMultiSelect").value(list);
+                TinhTienPhaiThu();
+                SaveThuChi();
+            }
+
+        }
+        else {
+            ShowErrorMessage("Chọn QĐ phê duyệt PAXL");
+        }
+    })
+</script>
+
+

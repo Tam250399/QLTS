@@ -1,0 +1,66 @@
+@model LoaiTaiSanVoHinhModel
+@{
+    //page title
+    ViewBag.Title = "Sửa loại tài sản vô hình";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucLoaiTaiSanVoHinh");
+}
+<form asp-controller="LoaiTaiSanVoHinh" asp-action="Edit" method="post">
+    <div class="card mb-4">
+		<h6 class="card-header">
+			Sửa thông tin loại tài sản đơn vị
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="List">Quay lại danh sách</a>
+			</small>
+			<button type="button" class="btn btn-default btnClose" onclick="window.location.href = '/LoaiTaiSanVoHinh/List';" style="float:right; margin-right: 5px;">
+				<i class="ion ion-ios-close-circle-outline"></i>
+				Đóng
+			</button>
+			<button class="btn btn-danger" type="button" onclick="GS_Delete('Bạn có chắc chắn muốn xóa loại tài sản này không?',deleteLoaiTaiSanDonVi,@Model.ID)" title="Xóa" style="float:right;margin-right: 15px;">
+                <i class="fas fa-trash">&nbsp;Xóa</i>
+            </button>
+			@*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+			<i class="fas fa-trash"></i>
+			Xóa
+		</span>*@
+			@*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+			<i class="far fa-save"></i>
+			Lưu và tiếp tục sửa
+		</button>*@
+			<button type="submit" name="save" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h6>
+        <div class="card-body">
+			<input type="hidden" asp-for="CHE_DO_HAO_MON_ID" />
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+</form>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+
+<script>
+
+	function deleteLoaiTaiSanDonVi(id) {
+		var url = "/LoaiTaiSanVoHinh/Delete";
+		var data = { id: id };
+		var requestPost = ajaxPost(data, url);
+		requestPost.done((result) => {
+			if (result.Code == '00') {
+				ShowSuccessMessage(result.Message);
+				document.location.href = '/LoaiTaiSanVoHinh/List';
+			} else {
+				ShowErrorMessage(result.Message);
+			}
+		}).fail((xhr, ajaxOptions, thrownError) => {
+			console.log("error: " + thrownError);
+		});
+		
+    }
+
+
+</script>

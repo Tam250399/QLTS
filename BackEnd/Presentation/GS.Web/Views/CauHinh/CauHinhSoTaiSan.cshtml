@@ -1,0 +1,102 @@
+﻿@model CauHinhSoTaiSanModel
+@{
+	//page title
+	ViewBag.Title = "Cấu hình sổ tài sản";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhSoTaiSan");
+}
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+
+</div>
+<div id="items-grid" data-role="grid" class="k-grid k-widget k-display-block k-editable">
+	<div class="k-header k-grid-toolbar">
+		@*<a role="button" id="btn-save" class="pull-right btn-success k-button k-button-icontext k-grid-add" style="color:white;" href="#">
+			<span class="k-icon k-i-plus"></span>Lưu
+		</a>*@
+	</div><table role="grid">
+		<colgroup><col><col><col style="width:200px"></colgroup>
+		<thead class="k-grid-header" role="rowgroup">
+			<tr role="row">
+				<th scope="col" role="columnheader" width="50" data-field="MA" aria-haspopup="true" rowspan="1" data-title="Mã" data-index="0" class="k-header">STT</th>
+				<th scope="col" role="columnheader" data-field="GIA_TRI" aria-haspopup="true" rowspan="1" data-title="Giá trị" data-index="1" class="k-header">Năm</th>
+				<th scope="col" role="columnheader" data-field="NgayKhoaSo" aria-haspopup="true" rowspan="1" data-title="Ngày khóa sổ" data-index="1" class="k-header">Ngày khóa sổ</th>
+				<th scope="col" style="text-align:center" width="100" rowspan="1" data-index="2" class="k-header">Trạng thái</th>
+				<th scope="col" style="text-align:center" width="100" rowspan="1" data-index="2" class="k-header">Thao tác</th>
+			</tr>
+		</thead>
+		<tbody role="rowgroup">
+			@{ int i = 0;}
+			@foreach (var item in Model.list_TrangThaiNam)
+			{
+				<tr @(i % 2 == 1 ? "class=k-alt" : "") role="row">
+					<td class="text-center" role="gridcell">@(++i)</td>
+					<td class="text-center" role="gridcell">
+						<input type="hidden" asp-for="@item.Nam" class="z_Nam" data-id="@i" id="Nam_@i" />
+						@item.Nam
+					</td>
+					<td class="text-center" role="gridcell">@item.NgayKhoaSo.toDateVNString()</td>
+					<td class="k-command-cell text-center" role="gridcell">
+						<input type="hidden" asp-for="@item.TrangThai" id="TrangThai_@i" />
+						@item.TenTrangThai
+					</td>
+					<td>
+						<a  href='@Url.Action("EditTrangThaiNamTaiSan","CauHinh",new {Year=item.Nam })' class="btn btn-outline-primary btn-sm">Cập nhật</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="k-pager-wrap k-grid-pager k-widget k-floatwrap" data-role="pager">
+		<span class="k-pager-info k-label">Hiển thị @Model.list_TrangThaiNam.Count bản ghi</span>
+	</div>
+</div>
+<script>
+	$(function () {
+		$('#btn-save').click(function () {
+			$(this).addClass('disabled');
+			var _lstNam = [];
+			$(".z_Nam").each(function () {
+				let id = $(this).data('id');
+				let _nam = $('#Nam_' + id).val();
+				let _status = $('#TrangThai_' + id).val();
+				_lstNam.push({
+					Nam: _nam,
+					TrangThai: _status,
+				});
+			});
+			let _data = {
+				trangThaiNamModels: _lstNam
+			};
+			let _url = '@Url.Action("CauHinhSoTaiSan","CauHinh")';
+			ajaxPost(_data, _url, false).done(function () {
+				ShowSuccessMessage('Cập nhật thành công');
+				location.reload();
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				// If fail
+				console.log(textStatus + ': ' + errorThrown);
+				ShowErrorMessage('Có lỗi xảy ra');
+				$(this).removeClass('disabled');
+			});
+		});
+
+	});
+	function btnChangeStatusClick(val) {
+		let id = $(val).data('id');
+		let status = $('#TrangThai_' + id).val();
+		if (status == @((int)enumTrangThaiNamTaiSan.CLOSE)) {
+			$(val).text('Mở');
+			$(val).removeClass('btn-danger');
+			$(val).addClass('btn-success');
+			$('#TrangThai_' + id).val('@((int)enumTrangThaiNamTaiSan.OPEN)')
+		}
+		else if (status == @((int)enumTrangThaiNamTaiSan.OPEN)) {
+			$(val).text('Đóng');
+			$(val).removeClass('btn-success');
+			$(val).addClass('btn-danger');
+			$('#TrangThai_' + id).val('@((int)enumTrangThaiNamTaiSan.CLOSE)')
+		}
+	}
+</script>

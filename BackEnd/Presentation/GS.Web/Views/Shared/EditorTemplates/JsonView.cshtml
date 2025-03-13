@@ -1,0 +1,12 @@
+﻿@model string
+@{
+    var _idClient = Html.IdForModel();
+    var _name = Html.NameForModel();
+}
+<pre class="jsonView" id="@_idClient" name="@_name"></pre>
+<script>
+    $(document).ready(function () {
+        $("#@_idClient").html(syntaxHighlightJson(JSON.stringify(JSON.parse(String.raw`@Html.Raw(Model)`), undefined, 4)));
+    });
+    //JSON.parse(String.raw`
+</script>

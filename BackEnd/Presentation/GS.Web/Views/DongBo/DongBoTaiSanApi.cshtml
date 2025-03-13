@@ -1,0 +1,104 @@
+﻿@model DongBoTaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Đồng bộ tài sản sang kho csdlqg";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DongBoTaiSanApi");
+}
+<style>
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        vertical-align: middle;
+    }
+</style>
+<nop-antiforgery-token />
+@*<input asp-for="pageIndex" type="hidden" />*@
+<div class="content-header clearfix d-none">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Đơn vị quản lý</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="donViId" asp-filter="true" asp-items="Model.ddlDonVi" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Loại tài sản</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="LoaiHinhTaiSanSelected" asp-multiple="true" asp-items="Model.LoaiHinhTaiSanAvailable" />
+            <span class="field-validation-error" id="spanLoaiHinhTaiSanSelected" style="display:none"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Từ ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="fromDate" />
+        </div>
+        <label class="col-form-label col-sm-2 ">Đến ngày</label>
+        <div class="col-sm-4 ">
+            <nop-editor asp-for="toDate" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="row col-sm-4" style="margin:0px; padding:0px">
+
+        </div>
+
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnDongBo">Đồng bộ</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#btnDongBo").click(function () {
+            let StringLoaiTaiSan = null;
+            if ($("#LoaiHinhTaiSanSelected").val()) {
+                StringLoaiTaiSan = $("#LoaiHinhTaiSanSelected").val().join(',');
+                if (StringLoaiTaiSan == "" || StringLoaiTaiSan == null) {
+                    $("#spanLoaiHinhTaiSanSelected").text("Chọn nhóm tài sản");
+                    $("#spanLoaiHinhTaiSanSelected").fadeIn();
+                    return;
+                }
+            }
+            var _data = {
+                fromDate: $('#fromDate').val(),
+                toDate: $('#toDate').val(),
+                strLoaiHinhTSIds: StringLoaiTaiSan
+            };
+            showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+            ajaxPost(_data, "/DongBo/DongBoTaiSanCu", false).done(function (data) {
+                console.log(data);
+                ShowSuccessMessage('Cập nhật thành công');
+                hideThrobber();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                // If fail
+                console.log(textStatus + ': ' + errorThrown);
+                ShowErrorMessage('Có lỗi xảy ra');
+                hideThrobber();
+            });
+        })
+
+        $(function () {
+		    let loaiTaiSanMultiselect = $('#LoaiHinhTaiSanSelected').data("kendoMultiSelect");
+		    if (loaiTaiSanMultiselect) {
+                loaiTaiSanMultiselect.bind('change', () => {
+                    $("#spanLoaiHinhTaiSanSelected").fadeOut();
+				    //khi chọn loại hình là tất cả thì clear selected chỉ chọn tất cả
+				    let items = loaiTaiSanMultiselect.value();
+				    for (var i = 0; i < items.length; i++) {
+					    if (items[i] == "@((int)enumLOAI_HINH_TAI_SAN.ALL)") {
+						    loaiTaiSanMultiselect.value(["@((int)enumLOAI_HINH_TAI_SAN.ALL)"]);
+						    return;
+					    }
+				    }
+			    })
+		    }
+	    })
+    });
+
+</script>

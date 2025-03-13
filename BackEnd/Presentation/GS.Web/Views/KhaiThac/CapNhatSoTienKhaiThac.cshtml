@@ -1,0 +1,232 @@
+﻿@model KhaiThacChiTietModel
+@{
+	//page title
+	ViewBag.Title = "KhaiThac";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CapNhatSoTienKhaiThac");
+}
+<input hidden asp-for="ID" />
+<input hidden asp-for="LOAI_HINH_KHAI_THAC_ID" />
+<div class="card mb-4">
+	<h6 class="card-header">
+		Sửa thông tin
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a href="/KhaiThacChiTiet/List">Quay lại danh sách</a>
+		</small>
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/KhaiThacChiTiet/List';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+	</h6>
+	<div class="card-body">
+
+		<input asp-for="ID" type="hidden" />
+		<input asp-for="DON_VI_ID" type="hidden" />
+		<input asp-for="LOAI_HINH_KHAI_THAC_ID" type="hidden" />
+
+        <div class="gs-form-group mb-4">
+            <h6> Thông tin chi tiết </h6>
+            @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.LDLK)
+            {
+                @await Html.PartialAsync("_ChiTietKhaiThacLDLK", Model)
+
+            }
+            else if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.CHO_THUE_TS)
+            {
+                @await Html.PartialAsync("_ChiTietTaiSanKhaiThac", Model)
+
+            }
+            else
+            {
+                @await Html.PartialAsync("_ThongTinChiTietKhaiThac", Model)
+            }
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Số tiền đã thu được cộng dồn</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_KHAI_THAC_LUY_KE" asp-disabled="true" />
+            </div>
+        </div>
+        </div>
+
+		<div class="gs-form-group ">
+			<h6>
+				Danh sách thu tiền
+			</h6>
+			<div class="text-right row" style="margin-bottom: 5px;">
+				<div class="col-sm-10"></div>
+				<div class="col-sm-2 text-right">
+					<a href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Cập nhật số tiền khai thác" data-src="/KhaiThacTaiSan/_CreateOrUpdate?KhaiThacChiTietId=@Model.ID" class="btn btn-sm btn-primary"  style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;">
+						Thêm mới
+					</a>
+				</div>
+			</div>
+
+			<div class="grid-ktct" id="grid-ktct">
+			</div>
+			<script>
+
+				let record_khai_thac_chi_tiet = 0;
+				$(document).ready(function () {
+					function SearchData() {
+						var _data = {
+							KHAI_THAC_ID: $('#@Html.IdFor(model => model.KHAI_THAC_ID)').val(),
+                            KHAI_THAC_CHI_TIET_ID: $('#@Html.IdFor(model => model.ID)').val(),						
+						};
+						addAntiForgeryToken(_data);
+						return _data;
+					}
+					$("#btnSearch").click(function () {
+						var grid = $('#grid-ktct').data('kendoGrid');
+						record_khai_thac_chi_tiet = 0;
+						grid.dataSource.page(1); //new search. Set page size to 1
+						return false;
+					});
+					$("#grid-ktct").kendoGrid({
+						dataSource: {
+							type: "json",
+							transport: {
+								read: {
+									url: "@Html.Raw(Url.Action("List", "KhaiThacTaiSan"))",
+									type: "POST",
+									dataType: "json",
+									data: SearchData
+								}
+							},
+							schema: {
+								data: "Data",
+								total: "Total",
+								errors: "Errors"
+							},
+							error: function (e) {
+								display_kendoui_grid_error(e);
+								// Cancel the changes
+								this.cancelChanges();
+							},
+							pageSize: 10,
+							serverPaging: true,
+							serverFiltering: true,
+							serverSorting: true
+						},
+						pageable: {
+							refresh: true,
+							pageSizes: [10, 20, 50, 100],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+						},
+						editable: {
+							confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+							mode: "inline"
+						},
+						dataBinding: function () {
+							record_muaSam = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+						},
+						scrollable: false,
+						columns: [
+							{
+								title: "STT",
+								template: "#= ++record_khai_thac_chi_tiet #",
+								width: 50,
+								headerAttributes: { style: "text-align:center" },
+								attributes: { style: "text-align:center" },
+							},
+                           
+							{
+                                field: 'StrNgayKhaiThac',
+								title: 'Kỳ khai thác',								
+								width: 250,							
+								headerAttributes: { style: "text-align:center" },
+								attributes: { style: "text-align:center" },
+							},
+                            {
+                                field: 'StrVNSoTien',
+                                title: 'Số tiền thu được',
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:right" },
+                            },
+							{ field: 'GHI_CHU', title: 'Nội dung/ Diễn giải' },
+
+							{
+								field: "ID",
+								title: "Thao tác",
+								width: 150,
+								headerAttributes: { style: "text-align:center" },
+								attributes: { style: "text-align:center" },
+								template: (dataItem) => {
+                                    let btnEdit = `<a class="btn icon-btn btn-sm btn-outline-primary" href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Cập nhật số tiền khai thác" data-src="/KhaiThacTaiSan/_CreateOrUpdate?Id=${dataItem.ID}&KhaiThacChiTietId=@Model.ID">Sửa</a>`;
+                                    let btnDelete = '<a class="btn icon-btn btn-sm btn-outline-danger" href="javascript: DeleteKhaiThacTaiSan(' + dataItem.ID + ')" title="Xóa biến động">Xóa</a>';
+
+									let res = btnEdit + '&nbsp;' + btnDelete;
+									return res;
+								}
+
+							}
+						]
+					});
+				});
+			</script>
+			<!--#endregion -->
+		</div>
+
+	</div>
+	<h6 class="card-header">
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a href="/KhaiThac/List?hinhthuckhaithac=0&isdanhsach=1 ">Quay lại danh sách</a>
+		</small>
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/KhaiThacChiTiet/List';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+
+	</h6>
+</div>
+<script>
+	function DeleteKhaiThacTaiSan(id) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (msg) {
+				if (msg) {
+					var _data = {
+						id: id,
+					}
+					$.ajax({
+						type: "POST",
+						data: _data,
+						url: "/KhaiThacTaiSan/Delete",
+						success: function (msg) {
+							
+							if (msg.Code == "00") {
+                                ShowSuccessMessage(msg.Message);
+                                CapNhatSoTienKhaiThacLuyKe(msg.ObjectInfo)
+								var grid = $('#grid-ktct').data('kendoGrid');
+								record_khai_thac_chi_tiet = 0;
+								grid.dataSource.page(1); //new search. Set page size to 1
+							}
+							else {
+								ShowErrorMessage(msg.Message);
+							}
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							alert(thrownError);
+						}
+					});
+				}
+			},
+		});
+	}
+    function CapNhatSoTienKhaiThacLuyKe(soTien) {
+        var soTienLuyKeKendo = $("#SO_TIEN_KHAI_THAC_LUY_KE").data("kendoNumericTextBox");
+        if (soTienLuyKeKendo) {
+            soTienLuyKeKendo.value(soTien)
+        }
+    }
+</script>

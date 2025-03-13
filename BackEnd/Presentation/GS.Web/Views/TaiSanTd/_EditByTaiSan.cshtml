@@ -1,0 +1,147 @@
+﻿@model TaiSanTdModel
+<input asp-for="GUID" id="GUID_@Model.GUID" hidden/>
+<input asp-for="quyetdinh.is_vali" value="false" hidden />
+<input asp-for="QUYET_DINH_TICH_THU_ID" hidden />
+<div class="gs-form-group">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required ">Tên:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN" />
+            <span asp-validation-for="TEN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Nguồn gốc tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NGUON_GOC_TAI_SAN_ID" asp-items="@Model.DDLNguonGocTaiSan" asp-filter="true" />
+            <span asp-validation-for="NGUON_GOC_TAI_SAN_ID"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Loại tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LOAI_TAI_SAN_ID" asp-items="@Model.DDLLoaiTaiSan" asp-filter="true" />
+            <span asp-validation-for="LOAI_TAI_SAN_ID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        @*<label class="col-form-label col-sm-2 text-sm-left">Nguyên giá:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGUYEN_GIA" />
+            <span asp-validation-for="NGUYEN_GIA"></span>
+        </div>*@
+        <label class="col-form-label col-sm-2 text-sm-left">Tổng giá trị tịch thu/ xác lập:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="GIA_TRI_XAC_LAP" />
+            <span asp-validation-for="GIA_TRI_XAC_LAP"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số lượng:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_LUONG" />
+            <span asp-validation-for="SO_LUONG"></span>
+        </div>
+        @*<label class="col-form-label col-sm-2 text-sm-left">Khối lượng:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="KHOI_LUONG" />
+            <span asp-validation-for="KHOI_LUONG"></span>
+        </div>*@
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Diện tích:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="GIA_TRI_TINH" />
+            <span asp-validation-for="GIA_TRI_TINH"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ghi chú:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="GHI_CHU" />
+            <span asp-validation-for="GHI_CHU"></span>
+        </div>
+    </div>
+    @if (Model.is_delete == true) {
+    <div class="form-group row">
+        <div class="col-sm-10">
+        </div>
+        <div class="col-sm-2">
+            <button id="btnSaveTaiSan" class="btn btn-sm btn-outline-primary" style="float:right;margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </div>
+    </div>}
+</div>
+<script>
+    $(document).ready(function () {
+        $("#NGUON_GOC_TAI_SAN_ID").kendoDropDownList({
+        dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            popup: {
+            appendTo: $("#globalModalIframe")
+            },
+            template: function (e) {
+                if (e.Disabled) {
+                    return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+                } else {
+                    return '<span class="k-state-default">' + e.Text + '</span>';
+                }
+            },
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+            dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLNguonGocTaiSan).toStringJson()))`),
+        }).data("kendoDropDownList");
+        $("#NGUON_GOC_TAI_SAN_ID").data("kendoDropDownList").value(@Model.NGUON_GOC_TAI_SAN_ID);
+        $("#LOAI_TAI_SAN_ID").data("kendoDropDownList").value(@Model.LOAI_TAI_SAN_ID);
+    });
+     @if (Model.is_delete == true) {
+             <text>
+    $("#btnSaveTaiSan").click(function() {
+                 var _data = {
+            GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)").val(),
+            LOAI_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_TAI_SAN_ID)").val(),
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+            GUID: $("#GUID_@Model.GUID").val(),
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+            @*NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)").val(),*@
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)").val(),
+            @*KHOI_LUONG: $("#@Html.IdFor(c=>c.KHOI_LUONG)").val(),*@
+            GIA_TRI_TINH: $("#@Html.IdFor(c=>c.GIA_TRI_TINH)").val(),
+            GHI_CHU: $("#@Html.IdFor(c=>c.GHI_CHU)").val(),
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+             };
+        $.ajax({
+             type: "POST",
+            data: _data,
+            url: "/TaiSanTd/EditByTaiSan",
+            success: function(data) {
+                     if (data) {
+                         if (CheckValidMessageReturn(data)) {
+                             if (data.Code == "00") {
+                                 
+                                 ShowSuccessMessage(data.Message);
+                                 $("#btnSearchDetail").click();
+                                 $("#btnSearch").click();
+                                 HideModalManual();
+                             }
+                         }
+                         else {
+                             ShowErrorMessage(data.Message);
+                         }
+                     }
+                 },
+            error: function(xhr, ajaxoptions, thrownerror) {
+                     console.log(ajaxoptions + ": " + thrownerror);
+                 }
+
+             })
+    })
+    </text>
+}
+</script>

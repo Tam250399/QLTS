@@ -1,0 +1,172 @@
+﻿@model DinhMucChiTietModel
+
+@{
+    var idf = @Guid.NewGuid().ToString().Replace("-", "");
+}
+<div class="gs-form-group mb-4 contentChiTietDMCD" data-guid="@idf" id="divChiTiet_@idf">
+    <div class="row" style="margin-bottom:10px;">
+        <div class="col-md-11"></div>
+        <div class="col-md-1" style="text-align:right">
+            <a onclick="XoaDivChiTiet('@idf')" href="javascript:void(0);">
+                <i style="color:red" class="ion ion-md-remove-circle d-block"></i>
+            </a>
+        </div>
+    </div>
+
+    <h6>Thông tin chi tiết định mức</h6>
+    <input asp-for="ID" id="ID_@idf" type="hidden" />
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="text-sm-left text-required"> Nhóm tài sản</label>
+        </div>
+        <div class="col-sm-3">
+            <label class="text-sm-left text-required"> Loại hình tài sản</label>
+        </div>
+        <div class="col-sm-3">
+            <label class="text-sm-left text-required">Chức danh</label>
+        </div>
+        <div class="col-sm-1">
+            <label class="text-sm-left ">Số lượng</label>
+        </div>
+        <div class="col-sm-3">
+            <label class="text-sm-left ">Mức giá</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <nop-select asp-for="LOAI_HINH_TAI_SAN_ID" onclick="changelts('@idf')" id="LOAI_HINH_TAI_SAN_ID_@idf" asp-items="Model.DDLloaiHinhTaiSan" asp-filter="true" />
+            <span id="err_LOAI_HINH_TAI_SAN_ID_@idf" data-valmsg-for="err_LOAI_HINH_TAI_SAN_ID_@idf"  class="field-validation-valid"></span>
+        </div>
+        <div class="col-sm-3">
+            <nop-select asp-for="LOAI_TAI_SAN_ID" id="LOAI_TAI_SAN_ID_@idf" asp-items="Model.DDLNhomTaiSan" asp-filter="true" />
+            <span id="err_LOAI_TAI_SAN_ID_@idf" data-valmsg-for="err_LOAI_TAI_SAN_ID_@idf"  class="field-validation-valid"></span>
+        </div>
+        <div class="col-sm-3">
+            <nop-select asp-for="CHUC_DANH_ID" id="CHUC_DANH_ID_@idf" asp-items="Model.DDLChucDanh" asp-filter="true" />
+            <span id="err_MA_CHUC_DANH_@idf" data-valmsg-for="err_MA_CHUC_DANH_@idf"  class="field-validation-valid"></span>
+        </div>
+        <div class="col-sm-1">
+            <nop-editor asp-for="SO_LUONG" id="SO_LUONG_@idf"  />
+            <span id="err_SO_LUONG_@idf" data-valmsg-for="err_SO_LUONG_@idf"  class="field-validation-valid"></span>
+        </div>
+        <div class="col-sm-3">
+            <nop-editor asp-for="DINH_MUC" id="DINH_MUC_@idf" asp-dvt="đồng" />
+            <span id="err_DINH_MUC_@idf"  data-valmsg-for="err_DINH_MUC_@idf"  class="field-validation-valid"></span>
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <span class="field-validation-error text-danger" data-valmsg-for="err_DINH_MUC_CHITIET_@idf" data-valmsg-replace="true"></span>
+    </div>
+</div>
+
+<script>
+    //$(document).ready(function () {
+        var guid = '@idf';
+    $("#LOAI_HINH_TAI_SAN_ID_" + guid).change(function () {
+            var loaihinhtaisan = $("#LOAI_HINH_TAI_SAN_ID_" + guid).val();
+            var loaitaisan = $("#LOAI_TAI_SAN_ID_" + guid).val();
+            // check loại tài sản để disable chức danh
+            var chucDanh = $("#CHUC_DANH_ID_" + guid).data("kendoDropDownList");
+            if (IsDisableChucDanh(loaihinhtaisan,'0') == true) {
+                if (chucDanh) {
+                    chucDanh.select(0);
+                    chucDanh.enable(false);
+                    } 
+            } else {
+                if (chucDanh) {
+                    chucDanh.enable(true);
+                } 
+            }
+            var _str = "-- Chọn loại tài sản --";
+            var _data = {
+                loaihinhtaisan: loaihinhtaisan,
+                loaitaisan: loaitaisan,
+                str: _str
+            }
+            $.ajax({
+                url: "/DinhMuc/getddlloaitaisan",
+                type: "POST",
+                data: _data,
+                success: function (result) {
+                    var dropdownlistHuyen = $("#LOAI_TAI_SAN_ID_" + guid).data("kendoDropDownList");
+                    if (dropdownlistHuyen) {
+                        dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+                        $("#LOAI_TAI_SAN_ID_" + guid).val(0);
+                        var text = $("#LOAI_TAI_SAN_ID_" + guid + " option:first-child").text();
+                        $("#LOAI_TAI_SAN_ID_" + guid).parent().find(".k-input").text(text);
+                    }
+                  
+                }
+            });
+    });
+    $("#LOAI_TAI_SAN_ID_" + guid).change(function () {
+        var chucDanh = $("#CHUC_DANH_ID_" + guid).data("kendoDropDownList");
+        var loaihinhtaisan = $("#LOAI_HINH_TAI_SAN_ID_" + guid).val();
+        var lts = $(this).val();
+        if (IsDisableChucDanh(loaihinhtaisan, lts) == true) {
+            if (chucDanh) {
+                chucDanh.select(0);
+                chucDanh.enable(false);
+            }
+        } else {
+            if (chucDanh) {
+                chucDanh.enable(true);
+            }
+        }
+    });
+
+   // });
+    // true thì disable
+    function IsDisableChucDanh(lhts, lts) {
+        var isDisable = true;
+        console.log(lhts);
+        if (lhts == '@((int)enumLOAI_HINH_TAI_SAN.OTO)') {          
+            if (lts != '0') {
+              
+                let _data = {
+                    LoaiTaiSanId: lts
+				};
+				let _url = '@Url.Action("GetMaLoaiTaiSan", "LoaiTaiSan")';
+				let ajaxGetLoaiOto = ajaxPost(_data, _url);
+                ajaxGetLoaiOto.done((LoaiOTO) => {
+                    if (LoaiOTO == '@((int)enumLoaiTaiSanOto.OTO_CHUC_DANH)') {
+                        isDisable = false;
+                    } 
+				})
+            }
+        } else {
+            return true;
+        }
+        return isDisable;
+    }
+    function XoaDivChiTiet(e) {
+        debugger
+        var dinhmuc = $("#ID").val();
+        var chucdanh = $("#CHUC_DANH_ID_" + e).val();
+        var loaitaisan = $("#LOAI_TAI_SAN_ID_" + e).val();
+        var _data = {
+            DinhMucId: dinhmuc,
+            ChucDanhId: chucdanh,
+            LoaiTaiSanId: loaitaisan
+        }
+        $.ajax({
+                url: "/DinhMuc/DeleteDinhMucChiTiet",
+                type: "POST",
+                data: _data,
+            success: function (result) {
+                debugger
+                ShowSuccessMessage(result.Message);
+                $("#divChiTiet_" + e).remove();
+                    //var dropdownlistHuyen = $("#LOAI_TAI_SAN_ID_" + guid).data("kendoDropDownList");
+                    //dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+                    //$("#LOAI_TAI_SAN_ID_" + guid).val(0);
+                    //var text = $("#LOAI_TAI_SAN_ID_" + guid + " option:first-child").text();
+                    //$("#LOAI_TAI_SAN_ID_" + guid).parent().find(".k-input").text(text);
+                }
+            });
+    };
+</script>
+
+
+

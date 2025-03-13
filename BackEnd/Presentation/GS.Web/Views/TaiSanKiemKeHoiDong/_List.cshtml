@@ -1,0 +1,118 @@
+﻿@model TaiSanKiemKeHoiDongSearchModel
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div style="text-align:right;padding-bottom:10px;">
+        <input asp-for="KiemKeId" hidden />
+        <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới hội đồng" data-src="/TaiSanKiemKeHoiDong/_CreateForKiemKe?KiemKeId=@Model.KiemKeId" style="margin:10px;">
+            <i class="ion ion-md-add"></i>
+            Thêm thành viên 
+        </button>
+    </div>
+    <a style="display:none" id="btnSearchKK">Tìm kiếm</a>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid-kk"></div>
+                    <script>
+                        var recordHDKK = 0
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    KiemKeId: $('#@Html.IdFor(model => model.KiemKeId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchKK").click(function () {
+                                var grid = $('#items-grid-kk').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                recordHDKK = 0
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchKK").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid-kk").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_List", "TaiSanKiemKeHoiDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                 dataBinding: function() {
+                                      recordHDKK = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++recordHDKK #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    { field: 'HO_TEN', title: 'Họ và tên' },
+                                    { field: 'CHUC_VU', title: 'Chức vụ' },
+                                    { field: 'DAI_DIEN', title: 'Đại diện' },
+                                    { field: 'TenViTri', title: 'Tên vị trí' },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#edit-gird-Tem").html()),
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="edit-gird-Tem" type="text/x-kendo-tmpl">
+    <a class="btn icon-btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Sửa hội đồng" data-src="/TaiSanKiemKeHoiDong/_CreateForKiemKe?ID=#=ID#"><span class="fas fa-pencil-alt"></span></a>&nbsp;
+    <button class="btn icon-btn btn-sm btn-outline-danger" onclick="DeleteHoiDongKiemKe(#=ID#)" title="Xóa"><i class="far fa-trash-alt" style=""></i></button>
+</script>
+

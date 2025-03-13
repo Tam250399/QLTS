@@ -1,0 +1,177 @@
+﻿@model string
+@inject IFileCongViecService fileCongViecService
+
+@using GS.Core;
+@using GS.Web.Framework.UI;
+@using GS.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+
+@{
+    //Model: dau vao la 1 chuoi id cac file Id, dc ngan cach boi dau ","
+
+    //register CSS and JS
+    //Html.AddCssFileParts("/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.css");
+    //Html.AddScriptParts("/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.js");
+
+    //other variables
+    var randomNumber = CommonHelper.GenerateRandomInteger();
+    var clientId = "FileCongViec" + randomNumber;
+    var workfileitems = new List<FileCongViecModel>();
+    string _ids = Model;
+
+    //_ids = "78,79"; //test
+    if (!string.IsNullOrEmpty(_ids))
+    {
+        workfileitems = fileCongViecService.GetFileCongViecByIds(_ids).Select(c => c.ToModel<FileCongViecModel>()).ToList();
+    }
+    bool isAlterRow = false;
+
+    var _idClient = Html.IdForModel();
+    var htmlAttributes = new Dictionary<string, object>();
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        object _idclientOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+    }
+
+}
+<link href="~/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.css" rel="stylesheet" />
+<script src="~/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.js"></script>
+<div id="@(clientId + "value")">
+    <input type="hidden" id="@_idClient" name="@_idClient" />
+</div>
+<script>
+    var @("myDropzone"+clientId) = null; //luu thong tin object de thuc hien event
+
+    var @("myFileUpload"+clientId) =[];//luu thong tin file da upload, dang du lieu co cau truc
+    @if (workfileitems.Count > 0)
+    {
+        <text>
+        @("myFileUpload"+clientId)=@(Html.Raw(workfileitems.toStringJson()));
+        </text>
+    }
+    //thiet dat lai gia tri chuoi file id
+    function ResetValue@(clientId)() {
+
+        var file_up_names = @("myFileUpload"+clientId);
+        var _ids = null;
+        for (var i = 0; i < file_up_names.length; ++i) {
+            if (_ids)
+                _ids = _ids + "," + file_up_names[i].ID;
+            else
+                _ids = file_up_names[i].ID;
+        }
+        $("#@(clientId + "value") input").val(_ids);
+    }
+
+    ///Xoa file da upload
+    function DeleteFileUploaded@(clientId)(fileId) {
+        if (confirm('Xóa File khỏi hệ thống')) {
+            DeleteWorkFile(fileId);
+            $("#fileuploaded_" + fileId).hide(500);
+            //remove mang neu co
+            var file_up_names = @("myFileUpload"+clientId);
+            var i = 0;
+            for (i = 0; i < file_up_names.length; ++i) {
+                if (file_up_names[i].Id == fileId) {
+                    break;
+                }
+
+            }
+            if (i <@("myFileUpload"+clientId).length) {
+                @("myFileUpload"+clientId).splice(i, 1);
+                ResetValue@(clientId)();
+            }
+        }
+
+    }
+    $(document).ready(function () {
+        $('#dropzone-@clientId').dropzone({
+            url: "/FileCongViec/SaveDropzoneJsUploadedFiles",
+            parallelUploads: 1,
+            maxFiles:1,//toi da 1 file
+            maxFilesize: 50,//50M
+            addRemoveLinks: true,
+            autoProcessQueue: true,//ko tu dong upload
+            dictDefaultMessage: "Kéo thả file hoặc nhấn vào đây để upload",
+            dictRemoveFile: "Xóa",
+            dictFallbackMessage: "@T("AppWork.FileCongViec.BrowerNoSupport")",//Your browser does not support drag'n'drop file uploads.
+            dictFileTooBig: "@T("AppWork.FileCongViec.FileToBig")",//"File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+            dictInvalidFileType:  "@T("AppWork.FileCongViec.FileNotAllow")",//"You can't upload files of this type.",
+            dictResponseError:  "@T("AppWork.FileCongViec.ErrorFromServer")",//"Server responded with {{statusCode}} code.",
+            dictCancelUpload:  "@T("AppWork.FileCongViec.CancelUpload")",//"Cancel upload",
+            dictCancelUploadConfirmation:  "@T("AppWork.FileCongViec.ConfirmCancelUpload")",//"Are you sure you want to cancel this upload?",
+            dictMaxFilesExceeded:  "@T("AppWork.FileCongViec.NoMoreUpload")",//"You can not upload any more files.",
+            init: function () {
+                @("myDropzone"+clientId) = this; //closure
+            },
+            success(files, data) {
+                if (data.length > 0) {
+                    @("myFileUpload"+clientId).push(data[0]);
+                    ResetValue@(clientId)();
+                }
+            },
+            removedfile: function (file) {
+                var i = 0;
+                for (i = 0; i < @("myFileUpload"+clientId).length; ++i) {
+                    var _fname = @("myFileUpload" + clientId)[i].TEN_FILE + @("myFileUpload" + clientId)[i].DUOI_FILE;
+                    if (_fname == file.name) {
+                        DeleteWorkFile(@("myFileUpload"+clientId)[i].ID)
+                        break;
+                    }
+                }
+                if (i <@("myFileUpload"+clientId).length) {
+                    file.previewElement.remove();
+                    @("myFileUpload"+clientId).splice(i, 1);
+                    ResetValue@(clientId)();
+                }
+            }
+        });
+
+        $("#uploadfiles_@clientId").click(function () {
+            @("myDropzone"+clientId).processQueue();
+                });
+
+    })
+</script>
+<div class="card mb-4">
+    <div class="row card-header" style="margin-right: 0;margin-left: 0;">
+        <nop-label asp-for="@Model" class="col-md-6" />
+        <div class="col-md-6">
+            <button id="uploadfiles_@clientId" style="visibility:hidden" class="btn btn-success pull-right">@T("AppWork.FileCongViec.UploadAllFile")</button>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="dropzone needsclick dz-clickable" id="dropzone-@clientId">
+            <div class="dz-message needsclick">
+                Kéo thả file hoặc nhấn vào đây để upload
+            </div>
+        </div>
+    </div>
+    @if (workfileitems.Count > 0)
+    {
+        <div class="list-group">
+            <h6 class="card-header">
+                @T("AppWork.FileCongViec.FileUploaded")
+            </h6>
+            @foreach (var item in workfileitems)
+            {
+                if (isAlterRow)
+                {
+                    <div class="list-group-item list-group-item-primary" id="fileuploaded_@item.ID"><a href="@item.TAI_XUONG_URL">@(item.TEN_FILE + item.DUOI_FILE) - <span style="font-style:italic">@item.KICH_THUOC Kb</span></a><a href="javascript:DeleteFileUploaded@(clientId)(@item.ID);" class="close pull-right" style="color:red"><i class="ion ion-ios-remove-circle d-block"></i></a></div>
+                }
+                else
+                {
+                    <div class="list-group-item list-group-item-secondary" id="fileuploaded_@item.ID"><a href="@item.TAI_XUONG_URL">@(item.TEN_FILE + item.DUOI_FILE)- <span style="font-style:italic">@item.KICH_THUOC Kb</span></a><a href="javascript:DeleteFileUploaded@(clientId)(@item.ID);" class="close pull-right" style="color:red"><i class="ion ion-ios-remove-circle d-block"></i></a></div>
+                }
+                isAlterRow = !isAlterRow;
+            }
+        </div>
+    }
+
+</div>
+

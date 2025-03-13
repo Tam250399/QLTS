@@ -1,0 +1,205 @@
+﻿
+@{
+    ViewData["Title"] = "Tìm kiếm đồng bộ";
+    Html.SetActiveMenuItemSystemName("TimKiemDongBo");
+}
+
+<div class="card">
+    <div class="card-header">
+        Tìm kiếm tài sản đồng bộ
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <input class="form-control text-box single-line" id="KeySearchTaiSan" placeholder="Mã/tên tài sản...." type="text" value="">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="btnSearchTaiSanDB" class="btn btn-success">Tìm kiếm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div id="tai_san_grid">
+        </div>
+        <script>
+            function SearchTaiSanDB(data) {
+                var record = 1;
+                $("#tai_san_grid").kendoGrid({
+                    dataSource: {
+                        data: data,
+                        pageSize: 10,
+                        change: function (e) {
+                            record = 1;
+                        }
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: true,
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            title: 'STT',
+                            width: 50,
+                            template: function () {
+                                let pageSize = $("#tai_san_grid").data("kendoGrid").dataSource.pageSize();
+                                pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                                let page = $("#tai_san_grid").data("kendoGrid").dataSource.page();
+                                page = typeof page == 'undefined' ? 0 : page;
+                                let i = record++;
+                                return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                            }
+                        },
+                        {
+                            title: 'Mã tài sản',
+                            field: 'MA_TAI_SAN',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Mã tài sản CSDLQG',
+                            field: 'MA_DB',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Mã tài sản khác',
+                            field: 'MA_QLDKTS40',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Nguồn tài sản',
+                            field: 'NGUON_TAI_SAN',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Tên tài sản',
+                            field: 'TEN_TAI_SAN',
+                        },
+                        {
+                            title: 'Trạng thái',
+                            field: 'TEN_TRANG_THAI',
+                        }
+                    ]
+                });
+            };
+            SearchTaiSanDB(null);
+            $("#btnSearchTaiSanDB").click(function () {
+
+                let KeySearch = $("#KeySearchTaiSan").val();
+                console.log(KeySearch);
+                if (KeySearch == "")
+                    alert("Chưa nhập mã đồng bộ!");
+                else {
+                    ShowViewLoading("#tai_san_grid");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "Json",
+                        url: "/DongBo/SearchTaiSanDongBo",
+                        data: {
+                            KeySearch: KeySearch
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            $("#tai_san_grid").empty();
+                            SearchTaiSanDB(data);
+                        }
+                    })
+                }
+            });
+        </script>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Tìm kiếm CCDC đồng bộ
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <input class="form-control text-box single-line" id="KeySearchCCDC" placeholder="Mã/tên CCDC...." type="text" value="">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="btnSearchCCDCDB" class="btn btn-success">Tìm kiếm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div id="ccdc_grid">
+        </div>
+        <script>
+            function SearchCCDCDB(data) {
+                var record = 1;
+                $("#ccdc_grid").kendoGrid({
+                    dataSource: {
+                        data: data,
+                        pageSize: 10,
+                        change: function (e) {
+                            record = 1;
+                        }
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: true,
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            title: 'STT',
+                            width: 50,
+                            template: function () {
+                                let pageSize = $("#ccdc_grid").data("kendoGrid").dataSource.pageSize();
+                                pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                                let page = $("#ccdc_grid").data("kendoGrid").dataSource.page();
+                                page = typeof page == 'undefined' ? 0 : page;
+                                let i = record++;
+                                return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                            }
+                        },
+                        {
+                            title: 'Mã',
+                            field: 'MA',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Mã đồng bộ',
+                            field: 'MA_DB',
+                            attributes: { style: "text-align:center" },
+                        },
+                        {
+                            title: 'Tên',
+                            field: 'TEN',
+                        }
+                    ]
+                });
+            };
+            SearchCCDCDB(null);
+            $("#btnSearchCCDCDB").click(function () {
+
+                let KeySearch = $("#KeySearchCCDC").val();
+                console.log(KeySearch);
+                if (KeySearch == "")
+                    alert("Chưa nhập mã đồng bộ!");
+                else {
+                    ShowViewLoading("#ccdc_grid");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "Json",
+                        url: "/CongCu/SearchCCDCDongBo",
+                        data: {
+                            KeySearch: KeySearch
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            $("#ccdc_grid").empty();
+                            SearchCCDCDB(data);
+                        }
+                    })
+                }
+            });
+        </script>
+    </div>
+</div>

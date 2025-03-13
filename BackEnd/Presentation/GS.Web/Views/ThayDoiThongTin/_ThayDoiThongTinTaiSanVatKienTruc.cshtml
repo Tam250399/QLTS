@@ -1,0 +1,22 @@
+﻿@model TaiSanVktModel
+<div class="form-group row">
+	<label class="col-form-label col-sm-2   text-required">Diện tích</label>
+	<div class="col-sm-4 ">
+		<nop-editor asp-for="VKT_DIEN_TICH" asp-dvt="m2" asp-disabled="true" />
+		<span asp-validation-for="DIEN_TICH"></span>
+		<span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích </span>
+		<span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích</span>
+	</div>
+	<label class="col-form-label col-sm-2   text-required">Thể tích</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="THE_TICH" asp-dvt="m3" asp-disabled="true" />
+		<span asp-validation-for="THE_TICH"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2   text-required">Chiều dài</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="CHIEU_DAI" asp-dvt="m" asp-disabled="true" />
+		<span asp-validation-for="CHIEU_DAI"></span>
+	</div>
+</div>

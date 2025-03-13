@@ -1,0 +1,77 @@
+﻿@using GS.Services.DanhMuc;
+@using GS.Core
+
+@model ObjHienTrang
+@{
+    var hientrangId = Decimal.ToInt32(Model.HienTrangId ?? 0);
+    var kieudulieuId = Decimal.ToInt32(Model.KieuDuLieuId ?? 0);
+    var nhomHienTrangId = Decimal.ToInt32(Model.NhomHienTrangId ?? 0);
+
+}
+
+@switch (kieudulieuId)
+{
+    //kieudulieuId: 1 - dữ liệu kiểu numbericTextbox, 2 - checkbox
+    case 1:
+        <div class="col-sm-2">
+            <label class="col-form-label">@Model.TenHienTrang</label>
+            <div class="HienTrang" data-idhientrang="@hientrangId" data-tenhientrang="@Model.TenHienTrang" data-kieudulieuid="@kieudulieuId" data-nhomhientrangid="@nhomHienTrangId" nhom-hien-trang="@nhomHienTrangId">
+                <nop-editor asp-for="GiaTriNumber" asp-min-number="0" asp-dvt="m2" id="HienTrang_@hientrangId">
+                    <span class="field-validation-valid" data-valmsg-for="HienTrang_@hientrangId" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        break;
+    case 2:
+        <div class="col-md-2">
+            <div class="HienTrang" data-idhientrang="@hientrangId" data-tenhientrang="@Model.TenHienTrang" data-kieudulieuid="@kieudulieuId" data-nhomhientrangid="@nhomHienTrangId" nhom-hien-trang="@nhomHienTrangId">
+                <label class="custom-control custom-checkbox checkBox-hien-trang" data-idhientrang="@hientrangId" data-nhomhientrangid="@nhomHienTrangId">
+                    @Html.CheckBoxFor(c => c.GiaTriCheckbox.Value, new { @class = "custom-control-input ", @id = "HienTrang_" + @hientrangId })
+                    <span class="custom-control-label">@Model.TenHienTrang</span>
+
+                </label>
+                <span class="field-validation-valid" data-valmsg-for="HienTrang_@hientrangId" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        <script>
+			$(document).ready(function () {
+				$(".checkBox-hien-trang").click(function () {
+					var elementId = $(this).data("idhientrang");
+					var nhomHienTrangId = $(this).data("nhomhientrangid");
+					@*if (nhomHienTrangId == @((int)GS.Core.Domain.DanhMuc.enumNHOM_HIEN_TRANG.KINH_DOANH_KHONG_KINH_DOANH)) {
+						var listHT = $(".HienTrang[nhom-hien-trang=" + nhomHienTrangId + "]");
+						$.each(listHT, function (index, value) {
+							var id = $(value).data("idhientrang");
+							if (id != elementId) {
+								$("#HienTrang_" + id).prop("checked", false);
+							}
+						})
+					}*@
+
+				});
+            })
+        </script>
+        break;
+}
+<script>
+    $(document).ready(function () {
+        var hienTrangId = '@hientrangId';
+        var _data = {
+            HienTrangId: hienTrangId
+        };
+        // disable hiện trạng theo đơn vị
+        var ajaxRequest = ajaxPost(_data, `/HienTrang/CheckHienThiHienTrang?donViId=@Model.DonViId&isCapNhatTuCanhBao=true`, true);
+        ajaxRequest.done(function (result) {
+            if (result.ObjectInfo) {
+                var id = "#HienTrang_@hientrangId";
+                $(id).parent().children('.k-formatted-value').attr("disabled", "disabled");
+                $(id).attr("disabled", "disabled");
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            console.log(textStatus + ': ' + errorThrown);
+            ShowErrorMessage('Có lỗi xảy ra');
+            $(this).removeClass('disabled');
+        });
+    });
+
+</script>

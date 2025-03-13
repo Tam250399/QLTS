@@ -1,0 +1,26 @@
+@model DeNghiXuLyModel
+@{
+    //page title
+    ViewBag.Title = "Tạo mới đề nghị xử lý tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DeNghiXuLy");
+}
+<form asp-controller="DeNghiXuLy" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            @ViewBag.Title
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <button type="submit" name="save-continue" class="btn btn-success" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+

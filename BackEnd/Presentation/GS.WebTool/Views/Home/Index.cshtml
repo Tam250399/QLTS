@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Xuất dữ liệu đồng bộ";
+}
+@*<label for="pLOAI_HINH_TAI_SAN" style="width:15%;text-align:right">Chọn loại hình tài sản:</label>
+    <select name="pLOAI_HINH_TAI_SAN" id="pLOAI_HINH_TAI_SAN">
+        <option value="0">Tất cả</option>
+        <option value="1">Đất</option>
+        <option value="2">Nhà</option>
+        <option value="3">Vật kiến trúc</option>
+        <option value="4">Oto</option>
+        <option value="5">Phương tiện khác</option>
+        <option value="6">Máy móc thiết bị</option>
+        <option value="7">Cây lâu năm, svld</option>
+        <option value="8">Hưu hình khác</option>
+        <option value="9">Vô hình</option>
+        <option value="10">Đặc thù</option>
+    </select>
+    <br>
+    <label for="pNAM" style="width:15%;text-align:right">Chọn năm:</label>
+    <select name="pNAM" id="pNAM">
+        <option value="0">Tất cả</option>
+        @for (int i = DateTime.Now.Year; i >= DateTime.Now.Year - 1000; i--)
+        {
+            <option value="@i">@i</option>
+        }
+    </select>
+    <br>*@
+<label style="width:15%;text-align:right">Thư mục lưu:</label>
+<input id="folderSave"/>
+<br>
+<label style="width:15%;text-align:right">Mã đơn vị:</label>
+<input id="pMA_DON_VI" />
+<br>
+<label style="width:15%;text-align:right"></label>
+<label style="color:red">*nhập nhiều mã đơn vị phân cách bằng dấu ","</label>
+<br>
+@*<label for="is32" style="width:15%;text-align:right">Loại tài sản thuộc:</label>
+    <select name="is32" id="is32">
+        <option value="-1">Tất cả</option>
+        <option value="0">TT162</option>
+        <option value="1">QD32</option>
+    </select>*@
+@*<br>
+    <label for="pNHOM_DON_VI">Chọn nhóm đơn vị:</label>
+    <select name="pNHOM_DON_VI" id="pNHOM_DON_VI">
+        <option value="02">Nhóm Đơn vị sự nghiệp</option>
+        <option value="03">Nhóm Tổ chức</option>
+        <option value="04">Nhóm Khác</option>
+        <option value="05">Nhóm đơn vị đặc biệt</option>
+    </select>*@
+<br />
+<label for="LoaiTep" style="width:15%;text-align:right">Loại tệp:</label>
+<select name="LoaiTep" id="LoaiTep">
+    <option value="ExportJson">JSON</option>
+    @*<option value="ExportXml">XML</option>*@
+    @*<option value="ExportExcel">EXCEL</option>*@
+</select>
+<br />
+<label style="width:15%;"> </label>
+<button id="btnClick">xuất tệp</button>
+<br />
+<a href="" id="aDownload" style="display:none">click here to download your file</a>
+<div id="diva"></div>
+<script>
+    function download(text, name, type) {
+        var a = document.getElementById("aDownload");
+        var file = new Blob([text], { type: type });
+        a.href = URL.createObjectURL(file);
+        a.download = name;
+    }
+
+
+    $(document).ready(function () {
+
+        $("#btnClick").click(function () {
+            showThrobber("Đang lấy dữ liệu...");
+            $("#diva").empty();
+            var _data = {
+                pLOAI_HINH_TAI_SAN: $("#pLOAI_HINH_TAI_SAN").val(),
+                pNAM: $("#pNAM").val(),
+                pMA_DON_VI: $("#pMA_DON_VI").val(),
+                is32: $("#is32").val(),
+                folderSave: $("#folderSave").val()
+                //pNHOM_DON_VI: $("#pNHOM_DON_VI").val(),
+            }
+            console.log(_data);
+            $.ajax({
+                cache: false,
+                type: "GET",
+                data: _data,
+                url: "/Home/" + $("#LoaiTep").val(),
+                success: function (data) {
+                    hideThrobber();
+                    console.log(data);
+                    if (data.code == '00') {
+                        //download(data.textFile, data.fileName, data.fileType);
+
+                        //data.filePaths.forEach(function (element) {
+                        //    setTimeout(function () {
+                        //        let a = document.createElement('a');
+                        //        a.href = "/Home/ExportByUrl1?filePath=" + element + "&fileType=" + data.fileType;
+                        //        let fileName = element.substring(element.lastIndexOf("/") + 1, element.length);
+                        //        a.download = fileName;
+                        //        a.text = fileName;
+                        //        a.style = 'display: none';
+                        //        $("#diva").append(a);
+                        //        a.click();
+                        //        $("#diva").append("<br/>");
+                        //        //a.remove();
+                        //        //$("#aDownload").attr("href", "/Home/ExportByUrl1?filePath=" + element + "&fileType=" + data.fileType);
+                        //        //$("#aDownload").click();
+
+                        //    }, 1000);
+                        //});
+                        // data.filePaths.forEach(element => window.location = "/Home/ExportByUrl1?filePath=" + element + "&fileType=" + data.fileType);
+                        //window.location = "/Home/ExportByUrl?filePath=" + data.filePath + "&fileName=" + data.fileName + "&fileType=" + data.fileType;
+                    }
+                    else {
+                        console.log(data.mss)
+                        swal({
+                            title: "Lấy dữ liệu không thành công!",
+                            type: "warning",
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn-danger",
+                            showCancelButton: true,
+                            cancelButtonText: "Đóng",
+                            closeOnCancel: true
+                        });
+
+                        var zIndex = 1090 + (10 * $('.modal:visible').length);
+                        $("div[class='sweet-overlay']").css('z-index', zIndex - 1);
+                        $("div[class*='sweet-alert']").css('z-index', zIndex);
+                    }
+                }
+            });
+        });
+
+    })
+</script>

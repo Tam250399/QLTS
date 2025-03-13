@@ -1,0 +1,140 @@
+﻿<div style="margin-top: 25px;"></div>
+<div id="WidgetGiaTriSoLuongTaiSanTheoLoaiHinhVaDonVi" class="gs-form-group mb-4">
+	<h6>Tổng giá trị và số lượng tài sản theo từng nhóm tài sản</h6>
+	<div id="divGiaTriSoLuongTaiSanTheoLoaiHinhVaDonViWidget" style="width: 100%; height: 500px;">
+	</div>
+</div>
+<script>
+    function am4themes_myTheme(target) {
+        if (target instanceof am4core.ColorSet) {
+            target.list = [
+                am4core.color("@enumColorCodeLoaiHinhTS.DAT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.NHA"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VKT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.OTO"),
+                am4core.color("@enumColorCodeLoaiHinhTS.PHUONGTIENKHAC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.CAYLAUNAM"),
+                am4core.color("@enumColorCodeLoaiHinhTS.HUUHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VOHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.DACTHU"),
+                am4core.color("@enumColorCodeLoaiHinhTS.MAYMOC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC2"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC3"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC4"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC5")
+
+            ];
+        }
+	}
+</script>
+<script>
+    var fixValueNumber = true;
+    am4core.ready(function () {
+        // Themes begin
+        //am4core.useTheme(am4themes_myTheme);
+        var chart = am4core.create("divGiaTriSoLuongTaiSanTheoLoaiHinhVaDonViWidget", am4charts.XYChart);
+        // Themes end
+        $.ajax({
+            type: "GET",
+            url: "/Widget/GiaTriSoLuongTaiSanTheoLoaiHinhVaDonVi",
+            success: function (res) {
+                if (res.Code == "01") {
+                    $("#WidgetGiaTriSoLuongTaiSanTheoLoaiHinhVaDonVi").remove();
+                } else {
+                    chart.logo.disabled = true;
+                    chart.data = res.ObjectInfo;
+                    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                    categoryAxis.dataFields.category = "TEN_LOAI_HINH";
+                    categoryAxis.title.text = "";
+                    categoryAxis.renderer.cellStartLocation = 0.2;
+                    categoryAxis.renderer.cellEndLocation = 0.8;
+                    categoryAxis.renderer.grid.template.disabled = true;
+                    categoryAxis.renderer.minGridDistance = 20;
+                    // lable template
+                    var label = categoryAxis.renderer.labels.template;
+                    label.wrap = true;
+                    label.maxWidth = 85;
+                    // First value axis
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.title.text = "Số lượng (Cái, chiếc)";
+                    valueAxis.maxPrecision = 0;
+                    valueAxis.min = 0;
+
+                    // Second value axis
+                    var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis2.title.text = "Nguyên giá (Nghìn đồng)";
+                    valueAxis2.renderer.opposite = true;
+                    valueAxis2.min = 0;
+
+                    // First series
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.valueY = "SO_LUONG";
+                    series.dataFields.categoryX = "TEN_LOAI_HINH";
+                    series.name = "Số lượng";
+                    series.columns.template.tooltipText = "{name}: [bold]{ToolTipSoLuong}[/]\nTỷ trọng: [bold]{ToolTipTyTrongSoLuong}%[/]";
+                    series.tooltip.label.propertyFields.fill = "color";
+                    series.tooltip.background.propertyFields.stroke = "color";
+
+
+                    // Second series
+                    var series2 = chart.series.push(new am4charts.ColumnSeries());
+                    series2.dataFields.valueY = "TONG_NGUYEN_GIA";
+                    series2.dataFields.categoryX = "TEN_LOAI_HINH";
+                    series2.name = "Nguyên giá";
+                    series2.columns.template.tooltipText = "{name}: [bold]{ToolTipNguyenGia}[/]\nTỷ trọng: [bold]{ToolTipTyTrongNguyenGia}%[/]";
+                    series2.strokeWidth = 3;
+                    series2.yAxis = valueAxis2;
+                    series2.tooltip.label.propertyFields.fill = "color";
+                    series2.tooltip.background.propertyFields.stroke = "color";
+
+                    // Add legend
+                    chart.legend = new am4charts.Legend();
+
+                    // Add cursor
+                    //chart.cursor = new am4charts.XYCursor();
+                    series.columns.template.events.on("hit", function (ev) {
+                        var loaihinhtaisan = ev.target.dataItem.dataContext.LOAI_HINH_TAI_SAN_ID;
+                        window.location.href = "/TaiSan/TraCuuTaiSan?LoaiHinhTaiSanId=" + loaihinhtaisan;
+                    });
+                    series.columns.template.events.on("inited", function (ev) {
+                        if (fixValueNumber) {
+                            $("text").each(function (e) {
+                                var xValue = $(this).attr('x');
+                                if (xValue == '0') {
+                                    var lastChild = this.lastChild;
+                                    var input = $(lastChild).text();
+                                    const regex = new RegExp('^-?[0-9][0-9,\.]+$');
+                                    //console.log(input);
+                                    if (regex.test(input)) {
+                                        var output = formatNumber(input);
+                                        $(lastChild).text(output);
+                                    }
+                                   
+                                }
+                            })
+                        }
+                        fixValueNumber = false;
+                    });
+                }
+            }
+        });
+        am4core.unuseTheme(am4themes_animated);
+    });  
+    function formatNumber(input) {
+        var output;
+
+        var arrInput = input.split(',');
+        if (arrInput.length > 0) {
+            if (arrInput[arrInput.length - 1] !== '000')
+                output= input;
+            else {
+                
+                output = input.replaceAll(',', '&');
+                output = output.replaceAll('.', ',');
+                output = output.replaceAll('&', '.');
+            }
+        }
+        console.log(output);
+        return output;
+    }
+</script>

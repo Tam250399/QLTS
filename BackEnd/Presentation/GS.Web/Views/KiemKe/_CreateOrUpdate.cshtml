@@ -1,0 +1,81 @@
+﻿@model KiemKeModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="CurrentPage" type="hidden" />
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <input asp-for="DON_VI_ID" type="hidden" />
+    <input asp-for="SO_KIEM_KE" type="hidden" />
+    <h6>Thông tin kiểm kê</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị sử dụng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaDonVi" asp-disabled="true" />
+        </div>
+        <div class="col-sm-6">
+            <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+        </div>
+    </div>
+    @if (Model.ID > 0)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày kiểm kê</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="NGAY_KIEM_KE" asp-disabled="true"/>
+                <span asp-validation-for="NGAY_KIEM_KE"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Bộ phận/phòng ban</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" asp-filter="true" asp-disabled="true"/>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày kiểm kê</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="NGAY_KIEM_KE" />
+                <span asp-validation-for="NGAY_KIEM_KE"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Bộ phận/phòng ban</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" asp-filter="true" />
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Ký nhận</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Người lập biểu</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGUOI_LAP_BIEU" />
+            <span asp-validation-for="NGUOI_LAP_BIEU"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Đại diện bộ phận sử dụng (Thủ trưởng đơn vị)</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="DAI_DIEN_BO_PHAN" />
+            <span asp-validation-for="DAI_DIEN_BO_PHAN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Kế toán (Kế toán trưởng)</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="KE_TOAN" />
+            <span asp-validation-for="KE_TOAN"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Trưởng ban kiểm kê</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TRUONG_BAN" />
+            <span asp-validation-for="TRUONG_BAN"></span>
+        </div>
+    </div>
+</div>
+

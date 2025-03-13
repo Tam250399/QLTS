@@ -1,0 +1,885 @@
+﻿@model TestModel
+@{
+    Model.Int64Number = 100;
+    Model.IntNumber = 20;
+}
+<nop-antiforgery-token />
+
+<form asp-action="Test" method="post">
+    <div class="content">
+        <button type="submit" name="save-continue" class="btn btn-secondary spinner-grow" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            @T("Admin.Common.SaveContinue")
+        </button>
+        <button type="button" class="btn btn-primary" id="btnReport">Test Report</button>
+        <script>
+            $(document).ready(function () {
+                $("#btnReport").click(function () {
+                    $.ajax({
+                        url: "/Home/TestReportDev",
+                        type: "POST",
+                        success: function (data) {
+                            alert("Ok");
+                        }
+                    });
+                });
+            })
+        </script>
+    </div>
+    <div class="spinner-grow text-dark"></div>
+
+    <div class="spinner-border spinner-border-sm"></div>
+
+
+
+    <nop-textarea asp-for="testJson" />
+
+
+    <button id="testJsonBtn">Test Json</button>
+    <script>
+        $(document).ready(function () {
+            $("#testJsonBtn").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/testJson",
+                    dataType: "json",
+                    data: {
+                        testJson: $("#testJson").val(),
+                    },
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
+            });
+
+        });
+    </script>
+    <nop-editor asp-for="Int64Number" />
+    <nop-editor asp-for="WorkDate" />
+    <nop-editor asp-for="WorkFileIds" />
+    <label>input Addon</label>
+    <nop-editor asp-for="TestInputAddon" asp-dvt="m2" />
+    <nop-editor asp-for="KiemTraXacThuChuKySo" /> Kiểm tra xác thực chữ ký số:
+    <p>
+        <a href="javascript:OpenTestModal(2)">Click me to Popup</a>
+    </p>
+
+
+    <div class="block col-md-2">
+        <a href="#" class="btn btn-2 color-green" style="font-size: 15px;">
+            Hover
+        </a>
+    </div>
+    <a href="#" class="hvr-outline-out">Outline Out</a>
+    <script>
+        function OpenTestModal(id)
+        {
+            //var _url = "@(Url.Action("_TestPopUp", "Home"))?Id=" + id ;
+            var _url = "@(Url.Action("_CreateOrUpdate", "DonViBoPhan"))";
+            OpenModalManual("Hello", _url, 850, 450);
+        }
+
+    </script>
+    <input type="text" id="txtNum" value="10000" />
+    <script>
+        $(document).ready(function () {
+            kendo.cultures["vi-VN"] = {
+                // <language code>-<country/region code>
+                name: "vi-VN",
+                // The "numberFormat" defines general number formatting rules.
+                numberFormat: {
+                    //numberFormat has only negative pattern unlike the percent and currency
+                    //negative pattern: one of (n)|-n|- n|n-|n -
+                    pattern: ["-n"],
+                    //number of decimal places
+                    decimals: 2,
+                    //string that separates the number groups (1,000,000)
+                    ",": ",",
+                    // A string that separates a number from the fractional point.
+                    ".": ".",
+                    //the length of each number group
+                    groupSize: [3],
+                    //formatting rules for percent number
+                    percent: {
+                        //[negative pattern, positive pattern]
+                        // negativePattern: one of -n %|-n%|-%n|%-n|%n-|n-%|n%-|-% n|n %-|% n-|% -n|n- %
+                        //positivePattern: one of n %|n%|%n|% n
+                        pattern: ["-n %", "n %"],
+                        // The number of decimal places.
+                        decimals: 2,
+                        // The string that separates the number groups (1,000,000 %).
+                        ",": ",",
+                        // The string that separates a number from the fractional point.
+                        ".": ".",
+                        // The length of each number group.
+                        groupSize: [3],
+                        //percent symbol
+                        symbol: "%"
+                    },
+                    currency: {
+                        // [negative pattern, positive pattern]
+                        // negativePattern: one of "($n)|-$n|$-n|$n-|(n$)|-n$|n-$|n$-|-n $|-$ n|n $-|$ n-|$ -n|n- $|($ n)|(n $)"
+                        //positivePattern: one of "$n|n$|$ n|n $"
+                        pattern: ["(n $)", "n $"],
+                        // The number of decimal places.
+                        decimals: 2,
+                        // The string that separates the number groups (1,000,000 $).
+                        ",": ",",
+                        // The string that separates a number from the fractional point.
+                        ".": ".",
+                        // The length of each number group.
+                        groupSize: [3],
+                        // The currency symbol.
+                        symbol: "₫"
+                    },
+
+                },
+                calendars: {
+                    standard: {
+                        days: {
+                            // The full day names.
+                            names: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                            // The abbreviated day names.
+                            namesAbbr: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                            // The shortest day names.
+                            namesShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+                        },
+                        months: {
+                            // The full month names.
+                            names: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                            // abbreviated month names
+                            namesAbbr: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                        },
+                        // The AM and PM designators.
+                        // [standard,lowercase,uppercase]
+                        AM: ["AM", "am", "AM"],
+                        PM: ["PM", "pm", "PM"],
+                        // The set of predefined date and time patterns used by the culture.
+                        patterns: {
+                            d: "M/d/yyyy",
+                            D: "dddd, MMMM dd, yyyy",
+                            F: "dddd, MMMM dd, yyyy h:mm:ss tt",
+                            g: "M/d/yyyy h:mm tt",
+                            G: "M/d/yyyy h:mm:ss tt",
+                            m: "MMMM dd",
+                            M: "MMMM dd",
+                            s: "yyyy'-'MM'-'ddTHH':'mm':'ss",
+                            t: "h:mm tt",
+                            T: "h:mm:ss tt",
+                            u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
+                            y: "MMMM, yyyy",
+                            Y: "MMMM, yyyy"
+                        },
+                        // The first day of the week (0 = Sunday, 1 = Monday, and so on).
+                        firstDay: 0
+                    }
+                }
+            };
+            /// ₫ m² m³
+            $("#txtNum").kendoNumericTextBox({
+                format: "s",
+                decimals: 2, //always display 4 digits
+                culture: "vi-VN",
+            });
+        });
+    </script>
+</form>
+@* Test collapse *@
+<div>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Collapsible Group Item #1
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Collapsible Group Item #2
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Collapsible Group Item #3
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* Test Khấu hao, hao mòn *@
+<div class="gs-form-group">
+    <h6>Test khấu hao, hao mòn</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right text-required">Thông tin:</label>
+        <textarea class="col-sm-10" id="tinhTSInfo" style="width:100%; height:150px;"></textarea>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Kết quả:</label>
+        <textarea class="col-sm-10" id="ket-qua" style="width:100%; height:150px;"></textarea>
+    </div>
+    <input id="btn-Tinh" type="button" value="Tính" style="width:75px; height:32px; cursor:pointer;" onclick="CalculateAssetValue()" />
+    <script>
+        $(document).ready(function () {
+            var _data = {
+                //DON_VI_ID:425,
+                LOAI_TAI_SAN_ID: 409,
+                CHE_DO_HACH_TOAN: 3,
+                CHE_DO_HAO_MON_ID: 1,
+                GIA_TRI_HT: 10000000,
+                NGAY_SU_DUNG: "20/10/2004",
+                NGAY_GHI_TANG: "31/12/2008",
+                TY_LE_TINH_KHAU_HAO: 0.5,
+                TY_LE_TINH_HAO_MON: 0.5,
+            };
+            $("#tinhTSInfo").val(JSON.stringify(_data));
+        });
+        function CalculateAssetValue() {
+            //var _data = JSON.parse($("#tinhTSInfo").val());
+            var _data = {
+                LOAI_TAI_SAN_ID: 409,
+                CHE_DO_HACH_TOAN: 3,
+                CHE_DO_HAO_MON_ID: 1,
+                GIA_TRI_HT: 10000000,
+                NGAY_SU_DUNG: "20/10/2004",
+                NGAY_GHI_TANG: "31/12/2008",
+                TY_LE_TINH_KHAU_HAO: 0.5,
+                TY_LE_TINH_HAO_MON: 0.5,
+            };
+            var uri = "/taisan/CalculateAssetValue";
+            ServicePost(uri, _data, false, function (res) {
+                if (res.Success) {
+                    var data = res.Data;
+                    $("#KH_NGUYEN_GIA").val(data.KH_GIA_TRI_HT);
+                    $("#KH_NGUYEN_GIA").data("kendoNumericTextBox").value(data.KH_GIA_TRI_HT);
+                    $("#KH_GIA_TRI_CON_LAI").data("kendoNumericTextBox").value(data.KH_GIA_TRI_HT_CON_LAI);
+                    $("#SO_THANG_CON_SU_DUNG").data("kendoNumericTextBox").value(data.THOI_GIAN_CON_LAI_MONTH);
+                    $("#TINH_KHAU_HAO").data("kendoNumericTextBox").value(data.KHAU_HAO_PER_MONTH);
+                    $("#GIA_TRI_CON_LAI").data("kendoNumericTextBox").value(data.HM_GIA_TRI_HT_CON_LAI);
+                }
+            })
+        };
+    </script>
+</div>
+@* Test đồng bộ dữ liệu*@
+<div class="card">
+    <div class="card-header">Test Api Kho</div>
+
+    <div class="card-body">
+        <div class="row form-group">
+            <div class=" col-md-2">Url Api KhoCSDL:  </div>
+            <div class=" col-md-10">
+                <input id="ApiUrlKhoCSDL" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Url Api KhoCSDL:  </div>
+            <div class=" col-md-10">
+                <input id="UrlTokenKhoCSDLQG" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">ClientId:  </div>
+            <div class=" col-md-10">
+                <input id="ClientId" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Client Secret:  </div>
+            <div class=" col-md-10">
+                <input id="ClientSecret" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Username:  </div>
+            <div class=" col-md-10">
+                <input id="Username" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Password:  </div>
+            <div class=" col-md-10">
+                <input id="Password" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Response:  </div>
+            <div class=" col-md-10">
+                <textarea id="ResponseApi" style="width:100%; height:150px;"></textarea>
+            </div>
+            <br />
+            <span id="TrangThaiTestApi" style="color:red"></span>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#GetInfoApi").click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/GetInfoApiKhoCSDL",
+                        async: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $("#ApiUrlKhoCSDL").val(data.Data.ApiUrlKhoCSDL);
+                                $("#UrlTokenKhoCSDLQG").val(data.Data.UrlTokenKhoCSDLQG);
+                                $("#ClientId").val(data.Data.ClientId);
+                                $("#ClientSecret").val(data.Data.ClientSecret);
+                                $("#Username").val(data.Data.Username);
+                                $("#Password").val(data.Data.Password);
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+    <div class="card-footer">
+        <button id="GetInfoApi" class="btn btn-sm btn-outline-danger">Lấy thông tin</button>
+        <button id="SendRequest" class="btn btn-sm btn-outline-danger">Gửi Request token</button>
+        <button id="SendRequestUpdate" class="btn btn-sm btn-outline-danger">Gửi Request Update quốc gia</button>
+        <script>
+            function DongBoDanhMuc(name) {
+                var _data = {
+                    name: name
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/DongBoDanhMuc",
+                    data: _data,
+                    async: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#ResponseApi").val(data.Data);
+                            $('#TrangThaiTestApi').text("Thành công")
+                        }
+                        else {
+                            $("#ResponseApi").val(data.Error);
+                            $('#TrangThaiTestApi').text("Thất bại")
+                        }
+                    }
+                })
+            };
+        </script>
+        <div class="gs-form-group mb-4" style="margin-top:25px;">
+            <h6>Gửi đồng bộ danh mục không cấp</h6>
+            <form method="get" action="/Home/GetReportByGuid">
+                <div class="form-group row">
+                    <div class="col-sm-2" style="margin-bottom: 0.2rem !important;">
+                        File Guid:
+                    </div>
+                    <div class="col-sm-8" style="margin-bottom: 0.2rem !important;">
+                        <input type="text" class="form-control" required id="fileGuid" name="fileGuid" />
+                    </div>
+                    <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">File Guid</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="gs-form-group mb-4" style="margin-top:25px;">
+            <h6>Gửi đồng bộ danh mục không cấp</h6>
+            <div class="form-group row">
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('CheDoHaoMon')">chế độ hao mòn</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" disabled onclick="DongBoDanhMuc('MucDichSuDung')">mục đích sử dụng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('HienTrang')">hiện trạng sử dụng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('LyDoBienDong')">lý do biến động</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('QuocGia')">quốc gia</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('NguoiDung')">người dùng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="DongBoDanhMuc('DuAn')">dự án</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" disabled onclick="DongBoDanhMuc('HinhThucXuLy')">phương thức xử lý</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" disabled onclick="DongBoDanhMuc('PhuongAnXuLy')">hình thức xử lý</button>
+                </div>
+            </div>
+        </div>
+        <div class="gs-form-group mb-4" style="margin-top:25px;">
+            <h6>Gửi đồng bộ danh mục có cấp</h6>
+            <div class="form-group row">
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendNguonTs" class="btn btn-sm btn-outline-danger">nguồn hình thành tài sản</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendNhomTs" class="btn btn-sm btn-outline-danger">loại tài sản</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendLoaiLyDoBD" class="btn btn-sm btn-outline-danger">loại lý do biến động</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendTinhThanh" class="btn btn-sm btn-outline-danger">tỉnh thành</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendDonVi" class="btn btn-sm btn-outline-danger">đơn vị</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendLoaiDonVi" class="btn btn-sm btn-outline-danger">loại đơn vị</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button id="SendBoPhanSD" class="btn btn-sm btn-outline-danger">bộ phận sử dụng</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function ExportExcelDongBoDanhMuc(name) {
+
+                window.open('/Home/ExportExcelDongBoDanhMuc?name=' + name + '&type=' + $("#LoaiTep").val(), '_blank');
+
+            };
+        </script>
+        <div class="gs-form-group mb-4" style="margin-top:25px;">
+            <h6>Xuất excel danh mục</h6>
+
+            <div class="form-group row">
+                <label for="LoaiTep" style="width:15%;text-align:right">Loại tệp:</label>
+                <select name="LoaiTep" id="LoaiTep">
+                    <option value="2">JSON</option>
+                    <option value="1">EXCEL</option>
+                </select>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('CheDoHaoMon')">chế độ hao mòn</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" disabled onclick="ExportExcelDongBoDanhMuc('MucDichSuDung')">mục đích sử dụng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('HienTrang')">hiện trạng sử dụng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('LyDoBienDong')">lý do biến động</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('QuocGia')">quốc gia</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('NguoiDung')">người dùng</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('DuAn')">dự án</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('PhuongAnXuLy')">phương thức xử lý</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('HinhThucXuLy')">hình thức xử lý</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('NguonGocTaiSan')">nguồn hình thành tài sản</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('LoaiTaiSan')">loại tài sản</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('LoaiTaiSanToanDan')">loại tài sản toàn dân</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('LoaiLyDoBienDong')">loại lý do biến động</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('DiaBan')">tỉnh thành</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('DonVi')">đơn vị</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="ExportExcelDongBoDanhMuc('LoaiDonVi')">loại đơn vị</button>
+                </div>
+                <div class="col-sm-2 " style="margin-bottom: 0.2rem !important;">
+                    <button class="btn btn-sm btn-outline-danger">bộ phận sử dụng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div>
+    <input id="btn-test-array" type="button" value="Sumbit Array Model" class="btn btn-success" />
+    <script>
+        $(document).ready(function () {
+            $("#btn-test-array").click(function () {
+                var _data = [{
+                    Ten: "a",
+                    Tuoi: 1,
+                    CanNang: 1.22,
+                    SoLuong: "4,32"
+                }, {
+                    Ten: "b",
+                    Tuoi: 2,
+                    CanNang: 4.22,
+                    SoLuong: "1,22"
+                }];
+
+                var _model = {
+                    models: _data
+                }
+                //addAntiForgeryToken(_model);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/Home/TestArray",
+                    dataType: "json",
+                    data: _model,
+
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
+            });
+            $("#SendRequest").click(function () {
+                var _data = {
+                    ApiUrlKhoCSDL: $("#ApiUrlKhoCSDL").val(),
+                    UrlTokenKhoCSDLQG: $("#UrlTokenKhoCSDLQG").val(),
+                    ClientId: $("#ClientId").val(),
+                    ClientSecret: $("#ClientSecret").val(),
+                    Username: $("#Username").val(),
+                    Password: $("#Password").val(),
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetTokenCSDLQG",
+                    data: _data,
+                    async: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#ResponseApi").val(data.Data);
+                            $('#TrangThaiTestApi').text("Thành công")
+                        }
+                        else {
+                            $("#ResponseApi").val(data.Error);
+                            $('#TrangThaiTestApi').text("Thất bại")
+                        }
+                    }
+                })
+            })
+            $("#SendRequestUpdate").click(function () {
+                var _data = {
+                    ApiUrlKhoCSDL: $("#ApiUrlKhoCSDL").val(),
+                    ClientId: $("#ClientId").val(),
+                    ClientSecret: $("#ClientSecret").val(),
+                    Username: $("#Username").val(),
+                    Password: $("#Password").val(),
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/TestDongBoQuocGia",
+                    data: _data,
+                    async: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#ResponseApi").val(data.Data);
+                            $('#TrangThaiTestApi').text("Thành công")
+                        }
+                        else {
+                            $("#ResponseApi").val(data.Error);
+                            $('#TrangThaiTestApi').text("Thất bại")
+                        }
+                    }
+                })
+            })
+        });
+    </script>
+</div>
+
+@*Test amchart4*@
+<div class="gs-form-group">
+    <h4>Test AnPX</h4>
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+
+
+    <div id="chartdiv"></div>
+
+    <script>
+        am4core.ready(function () {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            var chart = am4core.create("chartdiv", am4charts.XYChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+            //ẩn logo góc biểu đồ
+            chart.logo.group.node.innerHTML = "";
+
+            chart.data = [
+                {
+                    country: "USA",
+                    visits: 23725
+                },
+                {
+                    country: "China",
+                    visits: 1882
+                },
+                {
+                    country: "Japan",
+                    visits: 1809
+                },
+                {
+                    country: "Germany",
+                    visits: 1322
+                },
+                {
+                    country: "UK",
+                    visits: 1122
+                },
+                {
+                    country: "France",
+                    visits: 1114
+                },
+                {
+                    country: "India",
+                    visits: 984
+                },
+                {
+                    country: "Spain",
+                    visits: 711
+                },
+                {
+                    country: "Netherlands",
+                    visits: 665
+                },
+                {
+                    country: "Russia",
+                    visits: 580
+                },
+                {
+                    country: "South Korea",
+                    visits: 443
+                },
+                {
+                    country: "Canada",
+                    visits: 441
+                }
+            ];
+
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.dataFields.category = "country";
+            categoryAxis.renderer.minGridDistance = 40;
+            categoryAxis.fontSize = 11;
+
+
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.min = 0;
+            valueAxis.max = 24000;
+            valueAxis.strictMinMax = true;
+            valueAxis.renderer.minGridDistance = 30;
+            // axis break
+            var axisBreak = valueAxis.axisBreaks.create();
+            axisBreak.startValue = 2100;
+            axisBreak.endValue = 22900;
+            //axisBreak.breakSize = 0.005;
+
+            // fixed axis break
+            var d = (axisBreak.endValue - axisBreak.startValue) / (valueAxis.max - valueAxis.min);
+            axisBreak.breakSize = 0.05 * (1 - d) / d; // 0.05 means that the break will take 5% of the total value axis height
+
+            // make break expand on hover
+            var hoverState = axisBreak.states.create("hover");
+            hoverState.properties.breakSize = 1;
+            hoverState.properties.opacity = 0.1;
+            hoverState.transitionDuration = 1500;
+
+            axisBreak.defaultState.transitionDuration = 1000;
+            /*
+            // this is exactly the same, but with events
+            axisBreak.events.on("over", function() {
+              axisBreak.animate(
+                [{ property: "breakSize", to: 1 }, { property: "opacity", to: 0.1 }],
+                1500,
+                am4core.ease.sinOut
+              );
+            });
+            axisBreak.events.on("out", function() {
+              axisBreak.animate(
+                [{ property: "breakSize", to: 0.005 }, { property: "opacity", to: 1 }],
+                1000,
+                am4core.ease.quadOut
+              );
+            });*/
+
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.categoryX = "country";
+            series.dataFields.valueY = "visits";
+            series.columns.template.tooltipText = "{valueY.value}";
+            series.columns.template.tooltipY = 0;
+            series.columns.template.strokeOpacity = 0;
+
+            // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+            series.columns.template.adapter.add("fill", function (fill, target) {
+                return chart.colors.getIndex(target.dataItem.index);
+            });
+
+        }); // end am4core.ready()
+    </script>
+
+</div>
+<style>
+    .hvr-outline-out {
+        display: inline-block;
+        vertical-align: middle;
+        -webkit-transform: perspective(1px) translateZ(0);
+        transform: perspective(1px) translateZ(0);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+        position: relative;
+    }
+
+        .hvr-outline-out:before {
+            content: '';
+            position: absolute;
+            border: #e1e1e1 solid 4px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            -webkit-transition-property: top, right, bottom, left;
+            transition-property: top, right, bottom, left;
+        }
+
+        .hvr-outline-out:hover:before, .hvr-outline-out:focus:before, .hvr-outline-out:active:before {
+            top: -8px;
+            right: -8px;
+            bottom: -8px;
+            left: -8px;
+        }
+</style>
+<div class="card">
+
+    <div class="card-body">
+        <div class="row form-group">
+            <div class=" col-md-12">
+                <textarea id="querySql" style="width:100%;"></textarea>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-12">
+                <span id="logExc"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button id="excSql" class="btn btn-sm btn-outline-danger">exc</button>
+        <script>
+            $(document).ready(function () {
+                $("#excSql").click(function () {
+                    var _data = {
+                        querySql: $("#querySql").val()
+                    };
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/ExcuteSql",
+                        data: _data,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            $('#logExc').text(data)
+                        }
+                    })
+                });
+            });
+        </script>
+
+    </div>
+
+</div>
+<div class="card">
+    <div class="card-header">Upfile to database</div>
+    <div class="card-body">
+        <div class="form-group">
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label class="form-label w-100">Nhập file</label>
+                <div class="custom-file">
+                    <input name="file" class="custom-file-input" id="fileUpLoadToDB" type="file">
+                    <label class="custom-file-label" for="file">Nhập file</label>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">
+                <button type="button" id="btnImportFile" class="btn btn-success">Import File</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row form-group">
+            <div class=" col-md-12">
+                <pre class="jsonView" id="ResultImportFile" name="ImportFile"></pre>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#btnImportFile").click(function () {
+            var fileupload = $("#fileUpLoadToDB").get(0);
+            var file = fileupload.files;
+            var data = new FormData();
+            data.append("file", file[0]);
+            $.ajax({
+                type: "post",
+                url: "/FileCongViec/UpFileToDataBase",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (result) {
+                    console.log(result);
+                    if (result.Code != '01')
+                        $("#ResultImportFile").html(syntaxHighlightJson(JSON.stringify(result.ObjectInfo, undefined, 4)));
+                },
+                error: function () {
+                    ShowErrorMessage("there was error uploading files!");
+                }
+            });
+        });
+    </script>
+
+</div>

@@ -1,0 +1,62 @@
+﻿@model DoiTacModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+@*<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-right text-required">Phòng ban:</label>
+	<div class="col-sm-10">
+		<nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.AvailableDonViBoPhan" />
+		<span asp-validation-for="DON_VI_BO_PHAN_ID"></span>
+	</div>
+</div>*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left text-required">Mã:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="MA" />
+		<span asp-validation-for="MA"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left text-required">Tên:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="TEN" />
+		<span asp-validation-for="TEN"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left">Đại diện:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="DAI_DIEN" />
+		<span asp-validation-for="DAI_DIEN"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left">Địa chỉ:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="DIA_CHI" />
+		<span asp-validation-for="DIA_CHI"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left">Điện thoại:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="DIEN_THOAI" />
+		<span asp-validation-for="DIEN_THOAI"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-sm-left">Mô tả:</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="MO_TA" />
+		<span asp-validation-for="MO_TA"></span>
+	</div>
+</div>
+<div class="form-group row" style="display:none">
+	<label class="col-form-label col-sm-2 text-sm-left">Loại đối tác:</label>
+	<div class="col-sm-10">
+		<nop-select asp-for="LOAI_DOI_TAC_ID" asp-items="Model.dllLoaiDoiTac" />
+		<span asp-validation-for="LOAI_DOI_TAC_ID"></span>
+	</div>
+</div>
+
+

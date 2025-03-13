@@ -1,0 +1,72 @@
+﻿@model KhaiThacChiTietModel
+@*Dùng riêng cho show thông tin khai thác khác, kinh doanh*@
+<div>
+    <input asp-for="TAI_SAN_ID" type="hidden" />
+    <input asp-for="KHAI_THAC_ID" type="hidden" />
+    <input asp-for="NGAY_SU_DUNG" type="hidden" />
+    <input asp-for="SO_TIEN_THU_DUOC" type="hidden" />
+    <input asp-for="ID" type="hidden" />
+    <input asp-for="KhaiThacChiTietId" type="hidden" />
+
+    <div class="@(Model.IsShowInfo? "":"gs-form-group mb-4")">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Mã tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TAI_SAN_MA" asp-disabled="true" />
+            </div>
+            <label class="col-form-label col-sm-2 ">Tên tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TAI_SAN_TEN" asp-disabled="true" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Loại tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="LoaiTaiSanTen" asp-disabled="true" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Quyết định phê duyêt số</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="KhaiThac.QUYET_DINH_SO" asp-disabled="@Model.IsShowInfo" />
+            </div>
+            <label class="col-form-label col-sm-2 text-required">Ngày</label>
+            <div class="col-sm-4">
+                <input class="form-control text-box single-line" value="@(Model.KhaiThac?.QUYET_DINH_NGAY.toDateVNString())" disabled="disabled"  />               
+            </div>
+        </div>
+
+        <div class="form-group row">
+           
+            <label class="col-form-label col-sm-2 text-required">@(Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.SXKD? "Thời hạn kinh doanh từ ngày": "Khai thác từ ngày") </label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_KHAI_THAC" asp-disabled="@Model.IsShowInfo" />
+                <br />
+                <span asp-validation-for="NGAY_KHAI_THAC"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required">Đến ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_KHAI_THAC_DEN" asp-disabled="@Model.IsShowInfo"/>
+                <br />
+                <span asp-validation-for="NGAY_KHAI_THAC_DEN"></span>
+            </div>
+        </div>
+        @if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+        {
+
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 ">Diện tích</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="DIEN_TICH" asp-disabled="true" />
+                </div>
+                <label class="col-form-label col-sm-2 ">Diện tích LDLK</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="DIEN_TICH_KHAI_THAC" asp-disabled="@Model.IsShowInfo" />
+                    <span asp-validation-for="DIEN_TICH_KHAI_THAC"></span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

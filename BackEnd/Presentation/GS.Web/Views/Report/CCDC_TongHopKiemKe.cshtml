@@ -1,0 +1,118 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+
+@{
+    //page title
+    ViewBag.Title = "Tổng hợp báo cáo kiểm kê";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoCCDCThongHopKiemKe");
+}
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Điều kiện báo cáo</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị báo cáo</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN_DON_VI" asp-disabled="true" />
+            <span asp-validation-for="TEN_DON_VI"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày báo cáo</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="NgayBaoCao" />
+            <span asp-validation-for="NgayBaoCao"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Phòng ban, bộ phận</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="DonViBoPhan" asp-items="Model.DDLDonViBoPhan" asp-filter="true" asp-arrow="true" asp-placeholder="Tất cả" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Nhóm công cụ, dụng cụ</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="ListCongCu" asp-items="Model.DDLNhomCongCu" asp-filter="true" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính giá trị</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="DonViTien" asp-items="Model.DDLDonViTien" />
+        </div>
+
+    </div>
+    <div class="form-group" style="text-align:center">
+        <button class="btn btn-success" id="btnBaoCao">Báo cáo</button>
+    </div>
+</div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+    $(function () {
+		ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+		if (ddlCap) {
+			ddlCap.select(0);
+		}
+		ddlSL = $("#So_luong_Object").data("kendoDropDownList");
+		if (ddlSL) {
+			ddlSL.select(0);
+		}
+
+		let _data = {
+			MaBaoCao: "@Model.MaBaoCao"
+		};
+		let _url = '@Url.Action("Detail","QueueProcess")';
+		ajaxPost(_data, _url, true).done(function (data) {
+			$('#view-contentTask').html(data);
+		});
+    });
+    $("#btnBaoCao").click(function () {
+                var check = true;
+        if ($("#NgayBaoCao").val() == null || $("#NgayBaoCao").val() == "") {
+            check = false;
+            showInvalidMessage("NgayBaoCao", "Ngày không được để trống")
+        }
+        else
+        {
+            hideValmsg("NgayBaoCao");
+        };
+        if (!checkValidateDateFormat("#NgayBaoCao", "NgayBaoCao", "Sai định dạng ngày")) { check = false; };
+        if (check) {
+            var ngayBaoCao = $("#NgayBaoCao").val();
+			var listCongCu = null;
+			var donViBoPhan = $("#DonViBoPhan").val();
+			if ($("#ListCongCu").val()) {
+				listCongCu = $("#ListCongCu").val().join(',');
+			}
+            var data = {
+                NgayBaoCao: getDateFormatForGetMethod($("#NgayBaoCao").val()),
+                DonViTien: $("#DonViTien").val(),
+				ListStringCongCu: listCongCu,
+				DonViBoPhan: donViBoPhan,
+            };
+            //$("#view-contentReport").prop('src', '/Empty.htm');
+            //$.ajax({
+            //    url: "/Report/CCDC_TongHopKiemKe_Report",
+            //    type: "POST",
+            //    data: data,
+            //    success: function (data) {
+            //        var dstFrame = document.getElementById('view-contentReport');
+            //        var dstDoc = dstFrame.contentDocument || dstFrame.contentWindow.document;
+            //        dstDoc.write(data);
+            //        dstDoc.close();
+            //    }
+            //})
+            submit_post_via_hidden_form("/Report/CCDC_TongHopKiemKe_Report_", data,"GET");
+
+        }
+    })
+</script>

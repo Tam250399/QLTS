@@ -1,0 +1,155 @@
+﻿@model KiemKeModel
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thành phần tham gia kiểm kê</h6>
+    <div id="view_ListHoiDong">
+        <script>
+
+            $(document).ready(function () {
+                LoadViewHoiDong();
+            })
+            function LoadViewHoiDong() {
+                ShowViewLoading("#view_ListHoiDong");
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemKeHoiDong/_List?KiemKeId=@Model.ID",
+                    success: function (data) {
+                        $("#view_ListHoiDong").html(data);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết công cụ, dụng cụ kiểm kê</h6>
+    <div id="view-congCuKiemKe"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        LoadCongCuKiemKe();
+    })
+    function LoadCongCuKiemKe() {
+         ShowViewLoading("#view-congCuKiemKe");
+        $.ajax({
+            type: "GET",
+            url: "/KiemKeCongCu/List?KiemKeId=@Model.ID",
+            success: function (data) {
+                $("#view-congCuKiemKe").html(data);
+            }
+        })
+    }
+</script>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết công cụ, dụng cụ phát hiện thừa</h6>
+    <div style="text-align:right">
+        <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới/sửa công cụ, dụng cụ phát hiện thừa" data-src="/KiemKeCongCu/Create?KiemKeId=@Model.ID" style="margin:10px;">
+            <i class="ion ion-md-add"></i>
+            Thêm công cụ, dụng cụ phát hiện thừa
+        </button>
+    </div>
+    <div id="view-congCuPhatHienThua"></div>
+    <script>
+    $(document).ready(function () {
+        LoadCongCuThuaKiemKe();
+    })
+        function LoadCongCuThuaKiemKe() {
+         ShowViewLoading("#view-congCuPhatHienThua");
+        $.ajax({
+            type: "GET",
+            url: "/KiemKeCongCu/ListCongCuThua?KiemKeId=@Model.ID",
+            success: function (data) {
+                $("#view-congCuPhatHienThua").html(data);
+            }
+        })
+    }
+    </script>
+</div>
+
+<script>
+    function DeleteHoiDongKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeHoiDong/DeleteForKiemKe?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadViewHoiDong();
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    function DeleteCongCuKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeCongCu/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadCongCuKiemKe();
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    function DeleteCongCuThuaKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeCongCu/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadCongCuThuaKiemKe();
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>

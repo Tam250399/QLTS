@@ -1,0 +1,188 @@
+﻿@model IMP_DoiTacModel
+@{
+	//page title
+	ViewBag.Title = "Nhập file";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("ImportDoiTac");
+}
+@using GS.Core.Data
+<div class="card">
+	<div class="card-header">
+		Import
+	</div>
+	<div class="card-body">
+		<form method="post" asp-action="ImportDoiTacFromFile" asp-controller="DoiTac" enctype="multipart/form-data" id="data">
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-12">
+						<label class="form-label w-100">Chọn file <i style="color:red;"> (*.json)</i></label>
+						<div class="custom-file">
+							<input name="file" class="custom-file-input" id="file" type="file" accept="application/JSON">
+							<label class="custom-file-label" for="file">Nhập file</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button type="button" id="btnImport" class="btn btn-success">Import</button>
+			<br />
+			<span id="logTime"></span>
+		</form>
+	</div>
+</div>
+<div id="GridDoiTac">
+	Danh sách đã Nhập thành công
+	<div id="GridDoiTac-success-grid">
+	</div>
+	Danh sách đã Nhập thất bại
+	<a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+	<div id="GridDoiTac-error-grid">
+	</div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnImport").click(function (evt) {
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+		$.ajax({
+			type: "post",
+			url: "/DoiTac/ImportDoiTacFromFile", 
+			contentType: false,
+			processData: false,
+			data: data,
+		}).done((result) => {
+            d = new Date();
+            logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                d.getFullYear() + " " +
+                ("0" + d.getHours()).slice(-2) + ":" +
+                ("0" + d.getMinutes()).slice(-2) + ":" +
+                ("0" + d.getSeconds()).slice(-2);
+            $("#logTime").html(logTime);
+            $("#GridDoiTac").show();
+            gridDoiTacSuccess(result.ListSuccess);
+            if (!result.success)
+                gridDoiTacError(result.ListError);
+            hideThrobber();
+        }).fail((jqXHR, textStatus, errorThrow) => {
+			console.log(textStatus + ': ' + errorThrow);
+			alert("there was error uploading files!");
+            hideThrobber();
+        });
+    });
+    function gridDoiTacSuccess(data) {
+        let record = 1;
+        var dataSuccess = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        $("#GridDoiTac-success-grid").kendoGrid({
+            dataSource: dataSuccess,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#GridDoiTac-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#GridDoiTac-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã',
+                    field: 'MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên',
+                    field: 'TEN'
+                },
+                {
+                    title: 'Mã đơn vị',
+                    field: 'MA_DON_VI',
+                },
+
+            ]
+        });
+
+    }
+    function gridDoiTacError(data) {
+        var record = 1;
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        $("#GridDoiTac-error-grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#GridDoiTac-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#GridDoiTac-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã',
+                    field: 'MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên',
+                    field: 'TEN',
+                },
+                {
+                    title: 'Mã đơn vị',
+                    field: 'MA_DON_VI',
+                },
+                {
+                    title: 'Lỗi',
+                    field: 'MESSAGE',
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#GridDoiTac').hide();
+    })
+</script>

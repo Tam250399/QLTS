@@ -1,0 +1,97 @@
+﻿@model Decimal?
+@{
+}
+<div class="grid-ktct" id="grid-ktct">
+</div>
+<script>
+
+				var record_khai_thac_chi_tiet = 0;
+				$(document).ready(function () {
+					function SearchData() {
+						var _data = {
+                            NhapXuatId: '@Model',
+						};
+						addAntiForgeryToken(_data);
+						return _data;
+					}
+					$("#grid-ktct").kendoGrid({
+						dataSource: {
+							type: "json",
+							transport: {
+								read: {
+									url: "@Html.Raw(Url.Action("ListThongTinCongCu", "XuatNhap"))",
+									type: "POST",
+									dataType: "json",
+									data: SearchData
+								}
+							},
+							schema: {
+								data: "Data",
+								total: "Total",
+								errors: "Errors"
+							},
+							error: function (e) {
+								display_kendoui_grid_error(e);
+								// Cancel the changes
+								this.cancelChanges();
+							},
+							pageSize: 10,
+							serverPaging: true,
+							serverFiltering: true,
+							serverSorting: true
+						},
+						pageable: {
+							refresh: true,
+							pageSizes: [10, 20, 50, 100],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+						},
+						scrollable: false,
+						columns: [
+							{
+								title: "STT",
+								template: "#= ++record_khai_thac_chi_tiet #",
+								width: 50,
+								headerAttributes: { style: "text-align:center" },
+								attributes: { style: "text-align:center" },
+							},
+
+							{
+                                field: 'TenLoaiBienDong',
+								title: 'Loại biến động',
+								width: 350,
+								headerAttributes: { style: "text-align:center" },
+								attributes: { style: "text-align:left" },
+							},
+                            {
+                                field: 'StrNgayBienDong',
+								title: 'Ngày biến động',
+                                width: 150,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:right" },
+							},
+                            {
+                                field: 'Soluong',
+                                title: 'Số lượng',
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:right" },
+							},
+							{
+                            field: 'NguoiTao',
+                            title: 'Người tạo',
+                            width: 200,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:right" },
+                            },
+                            {
+                                field: 'StrNgayTao',
+                                title: 'Ngày tạo',
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
+                            }
+    					
+						]
+					});
+				});
+</script>

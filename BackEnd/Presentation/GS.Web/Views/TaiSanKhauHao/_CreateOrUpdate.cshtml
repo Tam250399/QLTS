@@ -1,0 +1,148 @@
+﻿@model TaiSanModel
+<input asp-for="ID" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<div class="gs-form-group ">
+    <h6>Thông tin tài sản đất</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Đơn vị</label>
+        <div class="col-sm-4 d-none">
+            <nop-editor asp-for="DonViMa" asp-disabled="true" />
+        </div>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DonViTen" asp-disabled="true" />
+        </div>
+    </div>
+    @if (Model.isCreateTSDA != null && Model.isCreateTSDA.Value == true)
+    {
+        @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Dự án</label>
+            <div class="col-sm-10">
+                <div class="d-flex w-100">
+                    <div class="flex-grow-1 w-100">
+                        <app-select asp-for="DU_AN_ID" asp-items="Model.DuAnAvailable" asp-filter="true" />
+                        <span asp-validation-for="DU_AN_ID"></span>
+                    </div>
+                    <div class="">
+                        <button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="600" data-title="Thêm mới dự án" data-src="/DuAn/_Create" style="margin:3px 0px 0px 2px;">
+                            <span class="ion ion-md-add"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    }
+    <div class="form-group row">
+        
+        <label class="col-form-label col-sm-2 text-required ">Địa chỉ</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="taisandatModel.DIA_CHI" placeholder="Nhập số nhà, đường phố, tổ/ thôn/ xóm" maxlength="255" />
+            <span asp-validation-for="taisandatModel.DIA_CHI" class="check-diachi" data-valmsg-for="taisandatModel.DIA_CHI"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @*<select id="LOAI_TAI_SAN_ID" name="LOAI_TAI_SAN_ID" class="form-control"></select>*@
+            <app-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+            <span asp-validation-for="LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+            <script>
+                $(document).ready(function () {
+                   $("#LOAI_TAI_SAN_ID").kendoDropDownList({
+                        dataTextField: "Text",
+                       dataValueField: "Value",
+                       filter: "contains",
+                       template: function (e) {
+                            if (e.Disabled) {
+                                return '<span class="k-state-default" style="color: red;">'+e.Text+'</span>';
+                            } else {
+                                return '<span class="k-state-default">'+e.Text+'</span>';
+                            }
+                       },
+                        select: function (e) {
+                            if (e.dataItem.Disabled) {
+                                e.preventDefault();
+                            }
+                        },
+                       dataSource: JSON.parse(String.raw`@Html.Raw(((Model.LoaiTaiSanAvailable).toStringJson()))`),
+                   }).data("kendoDropDownList");
+               });
+            </script>
+        </div>
+    </div>
+    <div class="form-group row">
+
+        @if (Model.isTangMoi == true)
+        {
+            <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày tăng</label>
+        }
+        else
+        {
+            <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày kê khai</label>
+        }
+
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_NHAP" /><br />
+            <span asp-validation-for="NGAY_NHAP" class="valid-ngay-nhap-ts"></span>
+        </div>
+    </div>
+</div>
+<div class="gs-form-group ">
+    @*@(string.IsNullOrEmpty(Model.MA) ? "d-none" : "")*@
+    <h6>
+        Thông tin khấu hao tài sản
+    </h6>
+    <div class="ds-ts-khau-hao">
+        <div class="text-right" style="margin-bottom: 5px;">
+            <a type="button" class="btn btn-xs btn-outline-primary" href="javascript:tsKhauHaoObject.ThemTSKhauHao()">
+                <i class="ion ion-md-add" style="margin-right:5px;"></i>Thêm khấu hao
+            </a>
+        </div>
+        <div id="ListTSKhauHao">
+
+        </div>
+    </div>
+</div>
+
+@*<input asp-for="ID" type="hidden" />
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">NGAY_BAT_DAU:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="NGAY_BAT_DAU" />
+    <span asp-validation-for="NGAY_BAT_DAU"></span>
+    </div>
+    </div>
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">NGAY_KET_THUC:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="NGAY_KET_THUC" />
+    <span asp-validation-for="NGAY_KET_THUC"></span>
+    </div>
+    </div>
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">SO_THANG_KHAU_HAO:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="SO_THANG_KHAU_HAO" />
+    <span asp-validation-for="SO_THANG_KHAU_HAO"></span>
+    </div>
+    </div>
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">TAI_SAN_ID:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="TAI_SAN_ID" />
+    <span asp-validation-for="TAI_SAN_ID"></span>
+    </div>
+    </div>
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">TY_LE_KHAU_HAO:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="TY_LE_KHAU_HAO" />
+    <span asp-validation-for="TY_LE_KHAU_HAO"></span>
+    </div>
+    </div>
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">TY_LE_NGUYEN_GIA_KHAU_HAO:</label>
+    <div class="col-sm-10">
+    <nop-editor asp-for="TY_LE_NGUYEN_GIA_KHAU_HAO" />
+    <span asp-validation-for="TY_LE_NGUYEN_GIA_KHAU_HAO"></span>
+    </div>
+    </div>*@
+

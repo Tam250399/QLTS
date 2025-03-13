@@ -1,0 +1,98 @@
+﻿@model XuLyKetQuaModel
+@{
+    //page title
+    ViewBag.Title = "Sửa cập nhật số tiền";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("XuLyKetQua");
+}
+<form asp-controller="XuLyKetQua" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaXLKQ("@Model.ID") style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </a>
+            <a id="btnSaveXLKQ" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </a>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+<script>
+        $("#btnSaveXLKQ").click(function () {
+            var _data = {
+            ID: $("#@(Html.IdFor(c=>c.ID))").val(),
+            XU_LY_ID: $("#@(Html.IdFor(c=>c.XU_LY_ID))").val(),
+            NGAY_TAO: $("#@(Html.IdFor(c=>c.NGAY_TAO))").val(),
+            NGUOI_TAO_ID: $("#@(Html.IdFor(c=>c.NGUOI_TAO_ID))").val(),
+            CHUNG_TU_NOP_TIEN_SO: $("#@(Html.IdFor(c=>c.CHUNG_TU_NOP_TIEN_SO))").val(),
+            CHUNG_TU_NOP_TIEN_NGAY: $("#@(Html.IdFor(c=>c.CHUNG_TU_NOP_TIEN_NGAY))").val(),
+            NGAY_NOP_TIEN: $("#@(Html.IdFor(c=>c.NGAY_NOP_TIEN))").val(),
+            SO_TIEN: $("#@(Html.IdFor(c=>c.SO_TIEN))").val(),
+            GHI_CHU: $("#@(Html.IdFor(c=>c.GHI_CHU))").val(),
+        }
+        $.ajax({
+           type: "POST",
+            data: _data,
+            url: "/XuLyKetQua/Edit",
+            success: function (result) {
+                if (CheckValidMessageReturn(result)){
+                    ShowSuccessMessage(result.Message);
+                    location.href = "/XuLyKetQua/List";
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+
+        })
+        });
+    function XoaXLKQ(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        id: ID
+                    }
+                    var xlKQDelete = ajaxPost(data, "/XuLyKetQua/Delete");
+                    xlKQDelete.done(function (result) {
+						if (result) {
+                            if (result.Code == '00') {
+                                ShowSuccessMessage(result.Message);
+                                location.href = "/XuLyKetQua/List";
+                            }
+							else if (result.Code == '01') {
+								ShowErrorMessage(result.Message);
+							}
+						}
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+                }
+                return;
+
+            }
+        })
+    }
+</script>

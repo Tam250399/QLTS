@@ -1,0 +1,78 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+
+@{
+	//page title
+	ViewBag.Title = "";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("BaoCaoCKTSOld");
+}
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+	<h6>Điều kiện báo cáo</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required">Từ ngày</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NgayBatDau" />
+			<span asp-validation-for="NgayBatDau"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left text-required">Đến ngày</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NgayKetThuc" />
+			<span asp-validation-for="NgayKetThuc"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị</label>
+		<div class="col-sm-10">
+			<nop-select asp-for="DonVi" asp-filter="true" asp-items="Model.DDLDonVi" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required">Loại tài sản</label>
+		<div class="col-sm-10">
+            <nop-select asp-for="ListLoaiTaiSanId" asp-filter="true" asp-items="Model.LoaiHinhTaiSanAvaliable" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+		</div>
+	</div>
+	<div class="form-group" style="text-align:center">
+		<button class="btn btn-primary" id="btnBaoCao">Báo cáo</button>
+	</div>
+</div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+	$(function () {
+		ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+		if (ddlCap) {
+			ddlCap.select(0);
+		}
+		ddlSL = $("#So_luong_Object").data("kendoDropDownList");
+		if (ddlSL) {
+			ddlSL.select(0);
+		}
+
+	});
+	$("#btnBaoCao").click(function () {
+		//if (checkvali()) {
+		var data = {
+			NgayBatDau: getDateFormatForGetMethod($("#NgayBatDau").val()),
+			NgayKetThuc: getDateFormatForGetMethod($("#NgayKetThuc").val()),
+			DonVi: $("#DonVi").val(),
+			LoaiHinhTaiSan: $("#LoaiHinhTaiSan").val(),
+			DonViTien: $("#DonViTien").val(),
+			DonViDienTich: $("#DonViDienTich").val(),
+			DonViDienTichDat: $("#DonViDienTich").val(),
+			DonViDienTichNha: $("#DonViDienTich").val(),
+			BacTaiSan: $("#BacTaiSan").val(),
+			So_luong_Object: $("#So_luong_Object").val()
+		};
+		submit_post_via_hidden_form("/Report/TS_BCCK_M02_KQMS_TS_", data,'GET');
+	})
+</script>

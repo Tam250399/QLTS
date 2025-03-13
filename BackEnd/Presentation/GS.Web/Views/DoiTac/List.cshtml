@@ -1,0 +1,153 @@
+@model DoiTacSearchModel
+@{
+    //page title
+    ViewBag.Title = "Nhà cung cấp";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDoiTac");
+}
+
+<nop-antiforgery-token />
+<input asp-for="donviId" type="hidden" />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @*@ViewBag.Title*@
+        <br />
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	@*<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Duyệt TS cho đơn vị</label>
+		
+		<div class="col-sm-8">
+			<nop-editor asp-for="TenDonVi" asp-disabled="true" />
+		</div>
+		<div class="col-sm-2" style="text-align:right">
+			<button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+				<i class="fab fa-sistrix"></i>
+				Chọn đơn vị
+			</button>
+		</div>
+	</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Từ khóa:</label>
+		<div class="col-sm-8">
+			<nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã" />
+		</div>
+		<div class="col-sm-2 text-sm-right">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách nhà cung cấp</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn btn-sm btn-outline-primary" style="margin-right:7px;">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    donviId: $('#@Html.IdFor(model => model.donviId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DoiTac"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page: @(Model.Page),
+                                    pageSize:@(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                @*editable: {
+                                    confirmation: "@T("Bạn có chắc chắn muốn xóa nhà cung cấp này không ?")",
+                                    
+                                    mode: "inline"
+                                },*@
+                                scrollable: false,
+                                columns: [
+                                    {field: 'MA',title: 'Mã nhà cung cấp'},
+                                    {field: 'TEN',title: 'Tên nhà cung cấp'},
+                                    {field: 'DAI_DIEN',title: 'Đại diện'},
+                                    {field: 'DIA_CHI',title: 'Địa chỉ'},
+                                    {field: 'DIEN_THOAI',title: 'Điện thoại'},
+                                    {field: 'MO_TA',title: 'Mô tả'},
+                                    //{field: 'TEN_LOAI_DOI_TAC',title: 'Loại nhà cung cấp'},
+                                    //{field: 'TenDonViBoPhan',title: 'Đơn vị bộ phận'},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'
+                                    
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

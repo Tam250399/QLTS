@@ -1,0 +1,30 @@
+@model NhomCongCuModel
+@{
+    //page title
+    ViewBag.Title = "Nhóm công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucNhomCongCu");
+}
+<form asp-controller="NhomCongCu" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            Lưu và tiếp tục sửa
+        </button>*@
+            <a href="~/NhomCongCu/List" class="btn btn-secondary" role="button" style=" float:right;margin-right:5px; width:63px;">Đóng</a>
+            <button type="submit" name="save" class="btn btn-outline-primary" style="float:right;margin-right:5px;">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>

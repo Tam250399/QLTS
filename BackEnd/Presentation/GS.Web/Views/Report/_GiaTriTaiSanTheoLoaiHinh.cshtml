@@ -1,0 +1,82 @@
+﻿<div style="margin-top: 25px;"></div>
+<div id="WidgetGiaTriTaiSanTheoLoaiHinh" class="gs-form-group mb-4">
+	<h6>Tổng giá trị tài sản theo từng nhóm tài sản</h6>
+	<div id="GiaTriTaiSanTheoLoaiHinhWidget" style="width: 100%; height: 500px;">
+	</div>
+</div>
+<script>
+    function am4themes_myTheme(target) {
+        if (target instanceof am4core.ColorSet) {
+            target.list = [
+                am4core.color("@enumColorCodeLoaiHinhTS.DAT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.NHA"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VKT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.OTO"),
+                am4core.color("@enumColorCodeLoaiHinhTS.PHUONGTIENKHAC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.CAYLAUNAM"),
+                am4core.color("@enumColorCodeLoaiHinhTS.HUUHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VOHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.DACTHU"),
+                am4core.color("@enumColorCodeLoaiHinhTS.MAYMOC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC2"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC3"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC4"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC5")
+
+            ];
+        }
+    }
+</script>
+
+<script>
+	am4core.ready(function () {
+		// Themes begin
+		am4core.useTheme(am4themes_myTheme);
+		// Themes end
+
+		var chart = am4core.create("GiaTriTaiSanTheoLoaiHinhWidget", am4charts.XYChart);
+		chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+		//get data
+		$.ajax({
+			type: "GET",
+			url: "/Widget/GiaTriTaiSanTheoLoaiHinh",
+			success: function (data) {
+				if (data == "no") {
+					$("#WidgetGiaTriTaiSanTheoLoaiHinh").remove();
+				} else {
+					chart.logo.disabled = true;
+
+					var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+					categoryAxis.renderer.grid.template.location = 0;
+					categoryAxis.dataFields.category = "loaitaisan";
+					categoryAxis.renderer.minGridDistance = 1;
+					categoryAxis.renderer.inversed = true;
+					categoryAxis.renderer.grid.template.disabled = true;
+					var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+					valueAxis.min = 0;
+					var series = chart.series.push(new am4charts.ColumnSeries());
+					series.dataFields.categoryY = "loaitaisan";
+					series.dataFields.valueX = "giatri";
+					series.tooltipText = "{valueX.value}";
+					series.columns.template.strokeOpacity = 0;
+					series.columns.template.column.cornerRadiusBottomRight = 5;
+					series.columns.template.column.cornerRadiusTopRight = 5;
+					series.columns.template.tooltipText = "Tổng giá trị: [bold]{values.valueX.workingValue.toCurrencyVND()} đ[/]";
+					var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+					labelBullet.label.horizontalCenter = "left";
+					labelBullet.label.dx = 10;
+					labelBullet.label.text = "{values.valueX.workingValue.toCurrencyVND()} đ";
+					labelBullet.locationX = 1;
+					labelBullet.tooltipText = "Tổng giá trị: [bold]{values.valueX.workingValue.toCurrencyVND()} đ[/]";
+					series.columns.template.adapter.add("fill", function (fill, target) {
+						return chart.colors.getIndex(target.dataItem.index);
+					});
+					categoryAxis.sortBySeries = series;
+
+					chart.data = data;
+				}
+			}
+		});
+		am4core.unuseTheme(am4themes_animated);
+	}); // end am4core.ready()
+</script>

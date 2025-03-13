@@ -1,0 +1,821 @@
+﻿@model YeuCauModel
+<!-- Thong tin chung begin --------->
+@await Html.PartialAsync("_BDThongTinTaiSan", Model)
+<!-- Thong tin chung begin --------->
+<!-- Thong tin tang begin --------->
+<input asp-for="ID" type="hidden" />
+<input asp-for="TaiSanGuid" type="hidden" />
+<input asp-for="DON_VI_BO_PHAN_ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="LOAI_BIEN_DONG_ID" type="hidden" />
+<input asp-for="NGAY_SU_DUNG" type="hidden" />
+<div class="gs-form-group  ">
+	<h6>Thông tin tăng</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  ">Số quyết định</label>
+		<div class="col-md-6">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Số</span>
+				</div>
+				<nop-editor asp-for="QUYET_DINH_SO" />
+			</div>
+		</div>
+		<div class="col-md-4">
+			<nop-editor asp-for="QUYET_DINH_NGAY" placeholder="Ngày" /><br />
+			<span asp-validation-for="QUYET_DINH_NGAY"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required">Lý do tăng</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" />
+			<span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required">Ngày tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGAY_BIEN_DONG" /><br />
+			<span asp-validation-for="NGAY_BIEN_DONG"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Diễn giải</label>
+		<div class="col-sm-10">
+			<nop-textarea asp-for="GHI_CHU" />
+		</div>
+	</div>
+</div>
+<!-- Thong tin tang end --------->
+<!-- Gia tri bien dong (tang) begin --------->
+
+<div class="gs-form-group">
+	<h6>Giá trị tăng</h6>
+	@*<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+			<label class="col-form-label col-sm-2  text-required">Chọn nguồn vốn</label>
+			<div class="col-md-10">
+				<nop-select asp-for="SelectedNguonVonIds" asp-items="Model.NguonVonAvailable" asp-multiple="true" />
+				<span asp-validation-for="SelectedNguonVonIds"></span>
+			</div>
+		</div>*@
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<div class="col-sm-6">
+			<div class="row gs-mg-bot-10">
+				<label class="col-form-label col-sm-4 text-required">Tổng giá trị tăng</label>
+				<div class="col-sm-8">
+					<nop-editor asp-for="NGUYEN_GIA" asp-dvt="c" id="TongNguyenGia">
+						<span asp-validation-for="NGUYEN_GIA"></span>
+				</div>
+			</div>
+			<div id="ListNguonVon">
+				@if (Model.lstNguonVonModel != null)
+				{
+					@foreach (var _nv in Model.lstNguonVonModel)
+					{
+						@await Html.PartialAsync("../TaiSan/_NguonVonForTaiSan", _nv);
+					}
+				}
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<div class="gs-form-group">
+	<h6>Nguyên giá/Khấu hao/Hao mòn</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Nguyên giá trước khi tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="YCCTModel.NGUYEN_GIA_CU" asp-disabled="true" asp-dvt="c" />
+		</div>
+		<label class="col-form-label col-sm-2">Nguyên giá sau khi tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="YCCTModel.NGUYEN_GIA_SAU_BD" asp-disabled="true" asp-dvt="c" />
+			<span asp-validation-for="YCCTModel.NGUYEN_GIA_SAU_BD"></span>
+		</div>
+	</div>
+	@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT && Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
+	{
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 gtcl">GTCL trước khi tăng</label>
+			<div class="col-sm-4 gtcl">
+				<nop-editor asp-for="YCCTModel.HM_GIA_TRI_CON_LAI_CU" asp-disabled="true" asp-dvt="c" />
+			</div>
+			<label class="col-form-label col-sm-2 gtcl">GTCL sau khi tăng</label>
+			<div class="col-sm-4 gtcl">
+				<nop-editor asp-for="YCCTModel.HM_GIA_TRI_CON_LAI" asp-disabled="true" asp-dvt="c" />
+				<span asp-validation-for="YCCTModel.HM_GIA_TRI_CON_LAI"></span>
+			</div>
+		</div>
+	}
+</div>
+
+<!-- BEGIN region biến động diện tích cho loại tài sản có diện tích --------->
+@{
+	if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA)
+	{
+		<div class="row form-group" id="dien-tich">
+			<div class="col-md-4">
+				<div class="gs-form-group">
+					<h6>Diện tích trước khi tăng</h6>
+					@*<div class="form-group row">
+							<label class="col-form-label col-sm-4 ">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD_CU" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>*@
+					<div class="form-group row">
+						<label class="col-form-label col-sm-4 ">Diện tích sàn SD</label>
+						<div class="col-sm-8">
+							<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD_CU" asp-disabled="true" asp-dvt="m2" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="gs-form-group">
+					<h6>Diện tích tăng</h6>
+					@*<div class="form-group row">
+							<label class="col-form-label col-sm-4 ">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD" asp-min-number="0"  asp-disabled="false" asp-dvt="m2" />
+								<span id="checkDTNha" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích nhập không được âm</span>
+							</div>
+						</div>*@
+					<div class="form-group row">
+						<label class="col-form-label col-sm-4 ">Diện tích sàn SD</label>
+						<div class="col-sm-8">
+							<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD" asp-min-number="0" asp-disabled="false" asp-dvt="m2" />
+							<span id="checkTongDTNha" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích nhập không được âm</span>
+							<span asp-validation-for="YCCTModel.NHA_TONG_DIEN_TICH_XD"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="gs-form-group  ">
+					<h6>Diện tích sau khi tăng</h6>
+					@*<div class="form-group row">
+							<label class="col-form-label col-sm-4">Diện tích XD</label>
+							<div class="col-sm-8">
+								<nop-editor asp-for="YCCTModel.NHA_DIEN_TICH_XD_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+							</div>
+						</div>*@
+					<div class="form-group row">
+						<label class="col-form-label col-sm-4 ">Diện tích sàn SD</label>
+						<div class="col-sm-8">
+							<nop-editor asp-for="YCCTModel.NHA_TONG_DIEN_TICH_XD_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+							<span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn SD phải bằng tổng hiện trạng sử dụng</span>
+							<span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích sàn SD phải bằng tổng hiện trạng sử dụng</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+	{
+		<div class="row form-group" id="dien-tich">
+			<div class="col-md-4">
+				<div class="gs-form-group">
+					<h6>Diện tích trước khi tăng</h6>
+					<div class="form-group row">
+						<div class="col-sm-12">
+							<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH_CU" asp-disabled="true" asp-dvt="m2" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="gs-form-group">
+					<div class="form-group row">
+						<h6>Diện tích tăng</h6>
+						<div class="col-sm-12">
+							<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH" asp-min-number="0" asp-disabled="false" asp-dvt="m2" />
+							<span id="checkDTDat" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích nhập không được âm</span>
+							<span asp-validation-for="YCCTModel.DAT_TONG_DIEN_TICH"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="gs-form-group">
+					<div class="form-group row">
+						<h6>Diện tích sau khi tăng</h6>
+
+						<div class="col-sm-12">
+							<nop-editor asp-for="YCCTModel.DAT_TONG_DIEN_TICH_SAU_BD" asp-disabled="true" asp-dvt="m2" />
+							<span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng diện tích khuôn viên đất phải bằng tổng hiện trạng sử dụng</span>
+							<span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng diện tích khuôn viên đất phải bằng tổng hiện trạng sử dụng</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	}
+}
+@if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT || Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA)
+{
+	<!-- END region biến động diện tích cho loại tài sản có diện tích --------->
+	<div class="gs-form-group hien-trang-su-dung ">
+		<h6>Hiện trạng sử dụng</h6>
+		<div class="form-group row ">
+			@foreach (var obj in Model.YCCTModel.lstHienTrang)
+			{
+				@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+			}
+		</div>
+	</div>
+}
+else
+{
+	<!--Loại tài sản khác k cho thay đổi hiện trạng nên để ấn-->
+	<div class="gs-form-group hien-trang-su-dung d-none">
+		<h6>Hiện trạng sử dụng</h6>
+		<div class="form-group row ">
+			@foreach (var obj in Model.YCCTModel.lstHienTrang)
+			{
+				@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+			}
+		</div>
+	</div>
+}
+
+<!-- Gia tri bien dong (tang) begin --------->
+
+<script>
+	$(document).ready(function () {
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT)) {
+			$("#TenDonViBoPhan").hide('fast');
+			$("#lblTenDonViBoPhan").hide('fast');
+		}
+		@*//multiselect LoaiNguonVon
+		var multiselectNguonVon = $('#@Html.IdFor(model => model.SelectedNguonVonIds)')
+			.data("kendoMultiSelect");
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.ID <= 0) // nếu là đất set mặc định là loại nguồn ngân sách
+		{
+			multiselectNguonVon.value(@((int)enumNGUON_VON_DEFAULT.NGAN_SACH)); // 1 là ngân sách
+			multiselectNguonVon.readonly(true);
+
+			$.ajax({
+				url: "/TaiSan/_NguonVon?NguonVonId=" + multiselectNguonVon.value(),
+				type: "GET",
+				success: function (data) {
+					$("#ListNguonVon").append(data);
+
+				},
+				error: function () {
+					console.log("error");
+				},
+			});
+		}
+		else if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT)) {
+			multiselectNguonVon.readonly(true);
+		}
+		multiselectNguonVon.setOptions({
+			autoClose: true,
+			filter: "contains"
+
+		});
+		multiselectNguonVon.bind("select", loadNguonVon);
+		multiselectNguonVon.bind("deselect", DeselectNguonVon);
+		@if (Model.NguonVonAvailable.Count == 0)
+
+		{
+
+			<text>
+		multiselectNguonVon.setOptions({
+			enable: false,
+			placeholder:
+				'Chọn nguồn vốn...'
+
+		});
+		multiselectNguonVon._placeholder();
+		multiselectNguonVon._enable();
+			</text>
+
+		}*@
+		changeLyDoBienDong();
+		$("#LY_DO_BIEN_DONG_ID").change(function () {
+			//nếu là giao vốn tài tính được sửa GTCL sau khi tăng
+			@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT && Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
+						{
+						<text>
+						CheckLyDoBienDong();
+						</text>
+						}
+			changeLyDoBienDong();
+		});
+		@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT && Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
+		{
+		<text>
+		CheckLyDoBienDong();
+		function CheckLyDoBienDong() {
+			getMaByIdLyDoTangGiam($("#LY_DO_BIEN_DONG_ID").val()).done((maLyDo) => {
+				
+				if (@Model.LOAI_BIEN_DONG_ID == @((int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI) && $("#LY_DO_BIEN_DONG_ID").val() == @((int)enumLY_DO_THAY_DOI_TINH_TRANG_PHE_DUYET_QUYET_TOAN.THAY_DOI_TINH_TRANG_PHE_DUYET_QUYET_TOAN_BIEN_DONG_TANG_GIA_TRI)) {
+					var GTCL = $("#YCCTModel_HM_GIA_TRI_CON_LAI").data("kendoNumericTextBox");
+					if (GTCL) { GTCL.enable(true); }
+					var NGSBD = $("#YCCTModel_NGUYEN_GIA_SAU_BD").data("kendoNumericTextBox");
+					if (NGSBD) { NGSBD.enable(true); }
+				}
+				else if (@Model.LOAI_BIEN_DONG_ID == @((int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI) && $("#LY_DO_BIEN_DONG_ID").val() == @((int)enumLY_DO_THAY_DOI_TINH_TRANG_PHE_DUYET_QUYET_TOAN.THAY_DOI_TINH_TRANG_PHE_DUYET_QUYET_TOAN_BIEN_DONG_GIAM_GIA_TRI)) {
+					var GTCL = $("#YCCTModel_HM_GIA_TRI_CON_LAI").data("kendoNumericTextBox");
+					if (GTCL) { GTCL.enable(true); }
+					var NGSBD = $("#YCCTModel_NGUYEN_GIA_SAU_BD").data("kendoNumericTextBox");
+					if (NGSBD) { NGSBD.enable(true); }
+				}
+				else if (@Model.LOAI_BIEN_DONG_ID == @((int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI) && maLyDo == '@(enum_LY_DO_BIEN_DONG.TANG_DANH_GIA_LAI_GIA_TRI)') {
+					var GTCL = $("#YCCTModel_HM_GIA_TRI_CON_LAI").data("kendoNumericTextBox");
+
+					if (GTCL) {
+                        if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.NHA)) {
+                            GTCL.enable(false);
+                        } else {
+                            GTCL.enable(true);
+                        }
+
+					
+					}
+					//var NGSBD = $("#YCCTModel_NGUYEN_GIA_SAU_BD").data("kendoNumericTextBox");
+					//if (NGSBD) { NGSBD.enable(true); }
+				}
+				else if (@Model.LOAI_BIEN_DONG_ID == @((int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI) && maLyDo == '@(enum_LY_DO_BIEN_DONG.GIAM_DANH_GIA_LAI_GIA_TRI_TAI_SAN)') {
+					var GTCL = $("#YCCTModel_HM_GIA_TRI_CON_LAI").data("kendoNumericTextBox");
+					if (GTCL) { GTCL.enable(true); }
+					//var NGSBD = $("#YCCTModel_NGUYEN_GIA_SAU_BD").data("kendoNumericTextBox");
+					//if (NGSBD) { NGSBD.enable(true); }
+				}
+				else {
+					var GTCL = $("#YCCTModel_HM_GIA_TRI_CON_LAI").data("kendoNumericTextBox");
+					if (GTCL) { GTCL.enable(false); }
+					var NGSBD = $("#YCCTModel_NGUYEN_GIA_SAU_BD").data("kendoNumericTextBox");
+					if (NGSBD) { NGSBD.enable(false); }
+				}
+			})
+
+		}
+		</text>
+		};
+		let nbdDP = $("#NGAY_BIEN_DONG").data("kendoDatePicker");
+		if (nbdDP) {
+			nbdDP.bind("change", function () {
+				if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+					let _data = {
+						ngayBD: $('#NGAY_BIEN_DONG').val(),
+						TAI_SAN_ID: $('#TAI_SAN_ID').val(),
+						nguyenGiaBienDong: $('#TongNguyenGia').val(),
+						loaiBienDongId:@Model.LOAI_BIEN_DONG_ID,
+					}
+					let _url = "/YeuCau/CalculateGTCL";
+						ajaxPost(_data, _url, true).done(function (val) {
+							$('#YCCTModel_HM_GIA_TRI_CON_LAI_CU').data('kendoNumericTextBox').value(val.TS_GTCLTruocBD);
+							$('#YCCTModel_HM_GIA_TRI_CON_LAI').data('kendoNumericTextBox').value(val.TS_GTCLSauBD);
+					});
+				}
+				TinhNguyenGia();
+			})
+		}
+
+		$("#TongNguyenGia").data("kendoNumericTextBox").bind("change", function () {
+			
+			if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+				let _data = {
+						ngayBD: $('#NGAY_BIEN_DONG').val(),
+						TAI_SAN_ID: $('#TAI_SAN_ID').val(),
+						nguyenGiaBienDong: $('#TongNguyenGia').val(),
+						loaiBienDongId:@Model.LOAI_BIEN_DONG_ID,
+					}
+				let _url = "/YeuCau/CalculateGTCL";
+				ajaxPost(_data, _url, true).done(function (val) {
+					$('#YCCTModel_HM_GIA_TRI_CON_LAI_CU').data('kendoNumericTextBox').value(val.TS_GTCLTruocBD);
+					$('#YCCTModel_HM_GIA_TRI_CON_LAI').data('kendoNumericTextBox').value(val.TS_GTCLSauBD);
+				});
+
+			}
+			TinhNguyenGia();
+		});
+
+		$('#YCCTModel_DAT_TONG_DIEN_TICH, #YCCTModel_NHA_DIEN_TICH_XD, #YCCTModel_NHA_TONG_DIEN_TICH_XD').change(function () {
+				if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT))
+			{
+					let DT_After = $('#YCCTModel_DAT_TONG_DIEN_TICH_SAU_BD').data('kendoNumericTextBox');
+					var res = ConvertToNumber('#YCCTModel_DAT_TONG_DIEN_TICH_CU') + kendo.parseFloat($(this).val(), kendo.culture("vi-VN"));
+					if (res < 0)
+						res = 0
+
+				DT_After.value(res);
+				}
+
+			else if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA))
+			{
+					//let DT_After = $('#YCCTModel_NHA_DIEN_TICH_XD_SAU_BD').data('kendoNumericTextBox');
+					//var res = Number($('#YCCTModel_NHA_DIEN_TICH_XD_CU').val())+ Number($('#YCCTModel_NHA_DIEN_TICH_XD').val());
+					//if (res < 0)
+					//	res = 0
+					//DT_After.value(res);
+					let DT_After_san = $('#YCCTModel_NHA_TONG_DIEN_TICH_XD_SAU_BD').data('kendoNumericTextBox');
+					var res_san = ConvertToNumber('#YCCTModel_NHA_TONG_DIEN_TICH_XD_CU') + ConvertToNumber('#YCCTModel_NHA_TONG_DIEN_TICH_XD');
+					if (res_san < 0)
+						res_san = 0
+
+				DT_After_san.value(res_san);
+				}
+
+				CompareDientich();
+
+			});
+
+		$('#YCCTModel_DAT_TONG_DIEN_TICH, #YCCTModel_NHA_DIEN_TICH_XD, #YCCTModel_NHA_TONG_DIEN_TICH_XD').change();
+		$(".HienTrang").change(CompareDientich);
+		//TTNG();
+		//-------------Tính nguyên giá biến động khi nhập
+		@*$("#TongNguyenGia").change(function () {
+			
+                var val = $(this).val();
+                $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").value(val);
+                $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox").value(0);
+         });*@
+
+		// xét cả trường hợp tài sản dự án -- Hungnt sửa
+		$("#TongNguyenGia").change(function () {
+                    var val = $(this).val();
+                    $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").value(val);
+                    $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox").value(0);
+                    if (@Model.IsTaiSanDuAn.ToString().ToLower() == true) {
+                        $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)").data("kendoNumericTextBox").value(0);
+                        $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)").data("kendoNumericTextBox").value(0);
+                    }
+                });
+
+		let txtNguonVonKhac = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox");
+		let txtNguonVonNS = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox");
+		let txtTongNG = $("#TongNguyenGia").data("kendoNumericTextBox");
+		if (@Model.IsTaiSanDuAn.ToString().ToLower() == true) {
+			let txtNguonVonVienTroPhiCP = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)").data("kendoNumericTextBox");
+			let txtNguonVonODA = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)").data("kendoNumericTextBox");
+
+			if (txtTongNG && txtNguonVonKhac && txtNguonVonNS && txtNguonVonVienTroPhiCP && txtNguonVonODA) {
+				txtNguonVonVienTroPhiCP.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVTPCP > 0) {
+						if (nguonVTPCP > nguonNS) {
+							showInvalidMessage('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+						} else {
+							hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)');
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonVienTroPhiCP.value(0);
+						txtNguonVonNS.value(tongNG - nguonVonODA - nguonVonKhac);
+						hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.VTPCP)');
+					}
+				})
+				txtNguonVonODA.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonODA > 0) {
+						if (nguonVonODA > nguonNS) {
+							showInvalidMessage('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+
+						} else {
+							hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)');
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac);
+						hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DU_AN.ODA)');
+
+					}
+				})
+				txtNguonVonKhac.bind('change', () => {
+					var tongNG = txtTongNG.value();
+					var nguonNS = txtNguonVonNS.value();
+					var nguonVTPCP = txtNguonVonVienTroPhiCP.value();
+					var nguonVonKhac = txtNguonVonKhac.value();
+					var nguonVonODA = txtNguonVonODA.value();
+					var tongNguonVon = nguonNS + nguonVTPCP + nguonVonODA + nguonVonKhac;
+					if (tongNG > 0 && nguonNS > 0 && nguonVonKhac > 0) {
+						if (nguonVonKhac > nguonNS) {
+							showInvalidMessage('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)', 'Tổng các nguồn vốn phải bằng nguyên giá.');
+
+						} else {
+							hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+
+							var newNguonNS = parseInt(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+							txtNguonVonNS.value(newNguonNS);
+							txtNguonVonNS.trigger('change');
+						}
+					}
+					else {
+						txtNguonVonODA.value(0);
+						txtNguonVonNS.value(tongNG - nguonVTPCP - nguonVonKhac - nguonVonODA);
+						hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+
+					}
+				})
+			}
+		} else {
+				if (txtNguonVonKhac && txtNguonVonNS && txtTongNG) {
+					txtNguonVonKhac.bind('change', () => {
+						var tongNG = txtTongNG.value();
+						var nguonVonKhac = txtNguonVonKhac.value();
+						if (tongNG > 0 && nguonVonKhac > 0) {
+							if (nguonVonKhac > tongNG) {
+								showInvalidMessage('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)', 'Nguồn vốn khác phải nhỏ hơn hoặc bằng tổng giá trị tăng.');
+							} else {
+								hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+								var nguonNS = parseInt(tongNG - nguonVonKhac);
+								txtNguonVonNS.value(nguonNS);
+								txtNguonVonNS.trigger('change');
+							}
+						}
+						else {
+							txtNguonVonKhac.value(0);
+							txtNguonVonNS.value(txtTongNG.value());
+							hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+						}
+					});
+			};
+		};
+
+		//-----------------end Tính nguyên giá biến động khi nhập
+		TinhNguyenGia();
+	});
+
+
+	function TTNG() {
+		var TotalNguyenGia = 0;
+		$(".NguonVon").each(function () {
+			var nguonvonId = $(this).data("idnguonvon");
+			var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+			TotalNguyenGia = parseFloat(TotalNguyenGia) + parseFloat(_ValueNguonVon);
+		});
+		$("#TongNguyenGia").data("kendoNumericTextBox").value(TotalNguyenGia);
+	}
+function changeLyDoBienDong() {
+	let lydobdID = $("#LY_DO_BIEN_DONG_ID").val();
+	@if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+			{
+
+				<text>
+
+			if (lydobdID == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.TANG_GIA_DAT))//tăng giá đất
+			{
+				$('.hien-trang-su-dung').hide('fast');
+			let dtBD = $('#YCCTModel_DAT_TONG_DIEN_TICH').data("kendoNumericTextBox");
+			dtBD.value(0);
+			dtBD.enable(false);
+				$('#YCCTModel_DAT_TONG_DIEN_TICH').change();
+		}
+
+			else {
+				$('.hien-trang-su-dung').show('fast');
+			let dtBD = $('#YCCTModel_DAT_TONG_DIEN_TICH').data("kendoNumericTextBox");
+			dtBD.enable(true);
+
+		}
+				</text>
+
+			}
+
+	else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA)
+	{
+
+		<text>
+
+		if (lydobdID == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.THAY_DOI_TINH_TRANG_PHE_DUYET_QUYET_TOAN_TANG))//thay đổi tình trạng phê duyệt quyết toán
+		{
+			//$('.gtcl').hide('fast');
+			$('.hien-trang-su-dung').show('fast');
+			$('#dien-tich').show('fast');
+		}
+		else if (lydobdID ==  @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.DIEU_CHINH_GIA_TRI_TS_GIAM))//đánh giá lại nguyên giá
+		{
+			$('.hien-trang-su-dung').hide('fast');
+		}
+		else if (lydobdID == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.DANH_GIA_LAI_NGUYEN_GIA_TANG)) {
+			$('.hien-trang-su-dung').hide('fast');
+			$('#dien-tich').hide('fast');
+			var dtBD = $("#YCCTModel_NHA_TONG_DIEN_TICH_XD").data("kendoNumericTextBox");
+			dtBD.value(0);
+			//ResetHienTrang();
+			$('#YCCTModel_NHA_TONG_DIEN_TICH_XD').change();
+
+		}
+		else {
+			$('.hien-trang-su-dung').show('fast');
+			$('#dien-tich').show('fast');
+			$('.gtcl').show('fast');
+		}
+		</text>
+
+	}
+}
+	$("#@Html.IdFor(c=>c.YCCTModel.HM_GIA_TRI_CON_LAI)").change(function () {
+		if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+			let GTCL_After = ConvertToNumber('#YCCTModel_HM_GIA_TRI_CON_LAI');
+			var res = ConvertToNumber('#YCCTModel_HM_GIA_TRI_CON_LAI_CU') + ConvertToNumber('#TongNguyenGia');
+			if (GTCL_After > res) {
+				hideValmsg("YCCTModel.HM_GIA_TRI_CON_LAI");
+			}
+			else {
+				showInvalidMessage("YCCTModel.HM_GIA_TRI_CON_LAI", "GTCL sau khi tăng thấp hơn giá trị cho phép")
+			}
+
+		}
+	})
+	$("#@Html.IdFor(c=>c.YCCTModel.NGUYEN_GIA_SAU_BD)").change(function () {
+		if (@Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAT) && @Model.LOAI_HINH_TAI_SAN_ID!= @((int)enumLOAI_HINH_TAI_SAN.DAC_THU)) {
+			let NguyeGia_After = $('#YCCTModel_NGUYEN_GIA_SAU_BD').data('kendoNumericTextBox');
+			var res = ConvertToNumber('#YCCTModel_NGUYEN_GIA_CU') + ConvertToNumber('#TongNguyenGia');
+			if (NguyeGia_After > res) {
+				hideValmsg("YCCTModel.NGUYEN_GIA_SAU_BD");
+			}
+			else {
+				showInvalidMessage("YCCTModel.NGUYEN_GIA_SAU_BD", "Nguyên giá sau khi tăng thấp hơn giá trị cho phép")
+			}
+		}
+	})
+	/**
+	 * Tính nguyên giá sau khi biến động
+	 * */
+	function TinhNguyenGia() {
+		
+		let NguyeGia_After = $('#YCCTModel_NGUYEN_GIA_SAU_BD').data('kendoNumericTextBox');
+		var res = ConvertToNumber('#YCCTModel_NGUYEN_GIA_CU') + ConvertToNumber('#TongNguyenGia');
+		if (res < 0)
+			res = 0
+		NguyeGia_After.value(res);
+	}
+
+	 // khi deselect nguon von
+	function DeselectNguonVon(e) {
+		var _NguonVonId = e.dataItem.Value;
+		$("#TaiSanNguonvon_" + _NguonVonId).remove();
+		TinhTongNguyenGia();
+
+	}
+	//khi chon loai nguon von thi ve _NguonVon
+	function loadNguonVon(e, TaiSanId) {
+		var NguonVonId = e.dataItem.Value;
+		$.ajax({
+			url: "/TaiSan/_NguonVon?NguonVonId=" + NguonVonId + "&TaiSanId=" + TaiSanId,
+			type: "GET",
+			success: function (data) {
+				$("#ListNguonVon").append(data);
+
+			},
+			error: function () {
+				console.log("error");
+			},
+		});
+	}
+	function CompareDientich() {
+		$("#checkhientrangmin").hide('fast');
+		$("#checkhientrangmax").hide('fast');
+		$("#btnSave").prop("disabled",false);
+		$(".btnAdd").prop("disabled", false);
+		checkValidDienTich();
+		var total = 0;
+		$(".HienTrang").each(function () {
+			var _hientrangId = $(this).data("idhientrang");
+			var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+			total=total+_Value
+		});
+		var tonghientrang = Number(total.toFixed(2));
+		@if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)
+		{
+			<text>
+			var gt = ConvertToNumber("#YCCTModel_DAT_TONG_DIEN_TICH_SAU_BD");
+			</text>
+		}
+		else if (Model.LOAI_HINH_TAI_SAN_ID == (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA) {
+			<text>
+			var gt = ConvertToNumber("#YCCTModel_NHA_TONG_DIEN_TICH_XD_SAU_BD");
+			</text>
+		}
+
+		if (tonghientrang != gt) {
+			if (tonghientrang > gt) {
+				$("#checkhientrangmax").show('fast');
+				$("#checkhientrangmin").hide('fast');
+				$("#btnSave").prop("disabled",true);
+				$(".btnAdd").prop("disabled", true);
+			}
+			if (tonghientrang < gt) {
+				$("#checkhientrangmin").show('fast');
+				$("#checkhientrangmax").hide('fast');
+				$("#btnSave").prop("disabled",true);
+				$(".btnAdd").prop("disabled", true);
+			}
+		}
+	}
+
+	function checkValidDienTich() {
+		$("#btnSave").prop("disabled",false);
+		$(".btnAdd").prop("disabled", false);
+		if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT)) {
+			$('#checkDTDat').hide('fast');
+
+			var dtDat = $('#@Html.IdFor(c=>c.YCCTModel.DAT_TONG_DIEN_TICH)').val();
+			if (dtDat && (Number(dtDat) < 0) ) {
+				$('#checkDTDat').show('fast');
+				$("#btnSave").prop("disabled",true);
+				$(".btnAdd").prop("disabled", true);
+			}
+		}
+		else if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA))
+		{
+			$('#checkDTNha').hide('fast');
+			$('#checkTongDTNha').hide('fast');
+			var dtNha = $('#@Html.IdFor(c=>c.YCCTModel.NHA_DIEN_TICH_XD)').val();
+			var tongDtNha = $('#@Html.IdFor(c=>c.YCCTModel.NHA_TONG_DIEN_TICH_XD)').val();
+			if (dtNha && (Number(dtNha) < 0) ) {
+				$('#checkDTNha').show('fast');
+				$("#btnSave").prop("disabled",true);
+				$(".btnAdd").prop("disabled", true);
+			}
+			if (tongDtNha && (Number(tongDtNha) < 0)) {
+				$('#checkTongDTNha').show('fast');
+				$("#btnSave").prop("disabled",true);
+				$(".btnAdd").prop("disabled", true);
+			}
+		}
+	}
+
+	function tinhNguyenGiaTang() {
+		
+		let txtNguonVonKhac = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)").data("kendoNumericTextBox");
+		let txtNguonVonNS = $("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox");
+		let txtTongNG = $("#NGUYEN_GIA").data("kendoNumericTextBox");
+		if (txtNguonVonKhac && txtNguonVonNS && txtTongNG) {
+			txtNguonVonKhac.bind('change', () => {
+				var tongNG = txtTongNG.value();
+				var nguonVonKhac = txtNguonVonKhac.value();
+				if (tongNG > 0 && nguonVonKhac > 0) {
+					if (nguonVonKhac > tongNG) {
+						showInvalidMessage('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)', 'Nguồn vốn khác phải nhỏ hơn hoặc bằng nguyên giá.');
+					} else {
+						hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+						var nguonNS = parseInt(tongNG - nguonVonKhac);
+						txtNguonVonNS.value(nguonNS);
+						txtNguonVonNS.trigger('change');
+					}
+				}
+				else {
+					txtNguonVonKhac.value(0);
+					txtNguonVonNS.value(txtTongNG.value());
+					hideValmsg('NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.KHAC)');
+				}
+			})
+		}
+	}
+		@*function ResetHienTrang() {
+			
+			let numHT;
+		@foreach (var item in Model.YCCTModel.lstHienTrang)
+		{
+			switch (item.KieuDuLieuId)
+			{
+				case (int)enumKIEU_DU_LIEU.Numberic:
+					<text>
+			numHT = $("#HienTrang_@Decimal.ToInt32(item.HienTrangId.GetValueOrDefault())").data("kendoNumericTextBox");
+			if (numHT) {
+				numHT.value(@item.GiaTriNumber.GetValueOrDefault());
+				numHT.trigger('change');
+			}</text>
+					break;
+				case (int)enumKIEU_DU_LIEU.CheckBox:
+					if (item.GiaTriCheckbox == true)
+					{
+						<text>$("#HienTrang_@Decimal.ToInt32(item.HienTrangId.GetValueOrDefault())").prop('checked', true);</text>
+					}
+					else
+					{
+						<text>$("#HienTrang_@Decimal.ToInt32(item.HienTrangId.GetValueOrDefault())").prop('checked', false);</text>
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}*@
+</script>

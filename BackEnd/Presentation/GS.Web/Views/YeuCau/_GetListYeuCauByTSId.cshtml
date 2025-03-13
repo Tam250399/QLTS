@@ -1,0 +1,179 @@
+﻿@model YeuCauSearchModel
+<div class="content">
+    <style>
+        .link_href {
+            color: #007bff!important;
+        }
+            .link_href:hover {
+                cursor: pointer;
+                text-decoration: underline !important;
+            }
+    </style>
+	<div class="form-horizontal">
+		<div class="panel-group h">
+			<div class="panel panel-default ">
+				<div class="panel-body">
+					<div id="list-yeu-cau"></div>
+                    <script>
+						var listYeuCauRecord = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    taisanId:@Model.taisanId,
+                                    isDuyet: true
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#list-yeu-cau").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListYeuCau", "TaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+								scrollable: false,
+								dataBinding: function() {
+                                      listYeuCauRecord = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                },
+								columns: [
+									{
+                                      title: "STT",
+                                      template: "#= ++listYeuCauRecord#",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TenLyDoBienDong', title: 'Loại biến động',
+                                        template: function (dataItem) {
+											return "<a class='link_href' onclick='javascript:chiTietYeuCauBienDong(" + dataItem.ID + "," + dataItem.BDorYC + ")' >" + dataItem.TenLyDoBienDong + " - " + dataItem.TenLoaiLyDoBienDong+ "</a>";
+										}
+                                    },
+                                    //{field: 'NguyenGiaVNStringNumber',title: 'Nguyên giá sau BD'},
+                                    {field: 'NGAY_BIEN_DONG',title: 'Ngày biến động',type: "Date", format: "{0:dd/MM/yyyy}"},
+                                    {field: 'TenNguoiTao',title: 'Người tạo'},
+                                     {field: 'NGAY_TAO',title: 'Ngày tạo',type: "Date", format: "{0:dd/MM/yyyy}"},
+                                    {field: 'TenTrangThai',title: 'Trạng thái'},
+									{
+										field: "ID",
+										title: "Thao tác",
+										width: 150,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: function (dataItem) { return thaoTacYeuCau(dataItem);},
+                                }
+                                ]
+                            });
+						});
+						/**
+						 * Function tạo các button theo trạng thái data
+						 * dataItem: YeuCauModel
+						 */
+						function thaoTacYeuCau(dataItem) {
+							var btnViewDetail = "<button class='btn icon-btn btn-sm btn-info' id='btn-view-item-ts'  onclick='javascript:chiTietYeuCauBienDong(" + dataItem.ID + "," + dataItem.BDorYC + ")' title='Xem chi tiết'>Xem</button>";
+							if (@Model.isTraCuu.Value.ToString().ToLower()) {
+								return btnViewDetail ;
+							} else {
+								if (dataItem.TRANG_THAI_ID == @((int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET))
+								{
+								    switch (dataItem.LOAI_BIEN_DONG_ID) {
+								        default:
+								            return btnViewDetail;
+									}
+								} else
+								{
+									var btnDeleteHtml = "<button class='btn icon-btn btn-sm btn-danger' id='btn-delete-item-ts'  onclick='javascript:xoaYeuCauChoDuyet(" + dataItem.ID + ")' title='Xóa'>Xóa</button>";
+									switch (dataItem.LOAI_BIEN_DONG_ID) {
+										case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.TANG_TOAN_BO):
+										case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.NHAP_SO_DU_DAU_KY):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/TaiSan/Edit?guid=" + dataItem.TaiSanGuid + "&#38;yeucauId=" + dataItem.ID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnViewDetail;
+										case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/YeuCau/CreateOrUpdateTangNguyenGia?guidYC=" + dataItem.GUID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnDeleteHtml + "&nbsp;" + btnViewDetail;
+								            //return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.open(&#39;/YeuCau/CreateOrUpdateTangNguyenGia?yeucauId="+ dataItem.ID+ "&#39;,&#39;_blank&#39;)' title='Sửa'><span class='fasfa-pencil-alt'></span></button>"+ "&nbsp;" + btnDeleteHtml;
+										case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/YeuCau/CreateOrUpdateGiamNguyenGia?guidYC=" + dataItem.GUID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnDeleteHtml + "&nbsp;" + btnViewDetail;
+										case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.THAY_DOI_THONG_TIN):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/ThayDoiThongTin/UpdateThayDoiThongTin?guid=" + dataItem.GUID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnDeleteHtml + "&nbsp;" + btnViewDetail;
+                                        case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.GIAM_TOAN_BO):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/YeuCau/GiamTaiSan?guidYC=" + dataItem.GUID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnDeleteHtml + "&nbsp;" + btnViewDetail;
+								        case  @((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.GIAM_DIEU_CHUYEN_MOT_PHAN):
+											return "<button class='btn icon-btn btn-sm btn-secondary' onclick='javascript:window.location.href=&#39;/YeuCau/UpdateDieuChuyenTungPhan?guid=" + dataItem.GUID + "&#39;' title='Sửa'>Sửa</button>" + "&nbsp;" + btnDeleteHtml + "&nbsp;" + btnViewDetail;
+                                        default:
+                                            return btnViewDetail;
+								    }
+
+								}
+							}
+						}
+
+						//Function tài sản vừa nhập vào, tài sản trạng thái CHO_DUYET, tất cả yêu cầu trạng thái CHO_DUYET
+                        function xoaYeuCauChoDuyet(yeuCauId) {
+                            bootbox.confirm({
+                                message: "Bạn có chắc chắn xóa yêu cầu này?",
+                                className: 'bootbox-sm',
+                                buttons: {
+                                    confirm: {
+                                        label: 'Đồng ý',
+                                    },
+                                    cancel: {
+                                        label: 'Hủy',
+                                    },
+                                },
+								callback: function (result) {
+                                    if (result) {
+										var url = "/YeuCau/DeleteYeuCauBienDong?yeuCauId=" + yeuCauId;
+										var yeuCauDelete = ajaxDelete(url);
+                                        yeuCauDelete.done(function (result) {
+                                            if (result.Code == '00') {
+                                                ShowSuccessMessage(result.Message);
+                                                var grid = $('#list-yeu-cau').data('kendoGrid');
+                                                grid.dataSource.page(1);
+                                            } else
+                                                ShowErrorMessage(result.Message);
+                                        }).fail(function (jqXHR, textStatus, errorThrow) {
+                                            console.log(textStatus + ': ' + errorThrow);
+                                        });
+                                     }
+                                 },
+                            });
+						}
+
+						function chiTietYeuCauBienDong(yeucauId,BDorYC) {
+							var _url = "@(Url.Action("_ThongTinYeuCauBienDong", "TrungGianBDYC"))?Id=" + yeucauId+'&BDorYC='+BDorYC;
+							OpenModalManual("Thông tin biến động", _url,72);
+						}
+                    </script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,70 @@
+﻿@model Decimal?
+
+@{ 
+	var htmlAttributes = new Dictionary<string, object>();
+	var _DonViTinh = "";
+	var _disable = "";
+	var _minValue = "";
+	if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+	{
+		htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+		if (!String.IsNullOrEmpty(htmlAttributes["donvitinh"].ToString()))
+		{
+			_DonViTinh = htmlAttributes["donvitinh"].ToString();
+			///c = ₫, m2 = m², m3 = m³
+			if (_DonViTinh.Equals("c"))
+			{
+				_DonViTinh = "₫";
+			}
+			if (_DonViTinh.Equals("m2"))
+			{
+				_DonViTinh = "m²";
+			}
+			if (_DonViTinh.Equals("m3"))
+			{
+				_DonViTinh = "m³";
+			}
+		}
+		object _disableOut;
+		if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+		{
+			_disable = _disableOut.ToString();
+		}
+		object _minValueOut;
+		if (htmlAttributes.TryGetValue("minvalue", out _minValueOut))
+		{
+			_minValue = _minValueOut.ToString();
+		}
+	}
+}
+    <div class="input-group">
+        <input asp-for="@Model" asp-format="{0:0.##}" class="form-control" />
+        <div class="input-group-append">
+            <span class="input-group-text">@_DonViTinh</span>
+        </div>
+    </div>
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdForModel()").kendoNumericTextBox({
+            format: "###.###,##",
+            decimals: 2, //always display 4 digits
+            culture: "vi-VN",
+            round: false,
+            spinners: false
+        });
+        $("#@Html.IdForModel()").find(".k-select").css("display", "none");
+       if ("@_disable"== "disabled") {
+            $("#@Html.IdForModel()").data("kendoNumericTextBox").enable(false);
+		}
+		if ("@_minValue"!=="") {
+			$("#@Html.IdForModel()").data("kendoNumericTextBox").min(@_minValue);
+		}
+    });
+</script>

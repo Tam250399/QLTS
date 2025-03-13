@@ -1,0 +1,36 @@
+﻿@model MuaSamChiTietModel
+<div class=" card-header row" style="border-bottom:none; padding:5px">
+    <div class="col-9"> </div>
+    <div class="col-3">
+        <a class="btn btn-default btnClose btn-sm" style="float:right;margin-right: 5px;" href="javascript:HideModalManual()">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Hủy bỏ
+        </a>
+        <button type="button" class="btn btn-sm btn-outline-primary btnSaveMSCT" style="float:right;margin-right:5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+    </div>
+</div>
+@await Html.PartialAsync("_CreateOrUpdateMuaSamChiTiet", Model)
+<div class=" card-header row" style="border-bottom:none; padding:5px">
+    <div class="col-9"></div>
+    <div class="col-3">
+        <a class="btn btn-default btnClose btn-sm" style="float:right;margin-right: 5px;" href="javascript:HideModalManual()">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Hủy bỏ
+        </a>
+        <button type="button" class="btn btn-sm btn-outline-primary btnSaveMSCT" style="float:right;margin-right:5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+    </div>
+</div>
+<script>
+	$(document).ready(function () {
+	});
+
+</script>
+
+
+

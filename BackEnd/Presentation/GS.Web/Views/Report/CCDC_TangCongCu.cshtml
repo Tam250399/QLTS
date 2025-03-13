@@ -1,0 +1,136 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+
+@{
+    //page title
+    ViewBag.Title = "Báo cáo tăng";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoCCDCTangCongCu");
+}
+
+    <div class="gs-form-group mb-4" style="margin-top:25px;">
+        <h6>Điều kiện báo cáo</h6>
+        <input asp-for="LyDoID" hidden />
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Từ ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayBatDau" />
+                <span asp-validation-for="NgayBatDau"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Đến ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayKetThuc" />
+                <span asp-validation-for="NgayKetThuc"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Phòng ban, bộ phận</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="ListDonViBoPhan" asp-items="Model.DDLDonViBoPhan" asp-filter="true" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nhóm công cụ, dụng cụ</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="ListCongCu" asp-items="Model.DDLNhomCongCu" asp-filter="true" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Lý do tăng</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="ListLyDoID" asp-items="Model.DDLLyDoTang" asp-filter="true" asp-multiple="true" asp-arrow="true" asp-placeholder="Chọn lý do tăng" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính giá trị</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="DonViTien" asp-items="Model.DDLDonViTien" />
+            </div>
+
+        </div>
+        <div class="form-group" style="text-align:center">
+            <button class="btn btn-success" id="btnBaoCao">Báo cáo</button>
+        </div>
+    </div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+    $(function () {
+		ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+		if (ddlCap) {
+			ddlCap.select(0);
+		}
+		ddlSL = $("#So_luong_Object").data("kendoDropDownList");
+		if (ddlSL) {
+			ddlSL.select(0);
+		}
+
+		let _data = {
+			MaBaoCao: "@Model.MaBaoCao"
+		};
+		let _url = '@Url.Action("Detail","QueueProcess")';
+		ajaxPost(_data, _url, true).done(function (data) {
+			$('#view-contentTask').html(data);
+		});
+    });
+    $("#btnBaoCao").click(function () {
+        var check = true;
+        if ($("#NgayBatDau").val() == null || $("#NgayBatDau").val()=="") {
+            check = false;
+            showInvalidMessage("NgayBatDau", "Ngày không được để trống")
+        }
+        else
+        {
+            hideValmsg("NgayBatDau");
+        };
+        if ($("#NgayKetThuc").val() == null || $("#NgayKetThuc").val()=="") {
+            check = false;
+            showInvalidMessage("NgayKetThuc", "Ngày không được để trống")
+        }
+        else
+        {
+            hideValmsg("NgayKetThuc");
+        };
+        if (!checkValidateDateFormat("#NgayBatDau", "NgayBatDau", "Sai định dạng ngày")) { check = false };
+        if (!checkValidateDateFormat("#NgayKetThuc", "NgayKetThuc", "Sai định dạng ngày")) { check = false };
+        if (!checkValidateFromDateToDate("#NgayBatDau", "#NgayKetThuc", "NgayBatDau", "Ngày phải nhỏ hơn ngày đến")) { check = false };
+        if (check) {
+            var NgayBatDau = $("#NgayBatDau").val();
+            var NgayKetThuc = $("#NgayKetThuc").val();
+			if ($("#ListDonViBoPhan").val()) {
+				listDonViBoPhan = $("#ListDonViBoPhan").val().join(',');
+			}
+			if ($("#ListCongCu").val()) {
+				listCongCu = $("#ListCongCu").val().join(',');
+			}
+            var LyDoID = $("#LyDoID").val();
+            var listLyDoId = $("#ListLyDoID").val().toString();
+            var data = {
+                NgayBatDau: getDateFormatForGetMethod($("#NgayBatDau").val()),
+                NgayKetThuc: getDateFormatForGetMethod($("#NgayKetThuc").val()),
+                DonViTien: $("#DonViTien").val(),
+				ListStringCongCu: listCongCu,
+				ListStringDonVi: listDonViBoPhan,
+                LyDoID: LyDoID,
+                ListLyDoIdString: listLyDoId
+            };
+            //$("#view-contentReport").prop('src', '/Empty.htm');
+            //$.ajax({
+            //    url: "/Report/CCDC_LyDoIDCongCu_Report",
+            //    type: "POST",
+            //    data: data,
+            //    success: function (data) {
+            //        var dstFrame = document.getElementById('view-contentReport');
+            //        var dstDoc = dstFrame.contentDocument || dstFrame.contentWindow.document;
+            //        dstDoc.write(data);
+            //        dstDoc.close();
+            //    }
+            //})
+            submit_post_via_hidden_form("/Report/CCDC_TangOrGiamCongCu_Report_", data,"GET");
+        }
+    })
+</script>

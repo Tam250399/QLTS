@@ -1,0 +1,79 @@
+﻿@model SiteMapNode
+@using GS.Core
+@using GS.Web.Framework.Menu
+@inject IWorkContext workContext
+@{
+    string url = null;
+    if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
+    {
+        url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
+    }
+    else if (!string.IsNullOrEmpty(Model.Url))
+    {
+        url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
+    }
+    var isActive = Model.ContainsSystemName(Html.GetActiveMenuItemSystemName());
+}
+
+@if (!string.IsNullOrEmpty(url))
+{
+    <li class="@(isActive ? Html.Raw("active") : null)">
+        <a href="@url">
+            @if (!string.IsNullOrEmpty(Model.IconClass))
+            {
+                <text>
+                    <i class="@Url.Content(Model.IconClass)  mr-2"></i>
+                </text>
+            }
+            @Model.Title
+            @if (!string.IsNullOrEmpty(Model.BadgeId))
+            {
+                <text>
+                    <div class="pl-1 ml-auto">
+                        <div class="badge @Model.BadgeCss @Model.BadgeId"></div>
+                    </div>
+                </text>
+            }
+        </a>
+    </li>
+}
+else
+{
+    var idsubmenu = Guid.NewGuid().ToString();
+    <li class="@(!isActive ? Html.Raw("collapsed") : null)">
+        <a href="javascript:void(0)" data-toggle="collapse" data-target="#@idsubmenu">
+            @if (!string.IsNullOrEmpty(Model.IconClass))
+            {
+                <text>
+                    <i class="@Url.Content(Model.IconClass)  mr-2"></i>
+                </text>
+            }
+            @Model.Title
+            @if (!string.IsNullOrEmpty(Model.BadgeId))
+            {
+                <text>
+                    <div class="pl-1 ml-auto">
+                        <div class="badge @Model.BadgeCss @Model.BadgeId"></div>
+                    </div>
+                </text>
+            }
+            <i class="fas fa-angle-down icon-d"></i>
+        </a>
+        @{
+            var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
+        }
+        @if (childNodes.Any())
+        {
+            <ul class="sub-menu collapse @(isActive ? Html.Raw("show") : null)" id="@idsubmenu">
+                @foreach (var childItem in childNodes)
+                {
+                    @await Html.PartialAsync("_MenuItemTSCV1", childItem)
+                }
+            </ul>
+
+        }
+
+    </li>
+
+    
+}

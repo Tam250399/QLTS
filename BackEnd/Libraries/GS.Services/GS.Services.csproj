@@ -1,0 +1,158 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>Copyright © GS Solutions, Ltd</Copyright>
+    <Company>GS Solutions, Ltd</Company>
+    <Authors>GS Solutions, Ltd</Authors>
+    <Version>4.1.0.0</Version>
+    <Description>This project contains a set of core services, business logic, validations or calculations related with the data, if needed. Some people call it Business Access Layer (BAL).</Description>
+    <PackageLicenseUrl></PackageLicenseUrl> 
+    <PackageProjectUrl></PackageProjectUrl> 
+    <RepositoryUrl></RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Blogs\**" />
+    <Compile Remove="Catalog\**" />
+    <Compile Remove="Cms\**" />
+    <Compile Remove="Contracts\**" />
+    <Compile Remove="Customers\**" />
+    <Compile Remove="Directory\**" />
+    <Compile Remove="Forums\**" />
+    <Compile Remove="Gdpr\**" />
+    <Compile Remove="Installation\**" />
+    <Compile Remove="Media\**" />
+    <Compile Remove="Messages\**" />
+    <Compile Remove="News\**" />
+    <Compile Remove="PaymentAdvance\**" />
+    <Compile Remove="Plugins\**" />
+    <Compile Remove="Polls\**" />
+    <Compile Remove="Seo\**" />
+    <Compile Remove="Stores\**" />
+    <Compile Remove="Tasks\**" />
+    <Compile Remove="Themes\**" />
+    <Compile Remove="Topics\**" />
+    <Compile Remove="Vendors\**" />
+    <Compile Remove="WidgetApps\**" />
+    <Compile Remove="Works\**" />
+    <EmbeddedResource Remove="Blogs\**" />
+    <EmbeddedResource Remove="Catalog\**" />
+    <EmbeddedResource Remove="Cms\**" />
+    <EmbeddedResource Remove="Contracts\**" />
+    <EmbeddedResource Remove="Customers\**" />
+    <EmbeddedResource Remove="Directory\**" />
+    <EmbeddedResource Remove="Forums\**" />
+    <EmbeddedResource Remove="Gdpr\**" />
+    <EmbeddedResource Remove="Installation\**" />
+    <EmbeddedResource Remove="Media\**" />
+    <EmbeddedResource Remove="Messages\**" />
+    <EmbeddedResource Remove="News\**" />
+    <EmbeddedResource Remove="PaymentAdvance\**" />
+    <EmbeddedResource Remove="Plugins\**" />
+    <EmbeddedResource Remove="Polls\**" />
+    <EmbeddedResource Remove="Seo\**" />
+    <EmbeddedResource Remove="Stores\**" />
+    <EmbeddedResource Remove="Tasks\**" />
+    <EmbeddedResource Remove="Themes\**" />
+    <EmbeddedResource Remove="Topics\**" />
+    <EmbeddedResource Remove="Vendors\**" />
+    <EmbeddedResource Remove="WidgetApps\**" />
+    <EmbeddedResource Remove="Works\**" />
+    <None Remove="Blogs\**" />
+    <None Remove="Catalog\**" />
+    <None Remove="Cms\**" />
+    <None Remove="Contracts\**" />
+    <None Remove="Customers\**" />
+    <None Remove="Directory\**" />
+    <None Remove="Forums\**" />
+    <None Remove="Gdpr\**" />
+    <None Remove="Installation\**" />
+    <None Remove="Media\**" />
+    <None Remove="Messages\**" />
+    <None Remove="News\**" />
+    <None Remove="PaymentAdvance\**" />
+    <None Remove="Plugins\**" />
+    <None Remove="Polls\**" />
+    <None Remove="Seo\**" />
+    <None Remove="Stores\**" />
+    <None Remove="Tasks\**" />
+    <None Remove="Themes\**" />
+    <None Remove="Topics\**" />
+    <None Remove="Vendors\**" />
+    <None Remove="WidgetApps\**" />
+    <None Remove="Works\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\AddressAttributeExtensions.cs" />
+    <Compile Remove="Common\AddressAttributeFormatter.cs" />
+    <Compile Remove="Common\AddressAttributeParser.cs" />
+    <Compile Remove="Common\AddressAttributeService.cs" />
+    <Compile Remove="Common\AddressService.cs" />
+    <Compile Remove="Common\FulltextService.cs" />
+    <Compile Remove="Common\IAddressAttributeFormatter.cs" />
+    <Compile Remove="Common\IAddressAttributeParser.cs" />
+    <Compile Remove="Common\IAddressAttributeService.cs" />
+    <Compile Remove="Common\IAddressService.cs" />
+    <Compile Remove="Common\IFulltextService.cs" />
+    <Compile Remove="Common\IPdfService.cs" />
+    <Compile Remove="Common\ISearchTermService.cs" />
+    <Compile Remove="Common\PdfService.cs" />
+    <Compile Remove="Common\SearchTermService.cs" />
+    <Compile Remove="Security\AclService.cs" />
+    <Compile Remove="Security\IAclService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Tasks\ChotTaiSanTask.cs" />
+    <Compile Include="Tasks\DongBoBienDongDaNhanTask.cs" />
+    <Compile Include="Tasks\DongBoQueueTask.cs" />
+    <Compile Include="Tasks\DongBoTaiSanDaNhanTask.cs" />
+    <Compile Include="Tasks\DongBoTask.cs" />
+    <Compile Include="Tasks\GenDataReportDongBoTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\GenDataReportTask.cs" />
+    <Compile Include="Tasks\RenderReportDongBoTask.cs" />
+    <Compile Include="Tasks\RenderReportTask.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskManagerApi.cs" />
+    <Compile Include="Tasks\TestLogTask.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Xpo" Version="18.2.6" />
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.4" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.6.0" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GS.Core\GS.Core.csproj" />
+    <ProjectReference Include="..\GS.Data\GS.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+</Project>

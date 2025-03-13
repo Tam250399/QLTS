@@ -1,0 +1,454 @@
+﻿@model TaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Chuyển nguồn tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ChuyenNguonTaiSan");
+}
+<style>
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        vertical-align: middle;
+    }
+</style>
+<nop-antiforgery-token />
+@*<input asp-for="pageIndex" type="hidden" />*@
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <div class="col-md-10">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Chuyển nguồn tài sản của đơn vị</label>
+        <input asp-for="donviId" type="hidden" />
+        <div class="col-sm-8">
+            <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+        </div>
+        <div class="col-sm-2" style="text-align:right">
+            <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+                <i class="fab fa-sistrix"></i>
+                Chọn đơn vị
+            </button>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Loại tài sản</label>
+        <div class="col-sm-10">
+            <div class="custom-controls-stacked row" style="margin-left: 0px;">
+                @foreach (var loaiHinhTaiSan in Model.LoaiHinhTaiSanAvailable)
+                {
+                    if (loaiHinhTaiSan.Value.ToNumber() != (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.ALL)
+                    {
+                        <label class="custom-control custom-checkbox col-sm-2" style="margin-left:7px;">
+                            @Html.CheckBoxFor(c => c.loaihinhtaisancheck, new { @class = "custom-control-input ", @id = loaiHinhTaiSan.Value })
+                            <span class="custom-control-label">@(loaiHinhTaiSan.Text)</span>
+                        </label>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Nguồn tài sản từ</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NguonTaiSanId" asp-items="Model.ddlNguonTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 ">sang</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NguonTaiSanIdTo" asp-items="Model.ddlNguonTaiSan" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Nguyên giá</label>
+        <div class="col-sm-10">
+            <div class="custom-controls-stacked row" style="margin-left: 0px;">
+                <label class="custom-control custom-checkbox col-sm-2" style="margin-left:7px;">
+                    @Html.CheckBoxFor(c => c.isduoi500, new { @class = "custom-control-input" })
+                    <span class="custom-control-label">Tài sản dưới 500</span>
+                </label>
+                <label class="custom-control custom-checkbox col-sm-2" style="margin-left:7px;">
+                    @Html.CheckBoxFor(c => c.istren500, new { @class = "custom-control-input" })
+                    <span class="custom-control-label">Tài sản trên 500</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Chuyển đơn vị con</label>
+        <div class="col-sm-10 col-form-label">
+            <div class="custom-controls-stacked row" style="margin-left: 0px;">
+                <label class="custom-control custom-checkbox col-sm-2" style="margin-left:7px;">
+                    <input type="checkbox" class="custom-control-input" checked id="isDonViChild" />
+                    <span class="custom-control-label"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-6 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i>Danh sách tài sản
+        </div>
+    </div>
+    <div class="col-sm-6 custom-control row text-right" style="padding-right:0px">
+
+        <button type="button" class="btn btn-outline-danger" id="btnChuyenAll">chuyển tất cả</button>
+        <button type="button" class="btn btn-outline-danger" style="display:none" id="btnSelected">chuyển đã chọn</button>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+						var checkedIds = {};
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _arrayloaihinhtaisan = [];
+                                $("input[name='loaihinhtaisancheck']:checked").each(function () {
+                                    var _loaitaisanId = $(this).attr("id");
+                                    _arrayloaihinhtaisan.push(
+                                        _loaitaisanId,
+                                    );
+                                    //console.log(_arrayloaihinhtaisan);
+                                });
+                                var _data = {
+								KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val(),
+								Fromdate:$('#@Html.IdFor(model => model.Fromdate)').val(),
+								Todate:$('#@Html.IdFor(model => model.Todate)').val(),
+								donviId:$('#@Html.IdFor(model => model.donviId)').val(),
+								TRANG_THAI_ID: $('#@Html.IdFor(model => model.TRANG_THAI_ID)').val(),
+								strLoaiHinhTSIds: _arrayloaihinhtaisan.toString(),
+								isduoi500: $("input[name='isduoi500']:checked").val(),
+								istren500: $("input[name='istren500']:checked").val(),
+                                    NguonTaiSanId:$('#@Html.IdFor(model => model.NguonTaiSanId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                //console.log(_data);
+                                return _data;
+                            }
+							$("#btnSearch").click(function () {
+								if (checkdate()) {
+									 var grid = $('#items-grid').data('kendoGrid');
+									record = 0;
+									grid.dataSource.page(1); //new search. Set page size to 1
+								}
+									return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+                            var grid =  $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ChuyenNguonTaiSan", "TaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page:@(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+								},
+                                pageable: {
+                                    input: true,
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                 dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn chuyển không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                      title: "STT",
+                                      template: "#= ++record #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: "MA",
+                                        title: "Mã tài sản",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "white-space: nowrap" },
+                                    },
+                                    {
+                                        field: "TEN",
+                                        title: "Tên tài sản",
+                                        headerAttributes: { style: "text-align:center;max-width: 250px;" }
+                                    },
+                                    {
+                                        field: "TenLoaiTaiSan",
+                                        title: "Loại tài sản",
+                                        headerAttributes: { style: "text-align:center;max-width: 250px;" },
+                                        attributes: {style: "max-width: 250px"}
+									},
+									{
+										field: "TenDonVi",
+										title: "Đơn vị được giao SD",
+										headerAttributes: { style: "text-align:center" }
+									},{
+                                        field: "TenNguonTaiSan",
+										title: "Nguồn tài sản",
+										headerAttributes: { style: "text-align:center" }
+									},
+									{
+										field: "tentrangthai",
+										title: "Trạng thái",
+										headerAttributes: { style: "text-align:center" },
+									},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 60,
+                                        headerAttributes: { style: "text-align:center; max-width:150px" },
+                                        attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											let btnDeleteHtml = "<button class='btn icon-btn btn-sm btn-outline-danger' id='btn-delete-item-ts'  onclick='javascript:ActionChuyenNguonTaiSan(\"" + dataItem.GUID +"\")' title='chuyển'>chuyển</button>";
+											return btnDeleteHtml;
+                                        }
+									},
+									//{
+									//	title: 'Select All',
+									//	headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+									//	template: function (dataItem) {
+									//		return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+									//	},
+									//	width: 50,
+									//	attributes: {
+									//		style: "text-align: center;"
+									//	},
+									//},
+                                ]
+                            }).data("kendoGrid");
+							grid.table.on("click", ".row-checkbox", selectRow);
+							$('#header-chb').change(function (ev) {
+								var checked = ev.target.checked;
+								$('.row-checkbox').each(function (idx, item) {
+									if (checked) {
+										if (!($(item).closest('tr').is('.k-state-selected'))) {
+											$(item).click();
+										}
+									} else {
+										if ($(item).closest('tr').is('.k-state-selected')) {
+											$(item).click();
+										}
+									}
+								});
+							});
+							//chuyển tất cả
+							$('#btnChuyenAll').on('click', function () {
+
+								bootbox.confirm({
+									message: "Bạn có chắc chắn chuyển nguồn không?",
+									className: 'bootbox-sm',
+									buttons: {
+										confirm: {
+											label: 'Đồng ý',
+										},
+										cancel: {
+											label: 'Hủy',
+										},
+									},
+									callback: function (result) {
+										if (result) {
+											let _arrayloaihinhtaisan = [];
+											$("input[name='loaihinhtaisancheck']:checked").each(function () {
+												var _loaitaisanId = $(this).attr("id");
+												_arrayloaihinhtaisan.push(
+													_loaitaisanId,
+												);
+											});
+											if (_arrayloaihinhtaisan.length === 0) {
+												ShowErrorMessage("Phải chọn nhóm tài sản.");
+												return false;
+											}
+											let _isDeleteDVCon = $('#isDonViChild').is(':checked');
+
+											var _data = {
+												donviId: $('#@Html.IdFor(model => model.donviId)').val(),
+												strLoaiHinhTSIds: _arrayloaihinhtaisan.toString(),
+                                                IsDeleteDVCon: _isDeleteDVCon,
+                                                NguonTaiSanId:$('#@Html.IdFor(model => model.NguonTaiSanId)').val(),
+                                                NguonTaiSanIdTo:$('#@Html.IdFor(model => model.NguonTaiSanIdTo)').val(),
+                                            }
+                                            console.log(_data);
+											addAntiForgeryToken(_data);
+											let _url = '@Url.Action("ActionChuyenAllTaiSan","TaiSan")';
+											ajaxPost(_data, _url, true).done(function (res) {
+												if (res.Code == "00") {
+													ShowSuccessMessage(res.Message);
+													$("#btnSearch").click();
+												}
+												else {
+													ShowErrorMessage(res.Message);
+												}
+											});
+										}
+									},
+								});
+							})
+                        });
+                        //function open popup xem thông tin tài sản
+                        function OpenViewTaiSan(guid, tsMa) {
+                            var _url = "@(Url.Action("_ViewThongTinTaiSan", "TaiSan"))?guid=" + guid+"&isTraCuu=true";
+                            var titlePopup = "Thông tin tài sản mã: " + tsMa;
+                            OpenModalManual(titlePopup, _url,70);
+                        }
+					    function checkdate() {
+					        var check = true;
+					        if (!checkValidateDateFormat("#@Html.IdFor(c=>c.Fromdate)", "@Html.IdFor(c=>c.Fromdate)", "Sai định dạng ngày")) {
+					            check = false;
+					        }
+					        if (!checkValidateDateFormat("#@Html.IdFor(c=>c.Todate)", "@Html.IdFor(c=>c.Todate)", "Sai định dạng ngày")) {
+					            check = false;
+					        }
+					        if (!checkValidateFromDateToDate("#@Html.IdFor(c=>c.Fromdate)", "#@Html.IdFor(c=>c.Todate)", "@Html.IdFor(c=>c.Fromdate)", "Ngày bắt đầu phải bé hơn ngày kết thúc")) {
+					            check = false;
+					        }
+					        if ($("#@Html.IdFor(c=>c.Fromdate)").val() == "" || $("#@Html.IdFor(c=>c.Fromdate)").val() == undefined) {
+					            hideValmsg("@Html.IdFor(c=>c.Fromdate)");
+					        }
+					        if ($("#@Html.IdFor(c=>c.Todate)").val() == "" || $("#@Html.IdFor(c=>c.Todate)") == undefined) {
+					            hideValmsg("@Html.IdFor(c=>c.Todate)");
+					        }
+					        return check;
+						}
+						//lấy đơn id khi check box checked
+
+						function selectRow() {
+							var checked = this.checked,
+								row = $(this).closest("tr"),
+								grid = $("#items-grid").data("kendoGrid"),
+								dataItem = grid.dataItem(row);
+							checkedIds[dataItem.ID] = checked;
+							if (checked) {
+								//-select the row
+								row.addClass("k-state-selected");
+								var checkHeader = true;
+								var ListItem = [];
+								var ind = 0;
+								$.each(grid.items(), function (index, item) {
+									if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+										ListItem.push(item);
+									}
+								});
+								for (var i = 0; i < ListItem.length; i++) {
+									if (!$(ListItem[i]).hasClass("k-state-selected")) {
+										checkHeader = false;
+										break;
+									}
+								}
+								$("#header-chb")[0].checked = checkHeader;
+								$("#btnSelected").show();
+							}
+							else {
+								//-remove selection
+								row.removeClass("k-state-selected");
+								$("#header-chb")[0].checked = false;
+								var allSelected = $("#items-grid tr.k-state-selected");
+								if (allSelected.length > 0) {
+									$("#btnSelected").show();
+								} else {
+									$("#btnSelected").hide();
+								}
+							}
+						}
+						function onDataBound(e) {
+							//onDataBoundFixed(this);
+							var view = this.dataSource.view();
+							for (var i = 0; i < view.length; i++) {
+								if (checkedIds[view[i].ID]) {
+									this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+										.addClass("k-state-selected")
+										.find(".k-checkbox")
+										.attr("checked", "checked");
+								}
+							}
+						}
+						function ActionChuyenNguonTaiSan(_guid) {
+							bootbox.confirm({
+									message: "Bạn có chắc chắn chuyển nguồn không?",
+									className: 'bootbox-sm',
+									buttons: {
+										confirm: {
+											label: 'Đồng ý',
+										},
+										cancel: {
+											label: 'Hủy',
+										},
+									},
+									callback: function (result) {
+										if (result) {
+											var _data = {
+												guid: _guid,
+											}
+											addAntiForgeryToken(_data);
+											let _url = '@Url.Action("ActionChuyenNguonTaiSan", "TaiSan")';
+											ajaxPost(_data, _url, true).done(function (res) {
+												if (res.Code == "00") {
+													ShowSuccessMessage(res.Message);
+													$("#btnSearch").click();
+												}
+												else {
+													ShowErrorMessage(res.Message);
+												}
+											});
+										}
+									},
+								});
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

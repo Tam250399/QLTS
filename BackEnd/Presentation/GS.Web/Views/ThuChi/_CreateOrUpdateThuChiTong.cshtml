@@ -1,0 +1,329 @@
+﻿@model ThuChiModel
+<div class="modal fade" id="ThuChiModal" tabindex="-1" role="dialog" aria-labelledby="globalModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width:900px">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 class="modal-title" id="ThuChiModalLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="ThuChiModalClose">&times;</button>              
+            </div>
+            <div class="modal-body" style="padding:0.5625rem !important;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSaveThuChiChiTiet" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px;">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+       //prepare list thu chi
+
+        function SearchData() {
+            var ListXuLyIdString = "";
+            if (ListXuLyIdFirst == "") {
+                ListXuLyIdString = $('#SelectedXuLyIds').val().toString();
+            } else {
+                ListXuLyIdString = ListXuLyIdFirst;
+            }
+            var _data = {
+                ListXuLyIdString: ListXuLyIdString
+            };
+            addAntiForgeryToken(_data);
+            return _data;
+        }
+
+        $("#list-view").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ListThuChiByXuLy", "ThuChi"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: SearchData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    this.cancelChanges();
+                },
+                pageSize: 20,
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: 10,
+                @await Html.PartialAsync("_GridPagerMessages")
+            },
+            dataBinding: function () {
+                recordChildren = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+            },
+            editable: {
+                confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                mode: "inline"
+            },
+
+            scrollable: false,
+            columns: [
+                {
+                    title: "STT",
+                    template: "#= ++recordChildren #",
+                    width: 50,
+                    headerAttributes: { style: "text-align:center" },
+                },
+                {
+                    field: 'NGAY_THU',
+                    title: 'Ngày thu',
+                    template: "#= kendo.toString(kendo.parseDate(NGAY_THU, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center;" }
+                },
+                {
+                    field: 'SO_TIEN_PHAI_THU',
+                    title: 'Số tiền phải thu',
+                    format: "{0:#,#}",
+                    //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:right;" }
+                },
+
+                {
+                    field: 'SO_TIEN_THU',
+                    title: 'Số tiền đã thu',
+                    format: "{0:#,#}",
+                    //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:right;" }
+                },
+                {
+                    field: 'SO_TIEN_CON_PHAI_THU',
+                    title: 'Số tiền còn phải thu',
+                    format: "{0:#,#}",
+                    //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:right;" }
+                },
+
+                {
+                    field: 'CHI_PHI',
+                    title: 'Chi phí xử lý',
+                    format: "{0:#,#}",
+                    // template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:right;" }
+                },
+                {
+                    field: "ID",
+                    title: "Thao tác",
+                    width: 150,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '#if(Is_First){# <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" onclick="EditThuChiChiTiet(#=LIST_XU_LY_ID#,#=ID#)">Sửa</a> #}else{ #<a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" onclick="EditThuChiChiTiet(#=LIST_XU_LY_ID#,#=ID#)">Sửa</a> &nbsp;<a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaThuChi(#:ID#)>Xóa</a>#}#'
+                }
+            ]
+        });
+
+        //nút add thu chi
+        $('#btnAdd').on('click', function () {
+            var list = $("#SelectedXuLyIds").val().filter(function (item) { return item != '' })
+            $('#SelectedXuLyIds').data("kendoMultiSelect").value(list);
+            if ($("#SelectedXuLyIds").val().length > 0) {
+                if ($("#SelectedXuLyIds").val().length == 1 && $("#SelectedXuLyIds").val().includes("")) {
+                    ShowErrorMessage("Chọn QĐ phê duyệt PAXL");
+                } else {
+                    var ListXuLyIdString = null;
+                    if (ListXuLyIdFirst == "") {
+                        ListXuLyIdString = $('#SelectedXuLyIds').val().toString();
+                    } else {
+                        ListXuLyIdString = ListXuLyIdFirst;
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        url: '/ThuChi/_CreateOrUpdate?ListXuLyIdString=' + ListXuLyIdString + '&Id=0',
+                        success: function (res) {
+                            $("#ThuChiModal .modal-body").html(res);
+                            $('#ThuChiModal').modal('show');
+                            $('#ThuChiModalLabel').text('Thêm mới');
+                        }
+                    });
+
+                }
+
+            }
+            else {
+                ShowErrorMessage("Chọn QĐ phê duyệt PAXL");
+            }
+        });
+        $('#btnSaveThuChiChiTiet').on('click', function () {
+            var list = $("#SelectedXuLyIds").val().filter(function (item) { return item != '' })
+            $('#SelectedXuLyIds').data("kendoMultiSelect").value(list);
+            var ListXuLyIdString = "";
+            if (ListXuLyIdFirst == "") {
+                ListXuLyIdString = $('#SelectedXuLyIds').val().toString();
+            }
+            else {
+                ListXuLyIdString = ListXuLyIdFirst;
+            }
+                var _data = {
+                    SO_TIEN_CON_PHAI_THU: $("#@(Html.IdFor(c=>c.SO_TIEN_CON_PHAI_THU))").val(),
+                    SO_TIEN_PHAI_THU: $("#@(Html.IdFor(c=>c.SO_TIEN_PHAI_THU))").val(),
+                    SO_TIEN_THU: $("#@(Html.IdFor(c=>c.SO_TIEN_THU))").val(),
+                    CHI_PHI: $("#@(Html.IdFor(c=>c.CHI_PHI))").val(),
+                    ID: $("#IdThuChiChiTiet").val(),
+                    NGAY_THU: $("#@(Html.IdFor(c=>c.NGAY_THU))").val(),
+                    TG_NGAY_NOP: $("#@(Html.IdFor(c=>c.TG_NGAY_NOP))").val(),
+                    TG_SO_TIEN: $("#@(Html.IdFor(c=>c.TG_SO_TIEN))").val(),
+                    SO_TIEN_NOP_NSNN: $("#@(Html.IdFor(c=>c.SO_TIEN_NOP_NSNN))").val(),
+                    XU_LY_ID: $('#SelectedXuLyIds').val()[0],
+                    SelectedXuLyIds: $('#SelectedXuLyIds').val(),
+                    DON_VI_ID: '@Model.DON_VI_ID',
+                    Is_First: isFirst,
+                    LIST_XU_LY_ID: ListXuLyIdString,
+
+                }
+                CheckFullValid();
+                if (IsFullValid == true) {
+                    $.ajax({
+                        type: "POST",
+                        data: _data,
+                        url: "/ThuChi/_CreateOrUpdate",
+                        success: function (res) {
+                            if (CheckValidMessageReturn(res)) {
+                                if (isFirst == true) {
+                                    ListXuLyIdFirst = $('#SelectedXuLyIds').val().toString();
+                                }
+                                isFirst = false;
+                                ShowSuccessMessage(res.Message);
+                                $('#ThuChiModal').modal('hide');
+                                LoadTable();
+                            } else {
+
+                                ShowErrorMessage(res.Message);
+                            }
+                        }
+                    });
+                }
+
+        });
+
+        $('.btnSave').on('click', function () {
+            if (ListXuLyIdFirst == "") {
+                ShowErrorMessage("Chưa thêm mới thu chi!");
+            } else {
+                var ListXuLyId = $('#SelectedXuLyIds').val().toString();
+                if (ListXuLyId == ListXuLyIdFirst ) {
+                    ShowSuccessMessage("Thêm mới thành công!");
+                    location.href = "/ThuChi/List";
+                } else {
+                    var _data = {
+                        ListThuChiFirst: ListXuLyIdFirst,
+                        ListThuChi: ListXuLyId,
+                    };
+                    $.ajax({
+                        type: "Post",
+                        data: _data,
+                        url: '/ThuChi/CreateThuChiTong',
+                        success: function (res) {
+                            if (res.Status == true) {
+                                ShowSuccessMessage("Thêm mới thành công!");
+                                location.href = "/ThuChi/List";
+                            } else {
+                                ShowErrorMessage("Có lỗi xảy ra!")
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+        function LoadTable() {
+               record = 0;
+            var grid = $('#list-view').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+        }
+
+    });
+    function EditThuChiChiTiet(ListXuLyIdString,Id) {
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: '/ThuChi/_CreateOrUpdate?ListXuLyIdString=' + ListXuLyIdString + '&Id=' + Id ,
+            success: function (res) {
+                $("#ThuChiModal .modal-body").html(res);
+                $('#ThuChiModal').modal('show');
+                $('#ThuChiModalLabel').text('Cập nhật');
+            }
+        });
+    }
+     function XoaThuChi(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa thu chi?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ThuChi/Delete?id=" + ID,
+                        success: function (data) {
+                            if (data.Code == "00") {
+                                ShowSuccessMessage(data.Message);
+                                LoadTable();
+                            }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        });
+    }
+
+        function EditChiTietTaiSan(id, KhaiThacChiTietId) {
+
+			var TaiSanId = id;
+			var KhaiThacId = '@Model.ID';
+			var _url = `@(Url.Action("_ChiTietTaiSanKhaiThac", "KhaiThac"))?TaiSanId=${TaiSanId}&KhaiThacId=${KhaiThacId}&LOAI_HINH_KHAI_THAC_ID=${parseInt($("#LOAI_HINH_KHAI_THAC_ID").val())}&KhaiThacChiTietId=${KhaiThacChiTietId}`;
+            OpenModalEdit("Sửa thông tin", _url, 80);
+        };
+        function OpenModalEdit(title, src, mw) {
+            var modal = $('#globalModalIframe');
+            ShowViewLoading("#globalModalIframeContent");
+            modal.find('.modal-title').text(title);
+            modal.find('.modal-dialog').css({
+                //width: w + '%', //probably not needed
+                //height: h + '%', //probably not needed
+                maxWidth: mw + '%', //probably not needed
+            });
+            $.ajax({
+                type: "POST",
+				url: src,
+				async: false,
+				success: function (data) {
+					$("#globalModalIframeContent").html(data);
+                },
+            });
+            modal.modal('show');
+		}
+</script>

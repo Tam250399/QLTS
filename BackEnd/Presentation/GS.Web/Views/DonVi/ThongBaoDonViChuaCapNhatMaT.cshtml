@@ -1,0 +1,77 @@
+﻿
+
+<div class="modal fade" id="ListTaiSanModal" tabindex="-1" role="dialog" aria-labelledby="ListTaiSanModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 class="modal-title" id="ListTaiSanModalIframeLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:0.5625rem !important;">
+                <div id="ListTaiSanModalIframeContent" class="content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        openModal();
+        appendListTaiSan();
+
+    });
+    function editListTaiSan() {
+        appendListTaiSan();
+        openModal();
+    }
+    function appendListTaiSan() {
+        var modal = $('#ListTaiSanModal');
+        ShowViewLoading("#ListTaiSanModalIframeLabel");
+        modal.find('.modal-title').text("Yêu cầu chuyển mã về danh mục tài sản công");
+        modal.find('.modal-dialog').css({
+            maxWidth: 80 + '%', //probably not needed
+        });
+        var src = `/DonVi/_ListDonViChuaCapNhatMaT`;
+        $.ajax({
+            type: "GET",
+            url: src,
+            success: function (data) {
+                appendModal(data);
+            },
+        });
+    }
+    function appendChuyenMaTaiSan(MA_DVQHNS) {
+        var modal = $('#ListTaiSanModal');
+        ShowViewLoading("#ListTaiSanModalIframeLabel");
+        modal.find('.modal-title').text("Chuyển về mã tài sản công");
+        modal.find('.modal-dialog').css({
+            maxWidth: 70 + '%', //probably not needed
+        });
+        var src = `/DonVi/CreateDonViByDVDC?MA_DVQHNS=${MA_DVQHNS}`;
+        $.ajax({
+            type: "GET",
+            url: src,
+            success: function (data) {
+                appendModal(data);
+            },
+        });
+    }
+    function appendModal(view) {
+        $("#ListTaiSanModalIframeContent").html(view);
+    }
+    function openModal() {
+        var modal = $('#ListTaiSanModal');
+        modal?.modal('show');
+    }
+    function closeModal() {
+        var modal = $('#ListTaiSanModal');
+        modal?.modal('hide');
+    }
+</script>
+<style>
+    table {
+        empty-cells: show;
+        cursor: pointer;
+    }
+</style>
+

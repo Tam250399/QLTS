@@ -1,0 +1,12 @@
+﻿<div class="btn-group">
+    <button type="button" style="border-radius:0.25rem;" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thiết lập nhiệm vụ tạo báo cáo</button>
+    <div class="dropdown-menu" x-placement="top-start" style="position: absolute; will-change: top, left; top: -175px; left: 0px;">
+        <button name="FileType" value="@((int)enumEXPORT_FILE_TYPE.PDF)" class="dropdown-item">PDF (*.pdf)</button>
+        <button name="FileType" value="@((int)enumEXPORT_FILE_TYPE.WORD_DOCX)" class="dropdown-item">Word Document (*.docx)</button>
+        <button name="FileType" value="@((int)enumEXPORT_FILE_TYPE.EXCEL_XLS)" class="dropdown-item">Excel 97-2003 (*.xls)</button>
+        <button name="FileType" value="@((int)enumEXPORT_FILE_TYPE.EXCEL_XLSX)" class="dropdown-item">Excel Workbook (*.xlsx)</button>
+    </div>
+</div>
+<label class="col-form-label  text-sm-left " style="color:red; font-style:italic">
+    (*) Nhằm đảm bảo không bị gián đoạn trong quá trình tạo lập báo cáo, bạn nên áp dụng việc thiết lập nhiệm vụ tạo báo cáo trong trường hợp dữ liệu có nhiều bản ghi hoặc mất nhiều thời gian để tính toán
+</label>

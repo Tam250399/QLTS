@@ -1,0 +1,94 @@
+﻿@model GiamDieuChuyenModel
+@{ var stt = 0;}
+<input asp-for="ID" type="hidden" />
+<input asp-for="stringMapId" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="IsDieuChuyenNgoai" type="hidden" />
+
+<table class="table card-table">
+    <thead class="thead-light">
+        <tr>
+            <th>STT</th>
+            <th>Mã CCDC</th>
+            <th>Tên CCDC</th>
+            <th>Số lượng có thể điều chuyển</th>
+            <th>Số lượng điều chuyển</th>
+            <th>Đơn giá</th>
+            <th>Nhóm CCDC</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var map in Model.ListCongCuDieuChuyenModel)
+        {
+            
+        <tr class="listCongCuModel" data-guid="@map.MapId">
+            <td>@(stt += 1)</td>
+            <td>@map.MaCongCu</td>
+            <td>@map.TenCongCu</td>
+            <td style="text-align:center" id="SoLuongCoTheChuyen_@map.MapId">@map.SoLuongCoTheChuyen</td>
+            <td>
+                <nop-editor asp-for="@map.SoLuongDieuChuyen" id="SoLuongDieuChuyen_@map.MapId" asp-amount="true"/>
+                <span id="err_SO_LUONG_@map.MapId" style="display:none;" class="field-validation-error">Số lượng không hợp lệ</span>
+            </td>
+            <td>@map.DonGiaText</td>
+            <td>@map.NhomCongCuText</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin điều chuyển</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_QUYET_DINH" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_QUYET_DINH" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày điều chuyển</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="NGAY_DIEU_CHUYEN" />
+        </div>
+    </div>
+    @if (!Model.IsDieuChuyenNgoai)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị tiếp nhận</label>
+            <div class="col-sm-8">
+                <nop-editor asp-for="TenDonViTo" asp-disabled="true" />
+            </div>
+            <div class="col-sm-2" style="text-align:right">
+                <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="1100" data-title="Chọn đơn vị" data-src="/GiamDieuChuyen/_ChonDonViDieuChuyen">
+                    <i class="fab fa-sistrix"></i>
+                    Chọn đơn vị
+                </button>
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_CHUNG_TU" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_CHUNG_TU" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ghi chú</label>
+        <div class="col-sm-10">
+            <app-textarea asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+<style>
+    th {
+        text-align: left !important;
+    }
+</style>

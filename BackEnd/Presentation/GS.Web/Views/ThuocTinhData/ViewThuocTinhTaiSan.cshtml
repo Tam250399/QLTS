@@ -1,0 +1,131 @@
+﻿@model List<modelThuocTinh>
+@using GS.Core.Domain.ThuocTinhs
+
+<div class="gs-form-group ">
+    <h6>Thuộc tính tài sản</h6>
+    @foreach (var item in Model)
+    {
+        if (item.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.OBJ)
+        {
+            <div class="form-group row">
+                <label id="NAME_@item.GUID" class="col-form-label col-sm-12 " style="font-weight: bold;">@item.NAME</label>
+                <input class="LoadObject" id="@item.GUID" value="@item.GuidParrent" hidden />
+                <input id="Loai_@item.GUID" value="@item.LoaiDuLieuId" hidden />
+                <input id="VL_@item.GUID" value="@item.VALUE" hidden />
+                <span id="Vali_@item.GUID" data-value="@item.IS_VALIDATE" data-id="@item.GUID" style="display:none;color:red"></span>
+            </div>
+            foreach (var tt in item.THUOC_TINH)
+            {
+                @await Html.PartialAsync("_ViewThuocTinhTaiSan", tt)
+            }
+            @*<hr style="margin:2px;color:#2e79b8" />*@
+
+        }
+        else
+        {
+            @await Html.PartialAsync("_ViewThuocTinhTaiSan", item)
+            @*<hr style="margin:2px;color:red" />*@
+
+        }
+    }
+</div>
+<script>
+    function CheckVali() {
+        var check = true;
+        $(".vali-tt").each(function () {
+            var guid = $(this).attr("data-id");
+            var loai = $("#Loai_" + guid).val();
+            var id = "VL_" + guid;
+            if (loai == @((int)enumLoaiDuLieuCauHinh.CB) || loai ==@((int)enumLoaiDuLieuCauHinh.RD)) {
+                if ($('input[name=' + id + ']:checked').length == 0) {
+                    check = false;
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+            else if (loai == @((int)enumLoaiDuLieuCauHinh.ST) || loai == @((int)enumLoaiDuLieuCauHinh.DT)) {
+                var value = $("#VL_" + guid).val();
+                if (value.trim() == "" || value == null) {
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                    check = false;
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+            else {
+                var value = $("#VL_" + guid).val();
+                if (value == 0 || value == null || value.length == 0) {
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                    check = false;
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+        });
+        return check;
+    };
+    function SaveThuocTinhTaiSan(taisanid, loadlink) {
+        var check = CheckVali();
+        if (check) {
+            var data = [];
+            $(".LoadObject").each(function () {
+                var guid = this.id;
+                var id = "VL_" + guid;
+                var loai = $("#Loai_" + guid).val();
+                var value = "";
+                if (loai ==@((int)enumLoaiDuLieuCauHinh.CB)) {
+                    $('input[name=' + id + ']:checked').each(function () {
+                        value = value + $(this).val() + ",";
+                    });
+                }
+                else if (loai == @((int)enumLoaiDuLieuCauHinh.RD)) {
+                    $('input[name=' + id + ']:checked').each(function () {
+                        value = $(this).val();
+                    });
+                }
+                else {
+                    value = $("#" + id).val() + "";
+                }
+                var model = {
+                    GUID: guid,
+                    GuidParrent: $(this).val(),
+                    VALUE: value,
+                    LoaiDuLieuId: loai,
+                    IS_VALIDATE: $("#Vali_" + guid).attr("data-value"),
+                    NAME: $("#NAME_" + guid).text()
+                };
+                data.push(model);
+            });
+            var _data = {
+                listmodel: data,
+                TaiSanId: taisanid
+            }
+            $.ajax({
+                type: "POST",
+                data: _data,
+                url: "/ThuocTinhData/ViewThuocTinhTaiSan",
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        if (loadlink != "") {
+                            location.href = loadlink;
+                        };
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(ajaxOptions + ": " + thrownError);
+                }
+            })
+        }
+    }
+</script>

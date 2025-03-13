@@ -1,0 +1,352 @@
+﻿@model DinhMucModel
+@*<input asp-for="pageIndex" type="hidden" />*@
+<div class="gs-form-group mb-4">
+    <h6>
+        Thông tin chung
+    </h6>
+    <div class="form-group row">
+
+        <input asp-for="ID" type="hidden" />
+        <input asp-for="DON_VI_ID" type="hidden" />
+        <label class="col-form-label col-sm-2 text-required">Mã</label>
+        <div class="col-sm-4">
+            @*@if (!string.IsNullOrEmpty(Model.MA))
+            {*@
+            <nop-editor asp-for="MA" id="MA" asp-disabled="true" />
+            @*}
+            else
+            {
+                <nop-editor asp-for="MA" id="MA" />
+            }*@
+            @*<span asp-validation-for="MA"></span>*@
+        </div>
+        <label class="col-form-label col-sm-2 ">Nội dung</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="THONG_TU" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Số văn bản/ quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_SO" id="QUYET_DINH_SO" />
+            <span asp-validation-for="QUYET_DINH_SO"></span>
+        </div>
+        <label class="col-form-label col-sm-2 ">Ngày ban hành</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_NGAY" id="QUYET_DINH_NGAY" />
+            <br />
+            <span asp-validation-for="QUYET_DINH_NGAY"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Hiệu lực</label>
+        <div class="col-sm-10">
+            <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                    @Html.RadioButtonFor(c => c.IS_HIEU_LUC, true, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>Hết hiệu lực</small></span>
+                </label>
+                <label class="custom-control custom-radio col-sm-5">
+                    @Html.RadioButtonFor(c => c.IS_HIEU_LUC, false, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>Còn hiệu lực</small></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Hiệu lực từ ngày </label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TU_NGAY" id="TU_NGAY" />
+            <br />
+            <span asp-validation-for="TU_NGAY"></span>
+            @*class="text-danger d-none" id="TuNgayValidate" Khoảng thời gian quyết định bị trùng với khoảng thời gian quyết định khác.*@
+        </div>
+        <label class="col-form-label col-sm-2 text-required">Đến ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="DEN_NGAY" id="DEN_NGAY" />
+            <br />
+            <span asp-validation-for="DEN_NGAY"></span>
+            @*class="text-danger d-none" id="DenNgayValidate" Ngày kết thúc phải lớn hơn ngày bắt đầu
+                <span asp-validation-for="DEN_NGAY">Cần nhập ngày hết hiệu lực</span>
+                class="text-danger d-none" id="HieuLucDNValidate"*@
+        </div>
+    </div>
+    <div style="text-align:right">
+        @*<button type="button" class="btn btn-xs btn-outline-primary" id="btnCheckChiTietDCMD">
+                <i class="ion ion-md-add"></i>
+                Kiểm tra chi tiết định mức chức danh
+            </button>*@
+        <button type="button" class="btn btn-xs btn-outline-primary" id="btnAddChiTietDCMD">
+            <i class="ion ion-md-add"></i>
+            Thêm chi tiết định mức tài sản
+        </button>
+        <script>
+            $("#btnCheckChiTietDCMD").click(function () {
+                checktrungchitietdinhmuc();
+            });
+            function checktrungchitietdinhmuc() {
+                var checkChiTietDinhMuc = [];
+                $(".contentChiTietDMCD").each(function () {
+                    var IDF = $(this).data("guid");
+                    var ID_VAL = $("#ID_" + IDF).val();
+                    var CHUC_DANH_ID_VAL = $("#CHUC_DANH_ID_" + IDF).val();
+                    var DINH_MUC_VAL = $("#DINH_MUC_" + IDF).val();
+                    var LOAI_TAI_SAN_ID_VAL = $("#LOAI_TAI_SAN_ID_" + IDF).val();
+                    var ChiTietDMCD = {
+                        IDF: IDF,
+                        ID: ID_VAL,
+                        CHUC_DANH_ID: CHUC_DANH_ID_VAL,
+                        DINH_MUC: DINH_MUC_VAL,
+                        LOAI_TAI_SAN_ID: LOAI_TAI_SAN_ID_VAL,
+                    };
+                    checkChiTietDinhMuc.push(ChiTietDMCD);
+                });
+                console.log(checkChiTietDinhMuc);
+                checkChiTietDinhMuc.forEach(function (chiTietDinhMuc) {
+                    debugger
+                    var chucdanh = $("#CHUC_DANH_ID_" + guid).val();
+                    var loaitaisan = $("#LOAI_TAI_SAN_ID_" + guid).val();
+                    var DINH_MUC = $("#DINH_MUC_" + guid).val();
+                    if (chiTietDinhMuc.IDF != guid) {
+                        if (chiTietDinhMuc.CHUC_DANH_ID == chucdanh && chiTietDinhMuc.LOAI_TAI_SAN_ID == loaitaisan) {
+                            //alert("chi tiết tài sản đã trùng");
+                            $("#err_DINH_MUC_CHITIET_" + guid).toggle();
+                        }
+                        else {
+                            if (!$("#err_DINH_MUC_CHITIET_" + guid).is(":hidden")) {
+                                denNgayValidation.classList.toggle("d-none");
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+
+<div id="view-" style="margin-top:10px;"></div>
+
+
+@if (Model != null)
+{
+    if (Model.ChiTietDinhMuc.Count > 0)
+    {
+        foreach (var chitiet in Model.ChiTietDinhMuc)
+        {
+            <script>
+                var _data = {
+
+                    DinhMucID: @(chitiet.DINH_MUC_ID),
+                    ChucDanhId: @(chitiet.CHUC_DANH_ID),
+                    LoaiTaiSanId: @(chitiet.LOAI_TAI_SAN_ID),
+                    LoaiHinhTaiSan: @(chitiet.LOAI_HINH_TAI_SAN_ID),
+
+            };
+            $.ajax({
+                url: "/DinhMuc/_AddNewChiTiet",
+                type: "POST",
+                data: _data,
+                success: function (data) {
+                    $("#view-").append(data);
+                },
+                error: function (data) {
+
+                }
+            })
+            </script>
+        }
+    }
+}
+else
+{
+    <script>
+
+        //function checkNgayCollision(tuNgay, denNgay) {
+        //    debugger
+        //    if (tuNgay != "" && tuNgay != null && denNgay != "" && denNgay != null) {
+        //        var _data = {
+        //            tungay: tuNgay,
+        //            denngay: denNgay
+        //        }
+        //        $.ajax({
+        //            type: "POST",
+        //            data: _data,
+        //            url: "/DinhMuc/CheckCollisionDateRange",
+        //            success: function (data) {
+        //                var denNgayValidation = $("span[data-valmsg-for=TU_NGAY]");
+        //                var tuNgayValidation = document.getElementById("TuNgayValidate");
+        //                if (data.Message == "collided") {
+        //                    if (tuNgayValidation.classList.contains("d-none")) {
+        //                        tuNgayValidation.classList.toggle("d-none");
+        //                    }
+        //                } else {
+        //                    if (!tuNgayValidation.classList.contains("d-none")) {
+        //                        tuNgayValidation.classList.toggle("d-none");
+        //                    }
+        //                }
+        //            }
+        //        })
+
+        //    }
+        //    if (tuNgay != "" || tuNgay != null) {
+        //        if (tuNgayValidation.classList.contains("d-none")) {
+        //            tuNgayValidation.classList.toggle("d-none");
+        //            tuNgayValidation.html("Từ ngày không được để trống");
+        //        }
+        //    }
+        //}
+
+        $(document).ready(function () {
+            var dt = {
+                DinhMucID: '@(Model.ID)',
+                DinhMucChiTietID: 0
+            };
+            $.ajax({
+                type: "POST",
+                data: dt,
+                url: "/DinhMuc/_AddNewChiTiet",
+                success: function (data) {
+                    $("#view-").html(data);
+                }
+            })
+            //$("#TU_NGAY").on("change", function () {
+            //    debugger
+            //    var tuNgay = document.getElementById("TU_NGAY");
+            //    var denNgay = document.getElementById("DEN_NGAY");
+            //    var denNgayValidation = document.getElementById("DenNgayValidate");
+            //    var denNgayValidation = $("span[data-valmsg-for=DEN_NGAY]");
+            //    if (denNgay.value < tuNgay.value) {
+            //        if (!denNgayValidation.classList.contains("d-none")) {
+            //            denNgayValidation.classList.toggle("d-none");
+            //        }
+            //    } else {
+            //        if (denNgayValidation.classList.contains("d-none")) {
+            //            denNgayValidation.classList.toggle("d-none");
+            //        }
+            //    }
+            //    checkNgayCollision(tuNgay.value, denNgay.value);
+            //})
+            //$("#DEN_NGAY").on("change", function () {
+            //    var tuNgay = document.getElementById("TU_NGAY");
+            //    var denNgay = document.getElementById("DEN_NGAY");
+            //    var denNgayValidation = document.getElementById("DenNgayValidate");
+            //    if (denNgay.value > tuNgay.value) {
+            //        if (!denNgayValidation.classList.contains("d-none")) {
+            //            denNgayValidation.classList.toggle("d-none");
+            //        }
+            //    } else {
+            //        if (denNgayValidation.classList.contains("d-none")) {
+            //            denNgayValidation.classList.toggle("d-none");
+            //        }
+            //    }
+            //    //checkNgayCollision(tuNgay.value, denNgay.value);
+            //})
+        })
+    </script>
+}
+
+
+<script>
+
+    $("#btnAddChiTietDCMD").click(function () {
+        var dt = {
+                DinhMucID: '@(Model.ID)',
+                DinhMucChiTietID: 0
+        };
+        $.ajax({
+            type: "POST",
+            data: dt,
+            url: "/DinhMuc/_AddNewChiTiet",
+            success: function (data) {
+                $("#view-").append(data);
+            }
+        })
+    })
+    function checkhieuluc(ishieuluc) {
+        var denNgay = document.getElementById("DEN_NGAY");
+        //var hieulucdenNgayValidation = document.getElementById("HieuLucDNValidate");
+        var hieulucdenNgayValidation = $("span[data-valmsg-for=DEN_NGAY]");
+        if (ishieuluc == true) {
+            if (denNgay.value == "") {
+                if (hieulucdenNgayValidation.html() == "") {
+                    hieulucdenNgayValidation.html("Cần nhập ngày hết hiệu lực").addClass("text-danger");
+                }
+            } else {
+                if (hieulucdenNgayValidation.html() != "") {
+                    hieulucdenNgayValidation.html("") ;
+                }
+            }
+        } else {
+                if (hieulucdenNgayValidation.html() != "") {
+                    hieulucdenNgayValidation.html("");
+                }
+            }
+    }
+    $("#DEN_NGAY").change(function () {
+         if ($('input[value="False"][name="IS_HIEU_LUC"]').is(":checked")) {
+             checkhieuluc(false);
+             $("#DEN_NGAY").prop('disabled', true);
+             $("#DEN_NGAY").parent().addClass('k-state-disabled');
+        }
+        if ($('input[value="True"][name="IS_HIEU_LUC"]').is(":checked")) {
+            checkhieuluc(true);
+            $("#DEN_NGAY").prop('disabled', false);
+            $("#DEN_NGAY").parent().removeClass('k-state-disabled');
+        }
+    })
+    $(document).ready(function () {
+        if ($('input[value="False"][name="IS_HIEU_LUC"]').is(":checked")) {
+            checkhieuluc(false);
+            $("#DEN_NGAY").prop('disabled', true);
+            $("#DEN_NGAY").parent().addClass('k-state-disabled');
+        }
+        else {
+            checkhieuluc(true);
+            $("#DEN_NGAY").prop('disabled', false);
+            $("#DEN_NGAY").parent().removeClass('k-state-disabled');
+        }
+        if ($('input[value="True"][name="IS_HIEU_LUC"]').is(":checked")) {
+            checkhieuluc(true);
+            $("#DEN_NGAY").prop('disabled', false);
+            $("#DEN_NGAY").parent().removeClass('k-state-disabled');
+        } else {
+            checkhieuluc(false);
+            $("#DEN_NGAY").prop('disabled', true);
+            $("#DEN_NGAY").parent().addClass('k-state-disabled');
+        }
+    });
+    $('input[value="False"][name="IS_HIEU_LUC"]').change(function () {
+        debugger
+        if ($('input[value="False"][name="IS_HIEU_LUC"]').is(":checked")) {
+            checkhieuluc(false);
+            $("#DEN_NGAY").prop('disabled', true);
+            $("#DEN_NGAY").parent().addClass('k-state-disabled');
+        }
+        else {
+            checkhieuluc(true);
+            $("#DEN_NGAY").prop('disabled', false);
+            $("#DEN_NGAY").parent().removeClass('k-state-disabled');
+        }
+    });
+    $('input[value="True"][name="IS_HIEU_LUC"]').change(function () {
+        debugger
+        if ($('input[value="True"][name="IS_HIEU_LUC"]').is(":checked")) {
+            checkhieuluc(true);
+            $("#DEN_NGAY").prop('disabled', false);
+
+            $("#DEN_NGAY").parent().removeClass('k-state-disabled');
+        } else {
+            checkhieuluc(false);
+            $("#DEN_NGAY").prop('disabled', true);
+            $("#DEN_NGAY").parent().addClass('k-state-disabled');
+        }
+    });
+        //$('input[value="False"][name="IS_HIEU_LUC"]').on("click", function () {
+        //    checkhieuluc(false);
+        //    $("#DEN_NGAY").prop('disabled', true);
+        //});
+        //$('input[value="True"][name="IS_HIEU_LUC"]').on("click", function () {
+        //    checkhieuluc(true);
+        //    $("#DEN_NGAY").prop('disabled', false);
+        //});
+</script>

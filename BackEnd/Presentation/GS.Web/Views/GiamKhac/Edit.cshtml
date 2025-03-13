@@ -1,0 +1,99 @@
+﻿@model GiamDieuChuyenModel
+@{
+    //page title
+    ViewBag.Title = "Giảm khác";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GiamKhacCongCuDungCu");
+}
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            <button type="button" id="btnSaveDieuChuyen" class="btn btn-success" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />
+
+
+<script>
+    $("#btnSaveDieuChuyen").click(function () {
+        var checkValidation = true;
+        var ListCongCuDieuChuyen = [];
+        $(".listCongCuModel").each(function () {
+            var IDF = $(this).data("guid");
+            var MapId_VAL = IDF;
+            var SoLuongDieuChuyen_VAL = $("#SoLuongDieuChuyen_" + IDF).val();
+            var congcu = {
+                MapId: MapId_VAL,
+                SoLuongDieuChuyen: SoLuongDieuChuyen_VAL
+            };
+            ClearGiamValidated(IDF);
+            if (!CheckGiamValidation(IDF)) {
+                checkValidation = false;
+            }
+            ListCongCuDieuChuyen.push(congcu);
+        });
+        var data = {
+            ListCongCuDieuChuyenModel: ListCongCuDieuChuyen,
+            SO_QUYET_DINH: $("#SO_QUYET_DINH").val(),
+            NGAY_QUYET_DINH: $("#NGAY_QUYET_DINH").val(),
+            NGAY_DIEU_CHUYEN: $("#NGAY_DIEU_CHUYEN").val(),
+            DON_VI_ID: $("#DON_VI_ID").val(),
+            SO_CHUNG_TU: $("#SO_CHUNG_TU").val(),
+            NGAY_CHUNG_TU: $("#NGAY_CHUNG_TU").val(),
+            GHI_CHU: $("#GHI_CHU").val(),
+            LoaiXuatNhapId: $("#LoaiXuatNhapId").val(),
+            ID: $("#ID").val(),
+        };
+        if (checkValidation) {
+            $.ajax({
+                url: "/GiamKhac/Edit",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/GiamKhac/List';
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function CheckGiamValidation(e) {
+        var check = true;
+        var SoLuongDieuChuyen = $("#SoLuongDieuChuyen_" + e).val();
+        var SoLuongCoTheDieuChuyen = $("#SoLuongCoTheChuyen_" + e).text();
+        if (SoLuongDieuChuyen == undefined && (SoLuongDieuChuyen == 0 || (SoLuongDieuChuyen > SoLuongCoTheDieuChuyen))) {
+            $("#err_SO_LUONG_" + e).show();
+            check = false;
+        }
+        var LyDoGiam = $("#LoaiXuatNhapId").val();
+        if (LyDoGiam == undefined || LyDoGiam == 0) {
+            $("#err_LoaiXuatNhapId").show();
+             check = false;
+        }
+        return check;
+    }
+    function ClearGiamValidated(e) {
+        $("#err_SO_LUONG_" + e).hide();
+        $("#err_LoaiXuatNhapId").hide();
+    }
+</script>

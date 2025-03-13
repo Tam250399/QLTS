@@ -1,0 +1,661 @@
+﻿@model MuaSamSearchModel
+@using GS.Core.Domain.BienDongs
+@{
+	//page title
+	ViewBag.Title = "Duyệt đăng ký mua sắm";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DuyetKeHoachMuaSam");
+}
+
+<nop-antiforgery-token />
+<input asp-for="TRANG_THAI_ID" type="hidden" />
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	<div class="form-group row">
+		<div class="col-md-10">
+		</div>
+		<div class="col-md-2" style=" padding-left: 0px; padding-top: 5px;">
+			<a class="pull-right collapsed" data-toggle="collapse" href="#accordion-2" aria-expanded="false" id="updown">
+				<i class="fas fa-angle-double-up" id="up" style="display:none"></i>
+				<i class="fas fa-angle-double-down" id="down"></i>
+				Tìm kiếm nâng cao
+			</a>
+			<script>
+				$(function () {
+					$('.to-date').hide();
+				});
+				$("#updown").click(function () {
+					$("#up").toggle();
+					$("#down").toggle();
+					$('.to-date').toggle();
+				})
+			</script>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Duyệt TS cho đơn vị</label>
+		<input asp-for="DonviSD_ID" type="hidden" />
+		<div class="col-sm-8">
+			<nop-editor asp-for="TenDonViSD" asp-disabled="true" />
+		</div>
+		<div class="col-sm-2" style="text-align:right">
+			<button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+				<i class="fab fa-sistrix"></i>
+				Chọn đơn vị
+			</button>
+		</div>
+
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Từ khóa</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã mua sắm..." />
+		</div>
+	</div>
+	<div class="collapse" id="accordion-2">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 ">Từ ngày</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="Tu_ngay" />
+				<br /><span asp-validation-for="Tu_ngay"></span>
+			</div>
+			<label class="col-form-label col-sm-2 ">Đến ngày</label>
+			<div class="col-sm-4 ">
+				<nop-editor asp-for="Den_ngay" />
+				<br /><span asp-validation-for="Den_ngay"></span>
+			</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="row col-sm-4" style="margin:0px; padding:0px">
+
+		</div>
+
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch" style="display:none;"></button>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="button" class="btn btn-sm btn-primary" id="btnChoDuyet" value="@((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.CHO_DUYET)">Chờ duyệt</button>
+			<button type="button" class="btn btn-sm btn-danger" id="btnTuChoi" value="@((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.TRA_LAI)">Từ chối</button>
+			<button type="button" class="btn btn-sm btn-success" id="btnDaDuyet" value="@((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.DA_DUYET)">Đã duyệt</button>
+		</div>
+	</div>
+</div>
+<div class="content-header clearfix row">
+	<div class="col-sm-8">
+		<div class="tle1" @*style="color:red"*@>
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách mua sắm chờ duyệt</span>
+		</div>
+		@*<h5 style="font-weight:bold;" class="pull-left list-group-item list-group-item-info" id="name-list">
+			Danh sách mua sắm chờ duyệt
+		</h5>*@
+	</div>
+	<div class="col-sm-4 custom-control row text-right"  style="">
+		<button type="button" class="btn btn-outline-success" style="display:none;" id="btnDuyetAll">Duyệt tất cả</button>
+		<button type="button" class="btn btn-outline-danger" style="display:none;" id="btnHuyDuyetAll">Bỏ duyệt tất cả</button>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>
+						var record_muaSam = 0;
+						var record_child = 0;
+						var listID = [];
+						$(document).ready(function () {
+							function SearchData() {
+								var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+									Tu_ngay: $('#@Html.IdFor(model => model.Tu_ngay)').val(),
+									Den_ngay: $('#@Html.IdFor(model => model.Den_ngay)').val(),
+									DonviSD_ID: $('#@Html.IdFor(model => model.DonviSD_ID)').val(),
+									//LOAI_HINH_TAI_SAN_ID: $("input[name='LOAI_HINH_TAI_SAN_ID']:checked").val(),
+									TRANG_THAI_ID: $('#@Html.IdFor(model => model.TRANG_THAI_ID)').val(),
+								};
+								addAntiForgeryToken(_data);
+								return _data;
+							}
+							$("#btnSearch").click(function () {
+								if (checkValidate() && checkdate()) {
+									$("#TRANG_THAI_ID").val(0);
+									var grid = $('#items-grid').data('kendoGrid');
+									grid.dataSource.page(1); //new search. Set page size to 1
+									//bỏ tích check all
+									$('#header-chb').prop('checked', false)
+									$('#header-chb').change()
+								}
+								return false;
+							});
+							$("#btnDaDuyet").click(function () {
+								if (checkdate()) {
+									var _trangthaiId = $(this).val();
+									$("#TRANG_THAI_ID").val(_trangthaiId);
+									var grid = $('#items-grid').data('kendoGrid');
+									record_muaSam = 0;
+									grid.dataSource.page(1); //new search. Set page size to 1
+									updateSpanList();
+									//bỏ tích check all
+									$('#header-chb').prop('checked', false)
+									$('#header-chb').change();
+									grid.hideColumn("strLyDoTuChoi");
+									grid.showColumn("tentrangthai");
+								}
+								return false;
+							});
+							$("#btnChoDuyet").click(function () {
+								if (checkdate()) {
+									var _trangthaiId = $(this).val();
+									$("#TRANG_THAI_ID").val(_trangthaiId);
+									var grid = $('#items-grid').data('kendoGrid');
+									record_muaSam = 0;
+									grid.dataSource.page(1); //new search. Set page size to 1
+									updateSpanList();
+									//bỏ tích check all
+									$('#header-chb').prop('checked', false)
+									$('#header-chb').change();
+									grid.hideColumn("strLyDoTuChoi");
+									grid.hideColumn("tentrangthai");
+								}
+								return false;
+							});
+							$("#btnTuChoi").click(function () {
+								if (checkdate()) {
+									var _trangthaiId = $(this).val();
+									$("#TRANG_THAI_ID").val(_trangthaiId);
+									var grid = $('#items-grid').data('kendoGrid');
+									record_muaSam = 0;
+									grid.dataSource.page(1); //new search. Set page size to 1
+									updateSpanList();
+									//bỏ tích check all
+									$('#header-chb').prop('checked', false)
+									$('#header-chb').change();
+									grid.showColumn("strLyDoTuChoi");
+									grid.hideColumn("tentrangthai");
+								}
+								return false;
+							});
+							$("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+								if (event.keyCode === 13) {
+									$("#btnChoDuyet").click();
+									return false;
+								}
+							});
+							var grid = $("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("ListYeuCauDuyetMuaSam", "MuaSam"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									input: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+								@await Html.PartialAsync("_GridPagerMessages")
+								},
+								dataBinding: function () {
+									record_muaSam = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								//detailInit: detailInit,
+								scrollable: false,
+								dataBound: onDataBound,
+								columns: [
+									{
+										title: "STT",
+										template: "#= ++record_muaSam #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'NGAY_DANG_KY',
+										title: 'Ngày đăng ký',
+										type: "Date",
+										width: 150,
+										format: "{0:dd/MM/yyyy}",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'TEN_DVSDTS',
+										title: 'Đơn vị sử dụng',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:left" },
+									},
+									{
+										field: 'NAM',
+										title: 'Năm',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'TenNguoiTao',
+										title: 'Người tạo',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:left" },
+									},
+									{
+										//field: 'tentrangthai',
+										field: 'TRANG_THAI_ID',
+										title: 'Trạng thái',
+										width: 150,
+										//hidden: true,
+									},
+
+									{
+										field: "ID",
+										title: "Thao tác",
+										width: 150,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											if (dataItem.TRANG_THAI_ID == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+												//return '<button type="button" class="btn icon-btn btn-outline-success" Onclick="DuyetMuaSam('+ kendo.htmlEncode(dataItem.ID) + ')"  title="Duyệt"><span class="ion ion-md-checkmark-circle-outline"></span></button>' + '&nbsp;' + '<button class="btn icon-btn btn-outline-danger" Onclick="KhongDuyetMuaSam(' + kendo.htmlEncode(dataItem.ID) + ')" title="Không duyệt"><span class="ion ion-ios-close-circle-outline"></span></button>';
+												return '<button type="button" class="btn btn-sm icon-btn btn-outline-success" Onclick="DuyetMuaSam(' + kendo.htmlEncode(dataItem.ID) + ')"  title="Duyệt"><span class="ion ion-md-checkmark-circle-outline"></span></button>' + '&nbsp;' + '<button class="btn btn-sm icon-btn btn-outline-danger" Onclick="khongduyet(' + kendo.htmlEncode(dataItem.ID) + ')" title="Từ chối"><span class="ion ion-ios-close-circle-outline"></span></button>';
+
+											}
+											else if (dataItem.TRANG_THAI_ID == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET)) {
+												return '<button class="btn btn-sm icon-btn btn-outline-danger" Onclick="khongDuyetMuaSam(' + kendo.htmlEncode(dataItem.ID) + ')" title="Từ chối"><span class="ion ion-ios-close-circle-outline"></span></button>';
+											}
+											else {
+
+												return '';
+											}
+										}
+									},
+									{
+										title: 'Select All',
+										headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+										template: function (dataItem) {
+											//if (dataItem.isCanDuyet) {
+												return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+											//}
+											//else {
+											//    return "";
+											//}
+										},
+										width: 50,
+										attributes: {
+											style: "text-align: center;"
+										},
+									},
+								]
+							}).data("kendoGrid");
+							//bind click event to the checkbox
+							grid.table.on("click", ".row-checkbox", selectRow);
+							$('#header-chb').change(function (ev) {
+								var checked = ev.target.checked;
+								$('.row-checkbox').each(function (idx, item) {
+									if (checked) {
+										if (!($(item).closest('tr').is('.k-state-selected'))) {
+											$(item).click();
+										}
+									} else {
+										if ($(item).closest('tr').is('.k-state-selected')) {
+											$(item).click();
+										}
+									}
+								});
+							});
+							// duyet nhieu tai san
+							$("#btnDuyetAll").click(function () {
+								var allSelected = $("#items-grid tr.k-state-selected");
+								var allSelectedModels = [];
+								var strMuaSamId = "";
+								$.each(allSelected, function (e) {
+									var row = $(this);
+									var grid = row.closest(".k-grid").data("kendoGrid");
+									var dataItem = grid.dataItem(row);
+									allSelectedModels.push(dataItem.ID);
+								});
+								strMuaSamId = allSelectedModels.join("-");
+								DuyetMuaSam(strMuaSamId);
+								//bỏ tích check all
+								$('#header-chb').prop('checked', false)
+								$('#header-chb').change()
+							});
+							// huy duyet nhieu tai san
+							$("#btnHuyDuyetAll").click(function () {
+								listID = [];
+								var allSelected = $("#items-grid tr.k-state-selected");
+								$.each(allSelected, function (e) {
+									var row = $(this);
+									var grid = row.closest(".k-grid").data("kendoGrid");
+									var dataItem = grid.dataItem(row);
+									listID.push(dataItem.ID);
+								});
+								if (listID.length > 0) {
+									khongDuyetMuaSam(listID[0]);
+								}
+								//bỏ tích check all
+								$('#header-chb').prop('checked', false)
+								$('#header-chb').change()
+
+							});
+						});
+
+							//lấy đơn id khi check box checked
+						var checkedIds = {};
+							//on click of the checkbox:
+						function selectRow() {
+								var checked = this.checked,
+									row = $(this).closest("tr"),
+									grid = $("#items-grid").data("kendoGrid"),
+									dataItem = grid.dataItem(row);
+								checkedIds[dataItem.ID] = checked;
+								if (checked) {
+									//-select the row
+									row.addClass("k-state-selected");
+									var checkHeader = true;
+									var ListItem = [];
+									var ind=0;
+									$.each(grid.items(), function (index, item) {
+										if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+											ListItem.push(item);
+										}
+									});
+									for (var i = 0; i < ListItem.length; i++) {
+										if (!$(ListItem[i]).hasClass("k-state-selected")) {
+											checkHeader = false;
+											break;
+										}
+									}
+									$("#header-chb")[0].checked = checkHeader;
+									let TrangThaiId = $('#TRANG_THAI_ID').val();
+										if (TrangThaiId) {
+											if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+												$("#btnDuyetAll").show();
+												$("#btnHuyDuyetAll").show();
+											}
+											else if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET) || TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET_GIAM_TOAN_BO)) {
+												$("#btnDuyetAll").hide();
+												$("#btnHuyDuyetAll").show();
+											}
+											else if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+												$("#btnDuyetAll").hide();
+												$("#btnHuyDuyetAll").hide();
+											}
+										}
+										else {
+											$("#btnDuyetAll").show();
+											$("#btnHuyDuyetAll").show();
+										}
+								}
+								else {
+									//-remove selection
+									row.removeClass("k-state-selected");
+									$("#header-chb")[0].checked = false;
+									var allSelected = $("#items-grid tr.k-state-selected");
+									if (allSelected.length > 0) {
+										let TrangThaiId = $('#TRANG_THAI_ID').val();
+										if (TrangThaiId) {
+											if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+												$("#btnDuyetAll").show();
+												$("#btnHuyDuyetAll").show();
+											}
+											else if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET) || TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET_GIAM_TOAN_BO)) {
+												$("#btnDuyetAll").hide();
+												$("#btnHuyDuyetAll").show();
+											}
+											else if (TrangThaiId == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+												$("#btnDuyetAll").hide();
+												$("#btnHuyDuyetAll").hide();
+											}
+										}
+										else {
+											$("#btnDuyetAll").show();
+											$("#btnHuyDuyetAll").show();
+										}
+
+									} else {
+										$("#btnDuyetAll").hide();
+										$("#btnHuyDuyetAll").hide();
+									}
+								}
+							}
+						function onDataBound(e) {
+									//onDataBoundFixed(this);
+									var view = this.dataSource.view();
+									for (var i = 0; i < view.length; i++) {
+										if (checkedIds[view[i].ID]) {
+											this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+												.addClass("k-state-selected")
+												.find(".k-checkbox")
+												.attr("checked", "checked");
+										}
+								}
+							}
+
+						function khongDuyetMuaSam(_muaSamId) {
+							bootbox.prompt({
+								title: "Bạn có chắc chắn từ chối mua sắm này?",
+								buttons: {
+									confirm: {
+										label: '@T("admin.common.yes")',
+									},
+									cancel: {
+										label: '@T("admin.common.no")',
+									},
+								},
+								required: true,
+								placeholder: "Lý do từ chối mua sắm(*)",
+								callback: function (_Note) {
+									if (_Note !== null) {
+										if (_Note !== '') {
+											let _data = {
+												MuaSamId: _muaSamId,
+												Note: _Note,
+											}
+											let _url = '@(Url.Action("_KhongDuyetMuaSam", "MuaSam"))';
+											ajaxPost(_data,_url,true).done(function (result) {
+												if (result.Code=="00") {
+													ShowSuccessMessage(result.Message);
+													var grid = $('#items-grid').data('kendoGrid');
+													grid.dataSource.page(grid.dataSource.page());
+												}
+												else {
+													ShowErrorMessage(result.Message);
+												}
+											}).fail(function (jqXHR, textStatus, errorThrown) {
+												// If fail
+												console.log(textStatus + ': ' + errorThrown);
+											});
+
+											return;
+										}
+										else {
+											ShowErrorMessage("Bắt buộc phải nhập lý do.");
+											return false;
+										}
+
+									}
+									return;
+
+								}
+							})
+						}
+						/**
+						 *
+						 * param MuaSamId
+						 */
+						function DuyetMuaSam(MuaSamId) {
+							bootbox.confirm({
+								message: "Bạn có chắc chắn duyệt không?",
+								className: 'bootbox-sm',
+								buttons: {
+									confirm: {
+										label: 'Đồng ý',
+									},
+									cancel: {
+										label: 'Hủy',
+									},
+								},
+								callback: function (result) {
+									if (result) {
+										var _data = {
+											MuaSamId: MuaSamId,
+										}
+										$.ajax({
+											cache: false,
+											type: "POST",
+											data: _data,
+											url: "/MuaSam/DuyetMuaSam",
+											success: function (msg) {
+												if (msg.Code == "00") {
+													ShowSuccessMessage(msg.Message);
+													var grid = $('#items-grid').data('kendoGrid');
+													grid.dataSource.page(grid.dataSource.page());
+													//location.href = '/MuaSam/ListYeuCauDuyetMuaSam';
+												}
+												else {
+													ShowErrorMessage(msg.Message);
+												}
+											},
+											error: function (xhr, ajaxOptions, thrownError) {
+												alert(thrownError);
+											},
+											traditional: true
+										});
+									}
+								},
+							});
+						}
+
+						/**
+						 * Duyệt nhiều mua sắm cùng một lúc
+						 * param strMuaSamIds
+						 */
+						function DuyetMuaSams(strMuaSamIds) {
+							bootbox.confirm({
+								message: "Bạn có chắc chắn duyệt không?",
+								className: 'bootbox-sm',
+								buttons: {
+									confirm: {
+										label: 'Đồng ý',
+									},
+									cancel: {
+										label: 'Hủy',
+									},
+								},
+								callback: function (result) {
+									var _data = {
+										MuaSamId: MuaSamId,
+									}
+									$.ajax({
+										cache: false,
+										type: "POST",
+										data: _data,
+										url: "/MuaSam/DuyetMuaSams",
+										success: function (msg) {
+											if (msg.Code == "00") {
+												ShowSuccessMessage(msg.Message);
+												var grid = $('#items-grid').data('kendoGrid');
+												grid.dataSource.page(grid.dataSource.page());
+												//location.href = '/MuaSam/ListYeuCauDuyetMuaSam';
+											}
+											else {
+												ShowErrorMessage(msg.Message);
+											}
+										},
+										error: function (xhr, ajaxOptions, thrownError) {
+											alert(thrownError);
+										},
+										traditional: true
+									});
+									return;
+								},
+							});
+						}
+
+						function checkValidate() {
+							let res = false;
+							if (
+								checkValidateDateFormat('#Fromdate', 'Fromdate', 'Phải nhập đúng định dạng ngày') &&
+								checkValidateDateFormat('#Todate', 'Todate', 'Phải nhập đúng định dạng ngày') &&
+								checkValidateFromDateToDate('#Fromdate', '#Todate', 'ToDate', 'Từ ngày phải nhỏ hơn đến ngày'))
+							{
+								res = true;
+							}
+							return res;
+						}
+						function updateSpanList() {
+							var trangThai = $("#TRANG_THAI_ID").val();
+							if (trangThai == @((int)enumTRANG_THAI_TAI_SAN.CHO_DUYET)) {
+								$("#name-list").text("Danh sách mua sắm chờ duyệt");
+								$(".tle1").css("color", "#2673b4");
+							}
+							else if (trangThai == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET) || trangThai == @((int)enumTRANG_THAI_TAI_SAN.DA_DUYET_GIAM_TOAN_BO)) {
+								$("#name-list").text("Danh sách mua sắm đã duyệt");
+								$(".tle1").css("color", "#02BC77");
+
+							}
+							else if (trangThai == @((int)enumTRANG_THAI_TAI_SAN.TRA_LAI)) {
+								$("#name-list").text("Danh sách mua sắm từ chối");
+								$(".tle1").css("color", "#d9534f");
+							}
+						}
+						function removeClassListGroup() {
+							$("#name-list").removeClass("list-group-item-danger");
+							$("#name-list").removeClass("list-group-item-success");
+							$("#name-list").removeClass("list-group-item-info");
+						}
+
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function checkdate() {
+		var check = true;
+		if (!checkValidateDateFormat("#@Html.IdFor(c=>c.Tu_ngay)", "@Html.IdFor(c=>c.Tu_ngay)", "Sai định dạng ngày")) {
+			check = false;
+		}
+		if (!checkValidateDateFormat("#@Html.IdFor(c=>c.Den_ngay)", "@Html.IdFor(c=>c.Den_ngay)", "Sai định dạng ngày")) {
+			check = false;
+		}
+		if (!checkValidateFromDateToDate("#@Html.IdFor(c=>c.Tu_ngay)", "#@Html.IdFor(c=>c.Den_ngay)", "@Html.IdFor(c=>c.Tu_ngay)", "Ngày bắt đầu phải bé hơn ngày kết thúc")) {
+			check = false;
+		}
+		if ($("#@Html.IdFor(c=>c.Tu_ngay)").val() == "" || $("#@Html.IdFor(c=>c.Tu_ngay)").val() == undefined) {
+			hideValmsg("@Html.IdFor(c=>c.Tu_ngay)");
+		}
+		if ($("#@Html.IdFor(c=>c.Den_ngay)").val() == "" || $("#@Html.IdFor(c=>c.Den_ngay)") == undefined) {
+			hideValmsg("@Html.IdFor(c=>c.Den_ngay)");
+		}
+		return check;
+	}
+</script>
+<style>
+</style>

@@ -1,0 +1,315 @@
+﻿@model modelThuocTinh
+@using GS.Core.Domain.ThuocTinhs
+
+
+@if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.OBJ)
+{
+    <div style="display:none">
+        <label id="NAME_@Model.GUID" class="col-form-label col-sm-12" style="font-weight: bold;">@Model.NAME</label>
+        <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+        <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+        <input id="VL_@Model.GUID" value="@Model.VALUE" hidden />
+        <span id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+    </div>
+    foreach (var tt in Model.THUOC_TINH)
+    {
+        @await Html.PartialAsync("_ViewThuocTinhByTaiSanTDXuLy", tt)
+    }
+    <hr style="margin:2px;color:red" />
+
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.NB)
+{
+    <div class="col-sm-6">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueSo" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueSo" id="VL_@Model.GUID" asp-amount="true" asp-min-number="0" />
+                    <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueSo" id="VL_@Model.GUID" asp-amount="true" asp-min-number="0" />
+                </div>
+            }
+            <script>
+                $("#VL_@Model.GUID").change(function () {
+                    $("#Field_@Model.GUID").val($(this).val());
+            })
+            </script>
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.ST)
+{
+    <div class="col-sm-6">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueChuoi" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueChuoi" id="VL_@Model.GUID" />
+                    <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 ">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueChuoi" id="VL_@Model.GUID" />
+                </div>
+            }
+            <script>
+                $("#VL_@Model.GUID").change(function () {
+                    $("#Field_@Model.GUID").val($(this).val());
+                })
+            </script>
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.DT)
+{
+    <div class="col-sm-6">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueNgayThang" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueNgayThang" id="VL_@Model.GUID" />
+                    <span class="vali-tt vali-date" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 ">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-editor asp-for="@Model.ValueNgayThang" id="VL_@Model.GUID" />
+                    <span class="vali-date" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+            }
+
+            <script>
+        $("#VL_@Model.GUID").change(function () {
+            $("#Field_@Model.GUID").val($(this).val());
+        })
+            </script>
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.RD)
+{
+    <div class="col-sm-12">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueSo" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                @foreach (var itemDDL in Model.OPTION)
+                {
+                    <div class="col-sm-6 col-form-label">
+                        <input type="radio" name="VL_@Model.GUID" id="VL_(@itemDDL.Value)_@Model.GUID" value="@itemDDL.Value" checked=@(Model.VALUE == itemDDL.Value ? true : false) />&nbsp;@itemDDL.Text
+                    </div>
+                }
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4"></div>
+                <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 ">@Model.NAME</label>
+                @foreach (var itemDDL in Model.OPTION)
+                {
+                    <div class="col-sm-6 col-form-label">
+                        <input type="radio" name="VL_@Model.GUID" id="VL_(@itemDDL.Value)_@Model.GUID" value="@itemDDL.Value" checked=@(Model.VALUE == itemDDL.Value ? true : false) />&nbsp;@itemDDL.Text
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.CB)
+{
+    <div class="col-sm-12">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueSo" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                @if (Model.OPTION.Count() > 3)
+                {
+                    <div class="col-sm-8"></div>
+                }
+                @foreach (var itemDDL in Model.OPTION)
+                {
+
+                    <div class="col-sm-6 col-form-label">
+                        <input type="checkbox" name="VL_@Model.GUID" id="VL_(@itemDDL.Value)_@Model.GUID" value="@itemDDL.Value" checked="@(Model.ValueListInt.Contains(itemDDL.Value.ToNumberInt32()) ? true : false)" />&nbsp;@itemDDL.Text
+                    </div>
+                }
+                <div class="col-sm-4"></div>
+                <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+            }
+            else
+            {
+                @if (Model.OPTION.Count() > 3)
+                {
+                    <div class="col-sm-8"></div>
+                }
+                @foreach (var itemDDL in Model.OPTION)
+                {
+
+                    <div class="col-sm-6 col-form-label">
+                        <input type="checkbox" name="VL_@Model.GUID" id="VL_(@itemDDL.Value)_@Model.GUID" value="@itemDDL.Value" checked="@(Model.ValueListInt.Contains(itemDDL.Value.ToNumberInt32()) ? true : false)" />&nbsp;@itemDDL.Text
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.DDL)
+{
+    <div class="col-sm-6">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueSo" hidden />
+            @if (Model.IS_VALIDATE == true && Model.FIELD != (enumFieldCauHinh.DON_VI_CHUYEN_ID).ToString())
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-select asp-for="@Model.ValueSo" id="VL_@Model.GUID" asp-items="@Model.OPTION" asp-filter="true" data-field="@Model.FIELD" />
+                    <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+            }
+            else if (Model.FIELD == (enumFieldCauHinh.DON_VI_CHUYEN_ID).ToString() && Model.IS_VALIDATE == true)
+            {
+                @*<label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                    <div class="col-sm-8">
+                        <input id="VL_@Model.GUID" value="@Model.ValueSo" hidden />
+                        <input id="CCB_@Model.GUID" class="form-control" style="width: 100%" value="@Model.TenValueCombobox" />
+                        <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                    </div>*@
+            }
+            else if (Model.FIELD == (enumFieldCauHinh.DON_VI_CHUYEN_ID).ToString() && Model.IS_VALIDATE == false)
+            {
+                @*<label id="NAME_@Model.GUID" class="col-form-label col-sm-4">@Model.NAME</label>
+                    <div class="col-sm-8">
+                        <input id="VL_@Model.GUID" value="@Model.ValueSo" hidden />
+                        <input id="CCB_@Model.GUID" class="form-control" style="width: 100%" value="@Model.TenValueCombobox" />
+                    </div>*@
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 ">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-select asp-for="@Model.ValueSo" id="VL_@Model.GUID" asp-items="@Model.OPTION" asp-filter="true" data-field="@Model.FIELD" />
+                </div>
+            }
+            @if (Model.FIELD == (enumFieldCauHinh.DON_VI_CHUYEN_ID).ToString())
+            {
+                @*<script>
+                    $(document).ready(function () {
+                        $("#CCB_@Model.GUID").kendoComboBox({
+                        placeholder: "Tên hoặc mã...",
+                            dataTextField: "Text",
+                            dataValueField: "Value",
+                            filter: "contains",
+                            autoBind: true,
+                            minLength: 3,
+                            dataSource: {
+                            type: "json",
+                                serverFiltering: true,
+                                transport: {
+                                read: {
+                                    url: "/DonVi/SearchDonVi",
+                                        data: SearchDonVi
+                                    },
+                                },
+                            },
+                            change: onDonViEditChange
+                        });
+                        SelectCCB();
+                    });
+                    function onDonViEditChange() {
+                        var value = this.value();
+                        $("#VL_@Model.GUID").val(value);
+                        $("#Field_@Model.GUID").val(value);
+                        //alert(value);
+                    }
+                    function SearchDonVi() {
+                        var _data = {
+                            Ten: $("#CCB_@Model.GUID").data("kendoComboBox").text(),
+                            ID : $("#VL_@Model.GUID").val()
+                        };
+                        return _data;
+                    }
+                    function SelectCCB() {
+                        var vlCCB = $("#VL_@Model.GUID").val();
+                        if (vlCCB > 0) {
+                            var combobox = $("#CCB_@Model.GUID").data("kendoComboBox");
+                            combobox.value(vlCCB);
+                        }
+                    }
+                    </script>*@
+            }
+            else
+            {
+                <script>
+                    $(document).ready(function () {
+                        $("#VL_@Model.GUID").data("kendoDropDownList").value(@Model.ValueSo);
+                        $("#VL_@Model.GUID").data("kendoDropDownList").bind("change", function () { var value = this.value();$("#Field_@Model.GUID").val(value);});
+                    });
+                </script>
+            }
+        </div>
+    </div>
+}
+else if (Model.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.MS)
+{
+    <div class="col-sm-6">
+        <div class="form-group row">
+            <input class="LoadObject" id="@Model.GUID" value="@Model.GuidParrent" hidden />
+            <input id="Loai_@Model.GUID" value="@Model.LoaiDuLieuId" hidden />
+            <input id="Field_@Model.GUID" data-field="@Model.FIELD" value="@Model.ValueListInt" hidden />
+            @if (Model.IS_VALIDATE == true)
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 text-required">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-select asp-for="@Model.ValueListInt" id="VL_@Model.GUID" asp-items="@Model.OPTION" asp-multiple=true asp-filter="true" data-field="@Model.FIELD" />
+                    <span class="vali-tt" id="Vali_@Model.GUID" data-value="@Model.IS_VALIDATE" data-id="@Model.GUID" style="display:none;color:#dc3545"></span>
+                </div>
+
+            }
+            else
+            {
+                <label id="NAME_@Model.GUID" class="col-form-label col-sm-4 ">@Model.NAME</label>
+                <div class="col-sm-8">
+                    <nop-select asp-for="@Model.ValueListInt" id="VL_@Model.GUID" asp-items="@Model.OPTION" asp-multiple=true asp-filter="true" data-field="@Model.FIELD" />
+                </div>
+            }
+            <script>
+                $("#VL_@Model.GUID").change(function () {
+                    $("#Field_@Model.GUID").val($(this).val());
+                })
+            </script>
+        </div>
+    </div>
+}

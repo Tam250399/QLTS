@@ -1,0 +1,202 @@
+﻿@model IMP_CCDCModel
+@{
+    //page title
+    ViewBag.Title = "Nhập file kiểm kê CCDC";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportKiemKeCCDC");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+        Import Công cụ, dụng cụ
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportKiemKeCCDCFromFile" asp-controller="CongCu" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file kiểm kê công cụ, dụng cụ <i style="color:red;"> (*.json)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file" accept="application/JSON">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImport" class="btn btn-success">Import</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div id="GridCCDC">
+    Danh sách Tài sản đã Nhập thành công
+    <div id="GridCCDC-success-grid">
+    </div>
+    Danh sách Tài sản đã Nhập thất bại
+    <a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+    <div id="GridCCDC-error-grid">
+    </div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnImport").click(function (evt) {
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/CongCu/ImportKiemKeCCDCFromFile",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+                $("#GridCCDC").show();
+                GridCCDCSuccess(result.ListSuccess);
+                if (!result.success) {
+                    GridCCDCError(result.ListError);
+                    $("#downloadListErr").attr("href", "/Home/ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                }
+                    
+                hideThrobber();
+            },
+            error: function () {
+                alert("there was error uploading files!");
+                hideThrobber();
+            }
+        });
+    });
+    function GridCCDCSuccess(data) {
+        let record = 1;
+        var dataSuccess = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        
+        $("#GridCCDC-success-grid").kendoGrid({
+            dataSource: dataSuccess,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function (e) {
+                        let pageSize = $("#GridCCDC-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#GridCCDC-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Ngày lập',
+                    field: 'NGAY_KIEM_KE',
+                    attributes: { style: "text-align:center" },
+                    type: "Date",
+                    format: "{0:dd/MM/yyyy}"
+                },
+                {
+                    title: 'Đơn vị sử dụng',
+                    field: 'DON_VI_SU_DUNG',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Bộ phận kiểm kê',
+                    field: 'BO_PHAN_KIEM_KE',
+                    attributes: { style: "text-align:center" },
+                }
+
+            ]
+        });
+
+    }
+    function GridCCDCError(data) {
+        var record = 1;
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        
+        $("#GridCCDC-error-grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#GridCCDC-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#GridCCDC-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Ngày lập',
+                    field: 'NGAY_KIEM_KE1',
+                    attributes: { style: "text-align:center" },
+                    type: "Date",
+                    format: "{0:dd/MM/yyyy}"
+                },
+                {
+                    title: 'Đơn vị sử dụng',
+                    field: 'DON_VI_SU_DUNG',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Bộ phận kiểm kê',
+                    field: 'BO_PHAN_KIEM_KE',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Lỗi',
+                    field: 'MESSAGE',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#GridCCDC').hide();
+    })
+</script>

@@ -1,0 +1,59 @@
+﻿@model string
+@{ 
+	Html.SetActiveMenuItemSystemName("GiamTaiSan");
+}
+<div class="card mb-4">
+	<h4 class="card-header">
+		Chọn loại dữ liệu
+	</h4>
+	<div class="card-body">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-2 col-md-3 col-xs-6 "></div>
+				<div class="col-md-2 col-md-3 col-xs-6 ">
+					<div class="card mb-4">
+						<div class="card-body hoverlight">
+							<a href="/YeuCau/GiamTaiSan?guidTS=@Model&loaiLyDoGiam=@((int)GS.Core.Domain.DanhMuc.enumLOAI_LY_DO_TANG_GIAM.GIAM_TOAN_BO)">
+								<div class="d-flex align-items-center">
+									<div class="display-4 text-default"><span class="fas fa-angle-double-down"></span></div>
+									<div class="ml-3">
+										<div style="font-size:15px;color:darkslategrey;font-weight:600">Giảm toàn bộ</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2 col-md-3 col-xs-6 ">
+					<div class="card mb-4">
+						<div class="card-body hoverlight">
+							<a href="/YeuCau/CreateDieuChuyenTungPhan?guidTS=@Model">
+								<div class="d-flex align-items-center">
+									<div class="display-4 text-default"><span class="fas fa-angle-down"></span></div>
+									<div class="ml-3">
+										<div style="font-size:15px;color:darkslategrey;font-weight:600">Giảm một phần</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2 col-md-3 col-xs-6 "></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.hoverlight:hover:before {
+		transform: scale(1.2);
+		box-shadow: 0 0 15px #85b2d5;
+		filter: blur(3px);
+	}
+
+	.hoverlight:hover {
+		color: #ffa502;
+		box-shadow: 0 0 15px #85b2d5;
+	}
+</style>

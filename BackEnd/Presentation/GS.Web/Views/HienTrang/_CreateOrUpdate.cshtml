@@ -1,0 +1,47 @@
+﻿@model HienTrangModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-required">Tên hiện trạng:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN_HIEN_TRANG" />
+        <span asp-validation-for="TEN_HIEN_TRANG"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 ">Nhóm tài sản:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvaliable" />
+        <span asp-validation-for="LOAI_HINH_TAI_SAN_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2">Kiểu dữ liệu:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="KIEU_DU_LIEU_ID" asp-items="Model.KieuDuLieuAvaliable" />
+        <span asp-validation-for="KIEU_DU_LIEU_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2">Loại tài sản áp dụng:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="NHOM_HIEN_TRANG_ID" asp-items="Model.NhomHienTrangAvaliable" />
+        <span asp-validation-for="NHOM_HIEN_TRANG_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2">Hiển thị:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="HIEN_THI_ID" asp-items="Model.HienTrangHienThiAvaliable" />
+        <span asp-validation-for="HIEN_THI_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2">Thứ tự sắp xếp:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="SAP_XEP" />
+        <span asp-validation-for="SAP_XEP"></span>
+    </div>
+</div>
+
+

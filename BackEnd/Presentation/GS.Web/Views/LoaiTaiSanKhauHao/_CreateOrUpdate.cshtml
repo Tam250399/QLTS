@@ -1,0 +1,45 @@
+﻿@model LoaiTaiSanKhauHaoModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="MA_DON_VI"type="hidden"/>
+<input asp-for="LOAI_TAI_SAN_ID"type="hidden"/>
+<input asp-for="DON_VI_ID"type="hidden"/>
+<input asp-for="MA_LOAI_TAI_SAN"type="hidden"/>
+@*<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right text-required">Mã loại tài sản</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="MA_LOAI_TAI_SAN" asp-disabled="true"/>
+        <span asp-validation-for="MA_LOAI_TAI_SAN"></span>
+    </div>
+</div>*@
+
+<div class="form-group row" >
+    <label class="col-form-label col-sm-3 text-sm-left text-required">Tên loại tài sản :</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="TEN_LOAI_TAI_SAN" asp-disabled="true"/>
+        <span asp-validation-for="TEN_LOAI_TAI_SAN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-left text-required">Tên đơn vị :</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="TEN_DON_VI" asp-disabled="true"/>
+        <span asp-validation-for="TEN_DON_VI"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-left">Tỷ lệ khấu hao theo tháng (%) :</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="TY_LE_KHAU_HAO" asp-min-number="0" />
+        <span asp-validation-for="TY_LE_KHAU_HAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-left text-required">Thời hạn sử dụng :</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="THOI_HAN_SU_DUNG" asp-dvt="tháng" asp-min-number="0"/>
+        <span asp-validation-for="THOI_HAN_SU_DUNG"></span>
+    </div>
+</div>
+
+

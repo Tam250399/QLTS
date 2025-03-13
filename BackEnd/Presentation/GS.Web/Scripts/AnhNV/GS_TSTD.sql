@@ -1,0 +1,5 @@
+
+-- sua doi kieu du lieu 
+
+ALTER TABLE SHTD_TAI_SAN_TD_XU_LY  
+MODIFY (GIA_TRI_TKTG NUMBER(32) );

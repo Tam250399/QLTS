@@ -1,0 +1,122 @@
+﻿@model TaiSanNhaSearchModel
+<input asp-for="TAI_SAN_DAT_ID" type="hidden" id="tai-san-dat-id" />
+<div id="list-TSnha-by-datId"></div>
+<script>
+	function addDataSearchListNha(){
+		var data = {
+			TAI_SAN_DAT_ID:@Model.TAI_SAN_DAT_ID,
+		}
+		return data;
+	}
+	var recordItemNha = 0;
+	$(document).ready(function () {
+		$("#list-TSnha-by-datId").kendoGrid({
+		dataSource: {
+			type: "json",
+			transport: {
+			    read: {
+			        url: "@Html.Raw(Url.Action( "ListTaiSanNhaByDatId","TaiSan"))",
+			        type: "POST",
+			        dataType: "json",
+					data: addDataSearchListNha,
+			    }
+			},
+			schema: {
+			    data: "Data",
+			    total: "Total",
+			    errors: "Errors"
+			},
+			error: function(e) {
+			    display_kendoui_grid_error(e);
+			    // Cancel the changes
+			    this.cancelChanges();
+			},
+			pageSize: @(Model.PageSize),
+				serverPaging: true,
+				serverFiltering: true,
+				serverSorting: true
+			},
+			pageable: {
+				refresh: true,
+				pageSizes: [@(Model.AvailablePageSizes)],
+				@await Html.PartialAsync("_GridPagerMessages")
+			},
+			dataBinding: function() {
+                recordItemNha = (this.dataSource.page() -1) * this.dataSource.pageSize();
+            },
+		editable: {
+			confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+			mode: "inline"
+		},
+		scrollable: false,
+			columns: [
+			{
+              title: "STT",
+              template: "#=++recordItemNha#",
+              width: 50,
+              headerAttributes: { style: "text-align:center" },
+              attributes: { style: "text-align:center" },
+            },
+			{ field: 'MaTaiSan', title: 'Mã nhà' },
+			{ field: 'TenTaiSan', title: 'Tên nhà' },
+			{ field: 'TenLoaiTaiSan', title: 'Cấp hạng nhà' },
+			{
+				field: 'strNguyenGiaVN',
+				title: 'Nguyên giá',
+				attributes: { style: "text-align:right" },
+			},
+			{
+				field: 'strDienTichSanVN',
+				title: 'Diện tích',
+				attributes: { style: "text-align:right" },
+			},
+			{
+			    field: "TAI_SAN_ID",
+			    title: "Thao tác",
+			    width: 150,
+			    headerAttributes: { style: "text-align:center" },
+				attributes: { style: "text-align:center" },
+				template: function (dataItem) {
+					if (dataItem.TRANG_THAI_TAI_SAN_ID == @((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.DA_DUYET) ||dataItem.TRANG_THAI_TAI_SAN_ID == @((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.DA_DUYET_GIAM_TOAN_BO))
+						return "";
+					else
+						return "<a class='btn btn-xs btn-outline-secondary'  data-title='Thông tin nhà' data-width='1200' data-toggle='modal' data-target='#globalModalIframe' href='javascript:void(0)' title='Sửa' data-src='/TaiSan/_TaiSanNhaTheoDat?taiSanNhaId=" + dataItem.TAI_SAN_ID + "'>Sửa</a>"+ "&nbsp;"
+						+ "<a class='btn btn-xs btn-outline-danger' id='btn-delete-item-nha' href='javascript:xoaTaiSanNhaTuDSTrenDat(" + dataItem.TAI_SAN_ID + ")' title='Xóa'>Xóa</a>";
+				}
+			}
+		]
+	});
+	})
+
+	//Function tài sản vừa nhập vào, tài sản trạng thái CHO_DUYET, tất cả yêu cầu trạng thái CHO_DUYET
+	function xoaTaiSanNhaTuDSTrenDat(idTS) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa tài sản này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var url = "/TaiSan/DeleteTaiSan?id=" + idTS;
+					var taiSanDelete = ajaxGet(url);
+					taiSanDelete.done(function (result) {
+						if (result.Code == '00') {
+							$('#list-TSnha-by-datId').data('kendoGrid').dataSource.page(1);
+						} else
+							ShowErrorMessage(result.Message);
+					}).fail(function (jqXHR, textStatus, errorThrow) {
+						console.log(textStatus + ': ' + errorThrow);
+					});
+				}
+			},
+		});
+
+	}
+
+</script>

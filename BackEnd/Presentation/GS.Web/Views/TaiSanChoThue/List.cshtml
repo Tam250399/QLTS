@@ -1,0 +1,199 @@
+@model TaiSanChoThueSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh sách tài sản sử dụng chung";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("TaiSanChoThue");
+}
+<style>
+		.link_href {
+			color: #007bff !important;
+		}
+
+			.link_href:hover {
+				cursor: pointer !important;
+				text-decoration: underline !important;
+			}
+</style>
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#globalModalIframe" data-width="1100" data-title="Chọn tài sản" data-src="/TaiSanChoThue/_ChonTaiSan" style="margin:10px;">
+            <i class="ion ion-md-add"></i>&nbsp; Thêm mới
+        </button>
+    </div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+     <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..."/>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>   
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i>Danh sách tài sản sử dụng chung
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<button type="button" class="btn btn-sm btn-outline-primary" onclick="openChonTaiSan()" >
+			<i class="fa fa-plus-square"></i>&nbsp; Thêm mới
+		</button>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                record = 0;
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanChoThue"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'MaTaiSan',
+                                        title: 'Mã tài sản',
+                                        template: function (dataItem) {
+											return "<a class='link_href' href='javascript:detailChoThue(" + dataItem.ID + ")'>" + dataItem.MaTaiSan + "</a>";
+                                        }
+                                    },
+                                    {
+                                        field: 'TenTaiSan',
+                                        title: 'Tên tài sản',
+                                        template: function (dataItem) {
+											return "<a class='link_href' href='javascript:detailChoThue(" + dataItem.ID + ")'>" + dataItem.TenTaiSan+ "</a>";
+                                        }
+                                    },
+                                    { field: 'HOP_DONG_SO', title: 'Văn bản thỏa thuận' },
+                                    //{ field: 'LoaiHinhTaiSan', title: 'Loại tài sản' },
+                                    //{field: 'BoPhanSuDung',title: 'Bộ phận sử dụng'},
+                                    //{field: 'DonGiaChoThueText',title: 'Đơn giá cho thuê'},
+                                    //{ field: 'DOI_TAC_ID', title: 'Đối tác' },
+
+                                    {
+                                        field: 'NGAY_CHO_THUE_FROM',
+                                        title: 'Sử dụng từ ngày',
+                                        type: "Date",
+                                        format: "{0:dd/MM/yyyy}",
+                                        headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'NGAY_CHO_THUE_TO',
+                                        title: 'Sử dụng đến ngày',
+                                        type: "Date",
+                                        format: "{0:dd/MM/yyyy}",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'ChiPhiSuDung',
+                                        title: 'Chi phí sử dụng',
+                                        //format:  "{0:0}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" },
+                                    },
+									//{ field: 'GHI_CHU', title: 'Ghi chú' },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+										template: '<a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit","TaiSanChoThue")?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'
+                                    }
+                                ]
+                            });
+						});
+
+                        function detailChoThue(itemId) {
+							var _url = '@(Url.Action("_DetailTaiSanChoThue", "TaiSanChoThue"))?id=' + itemId;
+							OpenModalManual("Thông tin cho sử dụng chung", _url,72);
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function openChonTaiSan() {
+		var _url = '@(Url.Action("_ChonTaiSan", "TaiSanChoThue"))';
+        OpenModalManual("Tra cứu tài sản", _url, 70);
+	}
+</script>
+

@@ -1,0 +1,162 @@
+﻿@model CauHinhTuDongDuyetModel
+@{
+	//page title
+	ViewBag.Title = "Cấu hình đơn vị";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhDonVi");
+}
+<form asp-controller="CauHinh" asp-action="CauHinhDonVi" method="post">
+	<div class="card mb-4">
+		<h5 class="card-header">
+			Sửa thông tin cấu hình đơn vị
+			<button type="button" id="save" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h5>
+        <div class="card-body">
+            @*<div class="form-group row">
+            <label class="col-form-label col-sm-3 text-sm-left">Tự động duyệt tài sản dưới 500 triệu</label>
+            <div class="col-sm-9">
+                <label class="custom-control custom-checkbox">
+                    <nop-editor asp-for="IsAutoDuyetTaiSanDuoi500" class="custom-control-input" />
+                    <span class="custom-control-label"></span>
+                </label>
+            </div>
+        </div>*@
+
+            <div class="gs-form-group  ">
+                <h6>Cấu hình duyệt tài sản</h6>
+                @foreach (var item in Model.cauHinhDuyetTaiSans)
+                {
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 text-right">Loại hình TS:</label>
+                        <div class="col-sm-2 col-form-label">
+                            @T("Enums.GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN." + (enumLOAI_HINH_TAI_SAN)item.LOAI_HINH_TAI_SAN)
+                            <input type="hidden" class="don-vi-cau-hinh" id="z-loai-hinh_@item.LOAI_HINH_TAI_SAN" data-loaihinh="@item.LOAI_HINH_TAI_SAN" value="@(item.LOAI_HINH_TAI_SAN)" />
+                        </div>
+                        <label class="col-form-label col-sm-2 text-right">Nguyên giá:</label>
+                        <div class="col-sm-2">
+                            <nop-editor asp-for="@item.NGUYEN_GIA" asp-dvt="c" id="z-nguyen-gia_@item.LOAI_HINH_TAI_SAN" asp-disabled="true">
+                        </div>
+                        <label class="col-form-label col-sm-3 text-right">Duyệt tự động dưới NG:</label>
+                        <div class="col-sm-1">
+                            <div class="col-sm-9">
+                                <label class="custom-control custom-checkbox">
+                                    <nop-editor asp-for="@item.IS_AUTO_DUYET_DUOI_NG" id="z-is-auto-duyet-tai-san-duoi500_@item.LOAI_HINH_TAI_SAN" class="custom-control-input" />
+                                    <span class="custom-control-label"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                }
+
+            </div>
+            @if (Model.IsShowCheckTSQLNhuTSCD)
+            {
+                <div class="gs-form-group  ">
+                    <h6>Quản lý tài sản từ 5 triệu đến 10 triệu</h6>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4 text-right">Đơn vị có quản lý tài sản từ 5 triệu đến 10 triệu: </label>
+                        <div class="col-sm-1">
+                            <div class="col-sm-8">
+                                <label class="custom-control custom-checkbox">
+                                    <nop-editor asp-for="@Model.tsQuanLyNhuTSCD" id="z-is-tsQuanLyNhuTSCD" class="custom-control-input" />
+                                    <span class="custom-control-label"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.IsShowCheckTSQLChuKySo)
+            {
+                <div class="gs-form-group  ">
+                    <h6>Quản lý tài sử dụng chữ ký số</h6>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4 text-right" style="padding-right: 67px">Đơn vị có quản lý sử dụng chữ ký số: </label>
+                        <div class="col-sm-1">
+                            <div class="col-sm-8">
+                                <label class="custom-control custom-checkbox">
+                                    <nop-editor asp-for="@Model.tsQuanLyChuKySo" id="z-is-tsQuanLyChuKySo" class="custom-control-input" />
+                                    <span class="custom-control-label"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        </div>
+</form>
+<script>
+    $(document).ready(function (){
+        $('#save').click(function () {
+            showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+			$(this).addClass('disabled');
+            var _lstModel = [];
+            var _taisanQuanLyNhuTSCD = $('#z-is-tsQuanLyNhuTSCD').prop('checked');
+            var _tsQuanLyChuKySo = $('#z-is-tsQuanLyChuKySo').prop('checked');
+            console.log(_taisanQuanLyNhuTSCD);
+			$(".don-vi-cau-hinh").each(function () {
+				let id = $(this).data('loaihinh');
+
+				let _loaiHinh = $('#z-loai-hinh_' + id).val();
+				let _nguyenGia = $('#z-nguyen-gia_' + id).val();
+				let _isAutoDuyet = $('#z-is-auto-duyet-tai-san-duoi500_' + id).prop('checked');
+
+
+
+				_lstModel.push({
+					LOAI_HINH_TAI_SAN: _loaiHinh,
+					NGUYEN_GIA: _nguyenGia,
+					IS_AUTO_DUYET_DUOI_NG: _isAutoDuyet,
+				});
+            });
+			let _data = {
+                cauHinhDuyetTaiSans: _lstModel,
+                tsQuanLyNhuTSCD: _taisanQuanLyNhuTSCD,
+                tsQuanLyChuKySo: _tsQuanLyChuKySo
+            };
+            let _url = '@Url.Action("CauHinhDuyetTaiSan", "CauHinh")';
+            jQuery.ajax({
+                type: "POST",
+                url: _url,
+                data: _data,
+                success: function (result) {
+                    hideThrobber();
+                    if (CheckValidMessageReturn(result)) {
+                        if (result.Code == '00') {
+                            ShowSuccessMessage("Cập nhật thành công");
+                            location.reload();
+                        }
+                    }
+                },
+                error: function (xhr, textStatus, thrownError) {
+                    ShowErrorMessage('Có lỗi xảy ra');
+                    $(this).removeClass('disabled');
+                    hideThrobber();
+                }
+            });
+            @*ajaxPost(_data, _url, false).done(function () {
+				ShowSuccessMessage('Cập nhật thành công');
+				location.reload();
+				hideThrobber();
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				// If fail
+				console.log(textStatus + ': ' + errorThrown);
+				ShowErrorMessage('Có lỗi xảy ra');
+				$(this).removeClass('disabled');
+				hideThrobber();
+			});*@
+		});
+	});
+</script>
+<style>
+	.custom-control-label::before {
+		border-color: #bdbdbd;
+	}
+</style>

@@ -1,0 +1,180 @@
+@model KhaiThacModel
+@{
+	//page title
+	ViewBag.Title = "KhaiThac";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("KhaiThac");
+}
+<input hidden asp-for="ID" />
+<input hidden asp-for="LOAI_HINH_KHAI_THAC_ID" />
+<div class="card mb-4">
+	<h6 class="card-header">
+		Sửa thông tin
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a href="/KhaiThac/List?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID ">Quay lại danh sách</a>
+		</small>
+		@*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash"></i>
+				Xóa
+			</span>*@
+
+		@*<a href="/KhaiThac/Delete?id=@Model.ID?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID" class="btn  btn-sm btn-danger" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash"></i>
+				Xóa
+			</a>*@
+		@*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+			<i class="far fa-save"></i>
+			Lưu và tiếp tục sửa
+			</button>*@
+		<button type="button" class="btn btn-sm btn-default btnClose"  style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		<span id="item-delete" onclick="xoaKhaiThacVuaNhap(@Model.ID,@Model.LOAI_HINH_KHAI_THAC_ID)" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+			<i class="fas fa-trash"></i>
+			Xóa
+		</span>
+		<button id="" name="save" class="btn  btn-sm btn-outline-primary btnUpdateKhaiThac" style="float:right; margin-right: 5px;">
+			<i class="fas fa-save"></i>
+			Lưu
+		</button>
+
+
+	</h6>
+	<div class="card-body">
+
+		@await Html.PartialAsync("_CreateOrUpdate", Model)
+
+	</div>
+    <h6 class="card-header">
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/KhaiThac/List?LOAI_HINH_KHAI_THAC_ID=@Model.LOAI_HINH_KHAI_THAC_ID ">Quay lại danh sách</a>
+        </small>
+        @*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>*@
+
+		@*<a href="/KhaiThac/Delete?id=@Model.ID?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID" class="btn  btn-sm btn-danger" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash"></i>
+				Xóa
+			</a>*@
+		@*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+			<i class="far fa-save"></i>
+			Lưu và tiếp tục sửa
+			</button>*@
+		<button type="button" class="btn btn-sm btn-default btnClose"  style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		<span id="item-delete" onclick="xoaKhaiThacVuaNhap(@Model.ID,@Model.LOAI_HINH_KHAI_THAC_ID)" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+			<i class="fas fa-trash"></i>
+			Xóa
+		</span>
+		<button id="" name="save" class="btn  btn-sm btn-outline-primary btnUpdateKhaiThac" style="float:right; margin-right: 5px;">
+			<i class="fas fa-save"></i>
+			Lưu
+		</button>
+
+    </h6>
+</div>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+<script>
+	@*function xoaKhaiThacVuaNhap(idTS,IdLHHT) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa tài sản này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var url1 = "/KhaiThac/Delete?id=?hinhthuckhaithac=?" + idTS + IdLHHT;
+					var url = "@string.Format(@"/KhaiThac/Delete?id={0}?hinhthuckhaithac={1}",Model.ID ,Model.LOAI_HINH_KHAI_THAC_ID)";
+					var taiSanDelete = ajaxPost(url);
+					taiSanDelete.done(function (result) {
+						if (result.Code == '00') {
+							ShowSuccessMessage(result.Message);
+							location.href="@(string.Format(@"/KhaiThac/List?LOAI_HINH_KHAI_THAC_ID={0}", Model.LOAI_HINH_KHAI_THAC_ID))";
+							//location.href="/TaiSan/List";
+						} else
+							ShowErrorMessage(result.Message);
+					}).fail(function (jqXHR, textStatus, errorThrow) {
+						console.log(textStatus + ': ' + errorThrow);
+					});
+				 }
+			 },
+		});
+    };*@
+	$(document).ready(function () {
+		$('.btnClose').on('click', function () {
+			backToList();
+        })
+
+	})
+    function xoaKhaiThacVuaNhap(id,hinhthuckhaithac) {
+	    bootbox.confirm({
+			 message: "Bạn có chắc chắn xóa biến động đã chọn?",
+			 className: 'bootbox-sm',
+			 buttons: {
+				 confirm: {
+					 label: 'Đồng ý',
+				 },
+				 cancel: {
+					 label: 'Hủy',
+				 },
+			 },
+			 callback: function (msg) {
+				 if (msg) {
+						showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+					 var _data = {
+							id: id,
+							hinhthuckhaithac: hinhthuckhaithac,
+					 }
+					 $.ajax({
+						 type: "POST",
+						 data: _data,
+						 url: "/KhaiThac/Delete?id=?hinhthuckhaithac=?" + id + hinhthuckhaithac,
+						 success: function (msg) {
+							 if (msg.Code == "00") {
+								 ShowSuccessMessage(msg.Message);
+								 location.href = "@(string.Format(@"/KhaiThac/List?LOAI_HINH_KHAI_THAC_ID={0}", Model.LOAI_HINH_KHAI_THAC_ID))";
+							 }
+							 else {
+								 ShowErrorMessage(msg.Message);
+							 }
+						 },
+						 error: function (xhr, ajaxOptions, thrownError) {
+							 alert(thrownError);
+							 hideThrobber();
+						 }
+					 });
+				 }
+			 },
+	    });
+	};
+	 function backToList() {
+	    bootbox.confirm({
+			 message: "Dữ liệu chưa được lưu, bạn có chắc chắn thoát không?",
+			 className: 'bootbox-sm',
+			 buttons: {
+				 confirm: {
+					 label: 'Đồng ý',
+				 },
+				 cancel: {
+					 label: 'Hủy',
+				 },
+			 },
+			 callback: function (msg) {
+				 window.location.href = '/KhaiThac/List?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID';
+			 },
+	    });
+    };
+</script>

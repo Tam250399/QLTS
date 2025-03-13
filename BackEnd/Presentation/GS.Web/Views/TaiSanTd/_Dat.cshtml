@@ -1,0 +1,130 @@
+﻿@model TaiSanTdModel
+
+    <div class="gs-form-group">
+        <h6>Tài sản đất</h6>
+        <input asp-for="GUID" type="hidden" />
+        <input asp-for="QUYET_DINH_TICH_THU_ID" type="hidden" />
+        <input asp-for="NGUON_GOC_TAI_SAN_ID" type="hidden" />
+        <input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+        <input asp-for="SO_LUONG" type="hidden" />
+        <input asp-for="DON_VI_TINH" type="hidden" />
+        <input asp-for="quyetdinh.is_vali" value="false" hidden />
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Địa chỉ:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Loại đất:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN_LOAI_TAI_SAN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN_LOAI_TAI_SAN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Diện tích:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_TINH" asp-disabled="@Model.is_detail" asp-dvt="m2" />
+                <span asp-validation-for="GIA_TRI_TINH"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Giá trị tịch thu/ xác lập:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" asp-disabled="@Model.is_detail" asp-dvt="đồng"/>
+                <span asp-validation-for="GIA_TRI_XAC_LAP"></span>
+            </div>
+        </div>
+        @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Tài sản nhà:</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="ListTaiSanNha" asp-items="Model.DDLNHA" asp-filter="true" asp-multiple="true" asp-placeholder="Chọn nhà" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="ListTaiSanNha"></span>
+            </div>
+        </div>*@
+        @if (Model.is_detail == false)
+        {
+            <div class="form-group row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2 text-right">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnAddNha" onclick="AddNhaTrenDat()">
+                        Thêm nhà
+                    </a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnSave">
+                        <i class="fa fa-save"></i>
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        }
+        <div class="form-group" id="View_addNha"></div>
+        <div class="form-group" id="tbNha"></div>
+    </div>
+<script>
+    var listNhaNhapId = [];
+    var _url = "/TaiSanTd/CreateTSTD";
+    @if(Model.ID > 0 && Model.TRANG_THAI_ID == (int)enumTRANGTHAITSTD.TONTAI)
+    {
+        <text>
+        _url = "/TaiSanTd/EditTSTD";
+        </text>
+    }
+    $(document).ready(function () {
+        $("#tbNha").hide();
+        $("#View_addNha").hide();
+        LoadTaiSanNhaTrenDat();
+    });
+    function AddNhaTrenDat() {
+          $.ajax({
+            type: "GET",
+            url: "/TaiSanTd/_NhaTrenDat?TaiSanDatId=@Model.ID",
+            success: function (data) {
+                $("#View_addNha").html(data);
+                $("#View_addNha").show();
+            }
+        });
+    }
+    function LoadTaiSanNhaTrenDat() {        
+        $.ajax({
+            type: "GET",
+            url: "/TaiSanTd/_ListNhaTrenDat?TaiSanDatId=@Model.ID",
+            success: function (data) {
+                $("#tbNha").html(data);
+            }
+        });
+    }
+    $("#btnSave").click(function () {
+        var _data = {
+            GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            LOAI_HINH_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_HINH_TAI_SAN_ID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)").val(),
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+            DON_VI_TINH: $("#@Html.IdFor(c=>c.DON_VI_TINH)").val(),
+            TEN_LOAI_TAI_SAN: $("#@Html.IdFor(c=>c.TEN_LOAI_TAI_SAN)").val(),
+            GIA_TRI_TINH: $("#@Html.IdFor(c=>c.GIA_TRI_TINH)").val(),
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)").val(),
+            SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+            @*ListTaiSanNha: $("#@Html.IdFor(c=>c.ListTaiSanNha)").val(),*@
+            ListNhaNhapId : listNhaNhapId,
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+        }
+        $.ajax({
+        type: "POST",
+            data: _data,
+            url: _url,
+            success: function (result) {
+                if (CheckValidMessageReturn(result)) {
+                    ShowSuccessMessage(result.Message);
+                    HideModalManual();
+                    $("#btnSearchDetail").click();
+                    $("#btnSearch").click();
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+        })
+    })
+</script>
+

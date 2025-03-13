@@ -1,0 +1,110 @@
+@model KhauHaoTaiSanModel
+@*@{
+    //page title
+    ViewBag.Title = "KhauHaoTaiSan";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KhauHaoTaiSan");
+}*@
+<div class="ui-bordered px-4 pt-4 mb-4">
+    @*<h6 class="card-header">
+            Sửa thông tin quyền
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            <button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+                <i class="far fa-save"></i>
+                Lưu và tiếp tục sửa
+            </button>
+            <button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>*@
+    <input asp-for="@Model.ID" type="hidden" />
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Tài sản id</label>
+        <div class="col-md-4">
+            <input type="text" class="form-control k-input" value="@Model.TAI_SAN_ID" disabled/>
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left">Mã tài sản</label>
+        <div class="col-md-4">
+            <input type="text" class="form-control k-input" value="@Model.MA_TAI_SAN" disabled/>
+        </div>
+    </div>
+    @*<div class="card-body">*@
+
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+    @*</div>*@
+    <div class="form-group row">
+        <div class="col-md-8">
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn  btn-outline-secondary" style="float:right; margin-left:5px" id="btnClose" data-dismiss="modal">Hủy bỏ</button>
+            <button type="button" class="btn  btn-primary" style="float:right" id="btndUpdate">Cập nhật</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        var thangkh = $("#@Html.IdFor(p=>p.THANG_KHAU_HAO)").data("kendoNumericTextBox");
+        var namkh = $("#@Html.IdFor(p=>p.NAM_KHAU_HAO)").data("kendoNumericTextBox");
+        var giaTrikh = $("#@Html.IdFor(p=>p.GIA_TRI_KHAU_HAO)").data("kendoNumericTextBox");
+        var tyLekh = $("#@Html.IdFor(p=>p.TY_LE_KHAU_HAO)").data("kendoNumericTextBox");
+        var tongNguyenGia = $("#@Html.IdFor(p=>p.TONG_NGUYEN_GIA)").data("kendoNumericTextBox");
+        var gtcl = $("#@Html.IdFor(p=>p.TONG_GIA_TRI_CON_LAI)").data("kendoNumericTextBox");
+        var khLuyKe = $("#@Html.IdFor(p=>p.TONG_KHAU_HAO_LUY_KE)").data("kendoNumericTextBox");
+        $('#btndUpdate').click(function () {
+            showThrobber("Đang điều chỉnh khấu hao...");
+            var res = true;
+            if (giaTrikh.value() <= tongNguyenGia.value()) {
+                hideValmsg("GIA_TRI_KHAU_HAO");
+            }
+            else {
+                showInvalidMessage("GIA_TRI_KHAU_HAO", "Giá trị không được lớn hơn nguyên giá")
+                res = false;
+            }
+            if (gtcl.value() <= tongNguyenGia.value()) {
+                hideValmsg("TONG_GIA_TRI_CON_LAI");
+            }
+            else {
+                showInvalidMessage("TONG_GIA_TRI_CON_LAI", "Giá trị không được lớn hơn nguyên giá")
+                res = false;
+            }
+            if (res == true) {
+                let _data = {
+                    ID: @Model.ID,
+                    THANG_KHAU_HAO: $("#@Html.IdFor(p=>p.THANG_KHAU_HAO)").val(),
+                    NAM_KHAU_HAO: $("#@Html.IdFor(p=>p.NAM_KHAU_HAO)").val(),
+                    GIA_TRI_KHAU_HAO: $("#@Html.IdFor(p=>p.GIA_TRI_KHAU_HAO)").val(),
+                    TY_LE_KHAU_HAO: $("#@Html.IdFor(p=>p.TY_LE_KHAU_HAO)").val(),
+                    TONG_NGUYEN_GIA: $("#@Html.IdFor(p=>p.TONG_NGUYEN_GIA)").val(),
+                    TONG_KHAU_HAO_LUY_KE: $("#@Html.IdFor(p=>p.TONG_KHAU_HAO_LUY_KE)").val(),
+                    TONG_GIA_TRI_CON_LAI: $("#@Html.IdFor(p=>p.TONG_GIA_TRI_CON_LAI)").val(),
+                }
+                let _url = '@Url.Action("Edit", "KhauHaoTaiSan")';
+                ajaxPost(_data, _url, false).done(function (objReturn) {
+                    hideThrobber();
+                    ShowSuccessMessage("Điều chỉnh thành công");
+                    let _grid = $('#items-grid').data('kendoGrid');
+                    if (_grid) {
+                        _grid.dataSource.page(_grid.dataSource.page());
+                    }
+                    HideModalManual();
+                }).fail(function () {
+                    hideThrobber();
+                    ShowErrorMessage("Thất bại");
+                    HideModalManual();
+                });
+            }
+
+        })
+    })
+</script>

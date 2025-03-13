@@ -1,0 +1,359 @@
+﻿@model DongBoTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Đồng bộ Tài sản toàn dân";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DongBoBienDongFromFile");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+      Đồng bộ Quyết định tịch thu
+    </div>
+    <div class="card-body">
+        <div>
+            <button type="button" id="btnDongBoQDTT" class="btn btn-success"> Đồng bộ Quyết định tịch thu</button>
+            <br />
+
+            <div class="alert alert-primary mt-4" id="alertDongBoQDTT" role="alert">
+                <span id="logTimeDongBoQDTT"></span>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="button" id="btnDongBoTSTD" class="btn btn-success"> Đồng bộ Tài sản toàn dân</button>
+            <br />
+            <span id="logTimeDongBoTSTD"></span>
+            <div class="alert alert-primary mt-4" id="alertDongBoTSTD" role="alert">
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="button" id="btnDongBoPAXL" class="btn btn-success"> Đồng bộ Phương án xử lý</button>
+            <br />
+            <span id="logTimeDongBoPAXL"></span>
+            <div class="alert alert-primary mt-4" id="alertDongBoPAXL" role="alert">
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="button" id="btnDongBoTSXL" class="btn btn-success"> Đồng bộ Tài sản xử lý</button>
+            <br />
+            <span id="logTimeDongBoTSXL"></span>
+            <div class="alert alert-primary mt-4" id="alertDongBoTSXL" role="alert">
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="button" id="btnDongBoKQ" class="btn btn-success"> Đồng bộ Kết quả</button>
+            <br />
+            <span id="logTimeDongBoKQ"></span>
+            <div class="alert alert-primary mt-4" id="alertDongBoKQ" role="alert">
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="button" id="btnDongBoTC" class="btn btn-success"> Đồng bộ Thu chi</button>
+            <br />
+            <span id="logTimeDongBoTC"></span>
+            <div class="alert alert-primary mt-4" id="alertDongBoTC" role="alert">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+    $("#btnDongBoQDTT").click(function (evt) {
+        $('#alertDongBoQDTT').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoQDTTSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoQDTT").html(logTime);
+                $('#alertDongBoQDTT').text(result.Message)
+                    hideThrobber();
+            },
+            error: function (w) {
+                hideThrobber();
+                $("#logTimeDongBoQDTT").html("");
+                $('#alertDongBoQDTT').text(e);
+                hideThrobber();
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+    $("#btnDongBoTSTD").click(function (evt) {
+        $('#alertDongBoTSTD').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoTaiSanTSTDSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoTSTD").html(logTime);
+                $('#alertDongBoTSTD').text(result.Message);
+                    hideThrobber();
+            },
+            error: function (e) {
+                hideThrobber();
+                $("#logTimeDongBoTSTD").html("");
+                $('#alertDongBoTSTD').text(e)
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+
+    $("#btnDongBoPAXL").click(function (evt) {
+        $('#alertDongBoPAXL').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoPAXLSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoPAXL").html(logTime);
+                $('#alertDongBoPAXL').text(result.Message);
+                    hideThrobber();
+            },
+            error: function (e) {
+                hideThrobber();
+                $("#logTimeDongBoPAXL").html("");
+                $('#alertDongBoPAXL').text(e)
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+
+     $("#btnDongBoTSXL").click(function (evt) {
+        $('#alertDongBoTSXL').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoTSXLSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoTSXL").html(logTime);
+                $('#alertDongBoTSXL').text(result.Message);
+                    hideThrobber();
+            },
+            error: function (e) {
+                hideThrobber();
+                $("#logTimeDongBoTSXL").html("");
+                $('#alertDongBoTSXL').text(e)
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+     });
+
+    $("#btnDongBoKQ").click(function (evt) {
+        $('#alertDongBoKQ').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoKQSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoKQ").html(logTime);
+                $('#alertDongBoKQ').text(result.Message);
+                    hideThrobber();
+            },
+            error: function (e) {
+                hideThrobber();
+                $("#logTimeDongBoKQ").html("");
+                $('#alertDongBoKQ').text(e)
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+    $("#btnDongBoTC").click(function (evt) {
+        $('#alertDongBoTC').text('Đang đồng bộ...');
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var data = new FormData();
+        var loaiBienDongId = $('#@Html.IdFor(c => c.LoaiBienDongId)').val();
+        data.append("loaiBienDongId", loaiBienDongId);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoThuChiSangKho",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDongBoTC").html(logTime);
+                $('#alertDongBoTC').text(result.Message);
+                    hideThrobber();
+            },
+            error: function (e) {
+                hideThrobber();
+                $("#logTimeDongBoTC").html("");
+                $('#alertDongBoTC').text(e)
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+
+    function TaiSanNhaNuocSuccess(data) {
+        var record = 1;
+        $("#TaiSanNhaNuoc-success-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'Status',
+                    field: 'Status',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Message',
+                    field: 'Message',
+                    attributes: { style: "text-align:left" },
+                },
+                {
+                    title: 'Date',
+                    field: 'Date',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Data',
+                    field: 'Data',
+                    width:300,
+                    attributes: { style: "text-align:left" },
+                }
+            ]
+        });
+
+    }
+    $(function () {
+        $('#NhaNuoc').hide();
+    })
+</script>

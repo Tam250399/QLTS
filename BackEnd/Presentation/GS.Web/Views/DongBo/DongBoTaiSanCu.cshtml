@@ -1,0 +1,106 @@
+﻿@*Test đồng bộ tài sản cũ*@
+@model PrameterDongBoTaiSanModel
+<div class="card">
+    <div class="card-body">
+        <h6>Đồng bộ tài sản cũ</h6>
+        <div class=" row form-group">
+            <label class="col-form-label col-sm-2 ">Đơn vị đồng bộ</label>
+            <input id="donviId" type="hidden" />
+            <div class="col-sm-8">
+                <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+            </div>
+            <div class="col-sm-2" style="text-align:right">
+                <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+                    <i class="fab fa-sistrix"></i>
+                    Chọn đơn vị
+                </button>
+            </div>
+
+            @*<div class=" col-md-2">
+            Chọn đơn vị cấp 1
+        </div>
+        <div class="col-md-4">
+            <nop-select asp-for="DonViCha" asp-items="Model.DdlDonViCha" asp-filter="true" />
+        </div>
+        <div class=" col-md-2">
+            Chọn đơn vị cấp 2
+        </div>
+        <div class="col-md-4">
+            <nop-select asp-for="DonViCon" asp-items="Model.DdlDonViCon" asp-filter="true" />
+        </div>*@
+        </div>
+        <div class=" row form-group">
+            <div class=" col-md-2">
+                Loại biến động
+            </div>
+            <div class="col-md-4">
+                <nop-select asp-for="LoaiBienDongId" asp-items="Model.DdlLoaiBienDong" asp-filter="true" />
+            </div>
+            @*<div class=" col-md-2">
+            Nguồn tài sản
+        </div>
+        <div class="col-md-4">
+            <nop-select asp-for="NguonTaiSanId" asp-items="Model.DdlNguonTaiSan" asp-filter="true" />
+        </div>*@
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-5"></div>
+            <div class=" col-md-2">
+                <button class="btn btn-sm btn-outline-facebook" id="btnDongBoTaiSanCu" type="button" style="width:100%">Đồng bộ tài sản</button>
+            </div>
+           
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-5">
+                <span style="color:red" id="msg"></span>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#DonViCha').change (function () {
+            var idDonViCha = $('#DonViCha').val();
+            var data = {
+                DonViCha: idDonViCha
+            }
+            $.ajax({
+                type: "GET",
+                data: data,
+                url: "/DongBo/GetddlDonViCon",
+                success: function (result) {
+                    var ddlCon = $('#DonViCon').data('kendoDropDownList');
+                    ddlCon.setDataSource(result);
+                }
+            })
+        })
+        $('#btnDongBoTaiSanCu').click(function () {
+            if ($('#donviId').val() == null || $('#donviId').val() == 0) {
+                ShowErrorMessage("Chọn đơn vị");
+            }
+            else {
+                showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+                var donvi = {
+                    //DonViCon: $('#DonViCon').val(),
+                    //DonViCha: $('#DonViCha').val(),
+                    LoaiBienDongId: $('#LoaiBienDongId').val(),
+                    //NguonTaiSanId: $('#NguonTaiSanId').val(),
+                    DonViCha: $('#donviId').val()
+                }
+                $.ajax({
+                    type: "POST",
+                    data: donvi,
+                    url: "/DongBo/DongBoTaiSanCu",
+                    success: function (reuslt) {
+                        hideThrobber();
+                        $("#msg").html(reuslt.Message);
+                        //ShowSuccessMessage(reuslt.Message);
+                        //location.href = "/AppWork/Index";
+                    }
+                })
+            }
+        })
+    })
+
+</script>

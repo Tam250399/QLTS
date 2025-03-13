@@ -1,0 +1,89 @@
+@model TaiSanKiemKeTaiSanModel
+
+<div class="card mb-4">
+    <h6 class="card-header">
+        <a class="btn btn-default" onclick="HideModalManual()" style="float:right;margin-right:5px;"> <i class="ion ion-ios-close-circle-outline" style="margin-right:5px;"></i>Đóng</a>
+        <button type="button" class="btn btn-success" style="float:right;margin-right:5px;" id="btnSaveCreateKKTS">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+
+<script>
+    $("#btnSaveCreateKKTS").click(function () {
+        var tinhTrangId = @((int)enumTinhTrang.THUA);
+        var data = {
+            TEN_TAI_SAN_THUA: $("#TEN_TAI_SAN_THUA").val(),
+            NHOM_TAI_SAN_ID: $("#NHOM_TAI_SAN_ID").val(),
+            KIEM_KE_ID: $("#KIEM_KE_ID").val(),
+            SO_LUONG_KIEM_KE: $("#SO_LUONG_KIEM_KE").val(),
+            NGUYEN_GIA_KIEM_KE: $("#NGUYEN_GIA_KIEM_KE").val(),
+            GIA_TRI_CON_LAI_KIEM_KE: $("#GIA_TRI_CON_LAI_KIEM_KE").val(),
+            TINH_TRANG_ID: tinhTrangId,
+            DE_NGHI_XU_LY_ID: $("#DE_NGHI_XU_LY_ID").val(),
+            GHI_CHU: $("#GHI_CHU").val(),
+            KIEN_NGHI_GQTST: $("#KIEN_NGHI_GQTST").val(),
+        };
+        ClearValidationTaiSanThua();
+        if (ValidationTaiSanThua()) {
+            $.ajax({
+                url: "/TaiSanKiemKeTaiSan/Create",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        HideModalManual();
+                        $("#btnSearchTSThua").click();
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function ValidationTaiSanThua() {
+        
+        var check = true;
+        var TEN_TAI_SAN_THUA = $("#TEN_TAI_SAN_THUA").val();
+        if (TEN_TAI_SAN_THUA != undefined && (TEN_TAI_SAN_THUA == "" || TEN_TAI_SAN_THUA == null)) {
+            check = false;
+            showInvalidMessage("TEN_TAI_SAN_THUA", "Tên không được để trống");
+        }
+        var NHOM_TAI_SAN_ID = Number($("#NHOM_TAI_SAN_ID").val());
+        if (NHOM_TAI_SAN_ID <= 0) {
+            check = false;
+            showInvalidMessage("NHOM_TAI_SAN_ID", "Tài sản không được để trống");
+        }
+        var SO_LUONG_KIEM_KE = Number($("#SO_LUONG_KIEM_KE").val());
+        if (SO_LUONG_KIEM_KE <= 0) {
+            check = false;
+            showInvalidMessage("SO_LUONG_KIEM_KE", "Số lượng phải lớn hơn 0");
+        }
+        var NGUYEN_GIA_KIEM_KE = Number($("#NGUYEN_GIA_KIEM_KE").val());
+        var GIA_TRI_CON_LAI_KIEM_KE = Number($("#GIA_TRI_CON_LAI_KIEM_KE").val());
+        if (NGUYEN_GIA_KIEM_KE < 0) {
+            check = false;
+            showInvalidMessage("NGUYEN_GIA_KIEM_KE", "Nguyên giá phải lớn hơn 0");
+        }
+        if (GIA_TRI_CON_LAI_KIEM_KE < 0) {
+            check = false;
+            showInvalidMessage("GIA_TRI_CON_LAI_KIEM_KE", "Giá trị còn lại phải lớn hơn 0");
+        }
+        if (NGUYEN_GIA_KIEM_KE < GIA_TRI_CON_LAI_KIEM_KE) {
+            check = false;
+            showInvalidMessage("GIA_TRI_CON_LAI_KIEM_KE", "Giá trị còn lại phải bé hơn nguyên giá");
+        }
+        return check;
+    }
+    function ClearValidationTaiSanThua() {
+        hideValmsg("TEN_TAI_SAN_THUA");
+        hideValmsg("SO_LUONG_KIEM_KE");
+        hideValmsg("NHOM_TAI_SAN_ID");
+    }
+</script>

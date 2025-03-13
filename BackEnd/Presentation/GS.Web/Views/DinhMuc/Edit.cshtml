@@ -1,0 +1,143 @@
+@model DinhMucModel
+@{
+    //page title
+    ViewBag.Title = "Sửa định mức tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DinhMucChucDanh");
+}
+@*<form asp-controller="DinhMuc" asp-action="Edit" method="post">*@
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            <button class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+@*</form>
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            debugger
+            var ChiTietDinhMuc = [];
+            $(".contentChiTietDMCD").each(function () {
+                var IDF = $(this).data("guid");
+                var ID_VAL = $("#ID_" + IDF).val();
+                var CHUC_DANH_ID_VAL = $("#CHUC_DANH_ID_" + IDF).val();
+                var SO_LUONG_VAL = $("#SO_LUONG_" + IDF).val();
+                var DINH_MUC_VAL = $("#DINH_MUC_" + IDF).val();
+                var LOAI_TAI_SAN_ID_VAL = $("#LOAI_TAI_SAN_ID_" + IDF).val();
+                var LOAI_HINH_TAI_SAN_ID_VAL = $("#LOAI_HINH_TAI_SAN_ID_" + IDF).val();
+                var ChiTietDMCD = {
+                    _arr: IDF,
+                    ID: ID_VAL,
+                    CHUC_DANH_ID: CHUC_DANH_ID_VAL,
+                    SO_LUONG: SO_LUONG_VAL,
+                    DINH_MUC: DINH_MUC_VAL,
+                    LOAI_TAI_SAN_ID: LOAI_TAI_SAN_ID_VAL,
+                    LOAI_HINH_TAI_SAN_ID: LOAI_HINH_TAI_SAN_ID_VAL,
+                };
+                ChiTietDinhMuc.push(ChiTietDMCD);
+            });
+            var _data = {
+                ChiTietDinhMuc: ChiTietDinhMuc,
+                ID: $("#ID").val(),
+                MA: $("#MA").val(),
+                TU_NGAY: $("#TU_NGAY").val(),
+                DEN_NGAY: $("#DEN_NGAY").val(),
+                QUYET_DINH_SO: $("#QUYET_DINH_SO").val(),
+                QUYET_DINH_NGAY: $("#QUYET_DINH_NGAY").val(),
+                THONG_TU: $("#THONG_TU").val(),
+                DON_VI_ID: $("#DON_VI_ID").val()
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/DinhMuc/Edit",
+                data: _data,
+                success: function (data) {
+                    if (data.Code == "00") {
+                        debugger
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/DinhMuc/List';
+                        //location.href = '/TaiSan/ListYeuCauDuyetTaiSan';
+                    }
+                    else {
+                        // ẩn hết message cũ
+                        $('span[data-valmsg-for]').each(function () {
+                            $(this).text("");
+                        });
+                        // show message Lỗi
+                        $.each(data.ObjectInfo, function (index, value) {
+                            $.each(value.Errors, function (index1, value1) {
+                                showInvalidMessage(value.Key, value1.ErrorMessage)
+                            });
+                        });
+                        //$("#err_DINH_MUC_CHITIET_" + data.ObjectInfo._arr).toggle();
+                        //hideThrobber();
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+
+        });
+
+        $("#item-delete").click(function () {
+            XoaDinhMuc();
+        })
+    })
+    function XoaDinhMuc(e) {
+            var _data = {
+                id: @Model.ID,
+            };
+            bootbox.confirm({
+                message: 'Bạn có chắc chắn muốn xóa định mức ?',
+                className: 'bootbox-sm',
+                buttons: {
+                    confirm: {
+                        label: '@T("admin.common.yes")',
+                    },
+                    cancel: {
+                        label: '@T("admin.common.no")',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/DinhMuc/Delete",
+                            type: "POST",
+                            data: _data,
+                            success: function (data) {
+                                if (CheckValidMessageReturn(data)) {
+                                    ShowSuccessMessage(data.Message);
+                                    document.location.href = '/DinhMuc/List';
+                                } else {
+                                    ShowErrorMessage(data.Message);
+                                }
+                            }
+                        });
+                        kendo.ui.progress($(".progress-bar"), true);
+
+                    }
+                }
+            })
+        }
+</script>

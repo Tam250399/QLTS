@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GS.WebTool</title>
+
+    <!-- Core stylesheets -->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
+
+
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
+    @*@*<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/theme-corporate.css" class="theme-settings-theme-css">
+        <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
+        <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/uikit.css">
+        <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/spinkit/spinkit.css">
+        <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.css">*@
+    <link rel="stylesheet" href="/Themes/AppWork/Content/html-demo/assets/css/demo.css">
+
+
+
+
+
+    @*<link rel="stylesheet" href="/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css">
+        <link rel="stylesheet" href="/lib/kendo/css/kendo.default-v2.min.css">
+        <link rel="stylesheet" href="/lib/kendo/custom/kendo.custom.css?v=14">*@
+
+
+    @*<script src="/Themes/AppWork/Content/assets/vendor/js/material-ripple.js"></script>
+        <script src="/Themes/AppWork/Content/assets/vendor/js/layout-helpers.js"></script>*@
+
+    <!-- Core scripts -->
+    <script src="/lib/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/js/admin.common.js"></script>
+    <link rel="stylesheet" href="~/css/admin/styles.css" />
+    @*<script src="/lib/kendo/2019.1.115/kendo.all.min.js"></script>
+        <script src="/lib/kendo/2019.1.115/cultures/kendo.culture.vi-VN.min.js"></script>
+        <script src="/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>*@
+
+
+    <!-- Libs -->
+    @*<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">*@
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/bootstrap-sweetalert/bootstrap-sweetalert.css">
+
+    @*<script>
+            function showThrobber(message) {
+                $('.throbber-header').html(message);
+                window.setTimeout(function () {
+                    $(".throbber").show();
+                }, 100);
+            }
+            function hideThrobber() {
+                $('.throbber-header').html("");
+                $(".throbber").hide();
+            }
+        </script>*@
+</head>
+<body>
+    <div class="throbber">
+        <div class="curtain">
+        </div>
+        <div class="curtain-content">
+            <div>
+                <h1 class="throbber-header"></h1>
+                <p>
+                    <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+                </p>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GS.WebTool</a>
+                Xuất dữ liệu đồng bộ
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - GS.WebTool - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <!-- Core scripts -->
+    @*<script src="/Themes/AppWork/Content/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/Themes/AppWork/Content/assets/vendor/js/bootstrap.js"></script>
+    <script src="/Themes/AppWork/Content/assets/vendor/js/sidenav.js"></script>*@
+    <!-- Libs -->
+    @*<script src="/Themes/AppWork/Content/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/chartjs/chartjs.js"></script>
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/bootbox/bootbox.js"></script>
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.js"></script>
+    <script src="/Themes/AppWork/Content/html-demo/assets/js/demo.js"></script>*@
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/bootstrap-sweetalert/bootstrap-sweetalert.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

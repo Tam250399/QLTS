@@ -1,0 +1,77 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="/css/app/throbber.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div class="throbber">
+		<div class="curtain">
+		</div>
+		<div class="curtain-content">
+			<div>
+				<h1 class="throbber-header">@T("Common.Wait...")</h1>
+				<p>
+					<img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+				</p>
+			</div>
+		</div>
+	</div>
+	<script src="/lib/jquery/jquery-3.3.1.min.js"></script>
+	@*<script src="/js/oidc-client.js"></script>*@
+	<script src="/lib/signalr/dist/browser/signalr.min.js"></script>
+	@*<script src="/js/singleSignOnApp.js"></script>*@
+	<script src="/js/admin.common.js"></script>
+	<script>
+		
+		var mgr = new Oidc.UserManager({ loadUserInfo: true, filterProtocolClaims: true, response_mode: "query" });
+		mgr.signinRedirectCallback().then(function (user) {
+			
+			// Tại thời điểm này, user đã đăng nhập thành công trên SSO.
+			// Thông tin đăng nhập đã được lưu vào trong cookie và sessionStorage của trình duyệt.
+			// Ta có thể thực hiện đăng nhập tại Web Client.
+			// Đối với MVC hoặc MVP Web Client, có thể thực hiện login tự động tại đây để hệ thống xử lý tiếp tại backend
+			// Riêng đối với Ja
+			//javascript Web Client thuần tùy tại VD này, chỉ cần redirect trở lại trang index.html
+			window.history.replaceState({},
+				window.document.title,
+				window.location.origin + window.location.pathname);
+			//tạo session trên server
+			showThrobber("Đang xử lý dữ liệu");
+			var _data = addAntiForgeryToken(JSON.parse(JSON.stringify(user)));
+			var _profile = {
+				name: _data.profile.name
+			};
+			var _data2 = {
+				access_token: _data.access_token,
+				profile:_profile
+			};
+			debugger;
+			$.ajax({
+				type: "POST",
+				beforeSend: function (request) {
+					request.setRequestHeader("Authorization", "Bearer " + user.access_token);
+				},
+				data: JSON.stringify(_data2),
+				url: '/Home/CallBackSSO',
+				contentType: "application/json;charset=UTF-8",
+				success: function (res) {
+					debugger;
+					if (res.Code == "00")
+						window.location = window.location.origin + "/AppWork/Index";
+					else logout();
+
+				}
+
+			});
+			
+		});
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+@model SuaChuaBaoDuongModel
+@{
+    //page title
+    ViewBag.Title = "Sửa chữa CCDC";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("SuaChuaCongCuDungCu");
+}
+<form asp-controller="SuaChuaBaoDuong" asp-action="Edit" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin sửa chữa CCDC
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <span id="item-delete" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            <a class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/SuaChuaBaoDuong/ChonTaiSan';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <button type="submit" name="save" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />
+
+

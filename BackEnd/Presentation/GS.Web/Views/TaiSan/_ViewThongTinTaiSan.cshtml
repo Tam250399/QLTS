@@ -1,0 +1,38 @@
+﻿@model TaiSanModel
+
+<div class="gs-form-group mb-4">
+    <h6>Thông tin chung</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-5  ">Mã tài sản: @Model.MA</label>
+        <label class="col-form-label col-sm-7  ">Tên tài sản: @Model.TEN</label>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-5  ">Đơn vị sử dụng: @Model.DonViTen</label>
+        <label class="col-form-label col-sm-7  ">Loại tài sản: @*@Model.TenLoaiTaiSanCha -*@ @Model.TenLoaiTaiSan</label>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-5  ">Người tạo: @Model.NguoiTaoTen</label>
+        @if (Model.LOAI_HINH_TAI_SAN_ID != 1)
+            {
+                <label class="col-form-label col-sm-7  ">Ngày sử dụng: @Model.NGAY_SU_DUNG.toDateVNString()</label>
+            }
+    </div>
+</div>
+<div id="listYeuCau" class="gs-form-group mb-4">
+    <h6>Danh sách biến động tài sản</h6>
+</div>
+<script>
+    $(document).ready(function () {
+        loadDanhSachYeuCau();
+    })
+    function loadDanhSachYeuCau() {
+        var _url = "@(Url.Action("_GetListYeuCauByTSId", "YeuCau"))?taisanId=" +@Model.ID + "&isTraCuu="+@Model.isTraCuu.Value.ToString().ToLower();
+        var getListYeuCau = ajaxGet(_url);
+        getListYeuCau.done(function (result) {
+            $("#listYeuCau").append(result);
+        }).fail(function (jqXHR, textStatus, errorThrow) {
+            console.log(textStatus + ": " + errorThrow);
+        });
+    };
+</script>

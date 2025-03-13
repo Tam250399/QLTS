@@ -1,0 +1,296 @@
+﻿@model QuyetDinhTichThuSearchModel
+@using GS.Core.Domain.SHTD;
+<nop-antiforgery-token />
+<div class="gs-form-group">
+    <h6>Chọn quyết định tịch thu</h6>
+    <div class="content-header clearfix">
+    </div>
+    <input asp-for="KeySearch" hidden />
+    <div class="ui-bordered px-4 pt-4 mb-4">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Số quyết định:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SoQuyetDinh" />
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Nguồn gốc:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="NguonGocTaiSanId" asp-items="@Model.DDLNguonGocTaiSan" asp-filter="true" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định từ:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayQuyetDinhTu" />
+                <span asp-validation-for="NgayQuyetDinhTu"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định đến:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayQuyetDinhDen" />
+                <span asp-validation-for="NgayQuyetDinhDen"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-5">
+            </div>
+            <div class="col-md-6">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10 d-flex align-items-center">
+            <div class="tle1">
+                <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách chọn quyết định tịch thu tài sản</span>
+            </div>
+        </div>
+        <div class="col-sm-2 text-right">
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="items-grid"></div>
+                        <script>
+                        var record = 0;
+                        var recordChildren = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    SoQuyetDinh: $('#@Html.IdFor(model => model.SoQuyetDinh)').val(),
+                                    NgayQuyetDinhTu: $('#@Html.IdFor(model => model.NgayQuyetDinhTu)').val(),
+                                    NgayQuyetDinhDen: $('#@Html.IdFor(model => model.NgayQuyetDinhDen)').val(),
+                                    NguonGocTaiSanId: $('#@Html.IdFor(model => model.NguonGocTaiSanId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                if (checkValiQuyetDinh()) {
+                                    record = 0;
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false
+                                };
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "QuyetDinhTichThu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TEN', title: 'Tên quyết định',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template :'<a href="/XuLy/Create?LoaiXuLy=@Model.LoaiXuLy&listID=#=ID#">#=TEN#</a>'
+                                    },
+                                    {
+                                        field: 'QUYET_DINH_SO', title: 'Số quyết định',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'QUYET_DINH_NGAY', title: 'Ngày quyết định', template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" }
+                                    },
+                                    {
+                                        field: 'CO_QUAN_BAN_HANH_TEN', title: 'Thuộc Bộ/Tỉnh',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" },
+                                        template: kendo.template($("#btn_template_parent").html())
+                                    }
+                                ]
+                            });
+                            function detailInit(e) {
+                                recordChildren =0;
+                                $('tr[data-uid="' + e.masterRow[0].dataset.uid + '"]').addClass("row-class");
+                                var data = {
+                                    QuyetDinhId: e.data.ID,
+                                };
+                                addAntiForgeryToken(data);
+                                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("List", "TaiSanTd"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: data
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: false,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    dataBinding: function() {
+                                      recordChildren = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                    editable: {
+                                        confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                        mode: "inline"
+                                    },
+
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            title: "STT",
+                                            template: "#= ++recordChildren #",
+                                            width: 50,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: 'TEN', title: 'Tên tài sản',
+                                            headerAttributes: { style: "text-align:center" }
+                                        },
+                                        {
+                                            field: 'TenLoaiTaiSan', title: 'Loại tài sản',
+                                            headerAttributes: { style: "text-align:center" }
+                                        },
+                                        {
+                                            field: 'GiaTri', title: 'Tổng giá trị tịch thu/ xác lập',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right;" }
+                                        },
+                                        {
+                                            field: 'SO_LUONG', title: 'Số lượng/ Khối lượng/ Diện tích',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right;" }
+                                        },
+                                        {
+                                            field: 'TenNguonGoc', title: 'Nguồn gốc',
+                                            headerAttributes: { style: "text-align:center" }
+                                        }
+
+                                    ]
+                                });
+                            };
+                        });
+                        $(".k-hierarchy-cell").click(function () { console.log(this) });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <style>
+        .k-grid tr.k-state-selected > td {
+            background-color: #e9fffd !important;
+        }
+
+        .row-class {
+            background-color: aliceblue !important;
+        }
+    </style>
+    <script type="text/x-kendo-template" id="btn_template_parent">
+        <div style="align-content:center">
+            <input type="checkbox" name="check" onclick="GetChecked(event)" value="#:ID#">
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="loaitaisan">
+        <span data-toggle="tooltip" data-placement="top" data-state="primary" data-original-title="#:TenLoaiHinhTaiSan#">#:TenLoaiTaiSan#</span>
+    </script>
+    <script>
+        var listQuyetDinhID = [];
+        function GetChecked(e) {
+            if (e.target.checked) {
+                listQuyetDinhID.push(e.target.value);
+            }
+            else {
+                const index = list.indexOf(e.target.value);
+                if (index > -1) {
+                    list.splice(index, 1);
+                }
+            }
+
+        }
+        function checkValiQuyetDinh() {
+            var check = true;
+            if (!checkValidateDateFormat("#NgayQuyetDinhTu", "NgayQuyetDinhTu", "Nhập sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateDateFormat("#NgayQuyetDinhDen", "NgayQuyetDinhDen", "Nhập sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateFromDateToDate("#NgayQuyetDinhTu", "#NgayQuyetDinhDen", "NgayQuyetDinhTu", "Ngày quyết định từ phải nhỏ hơn ngày quyết định đến")) {
+                check = false;
+            }
+            return check;
+        }
+    </script>

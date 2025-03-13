@@ -1,0 +1,64 @@
+﻿@model HaoMonTaiSanModel
+@{
+  Html.SetActiveMenuItemSystemName("DieuChinhHaoMon");
+}
+<div class="gs-form-group mb-4">
+    <div class="alert alert-success " style="display:none"  role="alert" id='alertHaoMon'> </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-1 text-sm-left" style="padding-left: 10px">Mã đơn vị:</label>
+        <div class="col-sm-11">
+            <nop-editor asp-for="TAI_SAN_TEN" id="MaDonVi" />
+        </div>
+    </div>  
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px;">
+        <i class="fas fa-save"></i>
+        Chốt Hao mòn
+    </button>
+</div>
+<script>
+        $(function () {
+            $('#btnSave').on('click', () => {
+                let _data = {
+                                   
+                }
+                 $('#alertHaoMon').hide();
+                var maDonVi = $('#MaDonVi').val();
+                showThrobber("Đang chốt hao mòn...");
+                try {
+                    $.ajax({
+                    type: "POST",
+                    data: _data,
+                    url: `/HaoMon/ChotHaoMonTaiSanDonVi?maDonVi=${maDonVi}`,
+                    success: function (msg) {
+                        hideThrobber();
+                        $('#alertHaoMon').show();
+                         $('#alertHaoMon').text(msg.Message);
+                        if (msg.Code == "00") {
+                            ShowSuccessMessage(msg.Message);
+                        }
+                        else {
+                           showErrorMessage(msg.Message);
+                           console.log(msg.Message);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                         hideThrobber();
+                         $('#alertHaoMon').show();
+                         $('#alertHaoMon').text(thrownError);
+                        console.log(thrownError);
+                    }
+                });
+                }catch(ex){
+                hideThrobber();
+                showErrorMessage('Có lỗi xảy ra');
+                $('#alertHaoMon').show();
+                $('#alertHaoMon').text('Có lỗi xảy ra');
+                }
+                
+
+            })
+        })
+
+</script>

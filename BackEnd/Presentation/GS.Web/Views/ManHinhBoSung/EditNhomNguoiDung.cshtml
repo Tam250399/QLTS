@@ -1,0 +1,117 @@
+﻿@model VaiTroModel
+
+@{
+	//page title
+	ViewBag.Title = "Nhóm người dùng";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("NhomNguoiDung");
+}
+<input hidden asp-for="ID" />
+<form asp-controller="VaiTro" asp-action="Edit" method="post">
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Sửa thông tin nhóm người dùng
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="ListNhomNguoiDung">Quay lại danh sách</a>
+			</small>
+			<span id="store-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash"></i>
+				Xóa
+			</span>
+			<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+				<i class="far fa-save"></i>
+				Lưu và tiếp tục sửa
+			</button>
+			<button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h6>
+		<div class="card-body">
+			@await Html.PartialAsync("_CreateOrUpdateVaiTro", Model)
+		</div>
+	</div>
+</form>
+<script>
+    var MangQuyenId = [];
+    var lstIdquyen = MangQuyenId;
+    var MangNguoiDungId = [];
+    var lstIdnguoiDung = MangQuyenId;
+
+    function loadQuyen(e) {
+        var quyenId = $(e).attr("data-id");
+        $(e).hide();
+        $(e).replaceWith('<i class="fas fa-check d-block"></i>');
+        var _dataquyenVaitro = {
+            ID: $('#@Html.IdFor(c => c.ID)').val(),
+            QUYEN_ID: quyenId
+
+        };
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "/Vaitro/_Addquyen?quyenId=?ID=" + quyenId + ID,
+            data: _dataquyenVaitro,
+            success: function (data) {
+                $("#Addquyen").append(data);
+            }
+        });
+    }
+
+    function RemoveQuyen(e) {
+        var index = lstIdquyen.indexOf(e);
+        lstIdquyen.splice(index, 1);
+        $(e).hide();
+        var quyenId = $(e).attr("data-id");
+        $("#goquyen_"+quyenId).remove();
+        var _data = {
+            ID: $('#@Html.IdFor(c=>c.ID)').val(),
+            QUYEN_ID: quyenId
+        };
+        $.ajax({
+            type: "POST",
+            url: "/VaiTro/_deleteQuyenvaitro?quyenId=?" + quyenId,
+            data: _data,
+            });
+    };
+
+    function loadNguoidung(e) {
+        var nguoiDungId = $(e).attr("data-id");
+        $(e).hide();
+        $(e).replaceWith('<i class="fas fa-check d-block"></i>');
+        var _datannguoidungVaitro = {
+            ID: $('#@Html.IdFor(c => c.ID)').val(),
+            NGUOI_DUNG_ID: nguoiDungId
+
+        };
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "/Vaitro/_AddNguoiDung?nguoiDungId=?ID=" + nguoiDungId + ID,
+            data: _datannguoidungVaitro,
+            success: function (data) {
+                $("#AddNguoiDung").append(data);
+            }
+        });
+    }
+    function RemoveNguoidung(e) {
+        var index = lstIdnguoiDung.indexOf(e);
+        lstIdnguoiDung.splice(index, 1);
+        $(e).hide();
+        var nguoiDungId = $(e).attr("data-id");
+        $("#gonguoidung_" + nguoiDungId).remove();
+        var _data = {
+            ID: $('#@Html.IdFor(c=>c.ID)').val(),
+            NGUOI_DUNG_ID: nguoiDungId
+                    //lstQuyen đổi thành quyền ID QUYEN_ID: quyenId,
+        };
+        $.ajax({
+            type: "POST",
+            url: "/VaiTro/_deleteNguoiDungvaitro?nguoiDungId=?" + nguoiDungId,
+            data: _data,
+            });
+    };
+</script>
+
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="store-delete"  />

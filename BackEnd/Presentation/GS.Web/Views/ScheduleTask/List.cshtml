@@ -1,0 +1,235 @@
+@model ScheduleTaskSearchModel
+@{
+    //page title
+    ViewBag.Title = "ScheduleTask";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ScheduleTask");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fa fa-plus-square"></i>
+                Thêm mới
+            </a>
+        </div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;">
+     <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>   
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    @*<script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {field: 'NAME',title: 'NAME'},
+                                    {field: 'SECONDS',title: 'SECONDS'},
+                                    {field: 'ENABLED',title: 'ENABLED'},
+                                    {field: 'STOP_OR_ERROR',title: 'STOP_OR_ERROR'},
+                                    { field: 'LAST_START', title: 'Bắt đầu', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date",},
+                                    { field: 'LAST_END', title: 'Kết thúc', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date",},
+                                    { field: 'LAST_SUCCESS', title: 'Hoàn thành', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date",},
+                                    {field: 'TYPE',title: 'TYPE'},
+                                {
+                                    field: "ID",
+                                    title: "Sửa",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'}
+                                ]
+                            });
+                        });
+                    </script>*@
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        },
+                                        @*create: {
+                                            url: "@Html.Raw(Url.Action("TaoMoi", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },*@
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("CapNhat", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("Delete", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ID",
+                                            fields: {
+                                                MA: { editable: true, type: "string" },
+                                                GIA_TRI: { editable: true, type: "string" },
+                                                ID: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update" || e.type == "create" || e.type == "destroy") {
+
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                //toolbar: [{
+                                //    name: "create", text: "Tạo mới",
+
+                                //}],
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    { field: 'NAME', title: 'NAME' },
+                                    { field: 'SECONDS', title: 'SECONDS' },
+                                    { field: 'ENABLED', title: 'ENABLED' },
+                                    { field: 'STOP_OR_ERROR', title: 'STOP_OR_ERROR' },
+                                    { field: 'LAST_START', title: 'Bắt đầu', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date", },
+                                    { field: 'LAST_END', title: 'Kết thúc', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date", },
+                                    { field: 'LAST_SUCCESS', title: 'Hoàn thành', format: "{0:dd/MM/yyyy HH:mm:ss}", type: "Date", }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200,
+                                        headerAttributes: { style: "text-align:center" },
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

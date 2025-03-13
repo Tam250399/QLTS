@@ -1,0 +1,180 @@
+﻿@{
+    //page title
+    ViewBag.Title = "Đồng bộ CCDC";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DongBo");
+}
+<div class="card">
+    <div class="card-header">
+        Nhập file CCDC
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportExcelCCDC" asp-controller="DongBo" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file CCDC<i style="color:red"> (*.json)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file json</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success"> Đồng bộ CCDC</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div id="CCDC">
+    Danh sách CCDC đã đồng bộ thành công
+    <div id="TaiSanCCDC-success-grid">
+    </div>
+    Danh sách CCDC đã đồng bộ thất bại
+    <a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+    <div id="TaiSanCCDC-error-grid">
+    </div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnDongBo").click(function (evt) {
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/ImportExcelCCDC",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+                console.log(result);
+                $('#CCDC').show();
+                if (result.success) {
+                    TaiSanCCDCSuccess(result.ListSuccess);
+                    hideThrobber();
+                }
+                else {
+                    if (result.ListSuccess == undefined) {
+                        ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                        hideThrobber();
+                    }
+                    else {
+                        TaiSanCCDCSuccess(result.ListSuccess);
+                        TaiSanCCDCError(result.ListError);
+                        $("#downloadListErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                        hideThrobber();
+                    }
+                }
+
+            },
+            error: function () {
+                alert("there was error uploading files!");
+            }
+        });
+    });
+    function TaiSanCCDCSuccess(data) {
+        var dataSuccess = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10
+        });
+        console.log(dataSuccess);
+        var record = 1;
+        $("#TaiSanCCDC-success-grid").kendoGrid({
+            dataSource: dataSuccess,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        return record++;
+                    }
+                },
+                {
+                    title: 'Mã CCDC',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên CCDC',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    //attributes: { style: "text-align:center" },
+                },
+
+            ]
+        });
+
+    }
+    function TaiSanCCDCError(data) {
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10
+        });
+        var record = 1;
+        $("#TaiSanCCDC-error-grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        return record++;
+                    }
+                },
+                {
+                    title: 'Mã CCDC',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên CCDC',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ghi chú',
+                    field: 'Message',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#CCDC').hide();
+    })
+</script>

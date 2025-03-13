@@ -1,0 +1,156 @@
+﻿@model NguoiDungModel
+@using GS.Core.Infrastructure;
+@{
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+    var currentCustomer = _workcontext.CurrentCustomer;
+}
+@if (Model.ID > 0)
+{
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label class="col-form-label text-sm-right text-required" style="width:100%">Tên đăng nhập: </label>
+        </div>
+        <div class="col-md-10 text-sm-left">
+            <nop-editor asp-for="TEN_DANG_NHAP" asp-disabled="true" />
+            <span asp-validation-for="TEN_DANG_NHAP"></span>
+            <span class="field-validation-error" id='checkname' style="display:none" data-valmsg-for="TEN_DANG_NHAP" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label class="col-form-label text-sm-right text-required" style="width:100%">Tên đăng nhập: </label>
+        </div>
+        <div class="col-md-10 text-sm-left">
+            <nop-editor asp-for="TEN_DANG_NHAP" />
+            <span asp-validation-for="TEN_DANG_NHAP"></span>
+            <span class="field-validation-error" id='checkname' style="display:none" data-valmsg-for="TEN_DANG_NHAP" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+}
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right text-required" style="width:100%">Tên đầy đủ: </label>
+    </div>
+    <div class="col-md-10 text-sm-left">
+        <nop-editor asp-for="TEN_DAY_DU" />
+        <span asp-validation-for="TEN_DAY_DU"></span>
+        <span class="field-validation-error" id='checkfullname' style="display:none" data-valmsg-for="TEN_DAY_DU" data-valmsg-replace="true"></span>
+    </div>
+</div>
+
+@if (!(Model.ID > 0))
+{
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label class="col-form-label text-sm-right text-required" style="width:100%">Mật khẩu: </label>
+        </div>
+        <div class="col-md-10 text-sm-left">
+            <nop-editor asp-for="MAT_KHAU" type="Password" />
+            <span asp-validation-for="MAT_KHAU"></span>
+            <span class="field-validation-error" id='checkpass' style="display:none" data-valmsg-for="MAT_KHAU" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+}
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right" style="width:100%">Nhóm người dùng: </label>
+    </div>
+    <div class="col-md-10">
+        <nop-select asp-for="SelectedVaiTro" asp-items="Model.ListVaiTroIds" asp-multiple="true" />
+        <script>
+                    $(document).ready(function() {
+                        var rolesIdsInput =
+                            $('#@Html.IdFor(model => model.SelectedVaiTro)')
+                                .data("kendoMultiSelect");
+                        rolesIdsInput.setOptions({
+                            autoClose: true,
+                            filter: "contains"
+                        });
+
+                        @if (Model.ListVaiTroIds.Count == 0)
+                        {
+                            <text>
+                                rolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder:
+                                        'Chọn vai trò ...'
+                                });
+                                rolesIdsInput._placeholder();
+                                rolesIdsInput._enable();
+                            </text>
+                        }
+                    });
+        </script>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right text-required" style="width:100%">Email: </label>
+    </div>
+    <div class="col-md-10 text-sm-left">
+        <nop-editor asp-for="EMAIL" placeholder="QLTSC@gmail.com">
+            <span asp-validation-for="EMAIL"></span>
+            <span class="field-validation-error" id='checkemail' style="display:none" data-valmsg-for="EMAIL" data-valmsg-replace="true"></span>
+</div>
+</div>
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right" style="width:100%">Số điện thoại: </label>
+    </div>
+    <div class="col-md-10">
+        <nop-editor asp-for="MOBILE" />
+    </div>
+</div>
+
+@*<div class="form-group row">
+        <div class="col-md-2 ">
+            <label class="col-form-label text-sm-right" style="width:100%">Trạng thái: </label>
+        </div>
+        <div class="col-md-4  form-group">
+            <app-select asp-for="TRANG_THAI_ID" asp-items="Model.LIST_TRANG_THAI" />
+        </div>
+    </div>*@
+@if (currentCustomer.IS_QUAN_TRI == true)
+{
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Quản trị</label>
+        <label class="custom-control custom-checkbox" style="margin-left: 12px;">
+            @Html.CheckBoxFor(c => c.IS_QUAN_TRI, new { @class = "custom-control-input" })
+            <span class="custom-control-label"><small></small></span>
+        </label>
+    </div>
+}
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right" style="width:100%">Ghi chú: </label>
+    </div>
+    <div class="col-md-10">
+        <app-textarea asp-for="GHI_CHU" />
+        <span asp-validation-for="GHI_CHU"></span>
+    </div>
+</div>
+<script>
+    $(function () {
+        ddlTrangThai = $("#TRANG_THAI_ID").data("kendoDropDownList");
+        if (ddlTrangThai) {
+            ddlTrangThai.select(0);
+        }
+    });
+    @*$('#@Html.IdFor(model => model.TEN_DANG_NHAP)').change(function () {
+        let _data= {
+            name: $('#@Html.IdFor(model => model.TEN_DANG_NHAP)').val()
+        }
+        let _url = '@Url.Action("Check_username", "NguoiDung")'
+        ajaxPost(_data, _url).done(function (res) {
+            $('#checkname').hide();
+        })
+        .fail(function (res) {
+            $('#checkname').show();
+            $('#checkname').text('Tên đăng nhập đã tồn tại');
+        });
+    });*@
+</script>

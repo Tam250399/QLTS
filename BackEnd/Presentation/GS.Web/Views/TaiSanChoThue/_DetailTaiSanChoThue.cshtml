@@ -1,0 +1,117 @@
+﻿@model TaiSanChoThueModel
+<div class="font-weight-bold mb-2">Thông tin chung:</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Mã tài sản:</td>
+					<td>
+						@Model.MaTaiSan
+					</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Loại tài sản:</td>
+					<td>@Model.LoaiHinhTaiSan</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Tên tài sản:</td>
+					<td>@Model.TenTaiSan</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Tên đơn vị:</td>
+					<td>@Model.DonViSuDungTaiSan</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+<hr />
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Văn bản thỏa thuận số:</td>
+					<td>
+						@Model.HOP_DONG_SO
+					</td>
+				</tr>
+				@*<tr>
+			<td class="pr-3">Chứng từ/hóa đơn số:</td>
+			<td>@Model.HOA_DON_SO</td>
+		</tr>*@
+				<tr>
+					<td class="pr-3">Sử dụng chung từ ngày:</td>
+					<td>@Model.NGAY_CHO_THUE_FROM.toDateVNString()</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Đơn vị sử dụng chung:</td>
+					<td>@Model.TenDoiTac</td>
+				</tr>
+				<tr>
+					<td class="pr-3">Diễn Giải:</td>
+					<td>
+						@Model.GHI_CHU
+					</td>
+				</tr>
+				@*<tr>
+			<td class="pr-3">Đơn giá cho thuê/tháng:</td>
+			<td>@Model.DON_GIA_CHO_THUE.ToVNStringNumber() vnd</td>
+		</tr>
+		<tr>
+			<td class="pr-3">Nộp ngân sách:</td>
+			<td>@Model.NOP_NGAN_SACH.ToVNStringNumber() vnd</td>
+		</tr>*@
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Hợp đồng ngày:</td>
+					<td>
+						@Model.HOP_DONG_NGAY.toDateVNString()
+					</td>
+				</tr>
+				@*<tr>
+					<td class="pr-3">Chứng từ/hóa đơn ngày:</td>
+					<td>@Model.HOA_DON_NGAY.toDateVNString()</td>
+				</tr>*@
+				<tr>
+					<td class="pr-3">Đến ngày:</td>
+					<td>@Model.NGAY_CHO_THUE_TO.toDateVNString()</td>
+				</tr>
+				<tr>
+					<td class="pr-3"><br /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="pr-3">Chi phí sử dụng chung:</td>
+					<td>@Model.THU_TU_CHO_THUE.ToVNStringNumber() vnd</td>
+				</tr>
+				@*<tr>
+					<td class="pr-3">Giữ lại đơn vị:</td>
+					<td>@Model.GIU_LAI_DON_VI.ToVNStringNumber() vnd</td>
+				</tr>*@
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12 mb-4">
+		<table>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+</div>

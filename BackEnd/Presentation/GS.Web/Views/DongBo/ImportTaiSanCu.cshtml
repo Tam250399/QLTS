@@ -1,0 +1,601 @@
+﻿@model DongBoTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Import tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportTaiSan40");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+        Nhập file Tài sản DKTS4.0
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="DongBoTaiSanFromFile" asp-controller="DongBo" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Chọn loại Tài sản</label>
+                        <nop-select asp-for="LoaiTaiSan" asp-items="Model.ddlLoaiTaiSan" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file Tài sản</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success"> Đồng bộ tài sản</button>
+            <button type="button" id="btnMapNhaDat" class="btn btn-success">Map Nhà đất</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Nhập file Tài sản DKTS4.0
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="form-label">Đường dẫn</label>
+
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control" id="inputDirectory" placeholder="Nhập đường dẫn thư mục tài sản" type="text" value="">
+                </div>
+            </div>
+        </div>
+        <button type="button" id="btnDongBoDirectory" class="btn btn-success"> Đồng bộ tài sản</button>
+        <br />
+        <span id="logTimeDirectory"></span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Insert files to temp
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-10">
+                    <input name="files" id="files" type="file" accept="application/JSON" />
+                    <div class="dropZoneElement">Drag and drop file here</div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $("#files").kendoUpload({
+                            async: {
+                                saveUrl: "SaveFiles",
+                                removeUrl: "RemoveFiles"
+                            },
+                            directory: true,
+                            upload: onUpload
+                        });
+                        function onUpload(e) {
+                            var files = e.files;
+
+                            $.each(files, function () {
+                                if (this.extension.toLowerCase() != ".json") {
+                                    e.preventDefault();
+                                }
+                            });
+                        }
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import DbTaiSan
+    </div>
+    <div class="card-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file Tài sản</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="fileDbTaiSan" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBoDBTAISAN" class="btn btn-success"> Import DbTaiSan</button>
+            <br />
+            <span id="logTimeDbTaiSan"></span>
+            <script>
+                $(document).ready({});
+                $("#btnDongBoDBTAISAN").click(function (evt) {
+                    $('#logTaiSan').empty();
+                    var d = new Date();
+                    var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+                        ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                        d.getFullYear() + " " +
+                        ("0" + d.getHours()).slice(-2) + ":" +
+                        ("0" + d.getMinutes()).slice(-2) + ":" +
+                        ("0" + d.getSeconds()).slice(-2);
+                    evt.preventDefault();
+                    var fileupload = $("#fileDbTaiSan").get(0);
+                    var file = fileupload.files;
+                    var data = new FormData();
+                    data.append("file", file[0]);
+                    showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+                    $.ajax({
+                        type: "post",
+                        url: "/DongBo/DongBoDbTaiSanFromFile",
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            d = new Date();
+                            logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                                ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                                d.getFullYear() + " " +
+                                ("0" + d.getHours()).slice(-2) + ":" +
+                                ("0" + d.getMinutes()).slice(-2) + ":" +
+                                ("0" + d.getSeconds()).slice(-2);
+                            $("#logTimeDbTaiSan").html(logTime);
+                                $('#listlogTaiSan').show();
+                                $('#logTaiSan').html(JSON.stringify(result));
+                                hideThrobber();
+                        },
+                        error: function () {
+                            hideThrobber();
+                            $("#logTimeDbTaiSan").html("");
+                            ShowErrorMessage("đã xảy ra lỗi khi tải tệp lên!");
+                        }
+                    });
+                });
+                </script>
+    </div>
+</div>
+<div id="ToanDan">
+    Danh sách quyết định đã Nhập thành công
+    <div id="TaiSanToanDan-success-grid">
+
+    </div>
+    Danh sách quyết định đã Nhập thất bại
+    <a href="#" id="downloadListTSTDErr"><i class="fas fa-download"></i></a>
+    <div id="TaiSanToanDan-error-grid">
+    </div>
+
+</div>
+<div id="NhaNuoc">
+    Danh sách Tài sản đã Nhập thành công
+    <div id="TaiSanNhaNuoc-success-grid">
+    </div>
+    Danh sách Tài sản đã Nhập thất bại
+    <a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+    <div id="TaiSanNhaNuoc-error-grid">
+    </div>
+</div>
+<div id="listlogTaiSan">
+    <input type="button" id="showorhidelog" style="cursor: pointer;" value="xem log" />
+    <p id="logTaiSan" style="overflow: auto; height:400px"></p>
+</div>
+<script>
+    var sshow = false;
+    $(document).ready(
+        function () {
+            $('#listlogTaiSan').hide();
+            $('#logTaiSan').hide();
+        });
+    $("#showorhidelog").click(function () {
+        if (sshow) {
+            document.getElementById("showorhidelog").value = "xem log";
+            $('#logTaiSan').hide();
+            sshow = false;
+        } else {
+            document.getElementById("showorhidelog").value = "ẩn log";
+            $('#logTaiSan').show();
+            sshow = true;
+        }
+    });
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+    $("#btnMapNhaDat").click(function () {
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "ExcuteMapTSNhaDat",
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.Code == "01")
+                    ShowErrorMessage(result.Message);
+                else
+                    ShowSuccessMessage(result.Message);
+                hideThrobber();
+            },
+            error: function () {
+                ShowErrorMessage("Lỗi xử lý");
+                hideThrobber();
+            }
+        });
+    });
+    $("#btnDongBo").click(function (evt) {
+        $('#TaiSanToanDan-success-grid').empty();
+        $('#TaiSanToanDan-error-grid').empty();
+        $('#TaiSanNhaNuoc-success-grid').empty();
+        $('#TaiSanNhaNuoc-error-grid').empty();
+        $('#logTaiSan').empty();
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        data.append("LoaiTaiSan", $('#LoaiTaiSan').val());
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoTaiSanFromFile",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+                if ($('#LoaiTaiSan').val() == '3') {
+                    console.log(result);
+                    $('#listlogTaiSan').show();
+                    $('#logTaiSan').html(JSON.stringify(result));
+                    hideThrobber();
+                }
+                if ($('#LoaiTaiSan').val() == '1') {
+                    $('#ToanDan').show();
+                    $('#NhaNuoc').hide();
+                    if (result.success) {
+                        TaiSanToanDanSuccess(result.ListSuccess);
+                        hideThrobber();
+                    }
+                    else {
+                        TaiSanToanDanSuccess(result.ListSuccess);
+                        TaiSanToanDanError(result.ListError);
+                        $("#downloadListTSTDErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                        hideThrobber();
+                    }
+                }
+                if ($('#LoaiTaiSan').val() == '2') {
+                    $('#ToanDan').hide();
+                    $('#NhaNuoc').show();
+                    if (result.success) {
+                        TaiSanNhaNuocSuccess(result.ListSuccess);
+                        hideThrobber();
+                    }
+                    else {
+                        if (result.ListSuccess == undefined) {
+                            ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                            hideThrobber();
+                        }
+                        else {
+                            TaiSanNhaNuocSuccess(result.ListSuccess);
+                            TaiSanNhaNuocError(result.ListError);
+                            $("#downloadListErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                            hideThrobber();
+                        }
+
+                    }
+                }
+
+            },
+            error: function () {
+                hideThrobber();
+                $("#logTime").html("");
+                ShowErrorMessage("đã xảy ra lỗi khi tải tệp lên!");
+            }
+        });
+    });
+
+    $("#btnDongBoDirectory").click(function (evt) {
+        $('#TaiSanToanDan-success-grid').empty();
+        $('#TaiSanToanDan-error-grid').empty();
+        $('#TaiSanNhaNuoc-success-grid').empty();
+        $('#TaiSanNhaNuoc-error-grid').empty();
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var _data = {
+            pathFolder: $('#inputDirectory').val()
+        };
+        console.log(_data);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/DongBoTaiSanFromFileDirectory",
+            data: _data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTimeDirectory").html(logTime);
+                if ($('#LoaiTaiSan').val() == '1') {
+                    $('#ToanDan').show();
+                    $('#NhaNuoc').hide();
+                    if (result.success) {
+                        TaiSanToanDanSuccess(result.ListSuccess);
+                        hideThrobber();
+                    }
+                    else {
+                        TaiSanToanDanSuccess(result.ListSuccess);
+                        TaiSanToanDanError(result.ListError);
+                        $("#downloadListTSTDErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                        hideThrobber();
+                    }
+                }
+                if ($('#LoaiTaiSan').val() == '2') {
+                    $('#ToanDan').hide();
+                    $('#NhaNuoc').show();
+                    if (result.success) {
+                        TaiSanNhaNuocSuccess(result.ListSuccess);
+                        hideThrobber();
+                    }
+                    else {
+                        if (result.ListSuccess == undefined) {
+                            ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                            hideThrobber();
+                        }
+                        else {
+                            TaiSanNhaNuocSuccess(result.ListSuccess);
+                            TaiSanNhaNuocError(result.ListError);
+                            $("#downloadListErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                            hideThrobber();
+                        }
+
+                    }
+                }
+
+            },
+            error: function () {
+                $("#logTimeDirectory").html("");
+                ShowErrorMessage("đã xảy ra lỗi khi tải tệp lên!");
+            }
+        });
+    });
+    function TaiSanToanDanSuccess(data) {
+        var record = 1;
+        var dataSuccess = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        $("#TaiSanToanDan-success-grid").kendoGrid({
+            dataSource: dataSuccess,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#TaiSanToanDan-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#TaiSanToanDan-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Số quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_SO',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ngày quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_NGAY',
+                    template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    attributes: { style: "text-align:center" },
+                },
+
+            ]
+        });
+
+    }
+    function TaiSanToanDanError(data) {
+        var record = 1;
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10,
+            change: function (e) {
+                record = 1;
+            }
+        });
+        $("#TaiSanToanDan-error-grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#TaiSanToanDan-error-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#TaiSanToanDan-error-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Số quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_SO',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ngày quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_NGAY',
+                    template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ghi chú',
+                    field: 'Message',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    function TaiSanNhaNuocSuccess(data) {
+        var record = 1;
+        //var _dataSource = new kendo.data.DataSource({
+        //    data: data,
+        //    pageSize: 10,
+        //    change: function (e) {
+        //        record = 1;
+        //    }
+        //});
+        $("#TaiSanNhaNuoc-success-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#TaiSanNhaNuoc-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#TaiSanNhaNuoc-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã tài sản',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mã tài sản đồng bộ',
+                    field: 'TaiSanDongBoApi.DB_MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên tài sản',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    //attributes: { style: "text-align:center" },
+                },
+
+            ]
+        });
+
+    }
+    function TaiSanNhaNuocError(data) {
+        var record = 1;
+        //var _dataSource = new kendo.data.DataSource({
+        //    data: data,
+        //    pageSize: 10,
+        //    change: function (e) {
+        //        record = 1;
+        //    }
+        //});
+        $("#TaiSanNhaNuoc-error-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#TaiSanNhaNuoc-error-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#TaiSanNhaNuoc-error-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã tài sản',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên tài sản',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mã tài sản đồng bộ',
+                    field: 'TaiSanDongBoApi.DB_MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ghi chú',
+                    field: 'Message',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#ToanDan').hide();
+        $('#NhaNuoc').hide();
+    })
+</script>

@@ -1,0 +1,238 @@
+﻿@model GiamDieuChuyenSearchModel
+@{
+    //page title
+    ViewBag.Title = "Giảm công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GiamCongCuDungCu");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    @*<h5 class="pull-left">
+        @ViewBag.Title
+    </h5>*@
+    <small>
+        <i class="fa fa-arrow-circle-left"></i>
+        <a asp-action="List">Quay lại danh sách</a>
+    </small>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchCongCu">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ phận sử dụng:</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="DonViBoPhanId" asp-items="Model.DDLDonViBoPhan" asp-filter="true" />
+        </div>      
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách chọn công cụ, dụng cụ</span>
+        </div>
+    </div>
+    <div class="col-sm-2 text-right">
+        <button type="button" class="btn btn-sm btn-outline-primary" onclick="Navigate()">+ Giảm CCDC</button>
+    </div>
+</div>
+<div class="content">
+    <div class="form-group row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+           
+            <script>
+				function Navigate() {
+					var allSelected = $("#list-congcu-grid tr.k-state-selected");
+					var allSelectedModels = [];
+					$.each(allSelected, function (e) {
+						var row = $(this);
+						var grid = row.closest(".k-grid").data("kendoGrid");
+                        var dataItem = grid.dataItem(row);
+                        allSelectedModels.push(dataItem.MapId);
+					});
+					if (allSelectedModels.length > 0) {
+						var StringId = allSelectedModels.join(',');
+						window.location.href = '/GiamCongCu/Create?StringId=' + StringId;
+					} else {
+						ShowErrorMessage("Không có công cụ, dụng cụ được chọn!");
+					}
+                }
+            </script>
+        </div>
+    </div>
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="list-congcu-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    DonViBoPhanId: $("#DonViBoPhanId").val(),
+                                    
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchCongCu").click(function () {
+                                var grid = $('#list-congcu-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+								record = 0;
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchCongCu").click();
+                                    return false;
+                                }
+                            });
+                            var grid = $("#list-congcu-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ChonTaiSan", "GiamCongCu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+								dataBinding: function () {
+									record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+                                scrollable: false,
+                                columns: [
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+                                    { field: 'MaLoCongCuText', title: 'Mã lô CCDC' },
+                                    { field: 'MaCongCuText', title: 'Mã CCDC' },
+                                    { field: 'TenCongCuText', title: 'Tên CCDC' },
+                                    { field: 'SoLuongText',attributes: { style: "text-align:right" }, title: 'Số lượng' },
+                                    { field: 'NhomCongCuText', title: 'Nhóm CCDC' },
+                                    { field: 'DonGiaText',attributes: { style: "text-align:right" }, title: 'Đơn giá' },
+                                    { field: 'BoPhanSuDungText', title: 'Bộ phận sử dụng' },
+                                    {
+                                        field: "MapId",
+                                        title: "Select All",
+										headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											//if (dataItem.isCanDuyet) {
+											return "<input type='checkbox' id='" + dataItem.MapId + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.MapId + "'></label>";
+											//}
+											//else {
+											//    return "";
+											//}
+										}
+                                    }
+                                ]
+                            }).data("kendoGrid");
+							//bind click event to the checkbox
+							grid.table.on("click", ".row-checkbox", selectRow);
+							$('#header-chb').change(function (ev) {
+								var checked = ev.target.checked;
+								$('.row-checkbox').each(function (idx, item) {
+									if (checked) {
+										if (!($(item).closest('tr').is('.k-state-selected'))) {
+											$(item).click();
+										}
+									} else {
+										if ($(item).closest('tr').is('.k-state-selected')) {
+											$(item).click();
+										}
+									}
+								});
+							});
+                        });
+						var checkedIds = {};
+						//on click of the checkbox:
+						function selectRow() {
+							var checked = this.checked,
+								row = $(this).closest("tr"),
+								grid = $("#list-congcu-grid").data("kendoGrid"),
+								dataItem = grid.dataItem(row);
+							checkedIds[dataItem.ID] = checked;
+							if (checked) {
+								//-select the row
+								row.addClass("k-state-selected");
+								var checkHeader = true;
+								var ListItem = [];
+								var ind = 0;
+								$.each(grid.items(), function (index, item) {
+									if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+										ListItem.push(item);
+									}
+								});
+								for (var i = 0; i < ListItem.length; i++) {
+									if (!$(ListItem[i]).hasClass("k-state-selected")) {
+										checkHeader = false;
+										break;
+									}
+								}
+							}
+							else {
+								//-remove selection
+								row.removeClass("k-state-selected");
+								$("#header-chb")[0].checked = false;
+								var allSelected = $("#items-grid tr.k-state-selected");
+							}
+						}
+						function onDataBound(e) {
+							//onDataBoundFixed(this);
+							var view = this.dataSource.view();
+							for (var i = 0; i < view.length; i++) {
+								if (checkedIds[view[i].ID]) {
+									this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+										.addClass("k-state-selected")
+										.find(".k-checkbox")
+										.attr("checked", "checked");
+								}
+							}
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

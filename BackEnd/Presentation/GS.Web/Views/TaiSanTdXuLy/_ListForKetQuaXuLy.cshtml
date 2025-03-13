@@ -1,0 +1,290 @@
+﻿@model TaiSanTdXuLySearchModel
+
+
+<nop-antiforgery-token />
+<div class="gs-form-group">
+    <h6>Cập nhật kết quả xử lý tài sản xác lập</h6>
+    <div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;display:none">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+            <div class="col-sm-8">
+                <nop-editor asp-for="KeySearch" />
+                <input asp-for="XuLyId" hidden />
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="items-grid"></div>
+                        <script>
+                            kendo.culture("vi-VN");
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    XuLyId: $('#@Html.IdFor(model => model.XuLyId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                record = 0;
+                                var grid = $('#items-grid').data('kendoGrid');
+                                var Page = grid.dataSource.page();
+                                //var PageSize = grid.dataSource.pageSize();
+                                grid.dataSource.page(Page);
+                                //grid.dataSource.pageSize(PageSize);
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanTdXuLy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TenTaiSan', title: 'Tên tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:"#=TenTaiSan + ' (' + SoLuongBanDauText + ' ' + DonViTinh +')'#"
+                                    },
+                                    {
+                                        field: 'TenPhuongAn', title: 'Phương án xử lý',
+                                        width: 330,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TenHinhThuc', title: 'Hình thức xử lý',
+                                        width: 220,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'SO_LUONG', title: 'SL/KL/DT',
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:"#=SoLuongText + ' ' + DonViTinh#"
+                                    },
+                                    {
+                                        field: "GUID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: function (item) {
+                                            var btnSua = `<a id='EDIT_${item.ID}' class="btn btn-sm btn-outline-primary" onclick='openAddOrEditModal("${item.GUID}","Sửa kết quả xử lý tài sản")' href="javascript:void(0)">Sửa</a>&nbsp;`
+                                            var btnXoa = `<a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaTaiSanXuLy('${item.GUID}')>Xóa</a>`
+                                            var btnThem = `<a id='ADD_${item.ID}' class="btn btn-sm btn-outline-success" onclick='openAddOrEditModal("${item.GUID}","Thêm kết quả xử lý tài sản")' href="javascript:void(0)">Thêm kết quả</a>`
+                                            if (item.isKetQua) {
+                                                return btnSua + btnXoa
+
+                                            } else {
+                                                return btnThem;
+                                            }
+                                           // kendo.template($("#btn_template_edit").html())
+                                        }
+
+
+                                    }
+                                ],
+                            });
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="KQXLModalIframe"  tabindex="-1" role="dialog" aria-labelledby="KQXLModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 class="modal-title" id="KQXLModalIframeLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="KQXLModalIframeClose">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:0.5625rem !important;">
+                <div id="KQXLModalIframeContent" class="content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ChonDonViModalIframe"  tabindex="-1" role="dialog" aria-labelledby="ChonDonViModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 class="modal-title" id="ChonDonViModalIframeLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="ChonDonViModalIframeClose">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0.5625rem !important; overflow: scroll; max-height: 500px;">
+                <div id="ChonDonViModalIframeContent" class="content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openAddOrEditModal(guid, title) {
+        var modal = $('#KQXLModalIframe');
+        modal.find('.modal-title').text(title);
+        modal.find('.modal-dialog').css({
+            maxWidth: '80%', //probably not needed
+        });
+        $.ajax({
+            type: "GET",
+            url: `/TaiSanTdXuLy/_ViewXuLyTaiSan?Guid=${guid}`,
+            success: function (data) {
+                $("#KQXLModalIframeContent").html(data);
+            },
+        });
+        modal.modal('show');
+    }
+    function showKQXLModal() {
+        var kqxlModal = $('#KQXLModalIframe');
+        var chonDVModal = $('#ChonDonViModalIframe');
+        kqxlModal.modal('show');
+        chonDVModal.modal("hide");
+    }
+    function showDVModal() {
+        var kqxlModal = $('#KQXLModalIframe');
+        var chonDVModal = $('#ChonDonViModalIframe');
+        kqxlModal.modal('hide');
+        chonDVModal.modal("show");
+    }
+</script>
+<script type="text/x-kendo-template" id="btn_template_edit">
+    #if(isKetQua){#
+    <a id='EDIT_#:ID#' class="btn btn-sm btn-outline-primary" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='\\#globalModalIframe' data-title='Sửa kết quả xử lý tài sản' data-src="/TaiSanTdXuLy/_ViewXuLyTaiSan?Guid=#=GUID#">Sửa</a>&nbsp;
+    <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaTaiSanXuLy('#:GUID#')>Xóa</a>
+    #}else
+    {#
+    <a id='ADD_#:ID#' class="btn btn-sm btn-outline-success" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='\\#globalModalIframe' data-title='Thêm kết quả xử lý tài sản' data-src="/TaiSanTdXuLy/_ViewXuLyTaiSan?Guid=#=GUID#">Thêm kết quả</a>
+    #}#
+</script>
+<script>
+        function XoaTaiSanXuLy(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa kết quả xử lý tài sản này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/TaiSanTdXuLy/DeleteKetQuaTSXL",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) { ShowSuccessMessage(data.Message); $("#btnSearch").click(); }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+    @*function XoaKetQuaXuLy(GUID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa kết quả xử lý tài sản này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/TaiSanTdXuLy/DeleteKetQuaTSXL",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) { ShowSuccessMessage(data.Message); $("#btnSearch").click(); }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }*@
+</script>
+

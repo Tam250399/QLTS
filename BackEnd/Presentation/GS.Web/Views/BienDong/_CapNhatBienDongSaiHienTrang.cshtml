@@ -1,0 +1,279 @@
+﻿@model YeuCauChiTietModel
+<!-- Thong tin chung begin --------->
+<input asp-for="TaiSanSaiHienTrangId" id="TaiSanSaiHienTrangId" type="hidden" />
+<input asp-for="BienDongSaiHienTrangId" id="BienDongSaiHienTrangId" type="hidden" />
+<input asp-for="LoaiHinhTaiSanSaiHienTrangId" id="LoaiHinhTaiSanSaiHienTrangId" type="hidden" />
+<input asp-for="DonViSaiHienTrangId" id="DonViSaiHienTrangId" type="hidden" />
+@{ 
+    var listLoaiTaiSanCoDienTich = new int[] { (int)enumLOAI_HINH_TAI_SAN.DAT, (int)enumLOAI_HINH_TAI_SAN.NHA, (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC };
+}
+<div id="div_main">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Cập nhật hiện trạng biến động
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="javascript:void(0)" id="btnBackToListBienDong">Quay lại danh sách</a>
+            </small>
+        </h6>
+
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-sm-6">  
+                    <input asp-for="TongHienTrangCheckbox"  type="hidden" />
+                    <span asp-validation-for="TongHienTrangCheckbox"></span>
+                </div>
+            </div>
+            @if (listLoaiTaiSanCoDienTich.Contains((int)Model.LoaiHinhTaiSanSaiHienTrangId))
+            {
+                <div class="gs-form-group  ">
+                    @if (Model.LoaiHinhTaiSanSaiHienTrangId == (int)enumLOAI_HINH_TAI_SAN.DAT)
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-3 ">Diện tích khuôn viên</label>
+                            <div class="col-sm-5">
+                                <nop-editor asp-for="DAT_TONG_DIEN_TICH_CU" asp-disabled="true" asp-dvt="m2" />
+                                <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích khuôn viên</span>
+                                <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích khuôn viên</span>
+                                <span asp-validation-for="DAT_TONG_DIEN_TICH_CU"></span>
+                            </div>
+                        </div>
+                        <script>
+                            CompareDientich = function () {
+                                var total = 0;
+                                $(".HienTrang").each(function () {
+                                    var _hientrangId = $(this).data("idhientrang");
+                                    var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+                                    total = total + _Value
+                                });
+                                var tonghientrang = total.toFixed(2);
+                                var gt = ConvertToNumber("#DAT_TONG_DIEN_TICH_CU");
+                                if (tonghientrang != gt) {
+                                    if (tonghientrang > gt) {
+                                        $("#checkhientrangmax").show();
+                                        $("#checkhientrangmin").hide();
+                                        return false;
+                                    }
+                                    if (tonghientrang < gt) {
+                                        $("#checkhientrangmin").show();
+                                        $("#checkhientrangmax").hide();
+                                        return false;
+                                    }
+                                }
+                                else {
+                                    $("#checkhientrangmin").hide();
+                                    $("#checkhientrangmax").hide();
+                                    return true;
+                                }
+                            }
+                            $(function () {
+                                $(".HienTrang").change(CompareDientich);
+                            });
+
+                        </script>
+                    }
+                    else if (Model.LoaiHinhTaiSanSaiHienTrangId == (int)enumLOAI_HINH_TAI_SAN.NHA)
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2 ">Diện tích sàn sử dụng</label>
+                            <div class="col-sm-4">
+                                <nop-editor asp-for="NHA_TONG_DIEN_TICH_XD_CU" asp-dvt="m2" asp-disabled="true" />
+                                <span asp-validation-for="NHA_TONG_DIEN_TICH_XD_CU"></span>
+                                <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích sàn sử dụng </span>
+                                <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích sàn sử dụng </span>
+                            </div>
+                        </div>
+                        <script>
+
+                            CompareDientich = function () {
+                                var total = 0;
+                                $(".HienTrang").each(function () {
+                                    var _hientrangId = $(this).data("idhientrang");
+                                    var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+                                    total = total + _Value
+                                });
+                                var tonghientrang = total.toFixed(2);
+                                var gt = ConvertToNumber("#NHA_TONG_DIEN_TICH_XD_CU");
+                                if (tonghientrang != gt) {
+                                    if (tonghientrang > gt) {
+                                        $("#checkhientrangmax").show();
+                                        $("#checkhientrangmin").hide();
+                                        return false;
+                                    }
+                                    if (tonghientrang < gt) {
+                                        $("#checkhientrangmin").show();
+                                        $("#checkhientrangmax").hide();
+                                        return false;
+                                    }
+                                }
+                                else {
+                                    $("#checkhientrangmin").hide();
+                                    $("#checkhientrangmax").hide();
+                                    return true;
+                                }
+                            }
+                            $(function () {
+                                CompareDientich();
+                                $(".HienTrang").change(CompareDientich);
+                            });
+                        </script>
+                    }
+                    else if (Model.LoaiHinhTaiSanSaiHienTrangId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC)
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2   text-required">Diện tích</label>
+                            <div class="col-sm-4 ">
+                                <nop-editor asp-for="VKT_DIEN_TICH_CU" asp-dvt="m2" asp-disabled="true" />
+                                <span asp-validation-for="VKT_DIEN_TICH_CU"></span>
+                                <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích </span>
+                                <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích</span>
+                            </div>
+                            <label class="col-form-label col-sm-2   text-required">Thể tích</label>
+                            <div class="col-sm-4">
+                                <nop-editor asp-for="VKT_THE_TICH_CU" asp-dvt="m3" asp-disabled="true" />
+                                <span asp-validation-for="VKT_THE_TICH_CU"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2   text-required">Chiều dài</label>
+                            <div class="col-sm-4">
+                                <nop-editor asp-for="VKT_CHIEU_DAI_CU" asp-dvt="m" asp-disabled="true" />
+                                <span asp-validation-for="VKT_CHIEU_DAI_CU"></span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <div class="gs-form-group  ">
+                <h6>Hiện trạng sử dụng</h6>
+                <div class="form-group row ">
+                    @foreach (var obj in Model.lstHienTrang)
+                    {
+                        obj.DonViId = Model.DonViSaiHienTrangId;
+                        @await Html.PartialAsync("../TaiSan/_HienTrangSuDungOnCanhBao", obj)
+                    }
+                </div>
+            </div>
+            <div>
+                <button type="button" id="btnSaveHienTrang" class="btn btn-sm btn-outline-primary " style="float:right;margin-right:5px;">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string loadingGuid = Guid.NewGuid().ToString();
+}
+@await Html.PartialAsync("LoadingView", loadingGuid)
+
+@*Biến toàn cục*@ 
+<script>
+    let CompareDientich;
+</script>
+
+<script>
+    /**
+    * Description: Lay du lieu bien dong tao yeu cau
+    * */
+    function addDataBDTangNG() {
+
+        var _lstHienTrang = [];
+        $(".HienTrang").each(function () {
+            var _hientrangId = $(this).data("idhientrang");
+            var _tenhientrang = $(this).data("tenhientrang");
+            var _kieudulieuid = $(this).data("kieudulieuid");
+            switch (_kieudulieuid) {
+                case 1:
+                    var _Value = $("#HienTrang_" + _hientrangId).val();
+                    _lstHienTrang.push({
+                        HienTrangId: _hientrangId,
+                        GiaTriNumber: _Value,
+                        TenHienTrang: _tenhientrang,
+                        KieuDuLieuId: _kieudulieuid,
+                    });
+                    break;
+                case 2:
+                    var _Value = $("#HienTrang_" + _hientrangId).prop("checked") ? true : false;
+                    _lstHienTrang.push({
+                        HienTrangId: _hientrangId,
+                        GiaTriCheckbox: _Value,
+                        TenHienTrang: _tenhientrang,
+                        KieuDuLieuId: _kieudulieuid,
+                    });
+                    break;
+            }
+        });
+        var _data = {
+            lstHienTrang: _lstHienTrang,
+            TaiSanSaiHienTrangId: $('#TaiSanSaiHienTrangId').val(),
+            BienDongSaiHienTrangId: $('#BienDongSaiHienTrangId').val(),
+            TongHienTrangCheckbox: $('#@Html.IdFor(c => c.TongHienTrangCheckbox)').val(),
+            IsCauHinhHienTrang: true,
+            LoaiHinhTaiSanSaiHienTrangId: $('#LoaiHinhTaiSanSaiHienTrangId').val(),
+            DonViSaiHienTrangId: $('#DonViSaiHienTrangId').val(),
+            DAT_TONG_DIEN_TICH_CU: $('#DAT_TONG_DIEN_TICH_CU').val(),
+            NHA_DIEN_TICH_XD_CU: $('#NHA_DIEN_TICH_XD_CU').val(),
+            NHA_TONG_DIEN_TICH_XD_CU: $('#NHA_TONG_DIEN_TICH_XD_CU').val(),
+            VKT_DIEN_TICH_CU: $('#VKT_DIEN_TICH_CU').val(),
+            VKT_THE_TICH_CU: $('#VKT_THE_TICH_CU').val(),
+            VKT_CHIEU_DAI_CU: $('#VKT_CHIEU_DAI_CU').val()
+        };
+
+        return _data;
+    }
+
+    $(document).ready(function () {
+        $('#btnBackToListBienDong').on('click', function () {
+            var taiSanId = $('#TaiSanSaiHienTrangId').val();
+            ShowViewLoading("#globalModalIframeContent");
+            var src = `/Biendong/_ListBienDongSaiHienTrang?TaiSanId=${taiSanId} `
+            $.ajax({
+                type: "GET",
+                url: src,
+                success: function (data) {
+                    $("#globalModalIframeContent").html(data);
+                },
+            });
+        })
+        $('#btnSaveHienTrang').on('click', function () {
+            var isValid = true
+            if (CompareDientich) {
+                isValid = CompareDientich();
+            }
+            var _data = addDataBDTangNG();
+            ShowOrHideLoading(true, 'div_main','@loadingGuid');
+            if (isValid) {
+                $.ajax({
+                    type: "POST",
+                    data: _data,
+                    url: "/BienDong/_CapNhatBienDongSaiHienTrang",
+                    success: function (result) {
+                        if (CheckValidMessageReturn(result)) {
+                            if (result.Code == '00') {
+                                ShowOrHideLoading(false, 'div_main','@loadingGuid');
+                                ShowSuccessMessage(result.Message);
+                                //$('#btnBackToListBienDong').click();
+                                $('#globalModalIframeClose').click();
+                                var grid = $('#items-grid-chon-tai-san').data('kendoGrid');
+                                recordChonTS = 0
+                                grid.dataSource.page(1);
+                            }
+                        }
+                        else {
+                            ShowOrHideLoading(false, 'div_main','@loadingGuid');
+                            ShowErrorMessage(result.Message);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                        ShowOrHideLoading(false, 'div_main','@loadingGuid');
+                    }
+                });
+            }
+        })
+    });
+
+</script>

@@ -1,0 +1,37 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Đăng nhập</title>
+	<link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="/css/app/throbber.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div class="throbber">
+		<div class="curtain">
+		</div>
+		<div class="curtain-content">
+			<div>
+				<h1 class="throbber-header">@T("Common.Wait...")</h1>
+				<p>
+					<img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script src="~/lib/jquery/jquery-3.3.1.min.js"></script>
+@*<script src="~/js/oidc-client.js"></script>*@
+<script src="/lib/signalr/dist/browser/signalr.min.js"></script>
+@*<script src="~/js/singleSignOnApp.js"></script>*@
+<script src="~/js/admin.common.js"></script>
+<script>
+	showThrobber("Đang xử lý dữ liệu");
+	$(function () {
+		login();
+	})
+</script>

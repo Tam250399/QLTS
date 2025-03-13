@@ -1,0 +1,51 @@
+@model TaiSanKiemKeModel
+@{
+    //page title
+    ViewBag.Title = "Kiểm kê tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KiemKeTaiSan");
+}
+<form asp-controller="TaiSanKiemKe" asp-action="Create" method="post" id="smTaiSanKiemKe">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            Lưu và tiếp tục sửa
+        </button>*@
+            <a class="btn btn-default btnClose btn-sm" name="close" onclick="window.location.href = '/TaiSanKiemKe/List';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <button type="submit" name="save" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+<script>
+    $("#smTaiSanKiemKe").submit(function () {
+        var check = true;
+        hideValmsg("NGAY_KIEM_KE");
+        if ($("#NGAY_KIEM_KE").val() == null|| $("#NGAY_KIEM_KE").val()== "") {
+            showInvalidMessage("NGAY_KIEM_KE", "Ngày không được để trống");
+            check = false;
+        }
+        if (!checkValidateDateFormat("#NGAY_KIEM_KE", "NGAY_KIEM_KE", "Sai định dạng ngày")) {
+            check = false;
+        };
+        if (!checkValidateDateWithDateNow("#NGAY_KIEM_KE", "NGAY_KIEM_KE", "Ngày phải nhỏ hơn ngày hiện tại")) {
+            check = false;
+        };
+        return check;
+    })
+</script>
+

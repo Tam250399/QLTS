@@ -1,0 +1,54 @@
+﻿@model YeuCauModel
+<div class="gs-form-group  ">
+	<h6>Thông tin tài sản</h6>
+
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Đơn vị sử dụng</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="TenDonVi" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Mã tài sản</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TAI_SAN_MA" asp-disabled="true" />
+		</div>
+		<label class="col-form-label col-sm-2">Tên tài sản</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TAI_SAN_TEN" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Loại tài sản</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TenLoaiTaiSan" asp-disabled="true" />
+		</div>
+		@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+		{
+			<label class="col-form-label col-sm-2" style="display:none;">Bộ phận sử dụng</label>
+			<div class="col-sm-4" style="display:none;">
+				<nop-editor asp-for="TenDonViBoPhan" asp-disabled="true" />
+			</div>
+		}
+		else
+		{
+			<label class="col-form-label col-sm-2">Bộ phận sử dụng</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="TenDonViBoPhan" asp-disabled="true" />
+			</div>
+		}
+	</div>
+	@if (Model.NhaMaTruSo != null)
+	{
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Mã trụ sở</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NhaMaTruSo" asp-disabled="true" />
+			</div>
+			<label class="col-form-label col-sm-2">Tên trụ sở</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NhaTenTruSo" asp-disabled="true" />
+			</div>
+		</div>
+	}
+</div>

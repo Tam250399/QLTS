@@ -1,0 +1,91 @@
+﻿@model XuatNhapModel
+@{ var stt = 0;}
+<input asp-for="ID" type="hidden" />
+<input asp-for="StringMapId" type="hidden" />
+<input id="NgayNhapKhoMin" type="hidden" value="@Model.NgayNhapKhoMin.toDateVNString()" />
+<input id="DateBefore" type="hidden" value="@Model.DateBefore.toDateVNString()" />
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin phân bổ</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày phân bổ</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="NGAY_XUAT_NHAP" />
+            <span asp-validation-for="NGAY_XUAT_NHAP"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Bộ phận sử dụng</label>
+        <div class="col-sm-9">
+            <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" />
+            <span asp-validation-for="DON_VI_BO_PHAN_ID"></span>
+        </div>
+        <div class="col-md-1" style="text-align:center">
+            <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin-bottom:10px;">
+                <i class="ion ion-md-add"></i>&nbsp;
+            </button>
+        </div>
+    </div>
+    @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Tình trạng</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="TRANG_THAI_ID" asp-items="Model.DDLTrangThai" />
+                <span asp-validation-for="TRANG_THAI_ID"></span>
+            </div>
+        </div>*@
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Diễn giải</label>
+        <div class="col-sm-10">
+            <app-textarea asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+<table class="table card-table table-bordered table-striped">
+    <thead class="thead-light">
+        <tr>
+            <th>STT</th>
+            <th>Mã CCDC</th>
+            <th>Tên CCDC</th>
+            <th>Số lượng có thể phân bổ</th>
+            <th>Số lượng phân bổ</th>
+            <th>Đơn giá</th>
+            <th>Nhóm CCDC</th>
+            <th>Ngày nhập lô</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var map in Model.ListMap)
+        {
+            <tr class="listCongCuModel" data-guid="@map.ID">
+                <td style="text-align:center;">@(stt+=1)</td>
+                <td>@map.MaCongCuText</td>
+                <td>@map.TenCongCuText</td>
+                <td class="txt-right">@map.SoLuongCoThePhanBo<input id="SoLuongCoThePhanBo_@map.ID" value="@map.SoLuongCoThePhanBo" hidden /></td>
+                <td>
+                    <nop-editor asp-for="@map.SO_LUONG" id="SO_LUONG_@map.ID" asp-amount="true" asp-min-number="0" />
+                    <span id="err_SO_LUONG_@map.ID" style="display:none;" class="field-validation-error">Số lượng không hợp lệ</span>
+                </td>
+                <td class="txt-right">@map.DonGiaText</td>
+                <td>@map.NhomCongCuText</td>
+                <td style="text-align:center;">@Model.NgayNhapKhoMin.toDateVNString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    th {
+        text-align: center !important;
+    }
+
+    /*.listCongCuModel td{
+        padding:4px 4px 4px 4px;
+    }*/
+    .txt-right {
+        text-align: right;
+    }
+
+    .txt-left {
+        text-align: left;
+    }
+</style>

@@ -1,0 +1,141 @@
+﻿@model HaoMonTaiSanModel
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	<div class="form-group row">
+		
+		<label class="col-form-label col-md-2 text-sm-left">Mã tài sản</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="MA_TAI_SAN"  asp-disabled="true"/>
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">Nguyên giá</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="TONG_NGUYEN_GIA" asp-min-number="0" asp-dvt="c" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-md-2 text-sm-left">Lũy kế hao mòn năm trước</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="TONG_HAO_MON_LUY_KE_NAM_TRUOC" id ="TONG_HAO_MON_LUY_KE_NAM_TRUOC_POPUP" asp-min-number="0" asp-dvt="c" />
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">Lũy kế hao mòn năm hiện tại</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="TONG_HAO_MON_LUY_KE" asp-min-number="0" asp-dvt="c" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-md-2 text-sm-left">Hao mòn trong năm</label>
+		<div class="col-md-4">
+			<nop-editor asp-min-number="0" asp-dvt="c" asp-for="GIA_TRI_HAO_MON"  id="GIA_TRI_HAO_MON_POPUP" />
+			<span asp-validation-for="GIA_TRI_HAO_MON"></span>
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">GTCL</label>
+		<div class="col-md-4">
+			<nop-editor asp-min-number="0" asp-dvt="c" asp-for="TONG_GIA_TRI_CON_LAI"  id="TONG_GIA_TRI_CON_LAI_POPUP" />
+			<span asp-validation-for="TONG_GIA_TRI_CON_LAI"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-4">
+			<button type="button" class="btn  btn-outline-secondary" style="float:right; margin-left:5px" id="btnClose" data-dismiss="modal">Hủy bỏ</button>
+			<button type="button" class="btn  btn-primary" style="float:right" id="btndUpdate">Cập nhật</button>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var giaTriHaoMon = $("#GIA_TRI_HAO_MON_POPUP").data("kendoNumericTextBox");
+		var gtcl = $("#TONG_GIA_TRI_CON_LAI_POPUP").data("kendoNumericTextBox");
+		var tongNguyenGia = $("#TONG_NGUYEN_GIA").data("kendoNumericTextBox");
+		var hmlk = $("#@Html.IdFor(p=>p.TONG_HAO_MON_LUY_KE)").data("kendoNumericTextBox");
+		if (giaTriHaoMon) {
+			giaTriHaoMon.bind("change", function (e) {
+				
+				hideValmsg("GIA_TRI_HAO_MON");
+				if (giaTriHaoMon.value() <= tongNguyenGia.value()) {
+					let _data = {
+						isGTCL: false,
+						idHaoMonTaiSan: @Model.ID,
+						giaTri: giaTriHaoMon.value()
+					}
+					let _url = '@Url.Action("UpdateGTCLorHaoMon","HaoMon")';
+					ajaxPost(_data, _url, false).done(function (objReturn) {
+						giaTriHaoMon.value(objReturn.GIA_TRI_HAO_MON);
+						if (gtcl)
+							gtcl.value(objReturn.TONG_GIA_TRI_CON_LAI);
+						if (hmlk)
+							hmlk.value(objReturn.TONG_HAO_MON_LUY_KE);
+
+					});
+				}
+				else {
+					showInvalidMessage("GIA_TRI_HAO_MON", "Giá trị không được lớn hơn nguyên giá")
+				}
+
+			});
+		}
+		if (gtcl) {
+			gtcl.bind("change", function (e) {
+				hideValmsg("TONG_GIA_TRI_CON_LAI");
+				
+				if (gtcl.value() <= tongNguyenGia.value()) {
+					let _data = {
+						isGTCL: true,
+						idHaoMonTaiSan: @Model.ID,
+						giaTri: gtcl.value()
+					}
+					let _url = '@Url.Action("UpdateGTCLorHaoMon","HaoMon")';
+					ajaxPost(_data, _url, false).done(function (objReturn) {
+						gtcl.value(objReturn.TONG_GIA_TRI_CON_LAI);
+						if (giaTriHaoMon)
+							giaTriHaoMon.value(objReturn.GIA_TRI_HAO_MON);
+						if (hmlk)
+							hmlk.value(objReturn.TONG_HAO_MON_LUY_KE);
+					});
+				}
+				else {
+					showInvalidMessage("TONG_GIA_TRI_CON_LAI", "Giá trị không được lớn hơn nguyên giá")
+				}
+			});
+		}
+		$('#btndUpdate').click(function () {
+			var res = true;
+			if (giaTriHaoMon.value() <= tongNguyenGia.value()) {
+				hideValmsg("GIA_TRI_HAO_MON");
+			}
+			else {
+				showInvalidMessage("GIA_TRI_HAO_MON", "Giá trị không được lớn hơn nguyên giá")
+				res = false;
+			}
+			if (gtcl.value() <= tongNguyenGia.value()) {
+				hideValmsg("TONG_GIA_TRI_CON_LAI");
+			}
+			else {
+				showInvalidMessage("TONG_GIA_TRI_CON_LAI", "Giá trị không được lớn hơn nguyên giá")
+				res = false;
+			}
+
+			if (res == true) {
+				let _data = {
+					ID: @Model.ID,
+                    GIA_TRI_HAO_MON: $("#GIA_TRI_HAO_MON_POPUP").val(),
+                    TONG_GIA_TRI_CON_LAI: $("#TONG_GIA_TRI_CON_LAI_POPUP").val(),
+				}
+				console.log(_data);
+				let _url = '@Url.Action("EditHaoMon", "HaoMon")';
+				ajaxPost(_data, _url, false).done(function (objReturn) {
+					ShowSuccessMessage("Điều chỉnh thành công");
+					let _grid = $('#items-grid').data('kendoGrid');
+					if (_grid) {
+						_grid.dataSource.page(_grid.dataSource.page());
+					}
+					HideModalManual();
+				}).fail(function () {
+					ShowErrorMessage("Thất bại");
+					HideModalManual();
+				});
+			}
+			
+		})
+	})
+</script>

@@ -1,0 +1,242 @@
+﻿@{
+    //page title
+    ViewBag.Title = "Import hao mòn tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportHaoMonTaiSan");
+}
+<div class="card">
+    <div class="card-header">
+        Nhập file hao mòn tài sản
+    </div>
+    <div class="card-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Chọn nguồn</label>
+                        <select id="nguonid"></select>
+                        <script>
+                        $(document).ready(function () {
+                            $("#nguonid").kendoDropDownList({
+                                dataTextField: "Text",
+                                dataValueField: "Value",
+                                select: function (e) {
+                                if (e.dataItem.Disabled) {
+                                e.preventDefault();
+                                }
+                                },
+                                dataSource: JSON.parse('[{"Text":"DKTS4.0","Value":1,"Selected":"true"},{"Text":"TSC","Value":0}]')
+                            });
+                        });
+                        </script>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file Tài sản</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success"> Đồng bộ</button>
+            <br />
+            <span id="logTime"></span>
+    </div>
+</div>
+
+
+<div id="HaoMon">
+    Danh sách Hao Mòn đã Nhập thành công
+    <div id="HaoMonTaiSan-success-grid">
+    </div>
+    Danh sách Hao Mòn đã Nhập thất bại
+    <a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+    <div id="HaoMonTaiSan-error-grid">
+    </div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+   
+    $("#btnDongBo").click(function (evt) {
+        $('#HaoMonTaiSan-success-grid').empty();
+        $('#HaoMonTaiSan-error-grid').empty();
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        data.append("nguonId", $('#nguonId').val());
+        console.log(data);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/DongBo/ImportHaoMonFromFile",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+                
+                    $('#HaoMon').show();
+                    if (result.success) {
+                        HaoMonTaiSanSuccess(result.ListSuccess);
+                        hideThrobber();
+                    }
+                    else {
+                        if (result.ListSuccess == undefined) {
+                            ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                            hideThrobber();
+                        }
+                        else {
+                            HaoMonTaiSanSuccess(result.ListSuccess);
+                            HaoMonTaiSanError(result.ListError);
+                            $("#downloadListErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                            hideThrobber();
+                        }
+
+                    }
+
+            },
+            error: function () {
+                $("#logTime").html("");
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+
+    function HaoMonTaiSanSuccess(data) {
+        var record = 1;
+        //var _dataSource = new kendo.data.DataSource({
+        //    data: data,
+        //    pageSize: 10,
+        //    change: function (e) {
+        //        record = 1;
+        //    }
+        //});
+        $("#HaoMonTaiSan-success-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#HaoMonTaiSan-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#HaoMonTaiSan-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã tài sản',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mã tài sản đồng bộ',
+                    field: 'TaiSanDongBoApi.DB_MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên tài sản',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    //attributes: { style: "text-align:center" },
+                },
+
+            ]
+        });
+
+    }
+    function HaoMonTaiSanError(data) {
+        var record = 1;
+        //var _dataSource = new kendo.data.DataSource({
+        //    data: data,
+        //    pageSize: 10,
+        //    change: function (e) {
+        //        record = 1;
+        //    }
+        //});
+        $("#HaoMonTaiSan-error-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#HaoMonTaiSan-error-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#HaoMonTaiSan-error-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Mã tài sản',
+                    field: 'TaiSanDongBoApi.MA_TAI_SAN',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Tên tài sản',
+                    field: 'TaiSanDongBoApi.TEN_TAI_SAN',
+                    //attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mã tài sản đồng bộ',
+                    field: 'TaiSanDongBoApi.DB_MA',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ghi chú',
+                    field: 'Message',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#HaoMon').hide();
+    })
+</script>

@@ -1,0 +1,263 @@
+﻿@model BaoCaoDienTuModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="NGUOI_TAO_ID" type="hidden" />
+<div class="content">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Tên báo cáo:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN" />
+            <span asp-validation-for="TEN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left ">Ngày báo cáo:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_BAO_CAO" />
+            <span asp-validation-for="NGAY_BAO_CAO"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>I. Tình hình ban hành các văn bản pháp luật về quản lý, sử dụng tài sản nhà nước</strong></label>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>1. Tình hình ban hành văn bản quy phạm pháp luật theo thẩm quyền</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="TINH_HINH_BAN_HANH_VAN_BAN" />
+            <span asp-validation-for="TINH_HINH_BAN_HANH_VAN_BAN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>II. Tình hình quản lý, sử dụng tài sản nhà nước của đơn vị</strong></label>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>1. Thực trạng công tác quản lý, sử dụng tài sản nhà nước</strong></label>
+        <label class="col-form-label col-sm-12 text-sm-left ">a. Phân tích thực trạng</label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="THUC_TRANG" />
+            <span asp-validation-for="THUC_TRANG"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left ">b. Tình hình tăng/giảm tài sản nhà nước theo từng loại tài sản</label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="TINH_HINH_TANG_GIAM" />
+            <span asp-validation-for="TINH_HINH_TANG_GIAM"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>2. Đánh giá những mặt tích cực, hiệu quả, những tồn tại, sai phạm trong quản lý, sử dụng tài sản của cơ quan/tổ chức/đơn vị trong kỳ báo cáo</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="DANH_GIA_TICH_CUC" />
+            <span asp-validation-for="DANH_GIA_TICH_CUC"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>3. Đánh giá tình hình thực hiện kết luận, kiến nghị của cơ quan thanh tra, kiểm tra, kiểm toán nhà nước về quản lý, sử dụng tài sản nhà nước trong kỳ báo cáo</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="DANH_GIA_TINH_HINH" />
+            <span asp-validation-for="DANH_GIA_TINH_HINH"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>III. Công tác chỉ đạo, hướng dẫn, kiểm tra việc quản lý, sử dụng tài sản nhà nước của các cơ quan, tổ chức, đơn vị thuộc phạm vi quản lý</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="CONG_TAC_CHI_DAO" />
+            <span asp-validation-for="CONG_TAC_CHI_DAO"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>IV. Tình hình thực hiện công khai quản lý, sử dụng tài sản nhà nước</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="TINH_HINH_THUC_HIEN" />
+            <span asp-validation-for="TINH_HINH_THUC_HIEN"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>V. Các kết quả khác</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="KET_QUA_KHAC" />
+            <span asp-validation-for="KET_QUA_KHAC"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>VI. Kiến nghị các giải pháp nhằm hoàn thiện hệ thống pháp luật, nâng cao hiệu quả công tác quản lý, sử dụng tài sản nhà nước</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="KIEN_NGHI" />
+            <span asp-validation-for="KIEN_NGHI"></span>
+        </div>
+        <label class="col-form-label col-sm-12 text-sm-left "><strong>VII. Nơi nhận</strong></label>
+        <div class="col-sm-12">
+            <nop-textarea asp-for="NOI_NHAN" />
+            <span asp-validation-for="NOI_NHAN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Tệp đính kèm:</label>
+        <div class="col-sm-8">
+            <div id="fileUpload_container">
+                <div class="file-upload">
+                    <div class="file-select" style="width:100%;height: 33px;border-radius: 4px;">
+                        <div class="file-select-button ">Chọn file</div>
+                        <div class="file-select-name">@(string.IsNullOrEmpty(Model.TenFile)? "Không có file nào được chọn" : Model.TenFile)</div>
+                        <input type="file" name="httpPostedFile" class="inputFile" id="UploadedFile" data-guid="">
+                        <input type="hidden" asp-for="FILE_ID" id="FILE_ID" />
+                        <input type="hidden" asp-for="TenFile" id="TenFile" />
+                    </div>
+                </div>
+                <span data-valmsg-for="FILE_ID" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#UploadedFile").on('change', function () {
+            var input = $('#UploadedFile').get(0);
+            var files = $(input).prop("files")
+            if (files && files.length > 0) {
+                var formData = new FormData();
+                formData.append("httpPostedFile", files[0]);
+                $.ajax({
+                    type: "POST",
+                    data: formData,
+                    url: "/BaoCaoDienTu/SaveDropzoneJsUploadedFiles",
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (result) {
+                        changeFileName(input);
+                        console.log(result[0].ID);
+                        $('#FILE_ID').val(result[0].ID)
+                    },
+
+                })
+
+            }
+        })
+
+    })
+</script>
+<script>
+    function changeFileName(input) {
+        var parentDiv = $(input).parent();
+        var filename = $(input).val();
+        var fileSelectName = parentDiv.find(".file-select-name");
+        $(input).addClass('active');
+        fileSelectName.text(filename.replace("C:\\fakepath\\", ""));
+    }
+</script>
+
+<style>
+    .file-upload {
+        display: block;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 12px;
+    }
+
+        .file-upload .file-select {
+            display: block;
+            border: 2px solid #dce4ec;
+            color: #34495e;
+            cursor: pointer;
+            height: 40px;
+            line-height: 40px;
+            text-align: left;
+            background: #FFFFFF;
+            overflow: hidden;
+            position: relative;
+            width: 315px;
+            position: relative;
+            width: 100%;
+            height: 32px;
+            position: relative;
+            border-radius: 4px;
+        }
+
+            .file-upload .file-select .file-select-button {
+                background: #dce4ec;
+                padding: 0 10px;
+                display: inline-block;
+                height: 40px;
+                line-height: 40px;
+                position: absolute;
+                top: -6px;
+                width: 58px;
+                left: 0px;
+                padding: 0 5px;
+            }
+
+            .file-upload .file-select .file-select-name {
+                line-height: 40px;
+                display: inline-block;
+                padding: 0 10px;
+                position: absolute;
+                left: 53px;
+                top: -6px;
+            }
+
+            .file-upload .file-select:hover {
+                border-color: #34495e;
+                transition: all .2s ease-in-out;
+                -moz-transition: all .2s ease-in-out;
+                -webkit-transition: all .2s ease-in-out;
+                -o-transition: all .2s ease-in-out;
+            }
+
+                .file-upload .file-select:hover .file-select-button {
+                    background: #34495e;
+                    color: #FFFFFF;
+                    transition: all .2s ease-in-out;
+                    -moz-transition: all .2s ease-in-out;
+                    -webkit-transition: all .2s ease-in-out;
+                    -o-transition: all .2s ease-in-out;
+                }
+
+        .file-upload.active .file-select {
+            border-color: #3fa46a;
+            transition: all .2s ease-in-out;
+            -moz-transition: all .2s ease-in-out;
+            -webkit-transition: all .2s ease-in-out;
+            -o-transition: all .2s ease-in-out;
+        }
+
+            .file-upload.active .file-select .file-select-button {
+                background: #3fa46a;
+                color: #FFFFFF;
+                transition: all .2s ease-in-out;
+                -moz-transition: all .2s ease-in-out;
+                -webkit-transition: all .2s ease-in-out;
+                -o-transition: all .2s ease-in-out;
+            }
+
+        .file-upload .file-select input[type=file] {
+            z-index: 100;
+            cursor: pointer;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+        .file-upload .file-select.file-select-disabled {
+            opacity: 0.65;
+        }
+
+            .file-upload .file-select.file-select-disabled:hover {
+                cursor: default;
+                display: block;
+                border: 2px solid #dce4ec;
+                color: #34495e;
+                cursor: pointer;
+                height: 40px;
+                line-height: 40px;
+                margin-top: 5px;
+                text-align: left;
+                background: #FFFFFF;
+                overflow: hidden;
+                position: relative;
+            }
+
+                .file-upload .file-select.file-select-disabled:hover .file-select-button {
+                    background: #dce4ec;
+                    color: #666666;
+                    padding: 0 10px;
+                    display: inline-block;
+                    height: 40px;
+                    line-height: 40px;
+                }
+
+                .file-upload .file-select.file-select-disabled:hover .file-select-name {
+                    line-height: 40px;
+                    display: inline-block;
+                    padding: 0 10px;
+                }
+</style>

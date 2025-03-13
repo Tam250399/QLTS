@@ -1,0 +1,342 @@
+﻿@model DongBoTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Đồng bộ tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DongBo");
+}
+@using GS.Core.Data
+@*<div class="card">
+        <div class="card-header">
+            Đồng bộ tài sản
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <a href="/DongBo/DongBoTaiSanToanDan" class="btn btn-success">Tài sản toàn dân</a>
+                &nbsp;
+                <a href="/DongBo/DongBoTaiSanKhac" class="btn btn-success">Tài sản Khác</a>
+            </div>
+        </div>
+    </div>*@
+<div class="card">
+    <div class="card-header">
+        Nhập file Tài sản
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="DongBoTaiSanFromFile" asp-controller="DongBo" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Chọn loại Tài sản</label>
+                        <nop-select asp-for="LoaiTaiSan" asp-items="Model.ddlLoaiTaiSan" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file Tài sản</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                        @*<input name="files" id="files" type="file" />
+                            <script>
+
+                                $(document).ready(function () {
+                                    $("#files").kendoUpload();
+                                    $("#files").kendoUpload({
+                                        async: {
+                                            saveUrl: @GSDataSettingsDefaults.FolderWorkFiles,
+                                            removeUrl: @GSDataSettingsDefaults.FolderTrashFiles,
+                                        },
+                                        showFileList: true
+                                    });
+                                            //$("#getFiles").on('click', function (e) {
+                                            //    e.preventDefault();
+
+                                            //    var upload = $("#files").data("kendoUpload"),
+                                            //        files = upload.getFiles();
+
+                                            //    alert("You have selected " + files.length + " files");
+                                            //    console.log(files);
+                                            //})
+                                            });
+                                            </script>*@
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success"> Đồng bộ tài sản</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import Danh mục dòng xe
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportDanhMucDongXe" asp-controller="Import" enctype="multipart/form-data" id="dongxe">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Chọn loại Tài sản</label>
+                        <nop-select asp-for="LoaiTaiSan" asp-items="Model.ddlLoaiTaiSan" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file dòng xe</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                        @*<input name="files" id="files" type="file" />
+                            <script>
+
+                                $(document).ready(function () {
+                                    $("#files").kendoUpload();
+                                    $("#files").kendoUpload({
+                                        async: {
+                                            saveUrl: @GSDataSettingsDefaults.FolderWorkFiles,
+                                            removeUrl: @GSDataSettingsDefaults.FolderTrashFiles,
+                                        },
+                                        showFileList: true
+                                    });
+                                            //$("#getFiles").on('click', function (e) {
+                                            //    e.preventDefault();
+
+                                            //    var upload = $("#files").data("kendoUpload"),
+                                            //        files = upload.getFiles();
+
+                                            //    alert("You have selected " + files.length + " files");
+                                            //    console.log(files);
+                                            //})
+                                            });
+                                            </script>*@
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success"> Import Danh mục</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import tài sản
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportTaiSanExl" asp-controller="Import" enctype="multipart/form-data" id="dongxe">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Chọn loại Tài sản</label>
+                        <nop-select asp-for="LoaiTaiSan" asp-items="Model.ddlLoaiTaiSan" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file tài sản</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                        @*<input name="files" id="files" type="file" />
+                            <script>
+
+                                $(document).ready(function () {
+                                    $("#files").kendoUpload();
+                                    $("#files").kendoUpload({
+                                        async: {
+                                            saveUrl: @GSDataSettingsDefaults.FolderWorkFiles,
+                                            removeUrl: @GSDataSettingsDefaults.FolderTrashFiles,
+                                        },
+                                        showFileList: true
+                                    });
+                                            //$("#getFiles").on('click', function (e) {
+                                            //    e.preventDefault();
+
+                                            //    var upload = $("#files").data("kendoUpload"),
+                                            //        files = upload.getFiles();
+
+                                            //    alert("You have selected " + files.length + " files");
+                                            //    console.log(files);
+                                            //})
+                                            });
+                                            </script>*@
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="" class="btn btn-success"> Import tài sản</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div id="ToanDan">
+    Danh sách quyết định đã Nhập thành công
+    <div id="TaiSanToanDan-success-grid">
+
+    </div>
+    Danh sách quyết định đã Nhập thất bại
+    <a href="#" id="downloadListTSTDErr"><i class="fas fa-download"></i></a>
+    <div id="TaiSanToanDan-error-grid">
+    </div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnDongBo").click(function (evt) {
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+       // data.append("LoaiTaiSan", $('#LoaiTaiSan').val());
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/Import/ImportExcelTaiSanToanDan",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+                console.log(result);
+                //if ($('#LoaiTaiSan').val() == '1') {
+                //    $('#ToanDan').show();
+                //    $('#NhaNuoc').hide();
+                //    if (result.success) {
+                //        TaiSanToanDanSuccess(result.ListSuccess);
+                //        hideThrobber();
+                //    }
+                //    else {
+                //        TaiSanToanDanSuccess(result.ListSuccess);
+                //        TaiSanToanDanError(result.ListError);
+                //        $("#downloadListTSTDErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                //        hideThrobber();
+                //    }
+                //}
+                //if ($('#LoaiTaiSan').val() == '2') {
+                //    $('#ToanDan').hide();
+                //    $('#NhaNuoc').show();
+                //    if (result.success) {
+                //        TaiSanNhaNuocSuccess(result.ListSuccess);
+                //        hideThrobber();
+                //    }
+                //    else {
+                //        if (result.ListSuccess == undefined) {
+                //            ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                //            hideThrobber();
+                //        }
+                //        else {
+                //            TaiSanNhaNuocSuccess(result.ListSuccess);
+                //            TaiSanNhaNuocError(result.ListError);
+                //            $("#downloadListErr").attr("href", "ExportByUrl?filePath=" + result.filePath + "&fileName=" + result.fileName + "&fileType=" + result.fileType);
+                //            hideThrobber();
+                //        }
+
+                //    }
+                //}
+
+            },
+            error: function () {
+                alert("there was error uploading files!");
+            }
+        });
+    });
+    function TaiSanToanDanSuccess(data) {
+        var dataSuccess = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10
+        });
+        var record = 1;
+        $("#TaiSanToanDan-success-grid").kendoGrid({
+            dataSource: dataSuccess,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        return record++;
+                    }
+                },
+                {
+                    title: 'Số quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_SO',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ngày quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_NGAY',
+                    template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    attributes: { style: "text-align:center" },
+                },
+
+            ]
+        });
+
+    }
+    function TaiSanToanDanError(data) {
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 10
+        });
+        var record = 1;
+        $("#TaiSanToanDan-error-grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        return record++;
+                    }
+                },
+                {
+                    title: 'Số quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_SO',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ngày quyết định',
+                    field: 'QuyetDinhTichThuApi.QUYET_DINH_NGAY',
+                    template: "#= kendo.toString(kendo.parseDate(QuyetDinhTichThuApi.QUYET_DINH_NGAY), 'dd/MM/yyyy') #",
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Ghi chú',
+                    field: 'Message',
+                    attributes: { style: "text-align:center" },
+                },
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#ToanDan').hide();
+        $('#NhaNuoc').hide();
+    })
+</script>

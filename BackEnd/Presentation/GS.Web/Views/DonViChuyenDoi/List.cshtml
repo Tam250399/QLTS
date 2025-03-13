@@ -1,0 +1,181 @@
+@model DonViChuyenDoiSearchModel
+@{
+    //page title
+    ViewBag.Title = "Lịch sử đơn vị";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDonVi");
+}
+
+<nop-antiforgery-token />
+<div class="card mb-4">
+    <h6 class="card-header">
+        @ViewBag.Title
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List" asp-controller="DonVi">Quay lại danh sách đơn vị</a>
+        </small>
+        <div class="pull-right" style="margin-bottom:5px;">
+            <a href="/DonViChuyenDoi/Create?donViId=@Model.DonViId" class="btn btn-success">
+                <i class="fa fa-plus-square"></i>
+                Thêm mới lịch sử
+            </a>
+        </div>
+    </h6>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <input asp-for="KeySearch" class="form-control" placeholder="Tên hoặc số quyết định" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Mã đơn vị</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="MA" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Tên đơn vị <span style="color: red;">*</span></label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Địa chỉ</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DIA_CHI" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Đơn vị cấp trên</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DON_VI_CAP_TREN" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+
+                                };
+                                console.log(_data);
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DonViChuyenDoi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {field: 'TEN',title: 'Tên'},
+                                    {field: 'LOAI_DON_VI',title: 'Loại đơn vị'},
+                                    {field: 'QUYET_DINH_SO',title: 'Số quyết định đủ điều kiện'},
+                                    {field: 'NgayQuyetDinhDuDieuKien',title: 'Ngày quyết định đủ điều kiện'},
+                                    {field: 'QUYET_DINH_GIAO_VON_SO',title: 'Số quyết định đủ giao vốn'},
+                                    {field: 'NgayQuyetDinhGiaoVon', title: 'Ngày quyết định đủ giao vốn'},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a> &nbsp<button class="btn btn-sm btn-outline-danger open-delete-confirm" data-toggle="modal" data-target="\\#donvichuyendoi-confirm-delete-modal" data-id="#=ID#"><i class="fas fa-trash d-block"></i>Xóa</button> '
+                                    }
+                                ]
+                            });
+                        });
+                        $(document).on("click", ".open-delete-confirm", function () {
+                            var dvcdId = $(this).data('id');
+                            var a = document.getElementById("donvichuyendoideleteform");
+                            a.action = "/DonViChuyenDoi/Delete/" + dvcdId 
+                        });
+
+                    </script>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="donvichuyendoi-confirm-delete-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">Bạn có chắc chắn không ?</h4>
+                                </div>
+                                <div id="abc"></div>
+                                <form action="" id="donvichuyendoideleteform" method="post">
+                                    <div class="form-horizontal">
+                                        <div class="modal-body">
+                                            Bạn có chắc chắn xóa không ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <span class="btn btn-default" data-dismiss="modal">Không</span>
+                                            <button type="submit" class="btn btn-danger">
+                                                Xoá
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

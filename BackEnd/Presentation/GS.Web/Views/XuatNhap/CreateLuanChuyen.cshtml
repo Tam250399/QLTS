@@ -1,0 +1,95 @@
+﻿@model XuatNhapModel
+@{
+    //page title
+    ViewBag.Title = "Luân chuyển công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("LuanChuyenCongCuDungCu");
+}
+<form asp-controller="XuatNhap" asp-action="CreateLuanChuyen" method="post" id="LuanChuyenFrom">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListLuanChuyen">Quay lại danh sách</a>
+            </small>
+            @*<button type="submit" name="save-continue" class="btn btn-secondary btn-save-luanchuyen" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            Lưu và tiếp tục sửa
+            </button>*@
+            <a class="btn btn-default btnClose btn-sm" name="close" onclick="window.location.href = '/XuatNhap/ChonTaiSanLuanChuyen';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <button type="submit" name="save" class="btn btn-sm btn-outline-primary btn-save-luanchuyen" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdateLuanChuyen", Model)
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#LuanChuyenFrom").submit(function () {
+            var res = true;           
+            ClearValidated();
+            res = myValidate();
+            return res;
+        });
+    });
+
+    function myValidate() {
+        let rs = true;
+        let NGAY_XUAT_NHAP = $("#NGAY_XUAT_NHAP").val();
+        if (NGAY_XUAT_NHAP != undefined && (NGAY_XUAT_NHAP == "" || NGAY_XUAT_NHAP == null)) {
+            showInvalidMessage("NGAY_XUAT_NHAP","Ngày luân chuyển không được để trống");
+            rs = false;
+        }
+        let SoLuongPhanBo = $("#SoLuongPhanBo").val();
+        if (SoLuongPhanBo != undefined && (SoLuongPhanBo == "" || SoLuongPhanBo == 0)) {
+            $("#err_SoLuongPhanBo").show();
+            rs = false;
+        }
+        let TongSoLuong = @Model.TongSoLuong;
+        if (SoLuongPhanBo > TongSoLuong) {
+            $("#err_SoLuongPhanBoCheck").show();
+            rs = false;
+        }
+        let BoPhanFrom = $("#BoPhanId").val();
+        let BoPhanTo = $("#DON_VI_BO_PHAN_ID").val();
+        if (BoPhanFrom == BoPhanTo || BoPhanTo ==0) {
+            $("#err_DON_VI_BO_PHAN_ID").show();
+            rs = false;
+        }
+        if (!checkValidateDateFormat("#NGAY_XUAT_NHAP", "NGAY_XUAT_NHAP", "Nhập sai định dạng ngày")) {;
+            rs = false;
+        }
+          if (!checkValidateDateFormat("#QUYET_DINH_NGAY", "QUYET_DINH_NGAY", "Nhập sai định dạng ngày")) {;
+            rs = false;
+        }
+        if (!checkValidateFromDateToDate("#DateBefore","#NGAY_XUAT_NHAP","NGAY_XUAT_NHAP", "Ngày luân chuyển phải lớn hơn ngày nhập kho")){
+            rs = false;
+        }
+        return rs;
+    }
+
+    function ClearValidated() {
+        hideValmsg("NGAY_XUAT_NHAP");
+        let SoLuongPhanBo = $("#err_SoLuongPhanBo").val();
+        if (SoLuongPhanBo != undefined) {
+            $("#err_SoLuongPhanBo").hide();
+        }
+        let SoLuongPhanBoCheck = $("#err_SoLuongPhanBoCheck").val();
+        if (SoLuongPhanBoCheck != undefined) {
+            $("#err_SoLuongPhanBoCheck").hide();
+        }
+        let BoPhanTo = $("#DON_VI_BO_PHAN_ID").val();
+        if (BoPhanTo != undefined) {
+            $("#err_DON_VI_BO_PHAN_ID").hide();
+        }
+    }
+</script>

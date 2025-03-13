@@ -1,0 +1,104 @@
+@model DinhMucModel
+@{
+    //page title
+    ViewBag.Title = "Thêm mới định mức tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DinhMucChucDanh");
+}
+@*<form asp-controller="DinhMuc" asp-action="Create" method="post">*@
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListDMCD">Quay lại danh sách</a>
+            </small>
+            <button class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+@*</form>*@
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            var ChiTietDinhMuc = [];
+            $(".contentChiTietDMCD").each(function () {
+                var IDF = $(this).data("guid");
+                var ID_VAL = $("#ID_" + IDF).val();
+                var CHUC_DANH_ID_VAL = $("#CHUC_DANH_ID_" + IDF).val();
+                if (CHUC_DANH_ID_VAL == "") {
+                    CHUC_DANH_ID_VAL = 0;
+                }
+                var SO_LUONG_VAL = $("#SO_LUONG_" + IDF).val();
+                var DINH_MUC_VAL = $("#DINH_MUC_" + IDF).val();
+                var LOAI_TAI_SAN_ID_VAL = $("#LOAI_TAI_SAN_ID_" + IDF).val();
+                var LOAI_HINH_TAI_SAN_ID_VAL = $("#LOAI_HINH_TAI_SAN_ID_" + IDF).val();
+                var ChiTietDMCD = {
+                    _arr:IDF,
+                    ID:ID_VAL,
+                    CHUC_DANH_ID: CHUC_DANH_ID_VAL,
+                    SO_LUONG: SO_LUONG_VAL,
+                    DINH_MUC: DINH_MUC_VAL,
+                    LOAI_TAI_SAN_ID: LOAI_TAI_SAN_ID_VAL,
+                    LOAI_HINH_TAI_SAN_ID: LOAI_HINH_TAI_SAN_ID_VAL,
+                };
+                ChiTietDinhMuc.push(ChiTietDMCD);
+            });
+            var _data = {
+                ChiTietDinhMuc: ChiTietDinhMuc,
+                MA: $("#MA").val(),
+                TU_NGAY: $("#TU_NGAY").val(),
+                DEN_NGAY: $("#DEN_NGAY").val(),
+                QUYET_DINH_SO: $("#QUYET_DINH_SO").val(),
+                QUYET_DINH_NGAY: $("#QUYET_DINH_NGAY").val(),
+                THONG_TU: $("#THONG_TU").val()
+            }
+            $.ajax({
+                url: "/DinhMuc/Create",
+                type: "POST",
+                data: _data,
+                success: function (data) {
+                    //ShowSuccessMessage(data.Message);
+                    //document.location.href = '/DinhMuc/List';
+                    if (data.Code == "00") {
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/DinhMuc/List';
+							//location.href = '/TaiSan/ListYeuCauDuyetTaiSan';
+					}
+                    else {
+                        // ẩn hết message
+                        $('span[data-valmsg-for]').each(function () {
+                            $(this).text("");
+                        });
+                        // show message Lỗi
+                        $.each(data.ObjectInfo, function (index, value) {
+                            $.each(value.Errors, function (index1, value1) {
+                                showInvalidMessage(value.Key, value1.ErrorMessage)
+                            });
+                        });
+                        //console.log(data.ObjectInfo._arr);
+                        //if ($("#err_DINH_MUC_CHITIET_" + data.ObjectInfo._arr).is(":hidden")) {
+                        //    $("#err_DINH_MUC_CHITIET_" + data.ObjectInfo._arr).toggle();
+                        //}
+                        //$("#err_DINH_MUC_CHITIET_" + data.ObjectInfo._arr).toggle();
+						//hideThrobber();
+					}
+                },
+                error: function (data) {
+                    //debugger
+                    //var guid = data._arr;
+                    //console.log(guid);
+                    //$("#err_DINH_MUC_CHITIET_" + guid).toggle();
+                }
+            })
+
+        })
+    })
+
+</script>
+

@@ -1,0 +1,13 @@
+﻿@model NguoiDungModel
+
+<tr role="row" data-idnguoidung="@Model.ID" id="gonguoidung_@Model.ID" class="listnguoidung">
+    <td>
+        @Model.TEN_DANG_NHAP
+    </td>
+    <td>
+        @Model.TEN_DAY_DU
+    </td>
+    <td style="width:100px">
+        <a href="javascript:void(0);" data-id="@Model.ID" onclick="RemoveNguoiDung(this)" class="btn btn-danger"><i class="fas fa-trash" style="margin-right:5px;"></i>Gỡ</a>
+    </td>
+</tr>

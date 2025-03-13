@@ -1,0 +1,18 @@
+﻿@model DevExpress.XtraReports.UI.XtraReport
+@using DevExpress.AspNetCore
+@{
+    Layout = "_AppWorkReport";
+}
+
+@Html.DevExpress().WebDocumentViewer("WebDocumentViewer1").Height("1000px").Bind(Model)
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("div[class='dx-shadow dxd-border-secondary dxrd-tab-panel-right']").hide();
+        var x = $("div[class='dxrd-toolbar-item']");
+        $(x).each(function () {
+            if ($(this).find("div[class*='dxrd-image-search']").length > 0)
+                $(this).hide();
+        });
+    });
+</script>
+

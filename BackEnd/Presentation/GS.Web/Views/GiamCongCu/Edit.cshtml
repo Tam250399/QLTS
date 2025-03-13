@@ -1,0 +1,157 @@
+﻿@model GiamDieuChuyenModel
+@{
+    //page title
+    ViewBag.Title = "Giảm công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GiamCongCuDungCu");
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        <button class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/GiamCongCu/List';" style="float:right;margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+        <span id="item-delete" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>
+        <button type="button" id="btnSaveGiamCongCu" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+    </div>
+</div>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+<script>
+    $("#item-delete").click(function () {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "/GiamCongCu/Delete?ID=" + @Model.ID,
+                        type: "GET",
+                        success: function (data) {
+                            if (data.Code == "00") {
+                                ShowSuccessMessage(data.Message);
+                                location.href = "/GiamCongCu/List?IsLoadSession=true";
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        },
+                        error: function (data) {
+
+                        }
+                    })
+                }
+            }
+        })
+    });
+    var checkngay = true
+    $("#btnSaveGiamCongCu").click(function () {
+        checkngay = true;
+        var checkValidation = true;
+        var ListCongCuDieuChuyen = [];
+        $(".listCongCuModel").each(function () {
+            var IDF = $(this).data("guid");
+            var MapId_VAL = IDF;
+            var SoLuongDieuChuyen_VAL = $("#SoLuongDieuChuyen_" + IDF).val();
+            var congcu = {
+                MapId: MapId_VAL,
+                SoLuongDieuChuyen: SoLuongDieuChuyen_VAL
+            };
+            ClearGiamValidated(IDF);
+            if (!CheckGiamValidation(IDF)) {
+                checkValidation = false;
+            }
+            ListCongCuDieuChuyen.push(congcu);
+        });
+        var data = {
+            ListCongCuDieuChuyenModel: ListCongCuDieuChuyen,
+            SO_QUYET_DINH: $("#SO_QUYET_DINH").val(),
+            NGAY_QUYET_DINH: $("#NGAY_QUYET_DINH").val(),
+            NGAY_DIEU_CHUYEN: $("#NGAY_DIEU_CHUYEN").val(),
+            DON_VI_ID: $("#DON_VI_ID").val(),
+            SO_CHUNG_TU: $("#SO_CHUNG_TU").val(),
+            NGAY_CHUNG_TU: $("#NGAY_CHUNG_TU").val(),
+            GHI_CHU: $("#GHI_CHU").val(),
+            LoaiXuatNhapId: $("#LoaiXuatNhapId").val(),
+            ID:$("#ID").val(),
+        };
+        if (checkValidation) {
+            $.ajax({
+                url: "/GiamCongCu/Edit",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/GiamCongCu/List?IsLoadSession=true';
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function CheckGiamValidation(e) {
+        var check = true;
+        var SoLuongDieuChuyen = $("#SoLuongDieuChuyen_" + e).val();
+        var SoLuongCoTheDieuChuyen = $("#SoLuongCoTheChuyen_" + e).text();
+        if (SoLuongDieuChuyen == undefined || (Number(SoLuongDieuChuyen) == 0 || (Number(SoLuongDieuChuyen) > Number(SoLuongCoTheDieuChuyen)))) {
+            $("#err_SO_LUONG_" + e).show();
+            check = false;
+        }    
+        var LoaiXuatNhapId = $("#LoaiXuatNhapId").val();
+        if (LoaiXuatNhapId == undefined || LoaiXuatNhapId == 0) {
+            showInvalidMessage("LoaiXuatNhapId", "Chọn lý do giảm");
+            check = false;
+        }
+        if ($("#NGAY_DIEU_CHUYEN").val() == null || $("#NGAY_DIEU_CHUYEN").val() == "") {
+            showInvalidMessage("NGAY_DIEU_CHUYEN", "Ngày không được để trống");
+            check = false;
+        }		
+        if (checkngay == true) {
+            if (!checkValidateDateFormat("#NGAY_DIEU_CHUYEN", "NGAY_DIEU_CHUYEN", "Nhập sai định dạng ngày")) {
+                check = false;
+                checkngay = false;
+            }
+            if (!checkValidateFromDateToDate("#NgayPhanBo_" + e, "#NGAY_DIEU_CHUYEN", "NGAY_DIEU_CHUYEN", "Ngày điều chuyển phải lớn hơn ngày phân bổ")) {
+                check = false;
+                checkngay = false;
+            }
+        }
+        return check;
+    }
+    function ClearGiamValidated(e) {
+        $("#err_SO_LUONG_" + e).hide();
+        hideValmsg("LoaiXuatNhapId");
+    }
+</script>
+
+

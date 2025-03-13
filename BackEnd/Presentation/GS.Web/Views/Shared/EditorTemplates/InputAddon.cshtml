@@ -1,0 +1,103 @@
+﻿@model Decimal?
+@{
+    var _idClient = Html.IdForModel();
+    var _nameClient = Html.NameForModel();
+    var htmlAttributes = new Dictionary<string, object>();
+    var _DonViTinh = "";
+    var _disable = "";
+    var _class = "form-control";
+    var _minValue = "";
+    var _maxValue = "";
+    var _IsSoLuong = "";
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        object _idclientOut, _classOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+        if (htmlAttributes.TryGetValue("class", out _classOut))
+        {
+            _class = _classOut.ToString();
+        }
+
+        if (!String.IsNullOrEmpty(htmlAttributes["donvitinh"].ToString()))
+        {
+            _DonViTinh = htmlAttributes["donvitinh"].ToString();
+            ///c = ₫, m2 = m², m3 = m³
+            if (_DonViTinh.Equals("c"))
+            {
+                _DonViTinh = "₫";
+            }
+            if (_DonViTinh.Equals("m2"))
+            {
+                _DonViTinh = "m²";
+            }
+            if (_DonViTinh.Equals("m3"))
+            {
+                _DonViTinh = "m³";
+            }
+        }
+        object _disableOut;
+        if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+        {
+            _disable = _disableOut.ToString();
+        }
+        object _minValueOut;
+        if (htmlAttributes.TryGetValue("minvalue", out _minValueOut))
+        {
+            _minValue = _minValueOut.ToString();
+        }
+        object _maxValueOut;
+        if (htmlAttributes.TryGetValue("maxvalue", out _maxValueOut))
+        {
+            _maxValue = _maxValueOut.ToString();
+        }
+        object _IsSoLuongOut;
+        if (htmlAttributes.TryGetValue("IsSoLuong", out _IsSoLuongOut))
+        {
+            _IsSoLuong = _IsSoLuongOut.ToString();
+        }
+    }
+}
+<input id="@_idClient" name="@_nameClient" value="@(Model == 0 ? null: Model)" style="width:100%;" class="@_class"/>
+<script>
+
+    $(document).ready(function () {
+        var _decimals = 2;
+		if ("@_IsSoLuong"=="true") {
+            _decimals = 0;
+        }
+		var input =
+        $("#@_idClient").kendoNumericTextBox({
+           format: '###.###,## @Html.Raw(_DonViTinh)',
+            culture: "vi-VN",
+            decimals: _decimals,
+			placeholder: "@Html.Raw(_DonViTinh)",
+            round: true,
+            spinners: false
+            
+            }).data("kendoNumericTextBox");
+        //dong k.select up-down
+        //input.wrapper
+        //    .find(".k-numeric-wrap")
+        //    .addClass("expand-padding")
+        //    .find(".k-select").hide();
+		//placeholder:,
+        if ("@_disable"== "disabled") {
+            $("#@_idClient").data("kendoNumericTextBox").enable(false);
+		}
+		if ("@_minValue"!=="") {
+			$("#@_idClient").data("kendoNumericTextBox").min(@_minValue);
+        }
+		if ("@_maxValue"!=="") {
+			$("#@_idClient").data("kendoNumericTextBox").max(@_maxValue);
+        }
+
+    });
+
+</script>
+
+
+

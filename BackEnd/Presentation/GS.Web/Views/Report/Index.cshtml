@@ -1,0 +1,53 @@
+﻿@{
+    //page title
+    ViewBag.Title = "Tổng hợp báo cáo";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCao");
+}
+
+@*<h1>THỐNG KÊ TỔNG HỢP</h1>
+
+@{ 
+    await Html.RenderPartialAsync("_SoLuongTaiSanTheoLoaiHinh");
+}
+
+@{ 
+    await Html.RenderPartialAsync("_SoLuongTaiSanTheoLoaiHinh");
+}
+
+<div class="row">
+    <div class="col-md-6">
+        @{
+            await Html.RenderPartialAsync("_SoLuongLoaiTaiSanTren500");
+            //await Html.RenderPartialAsync("_SoLuongLoaiTaiSanTren500");
+        }
+    </div>
+    <div class="col-md-6">
+        @{
+            await Html.RenderPartialAsync("_SoLuongLoaiTaiSanDuoi500");
+            //await Html.RenderPartialAsync("_SoLuongLoaiTaiSanDuoi500");
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @{ 
+            await Html.RenderPartialAsync("_GiaTriTaiSanTheoLoaiHinh");
+        }
+    </div>
+</div>*@
+
+@*<div class="row">
+    <div class="col-md-12">
+        @{ 
+            Html.RenderPartial("_SoLuongTaiSanTheoDonVi");
+            await Html.RenderPartialAsync("_SoLuongTaiSanTheoDonVi");
+        }
+    </div>
+
+</div>*@
+
+
+
+

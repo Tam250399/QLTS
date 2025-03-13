@@ -1,0 +1,70 @@
+﻿@model DieuKienLocTaiSanModel
+@{
+	//page title
+	ViewBag.Title = "Cấu hình báo cáo";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhThamSoBaoCao");
+}
+<form asp-controller="CauHinh" asp-action="EditCauHinhDieuKienLocTaiSan" method="post">
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Thêm mới
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="ListCauHinhDieuKienLocTaiSan">Quay lại danh sách</a>
+			</small>
+			<button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px; ">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+			<button id="btnDelete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+				<i class="fas fa-trash"></i>
+				Xóa
+			</button>
+		</h6>
+		<div class="card-body">
+			<div>
+				<input type="hidden" asp-for="MA_LOC_TAI_SAN" />
+				@await Html.PartialAsync("_CreateOrUpdateCauHinhDieuKienLocTaiSan", Model)
+			</div>
+		</div>
+	</div>
+</form>
+<script>
+    $("#btnDelete").click(function () {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+					var MA_LOC_TAI_SAN = $("#MA_LOC_TAI_SAN").val();
+                    $.ajax({
+						url: "/CauHinh/DeleteCauHinhDieuKienLocTaiSan?MA_LOC_TAI_SAN=" + MA_LOC_TAI_SAN,
+                        type: "POST",
+                        success: function (data) {
+							if (data.Code == "00") {
+								ShowSuccessMessage("Thành công");
+								window.location.href = '@Url.Action("ListCauHinhDieuKienLocTaiSan","CauHinh")';
+							}
+							else {
+								ShowErrorMessage("Thất bại");
+							}
+
+                        },
+                        error: function (data) {
+
+                        }
+                    })
+                }
+            }
+        })
+    })
+</script>

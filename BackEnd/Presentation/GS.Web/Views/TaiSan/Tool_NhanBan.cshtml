@@ -1,0 +1,73 @@
+﻿@model TaiSanModel
+@{
+	//page title
+	ViewBag.Title = "Nhân bản loại tài sản";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhMucLoaiTaiSan");
+}
+<div class="card mb-4">
+	<h6 class="card-header">
+		Tool Nhân Bản
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a asp-action="List">Quay lại danh sách</a>
+		</small>
+		<a href="~/LoaiTaiSan/List" class="btn btn-primary" role="button" style=" float:right;margin-right:1px;height:35px;width:68px;">Đóng</a>
+		<button name="save" class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Nhân bản
+		</button>
+	</h6>
+	<div class="card-body">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">ID tài sản</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="GIA_HOA_DON" asp-min-number="0" asp-amount="true" />
+				<span asp-validation-for="GIA_HOA_DON"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Số lượng nhân bản</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="SoLuongNhanBan"  asp-min-number="0" />
+				<span asp-validation-for="SoLuongNhanBan"></span>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+        $(document).ready(function () {
+			$("#btnSave").click(function () {
+                var _data = {
+					taiSanId: $('#@Html.IdFor(c => c.GIA_HOA_DON)').val(),
+					soLuongNhanBan:$('#@Html.IdFor(c => c.SoLuongNhanBan)').val(),
+				};
+				let _url = "/TaiSan/Tool_NhanBan";
+				ajaxPost(_data, _url,true).done((data) => {
+					if (CheckValidMessageReturn(data)) {
+						ShowSuccessMessage(data.Message);
+						location.href = '/TaiSan/List';
+					} else {
+						ShowErrorMessage(data.Message);
+					}
+				})
+                //$.ajax({
+                //cache: false,
+                //type: "POST",
+                //url: "/LoaiTaiSan/Create",
+                //data: _data,
+                //success: function (data) {
+                //    if (CheckValidMessageReturn(data)) {
+                //        ShowSuccessMessage(data.Message);
+                //        location.href = '/LoaiTaiSan/List';
+                //    }
+                //},
+                //error: function (xhr, ajaxOptions, thrownError) {
+                //   ShowErrorMessage(data.Message);
+                //     alert('error');
+                //}
+            //});
+            });
+        });
+</script>
+

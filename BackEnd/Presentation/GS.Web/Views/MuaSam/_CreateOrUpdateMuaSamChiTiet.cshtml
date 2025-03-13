@@ -1,0 +1,103 @@
+﻿@model MuaSamChiTietModel
+
+<input asp-for="MUA_SAM_ID" hidden id="MUA_SAM_ID_popup" />
+<input asp-for="ID" hidden id="idMSCT_popup"/>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	@*<div class="form-group row">
+			<label class="col-form-label col-sm-2 ">Đơn vị</label>
+			<div class="col-sm-10">
+				 <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+			</div>
+		</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-sm-left text-required">Loại tài sản</label>
+		<div class="col-sm-8">
+			<app-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+			<span asp-validation-for="LOAI_TAI_SAN_ID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-sm-left text-required">Tên tài sản</label>
+		<div class="col-sm-8">
+			<nop-editor asp-for="TEN_TAI_SAN" />
+			<span asp-validation-for="TEN_TAI_SAN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-sm-left text-required">Hình thức mua sắm</label>
+		<div class="col-sm-8">
+			<app-select asp-for="HINH_THUC_MUA_SAM_ID" asp-items="Model.HinhThucMuaSamAvailable" asp-filter="true" />
+			<span asp-validation-for="HINH_THUC_MUA_SAM_ID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 ">Quy cách, chất liệu, chủng loại</label>
+		<div class="col-sm-8 ">
+			<nop-textarea asp-for="DAC_DIEM" style="height:35px;" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-required">Số lượng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="SO_LUONG" asp-min-number="1"   asp-amount="true"/>
+			<span asp-validation-for="SO_LUONG"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-required">Đơn giá</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="DON_GIA" asp-min-number="0" asp-dvt="c" asp-amount="true"/>
+			<span asp-validation-for="DON_GIA"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 ">Thành tiền</label>
+		<div class="col-sm-4 ">
+
+			<nop-editor asp-for="THANH_TIEN" asp-dvt="c" asp-disabled="true">
+				<span asp-validation-for="THANH_TIEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-required">Dự kiến thời gian giao nhận</label>
+		<div class="col-sm-4 ">
+			<nop-editor asp-for="THOI_GIAN_DU_KIEN" />
+			<span asp-validation-for="THOI_GIAN_DU_KIEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 text-required">Dự toán được phê duyệt</label>
+		<div class="col-sm-4 ">
+			<nop-editor asp-for="DU_TOAN_DUOC_DUYET" asp-min-number="1" asp-dvt="c" asp-amount="true" />
+			<span asp-validation-for="DU_TOAN_DUOC_DUYET"></span>
+		</div>
+	</div>
+	@*<div class="form-group row">
+		<label class="col-form-label col-sm-4">Là tài sản từ nguồn viện trợ, quà biếu, tặng cho</label>
+		<label class="custom-control custom-checkbox" style="margin-left: 12px;">
+			@Html.CheckBoxFor(c => c.IS_TAI_SAN_NGUON_VIEN_TRO, new { @class = "custom-control-input" })
+			<span class="custom-control-label"> </span>
+		</label>
+	</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 ">Đề xuất</label>
+		<div class="col-sm-8 ">
+			<nop-textarea asp-for="DE_XUAT" style="height:35px;"/>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-4 ">Ghi chú</label>
+		<div class="col-sm-8 ">
+			<nop-textarea asp-for="GHI_CHU" style="height:35px;"/>
+		</div>
+	</div>
+
+</div>
+<script>
+	$(document).ready(function () {
+	});
+
+</script>
+
+
+

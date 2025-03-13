@@ -1,0 +1,233 @@
+﻿@model CongCuModel
+
+@{
+    var idf = @Guid.NewGuid().ToString().Replace("-", "");
+}
+<input asp-for="ID" type="hidden" id="ID_@idf" />
+<input asp-for="MapId" type="hidden" id="MapId_@idf" />
+<div class="gs-form-group mb-4 ContentLoCongCu" data-guid="@idf" id="divLoCongCu_@idf">
+    <div class="row" style="margin-bottom:10px;">
+        <div class="col-md-11"></div>
+        <div class="col-md-1" style="text-align:right">
+            <a onclick="XoaDivCongCu('@idf', '@Model.MapId')" href="javascript:void(0);">
+                <i style="color:red" class="ion ion-md-remove-circle d-block"></i>
+            </a>
+        </div>
+    </div>
+    <script>
+        function XoaDivCongCu(e, id) {
+            if (id > 0) {
+                XoaCongCu(e,id);
+            } else {
+                $("#divLoCongCu_" + e).remove();
+            }
+        }
+        function XoaCongCu(e,id) {
+            bootbox.confirm({
+                message: 'Bạn có chắc chắn muốn xóa công cụ, dụng cụ ?',
+                className: 'bootbox-sm',
+                buttons: {
+                    confirm: {
+                        label: '@T("admin.common.yes")',
+                    },
+                    cancel: {
+                        label: '@T("admin.common.no")',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                         $("#divLoCongCu_" + e).remove();
+                        //kendo.ui.progress($(".progress-bar"), true);
+                        //$.ajax({
+                        //    url: "/CongCu/DeleteCongCu?id=" + e,
+                        //    type: "POST",
+                        //    success: function (data) {
+                        //        if (CheckValidMessageReturn(data)) {
+                        //            ShowSuccessMessage(data.Message);
+                        //            $("#divLoCongCu_" + e).remove();
+                        //        } else {
+                        //            ShowErrorMessage(data.Message);
+                        //        }
+                        //    }
+                        //});
+                    }
+                }
+            })
+        }
+    </script>
+    <h6>Thông tin công cụ, dụng cụ</h6>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label class="text-sm-left text-required">Nhóm CCDC</label>
+            <a class="btn btn-xs btn-outline-success" href="javascript:void(0)" style="margin-left:30px;" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới Nhóm công cụ, dụng cụ" data-src="/CongCu/_ThemMoiCongCu?IDF=@idf"><i class="ion ion-md-add">&nbsp;Thêm mới</i></a>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="text-sm-left text-required">Tên CCDC</label>
+        </div>
+
+        @*<div class="col-sm-2">
+            <label class="text-sm-left text-required">Trạng thái</label>
+        </div>*@
+        <div class="col-sm-2" style="padding-left:0px;">
+            <label class="text-sm-left text-required">Số lượng</label>
+        </div>
+        <div class="col-sm-4" style="padding-right:0px;">
+            <div class="row">
+                <div class="col-sm-6" style="padding-left:0px;">
+                    <label class="text-sm-left text-required">Đơn giá</label>
+                </div>
+                <div class="col-sm-6" style="padding:0px;">
+                    <label class="text-sm-left">Thành tiền</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <nop-select asp-for="NHOM_CONG_CU_ID" asp-items="Model.DDLNhomCongCu" id="NHOM_CONG_CU_ID_@idf" asp-filter="true" />
+            <span id="err_NHOM_CONG_CU_ID_@idf" style="display:none;" class="field-validation-error">Chọn Nhóm công cụ, dụng cụ</span>
+        </div>
+        <div class="col-sm-3">
+            <input id="addCongCu_@idf" asp-for="ID" hidden />
+            <input id="CONG_CU_ID_@idf" data-guid="@idf" class="form-control" />
+            <span id="err_CONG_CU_ID_@idf" style="display:none;" class="field-validation-error">Chọn công cụ, dụng cụ</span>
+        </div>
+
+        @*<div class="col-sm-2">
+            <nop-select asp-for="TRANG_THAI_ID" asp-items="Model.DDLTrangThai" id="TRANG_THAI_ID_@idf" asp-filter="true" />
+            <span id="err_TRANG_THAI_ID_@idf" style="display:none;" class="field-validation-error">Chọn trạng thái</span>
+        </div>*@
+        <div class="col-sm-2" style="padding-left:0px;">
+            <nop-editor asp-for="SO_LUONG" id="SO_LUONG_@idf" asp-max-number="9999" asp-amount="true" asp-min-number="0" />
+            <span id="err_SO_LUONG_@idf" style="display:none;" class="field-validation-error">Số lượng không được để trống </span>
+        </div>
+        <div class="col-sm-4" style="padding-right:0px;">
+            <div class="row">
+                <div class="col-sm-6" style="padding-left:0px;">
+                    <nop-editor asp-for="DON_GIA" asp-dvt="c" id="DON_GIA_@idf" asp-amount="true" asp-min-number="0" />
+                    <span id="err_DON_GIA_@idf" style="display:none;" class="field-validation-error">Đơn giá không được để trống </span>
+                    <span id="alert_DON_GIA_@idf" style="display:none;" class="field-validation-error">Cảnh báo: Đơn giá đang >= 10 triệu đồng/ccdc  </span>
+                </div>
+                <div class="col-sm-6" style="padding:0px;">
+                    <div style="margin-top:5px;">
+                        <i id="THANH_TIEN_@idf" name="THANH_TIEN" style="color:#2673b4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function LoadCongCuTheoNhom(guid, objInfo, selected) {
+        var _data = {
+            maNhomCongCu: objInfo,
+            congCuSelected: selected
+        }
+        var selector = "#CONG_CU_ID_" + guid
+        var congCuComboBox = $(selector).data("kendoComboBox")
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: _data,
+            url: "/CongCu/GetJsonCongCuTheoNhom",
+            success: function (data) {
+                congCuComboBox.setDataSource(data);
+                if (selected == 0) {
+                    congCuComboBox.text("");
+                    $("#addCongCu_" + guid).val(0);
+                }
+                else {
+                    congCuComboBox.select(0);
+                    $("#addCongCu_" + guid).val(congCuComboBox.value());
+                }
+            }
+        });
+    }
+
+    function LoadNhomCongCu(guid, objInfo) {
+        var selector = '#NHOM_CONG_CU_ID_' + guid
+        var nhomCongCuDropdownList = $(selector)
+        var data = {
+            sel: objInfo
+        }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: data,
+            url: "/CongCu/GetJsonNhomCongCu",
+            success: function (data) {
+                if (data != null) {
+                    nhomCongCuDropdownList.data("kendoDropDownList").setDataSource(data);
+                    if (objInfo != 0) {
+                        nhomCongCuDropdownList.data("kendoDropDownList").value(objInfo);
+                    }
+                    else {
+                         nhomCongCuDropdownList.data("kendoDropDownList").select(0);
+                    }
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        @*var trangthai = $("#TRANG_THAI_ID_@idf").data("kendoDropDownList");
+        trangthai.value(@Model.TRANG_THAI_ID);*@
+        var GuidVal = '@idf';
+        $("#NHOM_CONG_CU_ID_" + GuidVal).data("kendoDropDownList").value(@Model.NHOM_CONG_CU_ID);
+        $("#CONG_CU_ID_" + GuidVal).kendoComboBox({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            placeholder: "Nhập tên công cụ, dụng cụ...",
+            select: (e) => {
+                if(e.dataItem !=undefined)
+                    $("#addCongCu_" + GuidVal).val(e.dataItem.Value);
+                else
+                     $("#addCongCu_" + GuidVal).val(null);
+            }
+        });
+        if (@Model.ID > 0){
+            LoadNhomCongCu(GuidVal, @Model.NHOM_CONG_CU_ID);
+            LoadCongCuTheoNhom(GuidVal, "@Model.NHOM_CONG_CU_ID", @Model.ID);
+        } else {
+            LoadNhomCongCu(GuidVal, 0);
+            LoadCongCuTheoNhom(GuidVal, "@Model.NHOM_CONG_CU_ID", @Model.ID);
+        }
+        LoadThanhTien(GuidVal);
+
+        //$("#SO_LUONG_" + GuidVal).change(function () {
+        //    LoadThanhTien(GuidVal);
+        //});
+        //$("#DON_GIA_" + GuidVal).change(function () {
+        //    LoadThanhTien(GuidVal);
+        //});
+        $("#NHOM_CONG_CU_ID_" + GuidVal).change(function () {
+            LoadCongCuTheoNhom(GuidVal, $("#NHOM_CONG_CU_ID_" + GuidVal).val(), 0);
+        });
+        $("#DON_GIA_" + GuidVal).data("kendoNumericTextBox").bind("change", function () {
+            LoadThanhTien(GuidVal);
+        });
+        $("#SO_LUONG_" + GuidVal).data("kendoNumericTextBox").bind("change", function () {
+            LoadThanhTien(GuidVal);
+        });
+    })
+
+    function LoadThanhTien(e) {
+        var soluong = $("#SO_LUONG_" + e).val();
+        var dongia = $("#DON_GIA_" + e).val();
+        if (dongia >= 10000000) {
+            $('#alert_DON_GIA_' + e).show();
+        }
+        else {
+            $('#alert_DON_GIA_' + e).hide();
+        }
+        if (soluong > 0 && dongia > 0) {
+            var thanhtien = soluong * dongia;
+            $("#THANH_TIEN_" + e).text(function (i, origText) {
+                return thanhtien.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")+" ₫";
+            });
+        }
+    }
+</script>

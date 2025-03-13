@@ -1,0 +1,106 @@
+﻿@model DinhMucChucDanhModel
+@{
+    //page title
+    ViewBag.Title = "Sửa định mức tài sản";
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa thông tin
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="ListDMCD">Quay lại danh sách</a>
+        </small>
+        <span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>
+        <button class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdateDMCD", Model);
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            var ChiTietDinhMuc = [];
+            $(".contentChiTietDMCD").each(function () {
+                var IDF = $(this).data("guid");
+                var CHUC_DANH_ID_VAL = $("#CHUC_DANH_ID_" + IDF).val();
+                var SO_LUONG_VAL = $("#SO_LUONG_" + IDF).val();
+                var DINH_MUC_VAL = $("#DINH_MUC_" + IDF).val();
+                var NHOM_TAI_SAN_ID_VAL = $("#NHOM_TAI_SAN_ID_" + IDF).val();
+                var ChiTietDMCD = {
+                    CHUC_DANH_ID: CHUC_DANH_ID_VAL,
+                    SO_LUONG: SO_LUONG_VAL,
+                    DINH_MUC: DINH_MUC_VAL,
+                    NHOM_TAI_SAN_ID: NHOM_TAI_SAN_ID_VAL,
+                };
+                ChiTietDinhMuc.push(ChiTietDMCD);
+            });
+            var _data = {
+                ChiTietDinhMuc: ChiTietDinhMuc,
+                MA: $("#MA").val(),
+                TU_NGAY: $("#TU_NGAY").val(),
+                DEN_NGAY: $("#DEN_NGAY").val(),
+                SO_QUYET_DINH: $("#SO_QUYET_DINH").val(),
+                NGAY_QUYET_DINH: $("#NGAY_QUYET_DINH").val(),
+                THONG_TU_NGHI_DINH: $("#THONG_TU_NGHI_DINH").val()
+            }
+            $.ajax({
+                url: "/CauHinh/EditDMCD",
+                type: "POST",
+                data: _data,
+                success: function (data) {
+                    ShowSuccessMessage(data.Message);
+                    document.location.href = '/CauHinh/ListDMCD';
+                },
+                error: function (data) {
+
+                }
+            })
+
+        })
+    })
+
+    function XoaDinhMuc(e) {
+            var _d = {
+                Ma: $("#MA").val(),
+            };
+            bootbox.confirm({
+                message: 'Bạn có chắc chắn muốn xóa định mức ?',
+                className: 'bootbox-sm',
+                buttons: {
+                    confirm: {
+                        label: '@T("admin.common.yes")',
+                    },
+                    cancel: {
+                        label: '@T("admin.common.no")',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/CauHinh/DeleteDMCD",
+                            type: "POST",
+                            data: _d,
+                            success: function (data) {
+                                if (CheckValidMessageReturn(data)) {
+                                    ShowSuccessMessage(data.Message);
+                                    document.location.href = '/CauHinh/ListDMCD';
+                                } else {
+                                    ShowErrorMessage(data.Message);
+                                }
+                            }
+                        });
+                        kendo.ui.progress($(".progress-bar"), true);
+
+                    }
+                }
+            })
+        }
+</script>

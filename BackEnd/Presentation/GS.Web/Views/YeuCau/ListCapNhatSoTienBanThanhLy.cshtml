@@ -1,0 +1,262 @@
+﻿@model YeuCauSearchModel
+@{
+	//page title
+	ViewBag.Title = "Cập nhật số tiền bán thanh lý";
+	var systemName = "CapNhatTien";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName(systemName);
+}
+
+<nop-antiforgery-token />
+<input asp-for="LOAI_LY_DO_BD_ID" type="hidden" />
+<div class="content-header clearfix d-none">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	<div class="form-group row">
+		<div class="col-md-12"></div>
+
+		<label class="col-form-label col-md-2 text-sm-left">Từ khóa</label>
+		<div class="col-md-10">
+			<nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-md-2 text-sm-left">Loại tài sản</label>
+		<div class="col-md-4">
+			<app-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvailable" asp-filter="true" />
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">Trạng thái</label>
+		<div class="col-md-4">
+			<nop-select asp-for="TRANG_THAI_ID" asp-items="Model.Trangthailist" />
+		</div>
+	</div>
+	<div class="form-group row">
+		@*@if (Model.LOAI_LY_DO_BD_ID == (int)enumLOAI_LY_DO_TANG_GIAM.GIAM_TOAN_BO)
+			{*@
+		<label class="col-form-label col-md-2 text-sm-left">Số quyết định</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="QUYET_DINH_SO" />
+		</div>
+		@*//}
+			//else
+			//{*@
+		@*<label class="col-form-label col-md-2 text-sm-left">Chứng từ số</label>
+				<div class="col-md-4">
+					<nop-editor asp-for="CHUNG_TU_SO" />
+				</div>
+			//}*@
+
+		<label class="col-form-label col-md-2 text-sm-left">Bộ phận sử dụng</label>
+		<div class="col-md-4">
+			<app-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.BoPhanSuDungAvailable" asp-filter="true" />
+		</div>
+	</div>
+	<div class=" form-group row">
+		<label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 30px;"*@>Biến động từ ngày</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="FromDate" /><br />
+			<span asp-validation-for="FromDate"></span>
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 20px;"*@>Đến ngày</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="ToDate" /><br />
+			<span asp-validation-for="ToDate"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-5">
+		</div>
+		<div class="col-md-6">
+			<div class="col-sm-6"></div>
+			<div class="col-sm-3">
+				<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i>@ViewBag.Title
+		</div>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>
+						var recordChonTS = 0;
+						$(document).ready(function () {
+							function SearchData() {
+								var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+									TRANG_THAI_ID: $('#@Html.IdFor(model => model.TRANG_THAI_ID)').val(),
+									DON_VI_BO_PHAN_ID: $('#@Html.IdFor(model => model.DON_VI_BO_PHAN_ID)').val(),
+									LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)').val(),
+									FromDate: $('#@Html.IdFor(model=>model.FromDate)').val(),
+									ToDate: $('#@Html.IdFor(model=>model.ToDate)').val(),
+									LOAI_LY_DO_BD_ID: $('#@Html.IdFor(model=>model.LOAI_LY_DO_BD_ID)').val(),
+									QUYET_DINH_SO: $('#@Html.IdFor(model=>model.QUYET_DINH_SO)').val(),
+									CHUNG_TU_SO: $('#@Html.IdFor(model=>model.CHUNG_TU_SO)').val(),
+                                    pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+									isIgnoreTraLai: false,
+								};
+								addAntiForgeryToken(_data);
+								return _data;
+							}
+							$("#btnSearch").click(function () {
+								if (checkValidate())
+								{
+									var grid = $('#items-grid').data('kendoGrid');
+									recordChonTS = 0;
+									grid.dataSource.page(1); //new search. Set page size to 1
+									return false;
+								}
+								return false;
+							});
+							 $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+								if (event.keyCode === 13) {
+									$("#btnSearch").click();
+									return false;
+								}
+							 });
+							var grid = $("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("ListCapNhatSoTienBanThanhLy", "YeuCau"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function(e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+                                    page:@(Model.Page),
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+
+								dataBinding: function() {
+									  recordChonTS = (this.dataSource.page() -1) * this.dataSource.pageSize();
+								},
+								pageable: {
+									refresh: true,
+									input: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+									@await Html.PartialAsync("_GridPagerMessages")
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								scrollable: false,
+								columns: [
+									{
+									  title: "STT",
+									  template: "#= ++recordChonTS#",
+									  width: 47,
+									  headerAttributes: { style: "text-align:center" },
+									  attributes: { style: "text-align:center" },
+									},
+									{
+										field: "TAI_SAN_MA",
+										title: "Mã tài sản",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "white-space: nowrap" },
+										template: function (dataItem) {
+											return "<a href='javascript:openViewThongTinYeuCau(" + dataItem.ID +"," + dataItem.BDorYC +  ")'>" + dataItem.TAI_SAN_MA + "</a>";
+										}
+									},
+									{
+										field: "TAI_SAN_TEN", title: "Tên tài sản",
+										headerAttributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											return "<a href='javascript:openViewThongTinYeuCau(" + dataItem.ID +"," + dataItem.BDorYC +  ")'>" + dataItem.TAI_SAN_TEN + "</a>";
+										}
+									},
+									{
+										field: "TenLoaiTaiSan",
+										title: "Loại tài sản",
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: "TenDonViBoPhan",
+										title: "Bộ phận sử dụng",
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: "TenLyDoBienDong",
+										title: "Lý do biến động",
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: "NGAY_BIEN_DONG",
+										title: "Ngày biến động", type: "Date",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										format: "{0:dd/MM/yyyy}",
+									},
+									{
+										field: "TenTrangThai",
+										title: "Trạng thái",
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: "ID",
+										title: "Thao tác",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											return "<a class='btn  btn-sm btn-outline-secondary' href='/YeuCau/UpdateSoTien?guid=" + dataItem.GUID + "&BDorYC=" + dataItem.BDorYC+"&pageIndex=" + dataItem.pageIndex + "' title='Cập nhật số tiền bán, thanh lý'>Cập nhật</a>"
+
+										}
+									}
+							]
+							}).data("kendoGrid");
+						});
+						function checkValidate() {
+							let res = false;
+							if (
+								checkValidateDateFormat('#FromDate', 'FromDate', 'Phải nhập đúng định dạng ngày') &&
+								checkValidateDateFormat('#ToDate', 'ToDate', 'Phải nhập đúng định dạng ngày') &&
+								checkValidateFromDateToDate('#FromDate', '#ToDate', 'FromDate', 'Từ ngày phải nhỏ hơn đến ngày'))
+							{
+								res = true;
+							}
+							return res;
+						}
+						//function trinh duyet
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+		function openViewThongTinYeuCau(yeucauId,BDorYC)
+		{
+			var _url = "@(Url.Action("_ThongTinYeuCauBienDong", "TrungGianBDYC"))?Id=" + yeucauId+'&BDorYC='+BDorYC;
+			OpenModalManual("Thông tin biến động", _url,72);
+		}
+</script>

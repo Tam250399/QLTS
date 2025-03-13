@@ -1,0 +1,95 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+@{
+    //page title
+    ViewBag.Title = "Báo cáo kết quả xử lý";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoKetQuaXuLyTSTD");
+}
+
+    <div class="gs-form-group mb-4" style="margin-top:25px;">
+        <h6>Điều kiện báo cáo</h6>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Từ ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayBatDau" />
+                <span asp-validation-for="NgayBatDau"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Đến ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NgayKetThuc" />
+                <span asp-validation-for="NgayKetThuc"></span>
+            </div>
+        </div>
+        <div class="form-group row" style="display:none">
+            <label class="col-form-label col-sm-2 text-sm-left">Đơn vị</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="DonVi" asp-items="Model.DDLDonVi" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính giá trị</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="DonViTien" asp-items="Model.DDLDonViTien" />
+            </div>
+            @*<label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính diện tích</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="DonViDienTich" asp-items="Model.DDLDonViDienTich" />
+            </div>*@
+        </div>
+        <div class="form-group" style="text-align:center">
+            <button class="btn btn-success" id="btnBaoCao">Báo cáo</button>
+        </div>
+    </div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+        $(document).ready(function () {
+        $("#DonViTien").data("kendoDropDownList").select(1);
+        //$("#DonViDienTich").data("kendoDropDownList").value(1);
+        })
+
+    function checkvali() {
+        var check = true;
+        if (!checkValidateDateFormat("#NgayBatDau", "NgayBatDau", "Sai định dạng ngày")) {
+             check = false;
+        }
+        if (!checkValidateDateFormat("#NgayKetThuc", "NgayKetThuc", "Sai định dạng ngày")) {
+             check = false;
+        }
+        if (!checkValidateFromDateToDate("#NgayBatDau", "#NgayKetThuc", "NgayBatDau", "Ngày bắt đầu phải bé hơn ngày kết thúc")) {
+             check = false;
+        }
+        if ($("#NgayBatDau").val() == "" || $("#NgayBatDau").val() == undefined) {
+            showInvalidMessage("NgayBatDau", "Ngày không được để trống");
+            check = false;
+        }
+        if ($("#NgayKetThuc").val() == "" || $("#NgayKetThuc") == undefined) {
+            showInvalidMessage("NgayKetThuc", "Ngày không được để trống");
+            check = false;
+        }
+        return check;
+    }
+    $("#btnBaoCao").click(function () {
+        if (checkvali()) {
+            var data = {
+                NgayBatDau:getDateFormatForGetMethod($("#NgayBatDau").val()),
+                NgayKetThuc: getDateFormatForGetMethod($("#NgayKetThuc").val()),
+                DonVi: $("#DonVi").val(),
+                DonViTien: $("#DonViTien").val(),
+                DonViDienTich: $("#DonViDienTich").val()
+            };
+            //$("#view-contentReport").prop('src', '/Empty.htm');
+            //$.ajax({
+            //    url: "/Report/TSTD_KetQuaXuLy",
+            //    type: "POST",
+            //    data: data,
+            //    success: function (data) {
+            //        var dstFrame = document.getElementById('view-contentReport');
+            //        var dstDoc = dstFrame.contentDocument || dstFrame.contentWindow.document;
+            //        dstDoc.write(data);
+            //        dstDoc.close();
+            //    }
+            //})
+            submit_post_via_hidden_form("/Report/TSTD_KetQuaXuLy", data);
+        }
+        })
+</script>

@@ -1,0 +1,2014 @@
+﻿@model BaoCaoTaiSanModel
+@using GS.Web.Models.BaoCaos;
+<style>
+    .k-state-focused {
+        box-shadow: inset 0 0 0 2px #91CFFA !important;
+    }
+</style>
+@if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoChiTietTaiSan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo chi tiết tài sản công";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoCTTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo chi tiết</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01A_DK_TSNN">
+                                Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo hiện trạng sử dụng nhà, đất của đơn vị trực tiếp sử dụng - Biểu số 01B-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo hiện trạng sử dụng nhà, đất của đơn vị trực tiếp sử dụng - Biểu số 01B-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01B_DK_TSNN">
+                                Báo cáo hiện trạng sử dụng nhà, đất của đơn vị trực tiếp sử dụng - Biểu số 01B-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tăng, giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01C-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tăng, giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01C-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01C_DK_TSNN">
+                                Báo cáo tăng, giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01C-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tăng tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01D-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tăng tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01D-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01D_DK_TSNN">
+                                Báo cáo tăng tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01D-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01E-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01E-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01E_DK_TSNN">
+                                Báo cáo giảm tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01E-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo chi tiết hao mòn tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01F-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo chi tiết hao mòn tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01F-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01F_DK_TSNN">
+                                Báo cáo chi tiết hao mòn tài sản công của đơn vị trực tiếp sử dụng - Biểu số
+                                01F-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tiến độ xác nhận tài sản" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tiến độ xác nhận tài sản" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_BCTDXNTS_DKTS">
+                                Báo cáo tiến độ xác nhận tài sản
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo chi tiết tình hình bán/thanh lý tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01G-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo chi tiết tình hình bán/thanh lý tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01G-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01G_DK_TSNN">
+                                Báo cáo chi tiết tình hình bán/thanh lý tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01G-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo chi tiết tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được của đơn vị trực tiếp sử dụng - Biểu số 01H-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo chi tiết tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được của đơn vị trực tiếp sử dụng - Biểu số 01H-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_01H_DK_TSNN">
+                                Báo cáo chi tiết tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được của đơn vị trực tiếp sử dụng - Biểu số 01H-ĐK/TSC
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoTaiChinhNhaNuoc)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tài chính nhà nước";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTCNN");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tài chính nhà nước</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+
+                        @if (Model.isDonViNhapLieu)
+                        {
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a title="Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_B03_CCTT_HUU_HINH">
+                                    Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị
+                                </a>
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a title="Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCT_B03_CCTT_VO_HINH">
+                                    Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a title="Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_B03_CCTT_HUU_HINH">
+                                    Mẫu số C03/CCTT - Tài sản cố định hữu hình trang bị cho đơn vị
+                                </a>
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a title="Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_TT_CUNGCAP_TAICHINH">
+                                    Mẫu số C03/CCTT - Tài sản cố định vô hình trang bị cho đơn vị
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoTongHopTaiSan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tổng hợp tài sản công";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTHTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tổng hợp</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-1" aria-expanded="false">
+                                <span title="Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước">
+                                    Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-1" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02A_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02A_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02A_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-2" aria-expanded="false">
+                                <span title="Biểu số 02B-ĐK/TSNN - Báo cáo tổng hợp hiện trạng sử dụng nhà, đất">
+                                    Biểu số 02B-ĐK/TSNN - Báo cáo tổng hợp hiện trạng sử dụng nhà, đất
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-2" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02B_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02B_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hiện trạng sử dụng nhà, đất - Biểu số 02B-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02B_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-3" aria-expanded="false">
+                                <span title="Biểu số 02C-ĐK/TSNN - Báo cáo tổng hợp tăng, giảm tài sản nhà nước">
+                                    Biểu số 02C-ĐK/TSNN - Báo cáo tổng hợp tăng, giảm tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-3" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02C_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02C_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng, giảm tài sản công - Biểu số 02C-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02C_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-4" aria-expanded="false">
+                                <span title="Biểu số 02D-ĐK/TSNN - Báo cáo tổng hợp tình hình tăng tài sản nhà nước">
+                                    Biểu số 02D-ĐK/TSNN - Báo cáo tổng hợp tình hình tăng tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-4" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02D_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02D_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tăng tài sản công - Biểu số 02D-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02D_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-5" aria-expanded="false">
+                                <span title="Biểu số 02E-ĐK/TSNN - Báo cáo tổng hợp tình hình giảm tài sản nhà nước">
+                                    Biểu số 02E-ĐK/TSNN - Báo cáo tổng hợp tình hình giảm tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-5" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02E_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02E_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp giảm tài sản công - Biểu số 02E-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02E_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-6" aria-expanded="false">
+                                <span title="Biểu số 02F-ĐK/TSNN - Báo cáo tổng hợp tình hình hao mòn tài sản nhà nước">
+                                    Biểu số 02F-ĐK/TSNN - Báo cáo tổng hợp tình hình hao mòn tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-6" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02F_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02F_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hao mòn tài sản công - Biểu số 02F-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02F_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-7" aria-expanded="false">
+                                <span title="Biểu số 02G-ĐK/TSNN - Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước">
+                                    Biểu số 02G-ĐK/TSNN - Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-7" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước - Biểu số 02G-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước - Biểu số 02G-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02G_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước - Biểu số 02G-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước - Biểu số 02G-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02G_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nước - Biểu số 02G-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước - Biểu số 02G-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02G_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-8" aria-expanded="false">
+                                <span title="Biểu số 02H-ĐK/TSNN - Báo cáo tổng hợp tình hình bán/thanh lý tài sản nhà nước chưa cập nhật số tiền thu được">
+                                    Biểu số 02H-ĐK/TSNN - Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-8" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02H_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02H_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tình hình bán/thanh lý TSC chưa cập nhật số tiền thu được - Biểu số 02H-ĐK/TSC - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_02H_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-10" aria-expanded="false">
+                                <span title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công">
+                                    Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-10" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-11" aria-expanded="false">
+                                <span title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công">
+                                    Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-11" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == 16)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tổng hợp tài sản công";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTongHopTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tổng hợp</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-10" aria-expanded="false">
+                                <span title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công">
+                                    Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-10" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08a-ĐK/TSC - Báo cáo tổng hợp hiện trạng sử dụng tài sản công - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08A_DK_TSC?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-11" aria-expanded="false">
+                                <span title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công">
+                                    Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-11" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 2: Chia theo loại hình đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 08b-ĐK/TSC - Báo cáo tổng hợp tình hình tăng, giảm tài sản công - Phần 3: Chi tiết từng đơn vị trực thuộc" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTH_08B_DK_TSC?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoQuocHoiTaiSan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo Chính phủ";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoQHTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo Chính phủ</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp tài sản công (Phụ lục I)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công (Phụ lục I)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU01_THTSNN">
+                                Tổng hợp tài sản công (Phụ lục I)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)" data-toggle="modal" data-target="#globalModalIframe" data-title="Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU02_CCTSNN">
+                                Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)" data-toggle="modal" data-target="#globalModalIframe" data-title="Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU03_QUYDAT_MDSD">
+                                Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU04_TS_LTS">
+                                Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU05_TS_CQ_TC_DV">
+                                Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU06_TS_CAPQL">
+                                Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Xe ô tô theo mục đích sử dụng (Phụ lục VII)" data-toggle="modal" data-target="#globalModalIframe" data-title="Xe ô tô theo mục đích sử dụng (Phụ lục VII)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU07_OTO_SD">
+                                Xe ô tô theo mục đích sử dụng (Phụ lục VII)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)" data-toggle="modal" data-target="#globalModalIframe" data-title="Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU08_OTO_VSD">
+                                Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tài sản cố định khác theo mục đích sử dụng (Phụ lục IX)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tài sản cố định khác theo mục đích sử dụng (Phụ lục IX)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU10_TS_TREN500_MDSD">
+                                Tài sản cố định khác theo mục đích sử dụng (Phụ lục IX)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL10_TANG_GIAM_TSNN">
+                                Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Bảng tổng hợp tài sản công (Phụ lục XIa)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tài sản công (Phụ lục XIa)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU11A_THTSNN">
+                                Bảng tổng hợp tài sản công (Phụ lục XIa)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Bảng tổng hợp tài sản công (Phụ lục XIb)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tài sản công (Phụ lục XIb)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU11B_THTSNN">
+                                Bảng tổng hợp tài sản công (Phụ lục XIb)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển kiểm soát, chức danh) - Chi tiết từng đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển kiểm soát, chức danh) - Chi tiết từng đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_QH14C_TH_OTOCD_DV">
+                                Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển kiểm soát, chức danh) - Chi tiết từng đơn vị
+                            </a>
+                        </li>
+                    </ul>
+                    @*<li>
+                                        <span class="far fa-file-alt pb"></span>
+                        <a class="collapsed ba" data-toggle="collapse" href="#accordion-1" aria-expanded="false">
+                            <span title="Báo cáo Chính phủ về tài sản công">
+                                Báo cáo Chính phủ về tài sản công
+                            </span>
+                        </a>
+                                        <div class="collapse show" id="accordion-1" style="padding-left:10px">
+                                            <div>
+                                                <span>
+                                                    <a title="Tổng hợp tài sản công (Phụ lục I)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công (Phụ lục I)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU01_THTSNN">
+                                                        - Tổng hợp tài sản công (Phụ lục I)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)" data-toggle="modal" data-target="#globalModalIframe" data-title="Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU02_CCTSNN">
+                                                        - Cơ cấu tài sản công tại các cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục II)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)" data-toggle="modal" data-target="#globalModalIframe" data-title="Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU03_QUYDAT_MDSD">
+                                                        - Quỹ đất chia theo nhóm mục đích sử dụng (Phụ lục III)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU04_TS_LTS">
+                                                        - Tổng hợp tài sản công chia theo loại tài sản (Phụ lục IV)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU05_TS_CQ_TC_DV">
+                                                        - Tổng hợp giá trị tài sản công theo nhóm cơ quan, tổ chức, đơn vị, Ban quản lý dự án (Phụ lục V)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU06_TS_CAPQL">
+                                                        - Tổng hợp tài sản công theo cấp quản lý (Phụ lục VI)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Xe ô tô theo mục đích sử dụng (Phụ lục VII)" data-toggle="modal" data-target="#globalModalIframe" data-title="Xe ô tô theo mục đích sử dụng (Phụ lục VII)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU07_OTO_SD">
+                                                        - Xe ô tô theo mục đích sử dụng (Phụ lục VII)
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <a title="Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)" data-toggle="modal" data-target="#globalModalIframe" data-title="Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU08_OTO_VSD">
+                                                        - Xe ô tô sử dụng vượt thời hạn quy định (Phụ lục VIII)
+                                                    </a>
+                                                </span>
+                                            </div>*@
+                    @*<div>
+                            <span>
+                                <a title="Quỹ đất chia theo mục đích sử dụng (mẫu 09)" data-toggle="modal" data-target="#globalModalIframe" data-title="Quỹ đất chia theo mục đích sử dụng (mẫu 09)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU09_DAT_SD">
+                                    - Quỹ đất chia theo mục đích sử dụng (mẫu 09)
+                                </a>
+                            </span>
+                        </div>*@
+                    @*<div>
+                            <span>
+                                <a title="Tài sản khác có nguyên giá từ 500 triệu đồng trở lên theo mục đích sử dụng (Phụ lục IX)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tài sản khác có nguyên giá từ 500 triệu đồng trở lên theo mục đích sử dụng (Phụ lục IX)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU10_TS_TREN500_MDSD">
+                                    - Tài sản khác có nguyên giá từ 500 triệu đồng trở lên theo mục đích sử dụng (Phụ lục IX)
+                                </a>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <a title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL10_TANG_GIAM_TSNN">
+                                    - Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục X)
+                                </a>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <a title="Bảng tổng hợp tài sản công (Phụ lục XIa)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tài sản công (Phụ lục XIa)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU11A_THTSNN">
+                                    - Bảng tổng hợp tài sản công (Phụ lục XIa)
+                                </a>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <a title="Bảng tổng hợp tài sản công (Phụ lục XIb)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tài sản công (Phụ lục XIb)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_MAU11B_THTSNN">
+                                    - Bảng tổng hợp tài sản công (Phụ lục XIb)
+                                </a>
+                            </span>
+                        </div>*@
+                    @*<div>
+                            <span>
+                                <a title="Báo cáo chi tiết xe Ôtô chức danh (loại xe, biển số, chức danh)" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo chi tiết xe Ôtô chức danh (loại xe, biển số, chức danh)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_QH14A_CT_OTOCD">
+                                    - Báo cáo chi tiết xe Ôtô chức danh (loại xe, biển số, chức danh)
+                                </a>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <a title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển số, chức danh) - Tổng hợp chung" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển số, chức danh) - Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_QH14B_TH_OTOCD_THC">
+                                    - Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển số, chức danh) - Tổng hợp chung
+                                </a>
+                            </span>
+                        </div>*@
+                    @*<div>
+                                        <span>
+                                            <a title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển kiểm soát, chức danh) - Chi tiết từng đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển số, chức danh) - Chi tiết từng đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_QH14C_TH_OTOCD_DV">
+                                                - Báo cáo tổng hợp xe Ôtô chức danh (loại xe, biển kiểm soát, chức danh) - Chi tiết từng đơn vị
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>*@
+                    @*<ul class="filetree treeview dotnone" id="browser">
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="collapsed ba" data-toggle="collapse" href="#accordion-2" aria-expanded="false">
+                                    <span title="Báo cáo Chính phủ về tài sản công">
+                                        Báo cáo Chính phủ tổng hợp tình hình tăng, giảm tài sản công
+                                    </span>
+                                </a>
+                                <div class="collapse show" id="accordion-2" style="padding-left:10px">
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình theo dõi quản lý, sử dụng khuôn viên đất trong cơ sở dữ liệu quốc gia về tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình theo dõi quản lý, sử dụng khuôn viên đất trong cơ sở dữ liệu quốc gia về tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC">
+                                                - Tổng hợp tình hình theo dõi quản lý, sử dụng khuôn viên đất trong cơ sở dữ liệu quốc gia về tài sản công
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình theo dõi quản lý, sử dụng nhà trong cơ sở dữ liệu quốc gia về tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình theo dõi quản lý, sử dụng nhà trong cơ sở dữ liệu quốc gia về tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_TH_QUAN_LY_SD_NHA_TSC">
+                                                - Tổng hợp tình hình theo dõi quản lý, sử dụng nhà trong cơ sở dữ liệu quốc gia về tài sản công
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình theo dõi quản lý, sử dụng ô tô, tài sản khác trong cơ sở dữ liệu quốc gia về tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="TỔNG HỢP TÌNH HÌNH THEO DÕI QUẢN LÝ, SỬ DỤNG Ô TÔ, TÀI SẢN KHÁC TRONG CƠ SỞ DỮ LIỆU QUỐC GIA VỀ TÀI SẢN CÔNG" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC">
+                                                - Tổng hợp tình hình theo dõi quản lý, sử dụng ô tô, tài sản khác trong cơ sở dữ liệu quốc gia về tài sản công
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 02)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 02)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL02_TANG_GIAM_TSNN">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 02)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công phân theo nhóm mục đích sử dụng quỹ đất (Phụ lục 03)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công phân theo nhóm mục đích sử dụng quỹ đất (Phụ lục 03)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL03_TANG_GIAM_TSNN">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công phân theo nhóm mục đích sử dụng quỹ đất (Phụ lục 03)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 05)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 05)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL05_TANG_GIAM_TSNN">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 05)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 06)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 06)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL06_TANG_GIAM_TSNN">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 06)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 07)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 07)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL07_TANG_GIAM_TSNN">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công (Phụ lục 07)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình xe ô tô sử dụng vượt thời gian quy định (Phụ lục 08)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình xe ô tô sử dụng vượt thời gian quy định (Phụ lục 08)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL08_TANG_GIAM_OTO_VSD">
+                                                - Tổng hợp tình hình xe ô tô sử dụng vượt thời gian quy định (Phụ lục 08)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Tổng hợp tình hình tăng, giảm tài sản công cho tài sản khác có nguyên giá từ 500 triệu đồng trở lên/1 đơn vị tài sản (Phụ lục 09)" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng, giảm tài sản công cho tài sản khác có nguyên giá từ 500 triệu đồng trở lên/1 đơn vị tài sản (Phụ lục 09)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL09_TANG_GIAM_TS_TREN500">
+                                                - Tổng hợp tình hình tăng, giảm tài sản công cho tài sản khác có nguyên giá từ 500 triệu đồng trở lên/1 đơn vị tài sản (Phụ lục 09)
+                                            </a>
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        <span>
+                                            <a title="Bảng tổng hợp tình hình tăng, giảm tài sản công theo nhóm cơ quan, tổ chức, đơn vị (Phụ lục 12)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tình hình tăng, giảm tài sản công theo nhóm cơ quan, tổ chức, đơn vị (Phụ lục 12)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL12_TANG_GIAM_NHOM_DV">
+                                                - Bảng tổng hợp tình hình tăng, giảm tài sản công theo nhóm cơ quan, tổ chức, đơn vị (Phụ lục 12)
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Bảng tổng hợp tình hình tăng, giảm tài sản công theo lĩnh vực hoạt động (Phụ lục 13)" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tổng hợp tình hình tăng, giảm tài sản công theo lĩnh vực hoạt động (Phụ lục 13)" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCQH_PL13_TANG_GIAM_LOAI_HOAT_DONG">
+                                                - Bảng tổng hợp tình hình tăng, giảm tài sản công theo lĩnh vực hoạt động (Phụ lục 13)
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoDuAn)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tổng hợp tài sản dự án";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTHDA");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tài sản dự án</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-1" aria-expanded="false">
+                                <span title="Tổng hợp tình hình tài sản Ban quản lý dự án">
+                                    Tổng hợp tình hình tài sản Ban quản lý dự án
+                                </span>
+                            </a>
+                            <div class="collapse show" id="accordion-1" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Phần 1 Tổng hợp chung - Mẫu số 02A-THC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 1 Tổng hợp chung - Mẫu số 02A-THC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02A_THC_TSDA">
+                                            - Phần 1 Tổng hợp chung - Mẫu số 02A-THC/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="- Phần 2 Chi tiết từng đơn vị - Mẫu số 02A-CTDV/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02A-CTDV/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02A_CTDV_TSDA">
+                                            - Phần 2 Chi tiết từng đơn vị - Mẫu số 02A-CTDV/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tài sản là trụ sở làm việc của dự án - Mẫu số 02B-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản là trụ sở làm việc của dự án - Mẫu số 02B-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02B_TS_TSDA">
+                                    Tổng hợp tài sản là trụ sở làm việc của dự án - Mẫu số 02B-TS/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tài sản là xe ô tô - Mẫu số 02C-OT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản là xe ô tô - Mẫu số 02C-OT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02C_OT_TSDA">
+                                    Tổng hợp tài sản là xe ô tô - Mẫu số 02C-OT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tài sản cố định khác - Mẫu số 02D-TSK/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tài sản cố định khác - Mẫu số 02D-TSK/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02D_TSK_TSDA">
+                                    Tổng hợp tài sản cố định khác - Mẫu số 02D-TSK/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02E-1-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02E-1-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02E1_KT_TSDA">
+                                    Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02E-1-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo đơn vị) - Mẫu số 02E-2-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo đơn vị) - Mẫu số 02E-2-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02E2_KT_TSDA">
+                                    Tổng hợp kết quả xử lý tài sản dự án (Báo cáo theo đơn vị) - Mẫu số 02E-2-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02F-1-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02F-1-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02F1_KT_TSDA">
+                                    Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo tài sản) - Mẫu số 02F-1-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo đợn vị) - Mẫu số 02F-2-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo đợn vị) - Mẫu số 02F-2-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02F2_KT_TSDA">
+                                    Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo đợn vị) - Mẫu số 02F-2-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo loại tài sản dự án) - Mẫu số 02F-3-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo loại tài sản dự án) - Mẫu số 02F-3-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02F3_KT_TSDA">
+                                    Tổng hợp tình hình xử lý tài sản dự án (Báo cáo theo loại tài sản dự án) - Mẫu số 02F-3-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp theo dõi dự án kết thúc - Mẫu số 02G-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp theo dõi dự án kết thúc - Mẫu số 02G-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02G_KT_TSDA">
+                                    Tổng hợp theo dõi dự án kết thúc - Mẫu số 02G-KT/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-10" aria-expanded="false">
+                                <span title="Tổng hợp tình hình tăng, giảm tài sản dự án - Mẫu 02I-KT/TSDA">
+                                    Tổng hợp tình hình tăng, giảm tài sản dự án - Mẫu 02I-KT/TSDA
+                                </span>
+                            </a>
+                            <div class="collapse show" id="accordion-10" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Phần 1 Tổng hợp chung - Mẫu số 02I-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 1 Tổng hợp chung - Mẫu số 02I-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02I_KT_TSDA?MauSo=1">
+                                            - Phần 1 Tổng hợp chung - Mẫu số 02I-KT/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02I-KT/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02I-KT/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02I_KT_TSDA?MauSo=2">
+                                            - Phần 2 Chi tiết từng đơn vị - Mẫu số 02I-KT/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-11" aria-expanded="false">
+                                <span title="Tổng hợp tình hình tăng tài sản dự án - Mẫu 02K-TS/TSDA">
+                                    Tổng hợp tình hình tăng tài sản dự án - Mẫu 02K-TS/TSDA
+                                </span>
+                            </a>
+                            <div class="collapse show" id="accordion-11" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Phần 1 Tổng hợp chung - Mẫu số 02K-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 1 Tổng hợp chung - Mẫu số 02K-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02K_TS_TSDA?MauSo=1">
+                                            - Phần 1 Tổng hợp chung - Mẫu số 02K-TS/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02K-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02K-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02K_TS_TSDA?MauSo=2">
+                                            - Phần 2 Chi tiết từng đơn vị - Mẫu số 02K-TS/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tình hình tăng tài sản dự án theo lý do - Mẫu số 02K-1-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình tăng tài sản dự án theo lý do - Mẫu số 02K-1-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02K1_TS_TSDA">
+                                    Tổng hợp tình hình tăng tài sản dự án theo lý do - Mẫu số 02K-1-TS/TSDA
+                                </a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-12" aria-expanded="false">
+                                <span title="Tổng hợp tình hình giảm tài sản dự án - Mẫu 02H-TS/TSDA">
+                                    Tổng hợp tình hình giảm tài sản dự án - Mẫu 02H-TS/TSDA
+                                </span>
+                            </a>
+                            <div class="collapse show" id="accordion-12" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Phần 1 Tổng hợp chung - Mẫu số 02H-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 1 Tổng hợp chung - Mẫu số 02H-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02H_TS_TSDA?MauSo=1">
+                                            - Phần 1 Tổng hợp chung - Mẫu số 02H-TS/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02H-TS/TSDAC" data-toggle="modal" data-target="#globalModalIframe" data-title="Phần 2 Chi tiết từng đơn vị - Mẫu số 02H-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02H_TS_TSDA?MauSo=2">
+                                            - Phần 2 Chi tiết từng đơn vị - Mẫu số 02H-TS/TSDA
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <span>
+                                <a title="Tổng hợp tình hình giảm tài sản dự án theo lý do - Mẫu số 02H-1-TS/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp tình hình giảm tài sản dự án theo lý do - Mẫu số 02H-1-TS/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02H1_TS_TSDA">
+                                    Tổng hợp tình hình giảm tài sản dự án theo lý do - Mẫu số 02H-1-TS/TSDA
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoBanQuanLyDuAn)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo ban quản lý dự án";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoBQLDA");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tài sản của Ban QLDA</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+
+                        @*<li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo tổng hợp hiện trạng sử dụng đất của dự án - Mẫu số 01-BC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp hiện trạng sử dụng đất của dự án - Mẫu số 01-BC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_01BC_TSDA">
+                                    Báo cáo tổng hợp hiện trạng sử dụng đất của dự án - Mẫu số 01-BC/TSDA
+                                </a>
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo hiện trạng sử dụng nhà của dự án - Mẫu số 02-BC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo hiện trạng sử dụng nhà của dự án - Mẫu số 02BC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_02-BC_TSDA">
+                                    Báo cáo hiện trạng sử dụng nhà của dự án - Mẫu số 02-BC/TSDA
+                                </a>
+
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo hiện trạng sử dụng xe ô tô của dự án - Mẫu số 03-BC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo hiện trạng sử dụng xe ô tô của dự án - Mẫu số 03-BC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_03BC_TSDA">
+                                    Báo cáo hiện trạng sử dụng xe ô tô của dự án - Mẫu số 03-BC/TSDA
+                                </a>
+
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo hiện trạng sử dụng tài sản cố định khác (Ngoài nhà, đất, xe ô tô) - Mẫu số 04-BC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo hiện trạng sử dụng tài sản cố định khác (Ngoài nhà, đất, xe ô tô) - Mẫu số 04-BC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_04BC_TSDA">
+                                    Báo cáo hiện trạng sử dụng tài sản cố định khác (Ngoài nhà, đất, xe ô tô) - Mẫu số 04-BC/TSDA
+                                </a>
+
+                            </li>*@
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" data-title="Mẫu số 05a-ĐK/TSDA - Báo cáo kê khai trụ sở làm việc phục vụ hoạt động của dự án" title="Mẫu số 05a-ĐK/TSDA - Báo cáo kê khai trụ sở làm việc phục vụ hoạt động của dự án" data-toggle="modal" data-target="#globalModalIframe" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_05a_DKTSDA_KEKHAITRUSO">
+                                Mẫu số 05a-ĐK/TSDA - Báo cáo kê khai trụ sở làm việc phục vụ hoạt động của dự án
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" data-title="Mẫu số 05b-ĐK/TSDA - Báo cáo kê khai xe ô tô  phục vụ hoạt động của dự án" title="Mẫu số 05b-ĐK/TSDA - Báo cáo kê khai xe ô tô  phục vụ hoạt động của dự án" data-toggle="modal" data-target="#globalModalIframe" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_05b_DKTSDA_KEKHAIOTO">
+                                Mẫu số 05b-ĐK/TSDA - Báo cáo kê khai xe ô tô  phục vụ hoạt động của dự án
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 05c-ĐK/TSDA - Báo cáo kê khai tài sản cố định khác phục vụ hoạt động của dự án(ngoài trụ sở làm việc, xe ô tô)" data-title="Biểu số 05c-ĐK/TSDA - Báo cáo kê khai tài sản cố định khác phục vụ hoạt động của dự án(ngoài trụ sở làm việc, xe ô tô)" data-toggle="modal" data-target="#globalModalIframe" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_05c_DKTSDA_KEKHAIKHAC">
+                                Biểu số 05c-ĐK/TSDA - Báo cáo kê khai tài sản cố định khác phục vụ hoạt động của dự án(ngoài trụ sở làm việc, xe ô tô)
+                            </a>
+                        </li>
+                        @*<li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo kê khai trụ sở làm việc - Mẫu số 01A-ĐK/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai trụ sở làm việc - Mẫu số 01A-ĐK/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_01A_DK_TSDA">
+                                    Báo cáo kê khai trụ sở làm việc - Mẫu số 01A-ĐK/TSDA
+                                </a>
+
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo kê khai xe ô tô - Mẫu số 01B-ĐK/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai xe ô tô - Mẫu số 01B-ĐK/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_01B_DK_TSDA">
+                                    Báo cáo kê khai xe ô tô - Mẫu số 01B-ĐK/TSDA
+                                </a>
+
+                            </li>
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo kê khai tài sản cố định khác (Ngoài nhà, đất, ô tô) - Mẫu số 01C-ĐK/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai tài sản cố định khác (Ngoài nhà, đất, ô tô) - Mẫu số 01C-ĐK/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_01C_DK_TSDA">
+                                    Báo cáo kê khai tài sản cố định khác (Ngoài nhà, đất, ô tô) - Mẫu số 01C-ĐK/TSDA
+                                </a>
+
+                            </li>*@
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tình hình tăng, giảm tài sản dự án - Mẫu số 05-BC/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tình hình tăng, giảm tài sản dự án - Mẫu số 05-BC/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_05BC_TSDA">
+                                Báo cáo tình hình tăng, giảm tài sản dự án - Mẫu số 05-BC/TSDA
+                            </a>
+
+                        </li>
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Danh mục trụ sở làm việc đề nghị xử lý - Mẫu số 04a-DM/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Danh mục trụ sở làm việc đề nghị xử lý - Mẫu số 04a-DM/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_04A_TRUSODENGHIXULY">
+                                Danh mục trụ sở làm việc đề nghị xử lý - Mẫu số 04a-DM/TSDA
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Danh mục xe ô tô đề nghị xử lý - Mẫu số 04b-DM/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Danh mục xe ô tô đề nghị xử lý - Mẫu số 04b-DM/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_04B_OTODENGHIXULY">
+                                Danh mục xe ô tô đề nghị xử lý - Mẫu số 04b-DM/TSDA
+                            </a>
+
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Danh mục tài sản cố định khác (Ngoài nhà, đất, xe ô tô) đề nghị xử lý - Mẫu số 04c-DM/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Danh mục tài sản cố định khác (Ngoài nhà, đất, xe ô tô) đề nghị xử lý - Mẫu số 04c-DM/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_04C_KHACDENGHIXULY">
+                                Danh mục tài sản cố định khác (Ngoài nhà, đất, xe ô tô) đề nghị xử lý - Mẫu số 04c-DM/TSDA
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp kết quả xử lý tài sản khi dự án kết thúc của các dự án sử dụng vốn nhà nước - Mẫu số 04/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp kết quả xử lý tài sản khi dự án kết thúc của các dự án sử dụng vốn nhà nước - Mẫu số 04/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_04_TSDA">
+                                Tổng hợp kết quả xử lý tài sản khi dự án kết thúc của các dự án sử dụng vốn nhà nước - Mẫu số 04/TSDA
+                            </a>
+
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tổng hợp kết quả xử lý tài sản không còn sử dụng được hoặc không cần sử dụng trong quá trình thực hiện dự án - Mẫu số 05/TSDA" data-toggle="modal" data-target="#globalModalIframe" data-title="Tổng hợp kết quả xử lý tài sản không còn sử dụng được hoặc không cần sử dụng trong quá trình thực hiện dự án - Mẫu số 05/TSDA" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCDA_05_TSDA">
+                                Tổng hợp kết quả xử lý tài sản không còn sử dụng được hoặc không cần sử dụng trong quá trình thực hiện dự án - Mẫu số 05/TSDA
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoCongKhaiTaiSan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo công khai";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoCKTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo công khai theo Thông tư 144/2017/TT-BTC</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    @*<label class="col-form-label-lg">II. Báo cáo công khai theo Thông tư 144/2017/TT-BTC</label>*@
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 09a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 09a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_9a_CK_TSC_TINHHINH_DAUTU">
+                                Mẫu số 09a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 09b-CK/TSC: Công khai tình hình quản lý, sử dụng trụ sở làm việc, cơ sở hoạt động sự nghiệp" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 09b-CK/TSC: Công khai tình hình quản lý, sử dụng trụ sở làm việc, cơ sở hoạt động sự nghiệp" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_9b_CK_TSC_QL_SD_TRU_SO">
+                                Mẫu số 09b-CK/TSC: Công khai tình hình quản lý, sử dụng trụ sở làm việc, cơ sở hoạt động sự nghiệp
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 09c-CK/TSC: Công khai tình hình quản lý, sử dụng xe ô tô và tài sản cố định khác" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 09c-CK/TSC: Công khai tình hình quản lý, sử dụng xe ô tô và tài sản cố định khác" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC">
+                                Mẫu số 09c-CK/TSC: Công khai tình hình quản lý, sử dụng xe ô tô và tài sản cố định khác
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 09d-CK/TSC: Công khai tình hình xử lý tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 09d-CK/TSC: Công khai tình hình xử lý tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_9d_CK_TSC_XULY_TS">
+                                Mẫu số 09d-CK/TSC: Công khai tình hình xử lý tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo mẫu số 09đ-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo mẫu số 09đ-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_9dd_CK_TSC_KHAITHAC_TC">
+                                Mẫu số 09đ-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 10a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 10a-CK/TSC: Báo cáo công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_10a_CK_TSC_DAUTU_XD_THUE">
+                                Mẫu số 10a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 10b-CK/TSC: Công khai tình hình quản lý, sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 10b-CK/TSC: Báo cáo công khai tình hình quản lý, sử dụng tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_10b_CK_TSC_QLSD_TS">
+                                Mẫu số 10b-CK/TSC: Công khai tình hình quản lý, sử dụng tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 10c-CK/TSC: Công khai tình hình xử lý tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 10c-CK/TSC: Báo cáo công khai tình hình xử lý tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_10c_CK_TSC_XL_TS">
+                                Mẫu số 10c-CK/TSC: Công khai tình hình xử lý tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 10d-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 10d-CK/TSC: Báo cáo công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_10d_CK_TSC_KTNL_TS">
+                                Mẫu số 10d-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 11a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 11a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS ">
+                                Mẫu số 11a-CK/TSC: Công khai tình hình đầu tư xây dựng, mua sắm, giao, thuê tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 11b-CK/TSC: Công khai tình hình quản lý, sử dụng tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 11b-CK/TSC: Báo cáo công khai tình hình quản lý, sử dụng tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_11b_CK_TSC_QL_SD_TS">
+                                Mẫu số 11b-CK/TSC: Công khai tình hình quản lý, sử dụng tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 11c-CK/TSC: Công khai tình hình xử lý tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 11c-CK/TSC: Báo cáo công khai tình hình xử lý tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_11c_CK_TSC_XL_TS">
+                                Mẫu số 11c-CK/TSC: Công khai tình hình xử lý tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 11d-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 11d-CK/TSC: Báo cáo công khai tình hình khai thác nguồn lực tài chính từ tài sản công" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_11d_CK_TSC_KTNL_TS">
+                                Mẫu số 11d-CK/TSC: Công khai tình hình khai thác nguồn lực tài chính từ tài sản công
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tiến độ mua sắm tài sản" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tiến độ mua sắm tài sản" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_TDMS">
+                                Báo cáo tiến độ mua sắm tài sản
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tình hình mua sắm tập trung" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tình hình mua sắm tập trung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_THMS">
+                                Báo cáo tình hình mua sắm tập trung
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo danh mục tài sản điều chuyển/ bàn giao do mua sắm tập trung" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo danh mục tài sản điều chuyển/ bàn giao do mua sắm tập trung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO">
+                                Báo cáo danh mục tài sản điều chuyển/ bàn giao do mua sắm tập trung
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoKeKhaiTaiSanCong)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo kê khai tài sản công";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoKKTS");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo kê khai theo quy định tại Thông tư số 144/2017/TT-BTC</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    @*<label class="col-form-label-lg">I. Báo cáo kê khai theo quy định tại Thông tư số 144/2017/TT-BTC</label>*@
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 04a-ĐK/TSC -
+                               của cơ quan, tổ chức, đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai trụ sở làm việc, cơ sở hoạt động sự nghiệp của cơ quan, tổ chức, đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_04a_DKTSC_KEKHAITRUSO">
+                                Biểu số 04a-ĐK/TSC - Báo cáo kê khai trụ sở làm việc, cơ sở hoạt động sự nghiệp của cơ quan, tổ chức, đơn vị
+                            </a>
+                        </li>
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 04b-ĐK/TSC – Báo cáo kê khai xe ô tô của cơ quan, tổ chức, đơn vị" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai xe ô tô của cơ quan, tổ chức, đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_04b_DKTSC_KEKHAIOTO">
+                                Biểu số 04b-ĐK/TSC – Báo cáo kê khai xe ô tô của cơ quan, tổ chức, đơn vị
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 04c-ĐK/TSC - Báo cáo kê khai tài sản cố định khác của cơ quan, tổ chức, đơn vị (ngoài trụ sở làm việc, cơ sở hoạt động sự nghiệp, xe ô tô)" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kê khai tài sản cố định khác của cơ quan, tổ chức, đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_04c_DKTSNN_KEKHAITSKHAC">
+                                Biểu số 04c-ĐK/TSC - Báo cáo kê khai tài sản cố định khác của cơ quan, tổ chức, đơn vị (ngoài trụ sở làm việc, cơ sở hoạt động sự nghiệp, xe ô tô)
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 06a-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về đơn vị sử dụng tài sản" data-toggle="modal" data-target="#globalModalIframe" data-title="Biểu số 06a-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về đơn vị sử dụng tài sản" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_06a_DKTSC_DVTDTTDON_VI">
+                                Biểu số 06a-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về đơn vị sử dụng tài sản
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 06b-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là trụ sở làm việc, cơ sở hoạt động sự nghiệp" data-toggle="modal" data-target="#globalModalIframe" data-title="Biểu số 06b-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là trụ sở làm việc, cơ sở hoạt động sự nghiệp" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_06b_DKTSC_DVTDTTNHA_DAT">
+                                Biểu số 06b-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là trụ sở làm việc, cơ sở hoạt động sự nghiệp
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 06c-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là xe ô tô" data-toggle="modal" data-target="#globalModalIframe" data-title="Biểu số 06c-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là xe ô tô" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_06c_DKTSC_DVTDTTOTO">
+                                Biểu số 06c-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản là xe ô tô
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 06d-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản cố định khác" data-toggle="modal" data-target="#globalModalIframe" data-title="Biểu số 06d-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản cố định khác" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_06d_DKTSC_DVTDTTKHAC">
+                                Biểu số 06d-ĐK/TSC - Báo cáo kê khai thay đổi thông tin về tài sản cố định khác
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Biểu số 07-ĐK/TSC - Báo cáo kê khai xóa thông tin về tài sản trong cơ sở dữ liệu" data-toggle="modal" data-target="#globalModalIframe" data-title="Biểu số 07-ĐK/TSC - Báo cáo kê khai xóa thông tin về tài sản trong cơ sở dữ liệu" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCKK_07_DKTSC_XOATS_CSDL">
+                                Biểu số 07-ĐK/TSC - Báo cáo kê khai xóa thông tin về tài sản trong cơ sở dữ liệu
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoSoHuuToanDan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tài sản được xác lập quyền sở hữu toàn dân";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTSTD");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tài sản được xác lập quyền sở hữu toàn dân</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 01 - BC/XLSHTD - Báo cáo kê khai thông tin tài sản được xác lập quyền sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 01 - BC/XLSHTD - Báo cáo kê khai thông tin tài sản được xác lập quyền sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_KeKhaiThongTin">
+                                Mẫu số 01 - BC/XLSHTD - Báo cáo kê khai thông tin tài sản được xác lập quyền sở hữu toàn dân
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-3" aria-expanded="false">
+                                <span title="Mẫu số 02 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng, giảm tài sản được xác lập sở hữu toàn dân">
+                                    Mẫu số 02 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng, giảm tài sản được xác lập sở hữu toàn dân
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-3" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 02 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng, giảm tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 02-BC/XLSHTD - Phần 1: Tổng hợp chung" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_TangGiam?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Mẫu số 02 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng, giảm tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 02-BC/XLSHTD - Phần 2: Chi tiết theo từng đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_TangGiam?MauSo=2">
+                                            - Phần 2: Chi tiết theo từng đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 03 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 03 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng tài sản được xác lập sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_Tang">
+                                Mẫu số 03 - BC/XLSHTD - Báo cáo tổng hợp tình hình tăng tài sản được xác lập sở hữu toàn dân
+                            </a>
+                        </li>
+
+                        <!--Delete later-->
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 04 - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 04 - BC/XLSHTD - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_Giam?MauGiamTSTD=2">
+                                Mẫu số 04 - BC/XLSHTD - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 05 - BC/XLSHTD - Báo cáo tổng hợp số tiền thu được từ xử lý tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 05 - BC/XLSHTD - Báo cáo tổng hợp số tiền thu được từ xử lý tài sản được xác lập sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_KetQuaXuLy">
+                                Mẫu số 05 - BC/XLSHTD - Báo cáo tổng hợp số tiền thu được từ xử lý tài sản được xác lập sở hữu toàn dân
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Mẫu số 06 - BC/XLSHTD - Kết quả xử lý tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 06 - BC/XLSHTD - Kết quả xử lý tài sản được xác lập sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_PhuongAnXuLy">
+                                Mẫu số 06 - BC/XLSHTD - Kết quả xử lý tài sản được xác lập sở hữu toàn dân
+                            </a>
+                        </li>
+                        @*<li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Mẫu số 06 - BC/XLSHTD - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân" data-toggle="modal" data-target="#globalModalIframe" data-title="Mẫu số 06 - BC/XLSHTD - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TSTD_Giam?MauGiamTSTD=1">
+                                    Mẫu số 06 - BC/XLSHTD - Báo cáo tổng hợp tình hình giảm tài sản được xác lập sở hữu toàn dân
+                                </a>
+                            </li>*@
+                        <!--End delete later-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoCongCuDungCu)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo công cụ, dụng cụ";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoCCDC");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo công cụ, dụng cụ</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo kiểm kê công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kiểm kê công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_KiemKe">
+                                Biểu số 01 - Báo cáo kiểm kê công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo kiểm kê công cụ, dụng cụ theo phòng ban" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo kiểm kê công cụ, dụng cụ theo phòng ban" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_KiemKeBoPhan">
+                                Biểu số 01b - Báo cáo kiểm kê công cụ, dụng cụ phòng ban
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tổng hợp kiểm kê công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp kiểm kê công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TongHopKiemKe">
+                                Biểu số 02 - Tổng hợp báo cáo kiểm kê công cụ, dụng cụ
+                            </a>
+                        </li>
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo liệt kê công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo liệt kê công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_LietKe">
+                                Biểu số 03 - Liệt kê công cụ, dụng cụ đang dùng
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo liệt kê công cụ, dụng cụ theo phòng ban" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo liệt kê công cụ, dụng cụ theo phòng ban" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_LietKeBoPhan">
+                                Biểu số 04 - Liệt kê công cụ, dụng cụ đang dùng - Mẫu phòng ban
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tăng, giảm công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tăng, giảm công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TangGiamCongCu">
+                                Biểu số 05 - Bảng kê tăng, giảm công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tăng công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tăng công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TangCongCu">
+                                Biểu số 06 - Báo cáo tình hình tăng công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo giảm công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo giảm công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_GiamCongCu">
+                                Biểu số 07 - Báo cáo tình hình giảm công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo sửa chữa công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo sửa chữa công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_SuaChuaCongCu">
+                                Biểu số 08 - Báo cáo tình hình sửa chữa công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo hỏng mất công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo hỏng mất công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_BaoHongMat">
+                                Biểu số 09 - Báo cáo tình hình hỏng, mất công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo phân bổ công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo phân bổ công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_PhanBoCongCu">
+                                Biểu số 10 - Bảng tính phân bổ công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tổng hợp tồn công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tồn công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TongHopTon">
+                                Báo cáo tổng hợp tồn công cụ, dụng cụ
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-3" aria-expanded="false">
+                                <span title="Báo cáo tổng hợp công cụ, dụng cụ">
+                                    Báo cáo tổng hợp công cụ, dụng cụ
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-3" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp công cụ, dụng cụ - Phần 1: Chi tiết theo đơn vị" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TongHop?MauSo=1">
+                                            - Phần 1: Chi tiết theo đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp công cụ, dụng cụ" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp công cụ, dụng cụ - Phần 2: Chi tiết theo công cụ, dụng cụ" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_TongHop?MauSo=2">
+                                            - Phần 2: Chi tiết theo công cụ, dụng cụ
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoCheDoKeToan)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo chế độ kế toán";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoCDKT");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo chế độ kế toán</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Sổ tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Sổ tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_B08_S24H_SO_TS">
+                                Sổ tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Sổ theo dõi tài sản và CCDC tại nơi sử dụng" data-toggle="modal" data-target="#globalModalIframe" data-title="Sổ theo dõi tài sản và CCDC tại nơi sử dụng" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_B11_S24H_SO_TS_CCDC">
+                                Sổ theo dõi tài sản và CCDC tại nơi sử dụng
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Kiểm kê tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Kiểm kê tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_KiemKeTaiSan">
+                                Kiểm kê tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Kiểm kê tài sản cố định mẫu phòng ban" data-toggle="modal" data-target="#globalModalIframe" data-title="Kiểm kê tài sản cố định mẫu phòng ban" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_KiemKeTaiSanPhongBan">
+                                Kiểm kê tài sản cố định mẫu phòng ban
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Tình hình tăng, giảm tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Tình hình tăng, giảm tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD">
+                                Tình hình tăng, giảm tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Bảng tính hao mòn tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tính hao mòn tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON">
+                                Bảng tính hao mòn tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Bảng tính khấu hao tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Bảng tính khấu hao tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD">
+                                Bảng tính khấu hao tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Sổ ghi tăng tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Sổ ghi tăng tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BS06_SOGHITANG_TSCD">
+                                Sổ ghi tăng tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Sổ ghi giảm tài sản cố định" data-toggle="modal" data-target="#globalModalIframe" data-title="Sổ ghi giảm tài sản cố định" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BS07_SOGHIGIAM_TSCD">
+                                Sổ ghi giảm tài sản cố định
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Sổ theo dõi tài sản tại nơi sử dụng" data-toggle="modal" data-target="#globalModalIframe" data-title="Sổ theo dõi tài sản tại nơi sử dụng" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_B09_S32H_SO_TS">
+                                Sổ theo dõi tài sản tại nơi sử dụng
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @*<ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo theo Quyết định số 19/2006/QĐ-BTC</span>
+                </li>
+            </ul>
+            <div class="tab-content">
+
+                <div class="tab-pane fade active show" id="navs-top-home">
+                    <div class="card-body">
+                        <ul class="filetree treeview dotnone" id="browser">
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoTraCuuSoLieu)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo tra cứu";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoTCSL");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tra cứu</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tra cứu theo loại tài sản - Biểu số 03-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tra cứu theo loại tài sản - Biểu số 03-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTC_03_DK_TSNN">
+                                Báo cáo tra cứu theo loại tài sản - Biểu số 03-ĐK/TSC
+                            </a>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tra cứu theo loại hình đơn vị - Biểu số 04-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tra cứu theo loại hình đơn vị - Biểu số 04-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/TS_BCTC_04_DK_TSNN">
+                                Báo cáo tra cứu theo loại hình đơn vị - Biểu số 04-ĐK/TSC
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoDoiChieuDuLieuTongHop)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo đối chiếu dữ liệu";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoDoiChieuData");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tổng hợp</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+
+                        <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="collapsed ba" data-toggle="collapse" href="#accordion-11" aria-expanded="false">
+                                    <span title="Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước">
+                                        Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước
+                                    </span>
+                                </a>
+                                <div class="collapse" id="accordion-11" style="padding-left:10px">
+                                    <div>
+                                        <span>
+                                            <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=1">
+                                                - Phần 1: Tổng hợp chung
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=2">
+                                                - Phần 2: Chia theo loại hình đơn vị
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=3">
+                                                - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                            </a>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-12" aria-expanded="false">
+                                <span title="Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước phục vụ đối chiếu">
+                                    Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước phục vụ đối chiếu
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-12" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(1); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoDoiChieuDuLieu)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo đối chiếu dữ liệu";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoDoiChieuData");
+    }
+
+
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tổng hợp</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="ba" title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_TS_BCCT_01A_DK_TSNN">
+                                Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 01A-ĐK/TSC
+                            </a>
+                        </li>
+                       @*  @if (Model.IsShowBaoCaoDoiChieu)
+                        {
+                            <li>
+                                <span class="far fa-file-alt pb"></span>
+                                <a class="ba" title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tài sản công của đơn vị trực tiếp sử dụng - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/GetFileBaoCaoDoiChieu1A">
+                                    Báo cáo tài sản công của đơn vị trực tiếp sử dụng phục vụ đối chiếu - Biểu số 02A-ĐK/TSC
+                                </a>
+                            </li>
+
+                        } *@
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.LoaiBaoCao == (int)enumLoaiBaoCao.BaoCaoDoiChieuDuLieuAdmin)
+{
+    {
+        //page title
+        ViewBag.Title = "Báo cáo đối chiếu dữ liệu";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("BaoCaoDoiChieuData");
+    }
+    <div class="nav-tabs-top mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <span class="nav-link active show" data-toggle="tab" href="#navs-top-home" style="font-size: 20px;font-weight: bolder;">Báo cáo tổng hợp</span>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-top-home">
+                <div class="card-body">
+                    <ul class="filetree treeview dotnone" id="browser">
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-11" aria-expanded="false">
+                                <span title="Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước">
+                                    Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-11" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/BC_DOICHIEU_DATA_02A_DK_TSNN?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </li>
+                        <li>
+                            <span class="far fa-file-alt pb"></span>
+                            <a class="collapsed ba" data-toggle="collapse" href="#accordion-12" aria-expanded="false">
+                                <span title="Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước phục vụ đối chiếu">
+                                    Biểu số 02A-ĐK/TSNN - Báo cáo tổng hợp tài sản nhà nước phục vụ đối chiếu
+                                </span>
+                            </a>
+                            <div class="collapse" id="accordion-12" style="padding-left:10px">
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(1); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=1">
+                                            - Phần 1: Tổng hợp chung
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=2">
+                                            - Phần 2: Chia theo loại hình đơn vị
+                                        </a>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <a title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-toggle="modal" data-target="#globalModalIframe" data-title="Báo cáo tổng hợp tài sản công - Biểu số 02A-ĐK/TSC" data-width="1000" href="javascript: void(0); return;" data-src="/Report/GetFileBaoCaoDoiChieu?MauSo=3">
+                                            - Phần 3: Chi tiết từng đơn vị trực thuộc
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    iframe {
+        height: 0px !important;
+    }
+
+    .dotnone {
+        list-style-type: none !important;
+    }
+
+    .pb {
+        padding-bottom: 7px;
+        padding-top: 7px;
+    }
+
+    .ba {
+        color: #2673b4;
+        font-weight: bolder;
+    }
+
+    a {
+        padding-left: 5px !important;
+        color: #2673b4;
+    }
+</style>

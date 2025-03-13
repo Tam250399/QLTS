@@ -1,0 +1,112 @@
+﻿@model DoiTacModel
+
+<form>
+    <div class="card mb-6">
+
+        <div class="card-body popup-DoiTac">
+            <input asp-for="ID" type="hidden" id="doitacId" />
+            <input asp-for="DON_VI_ID" type="hidden" id="doitacDonViId"/>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left text-required">Mã:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="MA" id="doitacMa"/>
+                    <span asp-validation-for="MA"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left text-required">Tên:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="TEN" id="doitacTen"/>
+                    <span asp-validation-for="TEN"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Đại diện:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="DAI_DIEN" id="doitacDaiDien"/>
+                    <span asp-validation-for="DAI_DIEN"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Địa chỉ:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="DIA_CHI" id="doitacDiaChi"/>
+                    <span asp-validation-for="DIA_CHI"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Điện thoại:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="DIEN_THOAI" id="DoiTacDienThoai"/>
+                    <span asp-validation-for="DIEN_THOAI"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Mô tả:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="MO_TA" id="doitacMoTa"/>
+                    <span asp-validation-for="MO_TA"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Loại đối tác:</label>
+                <div class="col-sm-10">
+                    <nop-select asp-for="LOAI_DOI_TAC_ID" asp-items="Model.dllLoaiDoiTac" id="doitacLoaiId"/>
+                    <span asp-validation-for="LOAI_DOI_TAC_ID"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                </div>
+                <div class="col-sm-2">
+
+                    <a id="btnSavedoitac" class="btn btn-success" style="float:right;margin-right:5px;color:white; ">
+                        <i class="fas fa-save" style="margin-right:5px;"></i>
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script>
+    $(document).ready(function () {
+        $("#btnSavedoitac").click(function () {
+            var url = "/DoiTac/_Create";
+            var _data = {
+                ID: $(".popup-DoiTac #doitacId").val(),
+                DON_VI_ID: $(".popup-DoiTac #doitacDonViId").val(),
+                MA: $(".popup-DoiTac #doitacMa").val(),
+                TEN: $(".popup-DoiTac #doitacTen").val(),
+                DAI_DIEN: $(".popup-DoiTac #doitacDaiDien").val(),
+                DIA_CHI: $(".popup-DoiTac #doitacDiaChi").val(),
+                DIEN_THOAI: $(".popup-DoiTac #DoiTacDienThoai").val(),
+                MO_TA: $(".popup-DoiTac #doitacMoTa").val(),
+                LOAI_DOI_TAC_ID: $(".popup-DoiTac #doitacLoaiId").val()
+            };
+            var DoiTac = ajaxPost(_data, url, false);
+            DoiTac.done(function (result) {
+                if (CheckValidMessageReturn(result)) {
+                    if (result.Code == "00") {
+                        ShowSuccessMessage(result.Message);
+                        var DoiTacModel = result.ObjectInfo;
+                        HideModalManual();
+                        //$("#LOAI_DOI_TAC_ID").data("kendoDropDownList").dataSource(DoiTacModel.dllLoaiDoiTac);
+                    }
+                } else {
+                    $(".TEN").hide();
+                }
+
+            })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    // If fail
+                    console.log(textStatus + ': ' + errorThrown);
+                });
+        });
+        $("#DoiTacDienThoai").kendoMaskedTextBox({
+            mask: "(999) 000-00000"
+        });
+
+    });
+</script>

@@ -1,0 +1,315 @@
+@model TaiSanTdSearchModel
+@{
+	//page title
+	ViewBag.Title = "Danh sách tài sản toàn dân";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhSachTaiSanToanDan");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        @*<a href="/Report/TSTD_TongHop" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Báo cáo tổng hợp
+        </a>*@
+        @*<a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>*@
+        @*<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>*@
+    </div>
+</div>
+<input asp-for="KeySearch" hidden />
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Tên tài sản:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TenTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SoQuyetDinh" />
+        </div>
+
+    </div>
+    <div class="form-group row">
+
+        <label class="col-form-label col-sm-2 text-sm-left">Loại tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiTaiSanId" asp-items="@Model.DDLLoaiTaiSan" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Nguồn gốc:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NguonGocTaiSan" asp-items="@Model.DDLNguonGocTaiSan" asp-filter="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định từ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayQuyetDinhTu" />
+            <span asp-validation-for="NgayQuyetDinhTu"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định đến:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayQuyetDinhDen" />
+            <span asp-validation-for="NgayQuyetDinhDen"></span>
+        </div>
+        @*<div class="col-sm-1" style="text-align:center">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch" style="width:100%">Tìm kiếm</button>
+        </div>*@
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5">
+        </div>
+        <div class="col-sm-2">
+
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài sản tịch thu/ xác lập</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn btn-sm btn-outline-primary">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>          
+                        kendo.culture("vi-VN");
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    SoQuyetDinh: $('#@Html.IdFor(model => model.SoQuyetDinh)').val(),
+                                    TenTaiSan: $('#@Html.IdFor(model => model.TenTaiSan)').val(),
+                                    NgayQuyetDinhTu: $('#@Html.IdFor(model => model.NgayQuyetDinhTu)').val(),
+                                    NgayQuyetDinhDen: $('#@Html.IdFor(model => model.NgayQuyetDinhDen)').val(),
+                                    LoaiTaiSanId: $('#@Html.IdFor(model => model.LoaiTaiSanId)').val(),
+                                    NguonGocTaiSan: $('#@Html.IdFor(model => model.NguonGocTaiSan)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                if (checkValiNgay()) {
+                                    record = 0;
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanTd"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TEN', title: 'Tên tài sản',
+                                        template:'<a href="javascript:void(0)" data-width="1000" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Thông tin tài sản" data-src="/TaiSanTd/_EditTaiSan?Guid=#=GUID#">#=TEN#</a>'
+                                    },
+                                    {
+                                        field: 'TEN_LOAI_TAI_SAN', title: 'Loại tài sản', template: kendo.template($("#loaitaisan").html()),
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'NguyenGia', title: 'Nguyên giá',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'GiaTri', title: 'Giá trị',
+                                        format: "{0:n2}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'SO_LUONG', title: 'Số lượng',
+                                        format: "{0:n2}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'KHOI_LUONG', title: 'Khối lượng',
+                                         format: "{0:n2}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    { field: 'TenNguonGoc', title: 'Nguồn gốc' },
+                                    {
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" },
+                                        template: kendo.template($("#btn_template_childent").html())
+                                    }
+                                ]
+                            });
+                        });
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/x-kendo-template" id="btn_template_childent">
+    #if(is_delete){#
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='\\#globalModalIframe' data-title='Thông tin tài sản' data-src="/TaiSanTd/_EditTaiSan?Guid=#=GUID#">Sửa</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaTaiSan('#:GUID#')>Xóa</a>
+    </div>#}
+    else{##}#
+</script>
+<script type="text/x-kendo-template" id="loaitaisan">
+
+    <span data-toggle="tooltip" data-placement="top" data-state="primary" data-original-title="#:TEN_LOAI_TAI_SAN#">#:TEN_LOAI_TAI_SAN#</span>
+
+</script>
+<script>
+    $(document).ready(function () {
+        $("#LoaiTaiSanId").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            template: function (e) {
+                if (e.Disabled) {
+                    return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+                } else {
+                    return '<span class="k-state-default">' + e.Text + '</span>';
+                }
+            },
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+            dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLLoaiTaiSan).toStringJson()))`),
+        }).data("kendoDropDownList");
+    });
+    function XoaTaiSan(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa tài sản này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "Post",
+                        data: data,
+                        url: "/TaiSanTd/Delete",
+						success: function (result) {
+							if (result) {
+                                if (result.Code == '00') {
+                                    ShowSuccessMessage(result.Message)
+									var grid = $('#items-grid').data('kendoGrid');
+									grid.dataSource.page(1);
+                                }
+                                else {
+								    ShowErrorMessage(result.Message)
+							    }
+                            }
+                        }
+                    })
+                }
+                return;
+
+            }
+        })
+    }
+    function checkValiNgay() {
+        var check = true;
+        if (!checkValidateDateFormat("#NgayQuyetDinhTu", "NgayQuyetDinhTu", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+        if (!checkValidateDateFormat("#NgayQuyetDinhDen", "NgayQuyetDinhDen", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+        if (!checkValidateFromDateToDate("#NgayQuyetDinhTu", "#NgayQuyetDinhDen", "NgayQuyetDinhTu", "Ngày quyết định từ phải nhỏ hơn ngày quyết định đến")) {
+            check = false;
+        }
+        return check;
+    }
+</script>

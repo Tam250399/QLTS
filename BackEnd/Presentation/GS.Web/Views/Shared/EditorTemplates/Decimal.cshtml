@@ -1,0 +1,46 @@
+@model Decimal
+@{ 
+	var _idClient = Html.IdForModel();
+	var _nameClient = Html.NameForModel();
+	var htmlAttributes = new Dictionary<string, object>();
+	var _disable = "";
+	var _minValue = "";
+	if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+	{
+		htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+		object _idclientOut;
+		if (htmlAttributes.TryGetValue("id", out _idclientOut))
+		{
+			_idClient = _idclientOut.ToString();
+		}
+		object _disableOut;
+		if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+		{
+			_disable = _disableOut.ToString();
+		}
+		object _minValueOut;
+		if (htmlAttributes.TryGetValue("minvalue", out _minValueOut))
+		{
+			_minValue = _minValueOut.ToString();
+		}
+	}
+}
+<input id="@_idClient" name="@_nameClient" value="@Model" style="width: 100%;" class="form-control" />
+
+<script>
+
+    $(document).ready(function() {
+        $("#@_idClient").kendoNumericTextBox({
+            format: "###,###,##0.#0",
+            decimals: 2, //always display 4 digits
+            culture: "vi-VN",
+            min: 0
+        });
+        if ("@_disable"== "disabled") {
+            $("#@_idClient").data("kendoNumericTextBox").enable(false);
+		}
+        if ("@_minValue"!=="") {
+			$("#@Html.IdForModel()").data("kendoNumericTextBox").min(@_minValue);
+		}
+    });
+</script>

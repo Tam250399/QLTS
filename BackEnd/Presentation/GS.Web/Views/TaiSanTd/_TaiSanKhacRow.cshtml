@@ -1,0 +1,39 @@
+﻿@model TaiSanTdModel
+
+
+    <tr id="row_@(Model.GUID)" style="text-align:center">
+        <th scope="row" id="Index_@(Model.GUID)" style="text-align:center" class="row-guid" data-guid="@Model.GUID"></th>
+        <td>
+            <nop-editor asp-for="TEN" id="TEN_@(Model.GUID)" />
+            <span data-valmsg-for="TEN_@Model.GUID"></span>
+        </td>
+        <td>
+            <nop-editor asp-for="DON_VI_TINH" id="DON_VI_TINH_@(Model.GUID)" />
+            <span data-valmsg-for="DON_VI_TINH_@Model.GUID"></span>
+        </td>
+        <td>
+            <nop-editor asp-for="GIA_TRI_TINH" asp-min-number="0" id="GIA_TRI_TINH_@(Model.GUID)" />
+            <span data-valmsg-for="GIA_TRI_TINH_@Model.GUID"></span>
+        </td>
+        <td>
+            <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" id="GIA_TRI_XAC_LAP_@(Model.GUID)" asp-dvt="đồng" />
+            <span data-valmsg-for="GIA_TRI_@Model.GUID"></span>
+        </td>
+        <td>
+            <nop-editor asp-for="TEN_LOAI_TAI_SAN" id="TEN_LOAI_TAI_SAN_@(Model.GUID)" />
+            <span data-valmsg-for="TEN_LOAI_TAI_SAN_@Model.GUID"></span>
+        </td>
+        <td>
+
+            <div class="btn-group">
+                <a style="color:black" class="btn btn-sm btn-outline-danger btn-xoa-row" href="javascript:void(0)" onclick=XoaRowTaiSan('@(Model.GUID)')>Xóa</a>
+            </div>
+
+        </td>
+    </tr>
+<script>
+    $(document).ready(function () {
+        Index_Row();
+        CheckBtn();
+    });
+</script>

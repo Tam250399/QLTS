@@ -1,0 +1,558 @@
+﻿@model TaiSanSearchModel
+
+<input asp-for="idKhaiThac" type="hidden" />
+<input asp-for="KHAI_THAC_ID" type="hidden" />
+<input asp-for="ngayTu" type="hidden" />
+<input asp-for="ngayDen" type="hidden" />
+
+<div class="back-to_search" style="display:none; margin-bottom: 20px;">
+    <small style="margin-left: 20px;">
+        <i class="fa fa-arrow-circle-left"></i>
+        <a href="#" onclick="close_createChitietkt()">Quay lại danh sách</a>
+    </small>
+    <button type="button" id="btnSaveOnPopup" class="btn btn-sm btn-outline-primary btnAddNha" style="float: right;margin-right: 5px;">
+        <i class="fas fa-save"></i>
+        Lưu
+    </button>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4 search">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Đơn vị</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Loại tài sản</label>
+        <div class="col-md-10">
+            <app-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvailable" asp-filter="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Mã tài sản</label>
+        <div class="col-sm-4 ">
+            <nop-editor asp-for="maTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 ">Tên tài sản</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="tenTaiSan" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-2">Từ ngày</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="Fromdate" id="chon-tai-san-fromdate" /><br />
+            <span asp-validation-for="Fromdate"></span>
+        </div>
+        <label class="col-form-label col-md-2 ">Đến ngày</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="Todate" id="chon-tai-san-todate" /><br />
+            <span asp-validation-for="Todate"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearchChonTaiSan">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-header clearfix row">
+    <div class="col-sm-8">
+        <div class="tle1" @*style="color:red"*@>
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài sản</span>
+        </div>
+    </div>
+    <div class="col-sm-4 custom-control row text-right" style="">
+        <button type="button" class="btn btn-outline-success" style="display:none;" id="btnDuyetAll">Chọn</button>
+    </div>
+</div>
+<div id="table">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="ThemTaiSan-grid" class="bangchontaisan"></div>
+                        <script>
+
+                            var record_chon_tai_san = 0;
+                            $(document).ready(function () {
+                                var loaiHinhKhaiThac = parseInt($('#LOAI_HINH_KHAI_THAC_ID').val());
+                                $("#btnSearchChonTaiSan").click(function () {
+                                    record_chon_tai_san = 0;
+                                    if (checkValidateDateFormat('#chon-tai-san-fromdate', 'Fromdate', 'Phải nhập đúng định dạng ngày') &&
+                                        checkValidateDateFormat('#chon-tai-san-todate', 'Todate', 'Phải nhập đúng định dạng ngày') &&
+                                        checkValidateFromDateToDate('#chon-tai-san-fromdate', '#chon-tai-san-todate', 'Fromdate', 'Từ ngày phải nhỏ hơn đến ngày')) {
+                                        ShowHideCollumAtBegin();
+                                        grid.dataSource.page(1);
+                                        return false;
+                                    }
+                                    return false;
+                                });
+
+                            @*$("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchChonTaiSan").click();
+                                    return false;
+                                }
+                            });*@
+                                $("#@Html.IdFor(model => model.maTaiSan)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#btnSearchChonTaiSan").click();
+                                        return false;
+                                    }
+                                });
+                                $("#@Html.IdFor(model => model.tenTaiSan)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#btnSearchChonTaiSan").click();
+                                        return false;
+                                    }
+                                });
+
+                             @*$("#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)").kendoDropDownList({
+                                    change:  $("#btnSearchChonTaiSan").click()
+                                });*@
+
+                                function SearchData() {
+                                    var _data = {
+                                        KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                        idKhaiThac: $('#@Html.IdFor(model => model.idKhaiThac)').val(),
+                                        LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)').val(),
+                                        tenTaiSan: $('#@Html.IdFor(model => model.tenTaiSan)').val(),
+                                        maTaiSan: $('#@Html.IdFor(model => model.maTaiSan)').val(),
+                                        MA: $('#@Html.IdFor(model => model.MA)').val(),
+                                        KHAI_THAC_ID: $('#@Html.IdFor(model => model.idKhaiThac)').val(),
+                                        DIEN_TICH_KHAI_THAC: $('#@Html.IdFor(model => model.DIEN_TICH_KHAI_THAC)').val(),
+                                        ngayDen: getDateFormatForGetMethod($('#@Html.IdFor(model => model.ngayDen)').val()),
+                                        Todate: $('#chon-tai-san-todate').val(),
+                                        Fromdate: $('#chon-tai-san-fromdate').val(),
+                                        TRANG_THAI_ID: '@((int)GS.Core.Domain.TaiSans.enumTRANG_THAI_TAI_SAN.DA_DUYET)'
+                                    };
+                                    addAntiForgeryToken(_data);
+                                    return _data;
+                                }
+
+                                var grid = $("#ThemTaiSan-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("_ListTaiSan_", "KhaiThac"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: SearchData
+                                            },
+                                            update: {
+                                                url: "@Html.Raw(Url.Action("CapNhat", "KhaiThac"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "ID",
+                                                fields: {
+                                                    MA: { editable: false, type: "string" },
+                                                    TEN: { editable: false, type: "string" },
+                                                    TenLoaiTaiSan: { editable: false, type: "string" },
+                                                    //TenLoaiTaiSan: { editable: false, type: "string" },
+                                                    DIEN_TICH_KT: { editable: false, type: "number" },
+                                                    DIEN_TICH_KHAI_THAC: {
+                                                        editable: true, type: "number", validation: { min: 0, required: { message: "Phải nhập diện tích khai thác" } }
+                                                    },
+                                                    ID: { editable: false, type: "number" },
+                                                    SelectAll: { editable: false, type: "checkbox" },
+                                                }
+                                            }
+                                        },
+                                        requestEnd: function (e) {
+                                            if (e.type == "update") {
+                                                this.read();
+                                            }
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                @*editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },*@
+                                    editable: "incell",
+                                    dataBound: onDataBound,
+                                    scrollable: true,
+                                    height: 350,
+                                    columns: [
+                                        {
+                                            title: "STT",
+                                            template: function () {
+                                                record_chon_tai_san = record_chon_tai_san + 1;
+                                                return record_chon_tai_san;
+                                            },
+                                            width: 50,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "MA",
+                                            title: "Mã tài sản",
+                                            template: function (dataItem) {
+                                                if (loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.CHO_THUE_TS) && loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.LDLK) ) {
+                                                    return "<a class='link_href' href='javascript:void(0);' onclick='checkTaiSan(" + dataItem.ID + ")' >" + dataItem.MA + "</a>";
+                                                } else {
+                                                    return dataItem.MA;
+                                                }
+
+                                            },
+                                        },
+                                        {
+                                            field: "TEN",
+                                            title: "Tên tài sản",
+                                            template: function (dataItem) {
+                                                if (loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.CHO_THUE_TS) && loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.LDLK) ) {
+                                                    return "<a class='link_href' href='javascript:void(0);' onclick='checkTaiSan(" + dataItem.ID + ")' >" + dataItem.TEN + "</a>";
+                                                } else {
+                                                    return dataItem.TEN;
+                                                }
+
+                                            },
+                                        },
+                                        {
+                                            field: "TenLoaiTaiSan",
+                                            title: "Loại tài sản"
+                                        },
+                                        {
+                                            field: "strNguyenGiaVN",
+                                            title: "Nguyên giá"
+                                        },
+                                        {
+                                            field: "DIEN_TICH_KT",
+                                            title: "Diện tích"
+
+                                        },
+                                        {
+                                            field: "DIEN_TICH_KHAI_THAC",
+                                            title: "Diện tích khai thác"
+
+                                        },
+
+                                        {
+                                            field: "ID",
+                                            title: 'Thao tác',
+                                            //headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+                                            template: function (dataItem) {
+                                                //return "<button class='btn btn-sm btn-info' Onclick='OpenEditChiTietTaiSan(&#39;" + dataItem.GUID + "&#39;,&#39;" + dataItem.TEN + "&#39;)' title='Xem'>Xem</button>";
+                                                return "<button class='btn btn-sm btn-info' Onclick='OpenEditChiTietTaiSan(&#39;" + dataItem.ID + "&#39;)' title='Chọn'>Chọn</button>";
+                                            },
+                                            width: 100,
+                                            attributes: {
+                                                style: "text-align: center;"
+                                            },
+                                        },
+                                        {
+                                            field: "SelectAll",
+                                            title: 'Select All',
+                                            headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+                                            template: function (dataItem) {
+                                                return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+                                            },
+                                            width: 50,
+                                            attributes: {
+                                                style: "text-align: center;"
+                                            },
+                                        },
+                                    ]
+                                }).data("kendoGrid");
+                                function categoryEditor(container, options) {
+                                    if (loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.CHO_THUE_TS) && loaiHinhKhaiThac != @((int)enumHinhThucKhaiThac.LDLK) ) {
+                                        if (container.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.DAT) || container.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.NHA)) {
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                function ShowHideCollumAtBegin() {
+                                    var loaiHinhKhaiThac = parseInt($('#LOAI_HINH_KHAI_THAC_ID').val());
+                                     if (parseInt( $('#LOAI_HINH_KHAI_THAC_ID').val()) == @((int)enumHinhThucKhaiThac.CHO_THUE_TS)||parseInt( $('#LOAI_HINH_KHAI_THAC_ID').val()) == @((int)enumHinhThucKhaiThac.LDLK)) {
+                                         grid.hideColumn("SelectAll");
+                                         grid.hideColumn("SelectAll");
+                                         grid.hideColumn("DIEN_TICH_KHAI_THAC");
+                                        grid.showColumn("ID");
+                                    }else {
+                                         var loaihinhtaisan = $('#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)').val();
+                                         if (loaihinhtaisan != 0 && loaihinhtaisan != @((int)enumLOAI_HINH_TAI_SAN.DAT) && loaihinhtaisan != @((int)enumLOAI_HINH_TAI_SAN.NHA)) {
+										grid.hideColumn("DIEN_TICH_KT");
+										grid.hideColumn("DIEN_TICH_KHAI_THAC");
+									       }else{
+                                        grid.showColumn("DIEN_TICH_KT");
+                                        grid.showColumn("DIEN_TICH_KHAI_THAC");}
+
+                                        grid.hideColumn("ID");
+                                        grid.showColumn("SelectAll");
+                                    }
+									//bỏ tích check all
+									$('#header-chb').prop('checked', false)
+									$('#header-chb').change()
+                                }
+                                // gọi luôn ban đầu
+                                ShowHideCollumAtBegin();
+
+                                //bind click event to the checkbox
+                                grid.table.on("click", ".row-checkbox", selectRow);
+                                $('#header-chb').change(function (ev) {
+                                    var checked = ev.target.checked;
+                                    $('.row-checkbox').each(function (idx, item) {
+                                        if (checked) {
+                                            if (!($(item).closest('tr').is('.k-state-selected'))) {
+                                                $(item).click();
+                                            }
+                                        } else {
+                                            if ($(item).closest('tr').is('.k-state-selected')) {
+                                                $(item).click();
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+                            //end table
+                            // duyet nhieu tai san
+                            $("#btnDuyetAll").click(function () {
+								var allSelected = $("#ThemTaiSan-grid tr.k-state-selected");
+								var allSelectedModels = [];
+								var allSelectedGTModels = [];
+								var strTaiSanId = "";
+								var strGiaTriTaiSanId = "";
+								$.each(allSelected, function (e) {
+									var row = $(this);
+									var grid = row.closest(".k-grid").data("kendoGrid");
+                                    var dataItem = grid.dataItem(row);
+                                    allSelectedModels.push(dataItem.ID);
+                                    allSelectedGTModels.push(dataItem.DIEN_TICH_KHAI_THAC);
+								});
+								strTaiSanId = allSelectedModels.join("-");
+								strGiaTriTaiSanId = allSelectedGTModels.join("-");
+								ChonTaiSan(strTaiSanId,strGiaTriTaiSanId);
+								//bỏ tích check all
+								//$('#header-chb').prop('checked', false)
+								//$('#header-chb').change()
+                            });
+
+                         // ẩn hiện cột lúc đầu
+
+
+                       //lấy đơn id khi check box checked
+						var checkedIds = {};
+							//on click of the checkbox:
+                        function selectRow() {
+							var checked = this.checked,
+								row = $(this).closest("tr"),
+								grid = $("#ThemTaiSan-grid").data("kendoGrid"),
+                                dataItem = grid.dataItem(row);
+							checkedIds[dataItem.ID] = checked;
+							if (checked) {
+								//-select the row
+								row.addClass("k-state-selected");
+								var checkHeader = true;
+								var ListItem = [];
+								var ind=0;
+								$.each(grid.items(), function (index, item) {
+									if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+										ListItem.push(item);
+									}
+								});
+								for (var i = 0; i < ListItem.length; i++) {
+									if (!$(ListItem[i]).hasClass("k-state-selected")) {
+										checkHeader = false;
+										break;
+									}
+								}
+								$("#header-chb")[0].checked = checkHeader;
+								$("#btnDuyetAll").show();
+							}
+							else {
+								//-remove selection
+								row.removeClass("k-state-selected");
+								$("#header-chb")[0].checked = false;
+								var allSelected = $("#ThemTaiSan-grid tr.k-state-selected");
+								if (allSelected.length > 0) {
+									$("#btnDuyetAll").show();
+								} else {
+									$("#btnDuyetAll").hide();
+								}
+							}
+						}
+						function onDataBound(e) {
+						    //onDataBoundFixed(this);
+						    var view = this.dataSource.view();
+						    for (var i = 0; i < view.length; i++) {
+						    	if (checkedIds[view[i].ID]) {
+						    		this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+						    			.addClass("k-state-selected")
+						    			.find(".k-checkbox")
+						    			.attr("checked", "checked");
+						    	}
+							}
+						}
+                       function ChonTaiSan(strTaiSanIds,strGiaTriTaiSanIds) {
+	                        bootbox.confirm({
+		                        message: "Bạn có chắc chắn chọn không?",
+		                        className: 'bootbox-sm',
+		                        buttons: {
+			                        confirm: {
+				                        label: 'Đồng ý',
+			                        },
+			                        cancel: {
+				                        label: 'Hủy',
+			                        },
+		                        },
+		                        callback: function (result) {
+			                        if (result) {
+				                        var _data = {
+                                            strTaiSanIds: strTaiSanIds,
+                                            strGiaTriTaiSanIdS: strGiaTriTaiSanIds,
+                                            KHAI_THAC_ID:$('#@Html.IdFor(model => model.idKhaiThac)').val(),
+				                        }
+				                        $.ajax({
+					                        type: "POST",
+					                        data: _data,
+					                        url: "/KhaiThac/ChonTaiSan?strTaiSanIds=?strGiaTriTaiSanIdS=?KHAI_THAC_ID=" + strTaiSanIds + strGiaTriTaiSanIds + KHAI_THAC_ID,
+					                        success: function (msg) {
+						                        if (msg.Code == "00") {
+													ShowSuccessMessage(msg.Message);
+                                                    HideModalManual();
+													$('#danh-sach-tai-san-khai-thac').data('kendoGrid').dataSource.page(1);
+
+						                        }
+                                                else {
+                                                    console.log(msg);
+							                        ShowErrorMessage(msg.Message);
+						                        }
+					                        },
+					                        error: function (xhr, ajaxOptions, thrownError) {
+						                        alert(thrownError);
+					                        }
+                                        });
+			                        }
+		                        },
+	                        });
+                            };
+
+						function checkTaiSan(id) {
+							
+							$('#' + id).click();
+                        }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="ChiTietTaiSan" style="display:none">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="themmoichitiet">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function OpenEditChiTietTaiSan(id, KhaiThacChiTietId) {
+        $(".search").hide();
+        $(".content-header").hide();
+        $("#table").hide();
+        $(".back-to_search").show();
+        $("#ChiTietTaiSan").show();
+        var TaiSanId = id;
+        var _data = {
+            TaiSanId: TaiSanId,
+            KhaiThacId: $("#idKhaiThac").val(),
+            LOAI_HINH_KHAI_THAC_ID: parseInt($("#LOAI_HINH_KHAI_THAC_ID").val()),
+            KhaiThacChiTietId: KhaiThacChiTietId
+        };
+
+        $.ajax({
+            url: "/KhaiThac/_ChiTietTaiSanKhaiThac",
+            type: "POST",
+            data: _data,
+            success: function (data) {
+                $(".themmoichitiet").html(data);
+            },
+            error: function (data) {
+
+            }
+        })
+    };
+    function EditChiTietTaiSan(id, KhaiThacChiTietId) {
+        $("#ChiTietTaiSan").show();
+        var TaiSanId = id;
+        var _data = {
+            TaiSanId: TaiSanId,
+            KhaiThacId: $("#idKhaiThac").val(),
+            LOAI_HINH_KHAI_THAC_ID: parseInt($("#LOAI_HINH_KHAI_THAC_ID").val()),
+            KhaiThacChiTietId: KhaiThacChiTietId
+        };
+
+        $.ajax({
+            url: "/KhaiThac/_ChiTietTaiSanKhaiThac",
+            type: "POST",
+            data: _data,
+            success: function (data) {
+                $(".themmoichitiet").html(data);
+            },
+            error: function (data) {
+
+            }
+        })
+    };
+    $("#btnSaveOnPopup").click(function () {
+        //lưu các thông tin khai thác chi tiết tài sản
+        savekhaithacchitiet();
+    });
+    function close_createChitietkt() {
+
+        $(".back-to_search").hide();
+        $("#ChiTietTaiSan").hide();
+        $(".search").show();
+        $(".content-header").show();
+        $("#table").show();
+    };
+    $(document).ready(function () {
+
+    });
+</script>
+

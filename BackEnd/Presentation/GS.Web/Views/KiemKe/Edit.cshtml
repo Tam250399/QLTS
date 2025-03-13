@@ -1,0 +1,135 @@
+@model KiemKeModel
+@{
+    //page title
+    ViewBag.Title = "Kiểm kê công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KiemKeCongCuDungCu");
+}
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin kiểm kê công cụ, dụng cụ
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-default btnClose btn-sm" name="close" onclick="window.location.href = '/KiemKe/List';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <span id="item-delete" onclick="javascript:Delete(@Model.ID)" class="btn btn-sm btn-outline-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            @*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+            <i class="far fa-save"></i>
+            Lưu và tiếp tục sửa
+        </button>*@
+            <a id="btnSM" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </a>
+            <a style="float:right;margin-right: 5px;" class="btn btn-sm btn-outline-info" title="In biên bản kiểm kê" data-toggle="modal" data-target="#globalModalIframe" data-title="In biên bản kiểm kê" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_BienBanKiemKe?KiemKeId=@Model.ID"><span class="ion ion-md-print"> In </span></a>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thông tin chi tiết kiểm kê công cụ, dụng cụ
+    </h6>
+    <div class="card-body" id="view-Detail"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/KiemKe/_Detail?ID=@Model.ID",
+            success: function (data) {
+                $("#view-Detail").html(data);
+            }
+        });
+    })
+    $("#btnSM").click(function () {
+       var check = true;
+        check = checkValidateDateFormat("#NGAY_KIEM_KE", "NGAY_KIEM_KE", "Nhập sai định dạng ngày");
+        check = checkValidateDateWithDateNow("#NGAY_KIEM_KE", "NGAY_KIEM_KE", "Phải nhỏ hơn ngày hiện tại")
+        if (check) {
+            var data = {
+                ID: $("#@Html.IdFor(c=>c.ID)").val(),
+                NGAY_KIEM_KE: $("#NGAY_KIEM_KE").val(),
+                NGUOI_LAP_BIEU: $("#NGUOI_LAP_BIEU").val(),
+                DON_VI_BO_PHAN_ID: $("#DON_VI_BO_PHAN_ID").val(),
+                DAI_DIEN_BO_PHAN: $("#DAI_DIEN_BO_PHAN").val(),
+                KE_TOAN: $("#KE_TOAN").val(),
+                TRUONG_BAN: $("#TRUONG_BAN").val(),
+                DON_VI_ID: $("#DON_VI_ID").val(),
+                NGUOI_LAP_BIEU: $("#NGUOI_LAP_BIEU").val(),
+                SO_KIEM_KE: $("#SO_KIEM_KE").val(),
+
+            };                    
+            $.ajax({
+                url: "/KiemKe/Edit",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                         location.href = "/KiemKe/List?IsLoadSession=true";
+                        
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    });
+    function Delete(BienBanId) {
+       
+       // var currentPage = grid.dataSource.page();
+         bootbox.confirm({
+            message: "Bạn có chắc chắn xóa Biên bản kiểm kê này không?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        id: BienBanId
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/KiemKe/Delete",
+                        success: function (data) {
+                            if (data.Code == '00')
+                            {
+                                ShowSuccessMessage(data.Message); 
+                                 location.href = "/KiemKe/List?IsLoadSession=true";
+                            }
+                            else {
+                                ShowErrorMessage(data.Message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+</script>
+
+

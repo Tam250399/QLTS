@@ -1,0 +1,186 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+
+@{
+    //page title
+    ViewBag.Title = "";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoCTTSOld");
+}
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Điều kiện báo cáo</h6>
+	<form asp-controller="Report" asp-action="TSCT_1C_CHAY_NGAM" method="post">
+
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị</label>
+			<div class="col-sm-10">
+				<nop-select asp-for="DonVi" asp-filter="true" asp-items="Model.DDLDonVi" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Từ ngày</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NgayBatDau" />
+				<span asp-validation-for="NgayBatDau"></span>
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Đến ngày</label>
+			<div class="col-sm-4">
+				<nop-editor asp-for="NgayKetThuc" />
+				<span asp-validation-for="NgayKetThuc"></span>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Lý do biến động</label>
+			<div class="col-sm-10">
+				<nop-select asp-placeholder="Tất cả" asp-for="ListLyDoID" asp-filter="true" asp-items="Model.DDLLyDoBienDong" asp-multiple="true" asp-arrow="true" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left text-required">Loại tài sản</label>
+			<div class="col-sm-10">
+				<nop-select asp-for="ListLoaiTaiSanId" asp-filter="true" asp-items="Model.LoaiHinhTaiSanAvaliable" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Bậc tài sản</label>
+			<div class="col-sm-4">
+				<nop-select asp-for="BacTaiSan" asp-items="Model.DDLCapBaoCao" />
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính số lượng</label>
+			<div class="col-sm-4">
+				<nop-select asp-for="So_luong_Object" asp-items="Model.DDLSo_luong_Object" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính giá trị</label>
+			<div class="col-sm-4">
+				<nop-select asp-for="DonViTien" asp-items="Model.DDLDonViTien" />
+			</div>
+			<label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính diện tích</label>
+			<div class="col-sm-4">
+				<nop-select asp-for="DonViDienTich" asp-items="Model.DDLDonViDienTich" />
+			</div>
+		</div>
+		<div class="form-group row" style="text-align:left">
+			<div class="col-2"></div>
+            <div class="col-10">
+                <button class="btn btn-primary" type="button" id="btnBaoCao">Báo cáo</button>
+                @await Html.PartialAsync("_BtnGroupBaoCaoNgam")
+            </div>
+
+			@*<button class="btn btn-success" style="display:none;" id="btnBaoCaoNgam" type="submit">Báo cáo ngầm</button>*@
+		</div>
+	</form>
+</div>
+<div id="view-contentTask"></div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+	    $("#NgayKetThuc").change(function () {
+        var check = true;
+        var ngaybaocao = $("#NgayKetThuc").val();
+        if (!ngaybaocao) {
+            check = false;
+        }
+        if (!checkValidateDateFormat('#NgayKetThuc', 'NgayKetThuc', 'Sai định dạng ngày')) {
+            check = false;
+        };
+        var temp = ngaybaocao.split('/');
+        var d = temp[1] + '/' + temp[0] + '/' + temp[2];
+        if (check) {
+            $.ajax({
+                type: "GET",
+                url: "/Report/GetJsonBacBaoCaoByDate?NgayBaoCao=" + d,
+                success: function (data) {
+                    var ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+                    ddlCap.setDataSource(data);
+                    ddlCap.select(0);
+                }
+            })
+        }
+    });
+	$(function () {
+		ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+		if (ddlCap) {
+			ddlCap.select(0);
+		}
+		ddlSL = $("#So_luong_Object").data("kendoDropDownList");
+		if (ddlSL) {
+			ddlSL.select(0);
+		}
+
+		let _data = {
+			MaBaoCao: "@Model.MaBaoCao"
+		};
+		let _url = '@Url.Action("Detail","QueueProcess")';
+		ajaxPost(_data, _url, true).done(function (data) {
+			$('#view-contentTask').html(data);
+		});
+	});
+ function checkvaliDate() {
+        var check = true;
+        var nbt = $("#NgayBatDau").val();
+        if (!nbt) {
+            check = false;
+            showInvalidMessage('NgayBatDau', 'Ngày không được để trống')
+        }
+		 else
+        {
+            hideValmsg("NgayBatDau");
+        };
+		var nkt = $("#NgayKetThuc").val();
+        if (!nkt) {
+            check = false;
+			showInvalidMessage('NgayKetThuc','Ngày không được để trống')
+        }
+		 else
+        {
+            hideValmsg("NgayKetThuc");
+        };
+        if (!checkValidateDateFormat('#NgayBatDau', 'NgayBatDau', 'Sai định dạng ngày')) {
+            check = false;
+        };
+		 if (!checkValidateDateFormat('#NgayKetThuc', 'NgayKetThuc', 'Sai định dạng ngày')) {
+            check = false;
+        };
+        if (!checkValidateFromDateToDate('#NgayBatDau', '#NgayKetThuc', 'NgayBatDau', 'Phải nhỏ hơn ngày kết thúc')) {
+			check = false;
+        };
+        return check;
+    }
+	$("#btnBaoCao").click(function () {
+        if (checkvaliDate()) {
+            let StringLoaiTaiSan = null;
+            if ($("#ListLoaiTaiSanId").val()) {
+                StringLoaiTaiSan = $("#ListLoaiTaiSanId").val().join(',');
+            }
+            let StringLyDoID = null;
+            if ($("#ListLyDoID").val() != undefined && $("#ListLyDoID").val() != 0) {
+                StringLyDoID = $("#ListLyDoID").val().join(',');
+            }
+            var data = {
+                NgayBatDau: getDateFormatForGetMethod($("#NgayBatDau").val()),
+                NgayKetThuc: getDateFormatForGetMethod($("#NgayKetThuc").val()),
+                DonVi: $("#DonVi").val(),
+                StringLoaiTaiSan: StringLoaiTaiSan,
+                StringLyDoID:StringLyDoID,
+                DonViTien: $("#DonViTien").val(),
+                DonViDienTich: $("#DonViDienTich").val(),
+                DonViDienTichDat: $("#DonViDienTich").val(),
+                DonViDienTichNha: $("#DonViDienTich").val(),
+                BacTaiSan: $("#BacTaiSan").val(),
+				LyDoID: $("#LyDoID").val(),
+                So_luong_Object: $("#So_luong_Object").val()
+            };
+            submit_post_via_hidden_form("/Report/TS_BCCT_01C_DK_TSNN_", data, 'GET');
+        }
+	})
+</script>

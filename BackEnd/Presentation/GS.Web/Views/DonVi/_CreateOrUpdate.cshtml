@@ -1,0 +1,588 @@
+﻿@model DonViModel
+@using GS.Core.Domain.DanhMuc
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<input asp-for="MA_CHUONG" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right ">Đơn vị cấp trên trực tiếp:</label>
+    <div class="col-sm-10">
+        @if ((Model.SO_DON_VI_CON <= 0 && Model.LA_DON_VI_NHAP_LIEU == false) || Model.LA_DON_VI_NHAP_LIEU == true)
+        {
+            <input id="DonViChaInput" class="form-control" style="width: 100%" value="@Model.TEN_DON_VI_CHA" />
+            @Html.HiddenFor(c => c.PARENT_ID)
+        }
+        else
+        {
+            <input id="DonViChaInput" class="form-control" disabled style="width: 100%" value="@Model.TEN_DON_VI_CHA" />
+            @Html.HiddenFor(c => c.PARENT_ID)
+        }
+    </div>
+
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right  text-required">Mã đơn vị: </label>
+    @if (Model.SO_DON_VI_CON > 0)
+    {
+        <div class="col-sm-4 ">
+            <div style="display:flex">
+                <input asp-for="MA_DON_VI_CHA" class="form-control" width="10" readonly />
+                <nop-editor asp-for="MA" readonly />
+            </div>
+            <span asp-validation-for="MA"></span>
+        </div>
+    }
+    else
+    {
+        <div class="col-sm-4 ">
+            <div style="display:flex">
+                <input asp-for="MA_DON_VI_CHA" class="form-control" width="10" readonly />
+                <nop-editor asp-for="MA" />
+            </div>
+            <span asp-validation-for="MA"></span>
+        </div>
+    }
+
+    <div class="col-sm-4">
+        <span id="span_GoiYMa" style="color: #24a224"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Mã QHNS</label>
+    <div class="col-sm-10">
+        <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+            <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                @Html.RadioButtonFor(c => c.IsMaQHNS, true, new { @class = "custom-control-input" })
+                <span class="custom-control-label"><small>Có Mã QHNS</small></span>
+            </label>
+            <label class="custom-control custom-radio col-sm-5">
+                @Html.RadioButtonFor(c => c.IsMaQHNS, false, new { @class = "custom-control-input" })
+                <span class="custom-control-label"><small>Chưa có mã QHNS</small></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div id="div_MaQHNS" class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Mã DVQHNS(DMDC): </label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="MA_DVQHNS" />
+        <span asp-validation-for="MA_DVQHNS"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Tên đơn vị:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Địa chỉ:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="DIA_CHI" placeholder="Số nhà, đường phố, thôn, xóm" />
+        <span asp-validation-for="DIA_CHI"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tỉnh/Thành phố</label>
+    <div class="col-sm-4">
+        <app-select asp-for="TINH_ID" asp-items="Model.dllDiaBanTinh" asp-filter="true" />
+        <span asp-validation-for="TINH_ID" class="check-TinhId" data-valmsg-for="TINH_ID"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right">Quận/Huyện</label>
+    <div class="col-sm-4">
+        <app-select asp-for="HUYEN_ID" asp-items="Model.dllDiaBanHuyen" asp-filter="true" />
+        <span asp-validation-for="HUYEN_ID" class="check-HuyenId" data-valmsg-for="HUYEN_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Xã/Phường</label>
+    <div class="col-sm-4">
+        <app-select asp-for="XA_ID" asp-items="Model.dllDiaBanXa" asp-filter="true" />
+        <span asp-validation-for="XA_ID" data-valmsg-for="XA_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Thuộc loại</label>
+    <div class="col-sm-10">
+        <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+            <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                @Html.RadioButtonFor(c => c.LA_DON_VI_NHAP_LIEU, false, new { @class = "custom-control-input" })
+                <span class="custom-control-label"><small>Đơn vị tổng hợp</small></span>
+            </label>
+            <label class="custom-control custom-radio col-sm-5">
+                @Html.RadioButtonFor(c => c.LA_DON_VI_NHAP_LIEU, true, new { @class = "custom-control-input" })
+                <span class="custom-control-label"><small>Đơn vị đăng ký</small></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Thuộc cấp:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="LOAI_CAP_DON_VI_ID" asp-items="Model.ddlLoaiCapDonVi" />
+    </div>
+    <div class="col-sm-4">
+        <nop-select asp-for="CAP_DON_VI_ID" asp-items="Model.dllCapDonVi" />
+        <span asp-validation-for="CAP_DON_VI_ID"></span>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Loại hình đơn vị:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="LOAI_DON_VI_ID" asp-items="Model.dllLoaiDonVi" asp-filter="true" />
+        <span asp-validation-for="LOAI_DON_VI_ID"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Chế độ quản lý TSCĐ:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="CHE_DO_HACH_TOAN_ID" asp-items="Model.dllQLTSCD" />
+        <span asp-validation-for="CHE_DO_HACH_TOAN_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Điện thoại:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="DIEN_THOAI" />
+        <span asp-validation-for="DIEN_THOAI"></span>
+    </div>
+</div>
+@*<div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Số Fax:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="FAX" />
+            <span asp-validation-for="FAX"></span>
+        </div>
+    </div>*@
+@*<div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Trạng thái</label>
+        <label class="custom-control custom-checkbox" style="margin-left: 12px;">
+            @Html.CheckBoxFor(c => c.TRANG_THAI_ID, new { @class = "custom-control-input" })
+            <span class="custom-control-label"><small>Hoạt động </small></span>
+        </label>
+    </div>*@
+<div id="quyetdinh" style="display:none">
+    <div class="form-group row" id="QuyetDinh">
+        <label class="col-form-label col-sm-2 text-sm-right text-required">Số QĐ đủ điều kiện:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_QUYET_DINH" />
+            <span asp-validation-for="SO_QUYET_DINH"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right text-required">Ngày quyết định:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_QUYET_DINH" />
+            <span asp-validation-for="NGAY_QUYET_DINH"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Quyết định giao vốn:</label>
+        <div class="col-sm-10">
+            <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                    @Html.RadioButtonFor(c => c.DA_CO_QUYET_DINH_GIAO_VON, Convert.ToBoolean(enumQuyetDinhGiaoVon.Chua), new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>Chưa có quyết định giao vốn</small></span>
+                </label>
+                <label class="custom-control custom-radio col-sm-5">
+                    @Html.RadioButtonFor(c => c.DA_CO_QUYET_DINH_GIAO_VON, Convert.ToBoolean(enumQuyetDinhGiaoVon.Co), new { @class = "custom-control-input" })
+                    <span class="custom-control-label "><small>Đã có quyết định giao vốn</small></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row" id="QuyetDinhGiaoVon" style="display:none">
+        <label class="col-form-label col-sm-2 text-sm-right text-required">Số QĐ giao vốn:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_QUYET_DINH_GIAO_VON" />
+            <span asp-validation-for="SO_QUYET_DINH_GIAO_VON"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right text-required">Ngày QĐ giao vốn:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_QUYET_DINH_GIAO_VON" />
+            <span asp-validation-for="NGAY_QUYET_DINH_GIAO_VON"></span>
+        </div>
+    </div>
+</div>
+<style>
+    #MA_DON_VI_CHA {
+        border-right: none;
+        border-top-right-radius: unset;
+        border-bottom-right-radius: unset;
+    }
+
+    #MA {
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+    }
+</style>
+<script>
+    // input DonViCha
+    function SearchDonViChaData() {
+        var _data = { TenDonVi: $("#DonViChaInput").data("kendoComboBox").text() };
+        return _data;
+    }
+    function onDonViChaEditChange() {
+        var value;
+        var valueInput = this.value();
+        if (isNaN(parseFloat(valueInput))) {
+            value = $("#PARENT_ID").val();
+        } else {
+            value = this.value();
+            $("#PARENT_ID").val(value);
+        }
+
+
+        $.ajax({
+            url: '/DonVi/GetMaGoiYFromDonViCha',
+            type: 'POST',
+            data:
+            {
+                donViChaId: value,
+            },
+            async: false,
+            success: function (res) {
+                if (res.ObjectInfo.data.length > 0) {
+
+                    // show gợi ý
+                    let listMa = res.ObjectInfo.data;
+                    let GoiY = `Gợi ý: Mã có thể dùng ${listMa[0]}, ${listMa[1]}, ${listMa[2]}, ... `
+                    $('#span_GoiYMa').text(GoiY);
+
+                    // Tự điền trước mã đầu tiên cho input ma
+                    $('#MA').get(0).value = listMa[0];
+
+                }
+                else {
+                    // nếu không chọn đơn vị cha thì không có mã gợi ý
+                    $('#span_GoiYMa').text("");
+                }
+                //show mã đơn vị cha
+                $('#MA_DON_VI_CHA').show();
+                $('#MA_DON_VI_CHA').get(0).value = res.ObjectInfo.ma;
+                (resizeInput).call($('#MA_DON_VI_CHA').get(0));
+                // validate loại cấp đơn vị con == loại cấp đơn vị cha
+                ddlLoaiCapDonVi = res.ObjectInfo.ddlLoaiCapDonVi;
+                let ddlLoaiCapDV = $('#LOAI_CAP_DON_VI_ID').data("kendoDropDownList");
+                ddlLoaiCapDV.setDataSource(ddlLoaiCapDonVi);
+                ddlLoaiCapDV.select(0);
+                // gọi change();
+                ddlLoaiCapDV_change();
+            }
+        });
+
+        //alert(value);
+    }
+    // input DiaBan-------------------------------------//
+    function SearchDiaBanData() {
+        var _data = { TenDiaBan: $("#DiaBanInput").data("kendoComboBox").text() };
+        return _data;
+    }
+    function onDiaBanEditChange() {
+        var value = this.value();
+        $("#DIA_BAN_ID").val(value);
+        //alert(value);
+    }
+    $(document).ready(function () {
+        $("#DiaBanInput").kendoComboBox({
+            placeholder: "Nhập địa bàn...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/Diaban/SearchDiaBan",
+                        data: SearchDiaBanData
+                    },
+                },
+            },
+            change: onDiaBanEditChange
+        });
+        var urlSearchDV = "/Donvi/SearchDonViCha";
+        if ('@(Model.IsCreateFromDMDC.ToString().ToLower())' == 'true') {
+            urlSearchDV = "/Donvi/SearchDonViTongHop";
+        }
+        $("#DonViChaInput").kendoComboBox({
+            placeholder: "Nhập đơn vị cha...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: urlSearchDV,
+                        data: SearchDonViChaData
+                    },
+                },
+            },
+            change: onDonViChaEditChange
+        });
+
+        let ddlLoaiCapDV = $('#LOAI_CAP_DON_VI_ID').data("kendoDropDownList");
+        if (ddlLoaiCapDV) {
+            ddlLoaiCapDV.bind("change", ddlLoaiCapDV_change);
+        };
+    });
+    function ddlLoaiCapDV_change() {
+        let _data = {
+            LoaiCapDV: $('#LOAI_CAP_DON_VI_ID').val()
+        }
+        let _url = '@Url.Action("ddlLoaiCapDV_change","DonVi")';
+        ajaxPost(_data, _url, true).done(function (data) {
+            let ddlCapDV = $('#CAP_DON_VI_ID').data("kendoDropDownList");
+            if (ddlCapDV) {
+                ddlCapDV.setDataSource(data);
+                ddlCapDV.select(0);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var isClickSummit = false;
+        if ($('input[value="False"][name="DA_CO_QUYET_DINH_GIAO_VON"]').is(":checked")) {
+            $("#QuyetDinh").show();
+            $("#QuyetDinhGiaoVon").hide();
+        }
+        if ($('input[value="True"][name="DA_CO_QUYET_DINH_GIAO_VON"]').is(":checked")) {
+            $("#QuyetDinh").hide();
+            $("#QuyetDinhGiaoVon").show();
+        }
+
+        $('input[value="False"][name="DA_CO_QUYET_DINH_GIAO_VON"]').on("click", function () {
+            $("#QuyetDinh").show();
+            $("#QuyetDinhGiaoVon").hide();
+        });
+        $('input[value="True"][name="DA_CO_QUYET_DINH_GIAO_VON"]').on("click", function () {
+            $("#QuyetDinh").hide();
+            $("#QuyetDinhGiaoVon").show();
+        });
+        // nếu có mã quan hệ ngân sách thì hiển thị form
+        if ($('input[value="False"][name="IsMaQHNS"]').is(":checked")) {
+            $("#div_MaQHNS").hide();
+            enableSubmit();
+
+        }
+        if ($('input[value="True"][name="IsMaQHNS"]').is(":checked")) {
+            $("#div_MaQHNS").show();
+            //checkMQHNS();
+        }
+        $('input[value="False"][name="IsMaQHNS"]').on("click", function () {
+            $("#div_MaQHNS").hide();
+            enableSubmit();
+        });
+        $('input[value="True"][name="IsMaQHNS"]').on("click", function () {
+            $("#div_MaQHNS").show();
+            checkMQHNS();
+        });
+        $('#MA_DVQHNS').on('change', function () {
+            checkMQHNS();
+        });
+
+
+        $('input[name="LA_DON_VI_TU_CHU_TAI_CHINH"]').on("click", function () {
+            if ($(this).is(":checked"))
+                $("#quyetdinh").show();
+            if (!$(this).is(":checked"))
+                $("#quyetdinh").hide();
+        });
+        if ($('input[name="LA_DON_VI_TU_CHU_TAI_CHINH"]').is(":checked"))
+            $("#quyetdinh").show();
+        // chỉnh kích thước của input mã đơn vị cha
+        var input = document.querySelector('#MA_DON_VI_CHA'); // get the input element
+        input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+        resizeInput.call(input); // immediately call the function
+
+        // Khi load ban đầu nếu Mã đơn vị cha = null thì ẩn
+        let donViChaId = '@Model.PARENT_ID'
+        if (donViChaId == '' || donViChaId == '0') {
+            $('#MA_DON_VI_CHA').hide();
+        }
+        // Set up span gợi ý
+        $('#MA').on('focus', function () {
+            $('#span_GoiYMa').show();
+        });
+        $('#MA').on('focusout', function () {
+            $('#span_GoiYMa').hide()
+        });
+        $('#DonViForm').submit(function (event) {
+            isClickSummit = true;
+            if (validationFormDonvi()) {
+                $(this).unbind('submit').submit();
+            } else {
+                event.preventDefault();
+            }
+        });
+        $("input,select").change(function () {
+            if (isClickSummit) {
+                validationFormDonvi();
+            }
+        });
+    });
+    function resizeInput() {
+        this.style.width = (this.value.length + 4) + "ch";
+    }
+    function checkMQHNS() {
+        let maQHNS = $('#MA_DVQHNS').val();
+        if (maQHNS == '' || maQHNS == null) {
+            showInvalidMessage('MA_DVQHNS', 'Mã QHNS không được bỏ trống!');
+            disableSubmit();
+        } else {
+            hideValmsg('MA_DVQHNS');
+            enableSubmit();
+        }
+    }
+    function disableSubmit() {
+        $('#DonViForm button[type ="submit"]').attr('disabled', 'disabled');
+    }
+    function enableSubmit() {
+        $('#DonViForm button[type ="submit"]').removeAttr('disabled');
+    }
+
+
+    //chọn địa bàn
+    $("#select-content-TINH_ID").change(function () {
+        var _str = "-- Chọn quận/Huyện --";
+        var _data = {
+            ParentId: $("#TINH_ID").val(),
+            str: _str,
+            CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.HUYEN),
+        }
+        $.ajax({
+            url: "/TaiSan/GetDataSource",
+            type: "POST",
+            data: _data,
+            success: function (result) {
+                var dropdownlistHuyen = $("#HUYEN_ID").data("kendoDropDownList");
+                dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+                $("#select-content-HUYEN_ID").val(0);
+                var text = $("#HUYEN_ID option:first-child").text();
+                $("#select-content-HUYEN_ID").parent().find(".k-input").text(text);
+
+                $("#select-content-XA_ID").val(0);
+                var text = $("#select-content-XA_ID option:first-child").text();
+                $("#select-content-XA_ID").parent().find(".k-input").text(text);
+            }
+        });
+    });
+    $("#select-content-HUYEN_ID").change(function () {
+        var _ParentId = $("#HUYEN_ID").val();
+        var _str = "-- Chọn xã/phường --";
+        var _data = {
+            ParentId: _ParentId,
+            CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.XA),
+            str: _str
+        }
+        $.ajax({
+            url: "/TaiSan/GetDataSource",
+            type: "POST",
+            data: _data,
+            success: function (result) {
+                var dropdownlistHuyen = $("#XA_ID").data("kendoDropDownList");
+                dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+
+                $("#select-content-XA_ID").val(0);
+                var text = $("#select-content-XA_ID option:first-child").text();
+                $("#select-content-XA_ID").parent().find(".k-input").text(text);
+            }
+        });
+    });
+</script>
+<script>
+    function addData() {
+        var _data = {
+            ID: $('#@Html.IdFor(c => c.ID)').val(),
+            MA: $('#@Html.IdFor(c => c.MA)').val(),
+            TEN: $('#@Html.IdFor(c => c.TEN)').val(),
+            pageIndex: $('#@Html.IdFor(c => c.pageIndex)').val(),
+            PARENT_ID: $('#@Html.IdFor(c => c.PARENT_ID)').val(),
+            MA_DON_VI_CHA: $('#@Html.IdFor(c => c.MA_DON_VI_CHA)').val(),
+            IsMaQHNS: $('input[name=IsMaQHNS]:checked').val(),
+            MA_DVQHNS: $('#@Html.IdFor(c => c.MA_DVQHNS)').val(),
+            DIA_CHI: $('#@Html.IdFor(c => c.DIA_CHI)').val(),
+            LA_DON_VI_NHAP_LIEU: $('input[name=LA_DON_VI_NHAP_LIEU]:checked').val(),
+            XA_ID: $('#@Html.IdFor(c => c.XA_ID)').val(),
+            HUYEN_ID: $('#@Html.IdFor(c => c.HUYEN_ID)').val(),
+            TINH_ID: $('#@Html.IdFor(c => c.TINH_ID)').val(),
+            LOAI_CAP_DON_VI_ID: $('#@Html.IdFor(c => c.LOAI_CAP_DON_VI_ID)').val(),
+            CAP_DON_VI_ID: $('#@Html.IdFor(c => c.CAP_DON_VI_ID)').val(),
+            LOAI_DON_VI_ID: $('#@Html.IdFor(c => c.LOAI_DON_VI_ID)').val(),
+            DIEN_THOAI: $('#@Html.IdFor(c => c.DIEN_THOAI)').val(),
+            SO_QUYET_DINH_GIAO_VON: $('#@Html.IdFor(c => c.SO_QUYET_DINH_GIAO_VON)').val(),
+            NGAY_QUYET_DINH_GIAO_VON: $('#@Html.IdFor(c => c.NGAY_QUYET_DINH_GIAO_VON)').val(),
+            DA_CO_QUYET_DINH_GIAO_VON: $('input[name=LA_DON_VI_NHAP_LIEU]:checked').val(),
+            CHE_DO_HACH_TOAN_ID: $('#@Html.IdFor(c => c.CHE_DO_HACH_TOAN_ID)').val(),
+            MA_CHUONG: $('#@Html.IdFor(c => c.MA_CHUONG)').val(),
+
+        }
+        return _data;
+    };
+    function validationFormDonvi() {
+        var isValid = true;
+        var data = addData();
+        var error = "field-validation-error";
+        var valid = "field-validation-valid";
+        function errorToValid(name, message = "", type = true) {
+            var element = $("[data-valmsg-for='" + name + "']")
+            if (type) {
+                //true : error -> valid
+                element.removeClass(error).addClass(valid);
+                element.text("");
+            } else {
+                //false : valid -> error
+                element.removeClass(valid).addClass(error);
+                element.text(message);
+                isValid = false;
+            }
+        }
+        //IsMaQHNS
+        if (data.IsMaQHNS === 'True') {
+            errorToValid(
+                "MA_DVQHNS",
+                "Mã QHNS không được bỏ trống!",
+                data.MA_DVQHNS.length != 0
+            );
+        } else {
+            isValid = true;
+        }
+        //Ma
+        errorToValid(
+            "MA",
+            "Mã chỉ được điền 3 kí tự và không được để trống",
+            data.MA.length == 3
+        );
+        //Ten đơn vị
+        errorToValid(
+            "TEN",
+            "Tên đơn vị không được để trống",
+            data.TEN.length != 0
+        );
+        //Địa chỉ
+        errorToValid(
+            "DIA_CHI",
+            "Địa chỉ không được để trống",
+            data.DIA_CHI.length != 0
+        );
+        //Loại đơn vị
+        errorToValid(
+            "LOAI_DON_VI_ID",
+            "Loại đơn vị chưa được chọn",
+            data.LOAI_DON_VI_ID.length != 0
+        );
+        //Chế độ hạch toán
+        errorToValid(
+            "CHE_DO_HACH_TOAN_ID",
+            "Chế độ hạch toán chưa được chọn",
+            data.CHE_DO_HACH_TOAN_ID != '0'
+        );
+        return isValid;
+    }
+</script>

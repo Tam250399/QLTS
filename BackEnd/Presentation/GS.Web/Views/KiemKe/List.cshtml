@@ -1,0 +1,245 @@
+@model KiemKeSearchModel
+@{
+    //page title
+    ViewBag.Title = "Kiểm kê CCDC";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KiemKeCongCuDungCu");
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số biên bản</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+    
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TuNgay" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Đến ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="DenNgay" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ phận sử dụng</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="BoPhanId" asp-items="Model.ddlBoPhan" asp-filter="true" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+    <script>
+        function CheckVali() {
+            var check = true;
+            if (!checkValidateDateFormat("#TuNgay", "TuNgay", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateDateFormat("#DenNgay", "DenNgay", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateFromDateToDate("#TuNgay", "#DenNgay", "TuNgay", "Ngày phải bé hơn ngày đến")) {
+                check = false;
+            }
+            return check;
+        }
+    </script>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách biên bản kiểm kê</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn btn-sm btn-outline-primary">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script id="ThaoTacTemplate" type="text/x-kendo-template">
+                        <a class="btn icon-btn btn-sm btn-outline-info" title="In biên bản kiểm kê" data-toggle="modal" data-target="\\#globalModalIframe" data-title="In biên bản kiểm kê" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CCDC_BienBanKiemKe?KiemKeId=#:ID#">In</a>&nbsp;
+                        @*<a class="btn icon-btn btn-sm btn-outline-info" onclick="PrintKK(#=ID#)"><span class="ion ion-md-print"></span></a>&nbsp;*@
+                        <a class="btn icon-btn btn-sm btn-outline-secondary" href="javascript:void(0)" onclick="EditBienBanKiemKe(#=ID#)" title="Sửa">Sửa</a>&nbsp;
+                        @*<button class="btn icon-btn btn-sm btn-outline-info" onclick="location.href=Detail?Id=#=ID#" title="Chi tiết"><span class="fas fa-eye"></span></button>*@
+                        <button class="btn icon-btn btn-sm btn-outline-danger" onclick="XoaBienBan(#=ID#)" title="Xóa">
+                            Xóa                          
+                        </button>
+                    </script>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    TuNgay: $('#@Html.IdFor(model => model.TuNgay)').val(),
+                                    DenNgay: $('#@Html.IdFor(model => model.DenNgay)').val(),
+                                    BoPhanId: $('#@Html.IdFor(model => model.BoPhanId)').val(),
+                                    Page: $("#items-grid").data("kendoGrid").dataSource.page(),
+                                    PageSize: $("#items-grid").data("kendoGrid").dataSource.pageSize(), 
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                if (CheckVali()) {
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    record = 0;
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "KiemKe"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    page:@(Model.Page),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+								dataBinding: function () {
+									record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+                                scrollable: false,                                
+                                columns: [
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+                                    { field: 'SO_KIEM_KE', title: 'Số biên bản' },
+                                    {
+                                        field: 'NgayKiemKeText',
+                                        title: 'Ngày lập',
+                                        attributes: { style: "text-align:center" }
+                                    },
+                                    { field: 'TenDonVi', title: 'Đơn vị sử dụng' },
+                                    { field: 'DonViBoPhanText', title: 'Bộ phận kiểm kê' },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#ThaoTacTemplate").html())
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function XoaBienBan(BienBanId) {
+       
+       // var currentPage = grid.dataSource.page();
+         bootbox.confirm({
+            message: "Bạn có chắc chắn xóa Biên bản kiểm kê này không?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        id: BienBanId
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/KiemKe/Delete",
+                        success: function (data) {
+                            if (data.Code == '00')
+                            {
+                                ShowSuccessMessage(data.Message); 
+                               var pageindex = $('#items-grid').data('kendoGrid').dataSource.page();
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(pageindex);
+                            }
+                            else {
+                                ShowErrorMessage(data.Message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+    function EditBienBanKiemKe(Id) {
+        var grid = $("#items-grid").data("kendoGrid");
+        var currentPage = grid.dataSource.page();
+        location.href = "/KiemKe/Edit?id=" + Id + "&CurrentPage=" + currentPage;
+           
+    }
+    function PrintKK(ID) {
+        var data = {
+            KiemKeId: ID,
+        };
+        submit_post_via_hidden_form("/Report/CCDC_BienBanKiemKe", data, 'GET');
+    }
+</script>
+

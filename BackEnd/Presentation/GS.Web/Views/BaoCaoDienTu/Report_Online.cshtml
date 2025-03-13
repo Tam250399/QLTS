@@ -1,0 +1,16 @@
+﻿@model BaoCaoDienTuModel
+
+@{
+    //page title
+    ViewBag.Title = "Báo cáo điện tử";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoDienTu");
+}
+
+<div class="gs-form-group">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-10 ">Tiêu đề báo cáo: <strong>@Model.TEN</strong></label><br />
+        <label class="col-form-label col-sm-10">Người tạo: <strong>@Model.NguoiTaoTen</strong></label>
+    </div>
+    <strong>Nội dung</strong>
+</div>

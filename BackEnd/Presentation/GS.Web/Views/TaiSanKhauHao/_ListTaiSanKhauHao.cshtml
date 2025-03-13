@@ -1,0 +1,247 @@
+@model TaiSanKhauHaoSearchModel
+
+<input asp-for="TaiSanId" type="hidden" />
+<div class="content-header clearfix">
+    <div class="pull-right" style="margin-bottom:5px;">
+        @*<a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>*@
+        <button type="button" id="dungTinhKhauHao" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;" class="btn btn-sm btn-primary">
+            Dừng tính khấu hao
+        </button>
+        <button type="button" id="chonKhauHao" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;" class="btn btn-sm btn-primary">
+            Thêm mới
+        </button>
+
+    </div>
+</div>
+<style>
+	.link_href {
+		color: #007bff !important;
+	}
+
+		.link_href:hover {
+			cursor: pointer !important;
+			text-decoration: underline !important;
+		}
+</style>
+<div id="danh-sach-tai-san-khau-hao"></div>
+<script>
+	var recordItemKTTS = 0;
+	$(document).ready(function () {
+		danhSachKhaiThacTaiSanJS = new DanhSachKhaiThacTaiSanJS();
+
+		var grid_ts_kt=$("#danh-sach-tai-san-khau-hao").kendoGrid({
+			dataSource: {
+				type: "json",
+				transport: {
+					read: {
+						url: "@Html.Raw(Url.Action("_ListTaiSanKhauHao", "TaiSanKhauHao"))",
+						type: "POST",
+						dataType: "json",
+						data: danhSachKhaiThacTaiSanJS.addDataSearchTaiSanKhaiThacs,
+					}
+				},
+				schema: {
+					data: "Data",
+					total: "Total",
+					errors: "Errors"
+				},
+				error: function (e) {
+					display_kendoui_grid_error(e);
+					// Cancel the changes
+					this.cancelChanges();
+				},
+				pageSize: @(Model.PageSize),
+				serverPaging: true,
+				serverFiltering: true,
+				serverSorting: true
+			},
+			pageable: {
+				refresh: true,
+				pageSizes: [@(Model.AvailablePageSizes)],
+				@await Html.PartialAsync("_GridPagerMessages")
+			},
+			dataBinding: function () {
+				recordItemKTTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+			},
+			editable: {
+				confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+				mode: "inline"
+			},
+			scrollable: false,
+            columns: [
+				{
+					field: "NGAY_BAT_DAU",
+					title: "Ngày bắt đầu",
+					type: "Date",
+					format: "{0:dd/MM/yyyy}",
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+				},{
+					field: "NGAY_KET_THUC",
+					title: "Ngày kết thúc",
+					type: "Date",
+					format: "{0:dd/MM/yyyy}",
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+				},
+				{
+					field: 'SO_THANG_KHAU_HAO',
+					title: 'Số tháng khấu hao',
+                    attributes: { style: "text-align:right" },
+				},
+				{
+					field: 'TY_LE_KHAU_HAO',
+					title: 'Tỷ lệ Khấu hao',
+                    attributes: { style: "text-align:right" },
+				},
+				{
+					field: 'TY_LE_NGUYEN_GIA_KHAU_HAO',
+					title: 'Tỷ lệ nguyên giá khấu hao',
+                    attributes: { style: "text-align:right" },
+				},
+                {
+                    field: "ID",
+                    title: "Thao tác",
+                    width: 150,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                   
+					template: function (item) {
+                        var editBtn = `<a class="btn btn-sm btn-outline-secondary" onclick="editTaiSanKhauHao(${item.ID})" title="Sửa">Sửa</a>`;
+						var deleteBtn = `<a class="btn btn-sm btn-outline-danger" onclick = "GS_Delete('Bạn có chắc chắn muốn xóa không ?',xoaTaiSanKhauHao,${item.ID})"> Xóa</a>`;
+                        if (item.IsLastTSKH) {
+                            return `${editBtn} &nbsp; ${deleteBtn}`;
+						}
+						return "";
+					}
+                }
+			]
+		});
+		if ($('#LOAI_HINH_KHAI_THAC_ID').val() == @((int)enumHinhThucKhaiThac.SXKD)) {
+			$("#danh-sach-tai-san-khau-hao thead [data-field=StrVNDienTichKhaiThac]").html("Diện tích SXKD");
+		}
+        //Function tài sản vừa nhập vào, tài sản trạng thái CHO_DUYET, tất cả yêu cầu trạng thái CHO_DUYET
+
+	})
+    function editTaiSanKhauHao(idTaiSanKhauHao) {
+	    var taiSanId = $("#TaiSanId").val();
+	    var _url = "@(Url.Action("_CreateOrUpdateTaiSanKhauHao", "TaiSanKhauHao"))?&idTaiSanKhauHao=" + idTaiSanKhauHao + "&taisanid=" + taiSanId  ;
+	    OpenModalManual("Thêm mới, sửa tài sản", _url, 80);
+	}
+	class DanhSachKhaiThacTaiSanJS{
+		constructor() {
+			this.initEvents();
+		}
+		initEvents() {
+			//$(document).on('click', '#xoatskhauhao', this.xoaTaiSanKhaiThac.bind(this));
+		}
+		addDataSearchTaiSanKhaiThacs() {
+			var data = {
+				TaiSanId: $('#TaiSanId').val(),
+			}
+			return data;
+        }
+
+	}
+		
+  //  function xoaTaiSanKhaiThac(khaiThacId) {
+		//debugger
+		//bootbox.confirm({
+		//	message: "Bạn có chắc chắn xóa tài sản khấu hao này?",
+		//	className: 'bootbox-sm',
+		//	buttons: {
+		//		confirm: {
+		//			label: 'Đồng ý',
+		//		},
+		//		cancel: {
+		//			label: 'Hủy',
+		//		},
+		//	},
+		//	callback: function (result) {
+		//		if (result) {
+		//			var url = "/taisankhauhao/delete?id=" + khaiThacId;
+		//			var KTTSDeleteRequest = ajaxDelete(url);
+		//			KTTSDeleteRequest.done(function (result) {
+		//				if (result.Code == '00') {
+		//					ShowSuccessMessage(result.Message);
+		//					$('#danh-sach-tai-san-khau-hao').data('kendoGrid').dataSource.page(1);
+		//				} else
+		//					ShowErrorMessage(result.Message);
+		//			}).fail(function (jqXHR, textStatus, errorThrow) {
+		//				console.log(textStatus + ': ' + errorThrow);
+		//			});
+		//		}
+		//	},
+		//});
+  //  }
+    function xoaTaiSanKhauHao(ID) {
+        $.ajax({
+            url: "/TaiSanKhauHao/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (data) {
+                console.log(data);
+                if (data.Code == '00') {
+                    var grid = $('#danh-sach-tai-san-khau-hao').data('kendoGrid');
+                    grid.dataSource.page(grid.dataSource.page());
+                    ShowSuccessMessage(data.Message);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+            },
+
+        });
+
+	}
+    $(document).ready(function () {
+		$('#dungTinhKhauHao').on('click', dungTinhKhauHao);
+    })
+    function dungTinhKhauHao() {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn muốn dừng tính khấu hao tài sản này?",
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: 'Đồng ý',
+                },
+                cancel: {
+                    label: 'Hủy',
+                },
+            },
+			callback: function (result) {
+				var taiSanId = $("#@Html.IdFor(c => c.TaiSanId)").val();
+                if (result) {
+                    $.ajax({
+                        url: "/TaiSanKhauHao/DungTinhKhauHao?taiSanId=" + taiSanId,
+                        type: "POST",
+                        contentType: "application/json;charset=UTF-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Code == '00') {
+                                var grid = $('#danh-sach-tai-san-khau-hao').data('kendoGrid');
+                                grid.dataSource.page(grid.dataSource.page());
+                                ShowSuccessMessage(data.Message);
+                            } else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        },
+
+                    });
+                }
+            }
+        })
+    }
+</script>
+@*<a class="btn btn-sm btn-outline-secondary" href="/TaiSanKhauHao/_CreateOrUpdateTaiSanKhauHao?idTaiSanKhauHao=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>&nbsp;*@
+@*<a class="btn btn-sm btn-outline-secondary" id="suatskhauhao" data-title="Thêm mới, sửa tài sản" data-toggle="modal" data-target="#globalModalIframe" href="javascript:DanhSachKhaiThacTaiSanJS.editTaiSanKhaiThac(#=ID#)" title="Sửa">Sửa</a>&nbsp;
+<a class="btn btn-sm btn-outline-secondary #if(CountSub>0||IsUsed== true){# disabled #}# " onclick="GS_Delete('Bạn có chắc chắn muốn xóa nguồn gốc tài sản này không ?',deleteNguonGocTaiSan,#=ID#)"><i class="far fa-trash-alt d-block"></i>Xóa</a>*@
+
+<script id="edit-gird-Tem" type="text/x-kendo-tmpl">
+	<a class="btn btn-sm btn-outline-secondary #if(NGAY_KET_THUC != null){# disabled #}# ""  href="javascript:editTaiSanKhaiThac(#=ID#)" title="Sửa">Sửa</a>
+	<a class="btn btn-sm btn-outline-danger #if(NGAY_KET_THUC != null){# disabled #}# " onclick="GS_Delete('Bạn có chắc chắn muốn xóa nguồn gốc tài sản này không ?',xoaTaiSanKhauHao,#=ID#)">Xóa</a>
+</script>

@@ -1,0 +1,466 @@
+@model DonViSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh mục đơn vị";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDonVi");
+}
+
+<nop-antiforgery-token />
+<input asp-for="pageIndex" type="hidden" />
+<input asp-for="donViId" type="hidden" />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @*@ViewBag.Title*@
+        <br />
+    </h5>
+    @if (Model.IsQuangTri == true)
+    {
+        <div class="pull-right" style="margin-bottom:5px;">
+            <a asp-action="create" class="btn btn-success">
+                <i class="fa fa-plus-square"></i>
+                Thêm mới
+            </a>
+        </div>
+    }
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Loại hình đơn vị:</label>
+        <div class="col-sm-10">
+            <nop-select asp-items="Model.dllLoaiDonVi" asp-filter="true" asp-for="LoaiDonViSearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Thuộc cấp:</label>
+        <div class="col-sm-10">
+            @*<nop-select asp-items="Model.dllCapDonVi" asp-for="CapDonViSearch" />*@
+            <nop-select asp-for="SelectedCapDonVis" id= "SelectedCapDonVis" asp-items="Model.dllCapDonVi" asp-multiple="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách đơn vị</span>
+        </div>
+    </div>
+    <div class="col-sm-1 text-right">
+        <a asp-action="Create" class="btn btn-sm btn-outline-primary" >
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+    <div class="col-sm-1 text-right">
+        <a href="#" id="ExportDanhMuc" target="_blank" class="btn btn-sm btn-outline-primary">
+            Xuất excel
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function genUrlExport() {
+                                var url = "/DonVi/ExportDonVi?donViId=" + parseInt($('#@Html.IdFor(model => model.donViId)').val())
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val();
+                                $("#ExportDanhMuc").attr('href', url);
+                            };
+                            genUrlExport();
+                            $("#KeySearch,#LoaiDonViSearch,#CapDonViSearch").change(function () {
+                                genUrlExport();
+                            });
+                       
+
+
+
+                            @*$("#ExportDanhMuc").click(function () {
+                                var url = "/DonVi/ExportDonVi?KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&donViId=" + $('#@Html.IdFor(model => model.donViId)').val();
+                                console.log(url);
+                                window.location = url;
+                            });*@
+                            function SearchData() {
+                                var listCapDonVisKendo = $('#SelectedCapDonVis').data("kendoMultiSelect");
+                                let listCapDonVis = [];
+                                if (listCapDonVisKendo) {
+                                    listCapDonVis = listCapDonVisKendo.value();
+                                }
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDonViSearch: $('#@Html.IdFor(model => model.LoaiDonViSearch)').val(),
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+                                    donViId: $('#@Html.IdFor(model => model.donViId)').val(),
+                                    SelectedCapDonVis: listCapDonVis
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+
+                            function setLinkCDDV(dataItem) {
+                                if (dataItem.SO_DON_VI_CON > 0) {
+                                    return "<a href='#' class='open-list-modal' data-toggle='modal' data-target='\#donvichuyendoi-list-modal' data-id=" + dataItem.ID + ">" + dataItem.MA + "&nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>" + dataItem.SO_DON_VI_CON + "</span>)" + "</a>"
+                                } else {
+                                    return "<a href='#' class='open-list-modal' data-toggle='modal' data-target='\#donvichuyendoi-list-modal' data-id=" + dataItem.ID + ">" + dataItem.MA + "</a>"
+                                }
+                            };
+
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    page:@(Model.Page),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "MA",
+                                        title: "Mã đơn vị",
+                                        width: 300,
+                                        template: setLinkCDDV
+                                        //template: '#=SO_DON_VI_CON>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+SO_DON_VI_CON+"</span>)":MA#'
+                                    },
+                                    {field: 'TEN',title: 'Tên đơn vị'},
+                                    { field: 'TEN_DON_VI_CHA',title: 'Tên đơn vị cha'},
+                                    { field: 'DIA_CHI', title: 'Địa Chỉ' },
+
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" title="Thay đổi thông tin" href="/DonViChuyenDoi/Create?donViId=#=ID#">Thay đổi</a>&nbsp<a class="btn btn-sm btn-outline-secondary #if(TREE_LEVEL < 2){# disabled #}#"   href="Edit?Id=#=ID#&pageIndex=#=pageIndex#" title="Sửa">Sửa</a>'
+
+                                    }
+                                ]
+                            });
+                            function detailInit(e) {
+                                var data = {
+                                    ParentID: e.data.ID,
+                                    TreeLevel: 0,
+                                    //IsSearchSub: true
+                                };
+
+                                addAntiForgeryToken(data);
+                                $("<div />").appendTo(e.detailCell).kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: data
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                    confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                    mode: "inline"
+                                    },
+                                    detailInit: detailInit,
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "MA",
+                                            title: "Mã",
+                                            width: 300,
+                                            template: setLinkCDDV
+                                        },
+                                        { field: 'TEN', title: 'Tên' },
+                                        { field: 'TEN_DON_VI_CHA', title: 'Tên đơn vị cha' },
+                                        { field: 'DIA_CHI', title: 'Địa Chỉ' },
+                                        {
+                                            field: "ID",
+                                            title: "Thao tác",
+                                            width: 150,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn icon-btn btn-xs btn-outline-secondary" title="Thay đổi thông tin" href="/DonViChuyenDoi/Create?donViId=#=ID#">&nbsp<i class="fas fa-history"></i>&nbsp</a>&nbsp<a class="btn icon-btn btn-xs btn-outline-secondary" href="Edit?Id=#=ID#&pageIndex=#=pageIndex#" title="Sửa"><i class="fas fa-pencil-alt"></i></a>'
+                                        }
+                                    ]
+                                });
+                            };
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="modal fade" id="donvichuyendoi-list-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" style="width: 90vw; height: auto; max-width: 100%;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">Lịch sử đơn vị</h4>
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px;">
+                                    <div class="col-sm-1"></div>
+                                    <label class="col-form-label col-sm-1">Mã đơn vị</label>
+                                    <div class="col-sm-9">
+                                        <input id="thongtindonvi-ma" class="form-control" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-1"></div>
+                                    <label class="col-form-label col-sm-1">Tên đơn vị</label>
+                                    <div class="col-sm-9">
+                                        <input id="thongtindonvi-ten" class="form-control" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-1"></div>
+                                    <label class="col-form-label col-sm-1">Địa chỉ</label>
+                                    <div class="col-sm-9">
+                                        <input id="thongtindonvi-diachi" class="form-control" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-1"></div>
+                                    <label class="col-form-label col-sm-1">Đơn vị cấp trên</label>
+                                    <div class="col-sm-9">
+                                        <input id="thongtindonvi-donvicaptren" class="form-control" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-horizontal">
+                                    <div class="modal-body">
+                                        <div id="dvcd-items-grid"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <span class="btn btn-default" data-dismiss="modal">Đóng</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).on("click", ".open-delete-confirm", function () {
+            var dvcdId = $(this).data('id');
+
+            $(document).on("click", ".dvcd-delete-yes-btn", function () {
+                $.ajax({
+                    url: '/DonViChuyenDoi/Delete',
+                    data: {
+                        id: dvcdId,
+                        redirectToList: false
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#donvichuyendoi-confirm-delete-modal").modal("hide");
+                        var grid = $('#dvcd-items-grid').data('kendoGrid');
+                        grid.dataSource.page(1);
+                    },
+                    type: 'POST'
+                });
+            })
+
+        });
+        
+        $(document).on("click", ".open-list-modal", function () {
+            var dvId = $(this).data('id');
+
+            $.ajax({
+                url: '/DonViChuyenDoi/GetThongTinDonVi',
+                data: {
+                    donViId: dvId
+                },
+                error: function (e) {
+                    console.log(e);
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $("#thongtindonvi-ma").val(data.MA);
+                    $("#thongtindonvi-ten").val(data.TEN);
+                    $("#thongtindonvi-diachi").val(data.DIA_CHI);
+                    $("#thongtindonvi-donvicaptren").val(data.DON_VI_CAP_TREN);
+                },
+                type: 'POST'
+            });
+
+            function searchDataDvcd() {
+                var _data = {
+                    KeySearch: $('#searchDvcd').val(),
+                    donViId: dvId
+                }
+                return _data
+            }
+            $("#dvcd-items-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("List", "DonViChuyenDoi"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: searchDataDvcd
+                        },
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(Model.PageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(Model.AvailablePageSizes)],
+                    @await Html.PartialAsync("_GridPagerMessages")
+                },
+                editable: {
+                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                    mode: "inline"
+                },
+                scrollable: false,
+                    columns: [
+                        {field: 'TEN',title: 'Tên'},
+                        {field: 'LOAI_DON_VI',title: 'Loại đơn vị'},
+                        {field: 'QUYET_DINH_SO',title: 'Số quyết định'},
+                        {
+                            field: 'NgayQuyetDinhDuDieuKien', title: 'Ngày quyết định',
+                            width: 150,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                        },
+                        @*{field: 'QUYET_DINH_GIAO_VON_SO',title: 'Số quyết định đủ giao vốn'},
+                        {field: 'NgayQuyetDinhGiaoVon', title: 'Ngày quyết định đủ giao vốn'},*@
+                        {
+                            field: "ID",
+                            title: "Thao tác",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn icon-btn btn-xs btn-outline-secondary open-delete-confirm" href="/DonViChuyenDoi/Edit/#=ID#" title="Sửa"><i class="fas fa-pencil-alt"></i></a>&nbsp<button class="btn icon-btn btn-xs btn-outline-danger open-delete-confirm" data-toggle="modal" data-target="\\#donvichuyendoi-confirm-delete-modal" title="Xóa" data-id="#=ID#"><i class="far fa-trash-alt"></i></button>'
+                        }
+                    ]
+                });
+        });
+    </script>
+    <div class="modal fade" id="donvichuyendoi-confirm-delete-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Bạn có chắc chắn không ?</h4>
+                </div>
+                <form action="" id="donvichuyendoideleteform" method="post">
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            Bạn có chắc chắn xóa không ?
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-default" data-dismiss="modal">Không</span>
+                            <a href="#" class="btn btn-danger dvcd-delete-yes-btn">
+                                Xoá
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

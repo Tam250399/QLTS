@@ -1,0 +1,14 @@
+﻿@model QuyenModel
+
+<tr role="row" data-idquyen="@Model.ID" id="goquyen_@Model.ID" class="listquyen">
+    <td>
+        @Model.TEN
+    </td>
+    <td>
+        @Model.PHAN_HE
+    </td>
+    <td style="width:100px">
+       <a href="javascript:void(0);" data-id="@Model.ID" onclick="RemoveQuyen(this)" class="btn btn-danger"><i class="fas fa-trash" style="margin-right:5px;"></i>Gỡ</a>
+    </td>
+</tr>
+

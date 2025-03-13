@@ -1,0 +1,41 @@
+﻿@model TaiSanMayMocModel
+@{
+	//page title
+	ViewBag.Title = "Tăng mới tài sản";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("NhapSoDuDauKyTaiSan");
+}
+<div class="card mb-4">
+	<h6 class="card-header">
+		<text>Thêm mới tài sản máy móc</text>
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a asp-action="List">Quay lại danh sách</a>
+		</small>
+		<button type="button" class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/TaiSan/ChonLoaiTaiSan';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		@*<button type="button" id="btnAddContinue" class="btn btn-sm btn-primary btnAdd" style="float:right;margin-right:5px;">
+				<i class="fas fa-save"></i>
+				Lưu và thêm nhà
+			</button>*@
+		<button type="button" class="btn btn-sm btn-outline-primary btnAdd " style="float:right;margin-right:5px;">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+	</h6>
+	<div class="card-body">
+		@await Html.PartialAsync("_CreateOrUpdateTSKhac", Model)
+	</div>
+	<div class="card-footer">
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSan/ChonLoaiTaiSan';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		<button type="button" class="btn btn-sm btn-outline-primary btnAdd" style="float:right;margin-right:5px;">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+	</div>
+</div>

@@ -1,0 +1,226 @@
+@model DuAnSearchModel
+@{
+	//page title
+	ViewBag.Title = "Dự án";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhMucDuAn");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@*@ViewBag.Title*@
+		<br />
+	</h5>
+	@*<div class="pull-right" style="margin-bottom:5px;">
+			<a asp-action="Create" class="btn btn-success">
+				<i class="fa fa-plus-square"></i>
+				Thêm mới
+			</a>
+		</div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+	<input asp-for="donviId" type="hidden" />
+	@*<div class="form-group row">
+			<label class="col-form-label col-sm-2 ">Duyệt TS cho đơn vị</label>
+			<div class="col-sm-8">
+				<nop-editor asp-for="TenDonViCha" asp-disabled="true" />
+			</div>
+			<div class="col-sm-2" style="text-align:left">
+				<button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+					<i class="fab fa-sistrix"></i>
+					Chọn đơn vị
+				</button>
+			</div>
+		</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Từ khóa:</label>
+		<div class="col-sm-8">
+			<nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã" />
+		</div>
+		<div class="col-sm-2 text-sm-left">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách dự án</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn btn-sm btn-outline-primary">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+									donviId: $('#@Html.IdFor(model => model.donviId)').val(),
+									pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DuAn"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+									},
+									page: @Model.Page,
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+									{
+										field: 'MA',
+										title: 'Mã dự án',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:left" },
+									},
+									{
+										field: 'TEN',
+										title: 'Tên dự án',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:left" },
+									},
+									//{
+									//	field: 'LOAI_DU_AN_ID',
+									//	title: 'Loại dự án',
+									//	headerAttributes: { style: "text-align:center" },
+									//	attributes: { style: "text-align:left" },
+									//},
+									//{
+									//	field: 'TEN_NHOM_DU_AN',
+									//	title: 'Tên nhóm dự án',
+									//	headerAttributes: { style: "text-align:center" },
+									//	attributes: { style: "text-align:left" },
+									//},
+									//{
+									//	field: 'TRANG_THAI_ID',
+									//	title: 'Trạng thái',
+									//	headerAttributes: { style: "text-align:center" },
+									//	attributes: { style: "text-align:center" },
+									//},
+                                    {
+                                        field: 'NGAY_BAT_DAU',
+                                        title: 'Ngày bắt đầu',
+                                        type:"Date",
+										format: "{0:dd/MM/yyyy}",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'NGAY_KET_THUC',
+                                        title: 'Ngày kêt thúc',
+                                        type:"Date",
+										format: "{0:dd/MM/yyyy}",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+									{
+										field: 'strVNTongKinhPhi',
+										title: 'Tổng kinh phí',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:right" },
+									},
+									{
+										field: 'SO_QUYET_DINH_PHE_DUYET',
+										title: 'Số quyết định',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:left" },
+									},
+                                    //{field: 'HINH_THUC_ID',title: 'Hình thức'},
+                                    //{field: 'CHU_DAU_TU',title: 'Chủ đầu tư'},
+                                    //{field: 'DIA_DIEM',title: 'Địa điểm'},
+                                    //{field: 'NGUON_VON',title: 'Nguồn vốn'},
+                                    //{field: 'GHI_CHU',title: 'Ghi chú'},
+                                    //{field: 'MA_LOAI_DU_AN',title: 'Loại dự án'},
+                                    //{field: 'NGUON_NS',title: 'NGUON_NS'},
+                                    //{field: 'NGUON_ODA',title: 'NGUON_ODA'},
+                                    //{field: 'NGUON_VIEN_TRO',title: 'NGUON_VIEN_TRO'},
+                                    //{field: 'NGUON_KHAC',title: 'NGUON_KHAC'},
+                                    //{field: 'KIEU',title: 'KIEU'},
+                                    //{field: 'CO_QUAN_TAI_CHINH',title: 'CO_QUAN_TAI_CHINH'},
+                                    //{field: 'MA_NHOM_DU_AN',title: 'MA_NHOM_DU_AN'},
+                                    //{field: 'MA_HT',title: 'MA_HT'},
+                                    //{field: 'TEN_HT',title: 'TEN_HT'},
+                                    //{field: 'HT_QUANLY',title: 'HT_QUANLY'},
+                                    //{field: 'HIEU_LUC',title: 'HIEU_LUC'},
+                                    //{field: 'MA_DVQHNS',title: 'MA_DVQHNS'},
+                                    //{field: 'MA_DU_AN_CU',title: 'MA_DU_AN_CU'},
+                                    //{field: 'DON_VI_ID',title: 'DON_VI_ID'},
+                                    //{field: 'DON_VI_CU_ID',title: 'DON_VI_CU_ID'},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+									template: 
+										function (dataItem) {
+											return "<a class='btn btn-sm btn-outline-secondary' href='/DuAn/Edit?Id=" + dataItem.ID + "&pageIndex=" + dataItem.pageIndex + "' title='Sửa'>Sửa</a>";
+										}
+									
+								}
+                                ]
+                            });
+                        });
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

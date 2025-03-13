@@ -1,0 +1,196 @@
+@model KhauHaoTaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Điều chỉnh khấu hao";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DieuChinhKhauHao");
+}
+
+<nop-antiforgery-token />
+@*<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>*@
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Loại tài sản</label>
+        <div class="col-md-4">
+            <app-select asp-for="LoaiHinhTaiSan" asp-items="Model.ddlLoaiHinhTaiSan" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-md-2">Tháng khấu hao</label>
+        <div class="col-md-1">
+            <nop-editor asp-for="ThangKhauHao"  asp-min-number="1" asp-max-number="12"/>
+        </div>
+        <label class="col-form-label col-md-2">Năm Khấu hao</label>
+        <div class="col-md-1">
+            <nop-editor asp-for="NamKhauHao" asp-max-number="9999"/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group row" id="TrinhChotKH">
+    <div class="col-sm-10">
+    </div>
+    <div class="col-sm-2">
+        @*<button type="button" class="btn btn-outline-success" id="Chot1TaiSan">Chốt khấu hao 1 tài sản</button>*@
+        <button type="button" class="btn btn-outline-success" onclick="Chot1TaiSan()">Chốt khấu hao 1 tài sản</button>
+    </div>
+    
+</div>
+<div class="form-group row">
+    <div class="col-sm-1 text-right">
+        <a href="#" id="ExportKhauHao" target="_blank" class="btn btn-sm btn-outline-primary">
+            Xuất excel
+        </a>
+    </div>
+</div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="items-grid"></div>
+                        <script>
+                            $(document).ready(function () {
+                            function genUrlExport() {
+                                var url = "/KhauHaoTaiSan/ExportKhauHao?ThangKhauHaoSearch=" +$('#@Html.IdFor(model => model.ThangKhauHao)').val()
+                                    + "&NamKhauHaoSearch="+$('#@Html.IdFor(model => model.NamKhauHao)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LoaiHinhTaiSanSearch=" + $('#@Html.IdFor(model => model.LoaiHinhTaiSan)').val();
+                                $("#ExportKhauHao").attr('href', url);
+                            };
+                            genUrlExport();
+                            $("#KeySearch,#ThangKhauHaoSearch,#NamKhauHaoSearch,#LoaiHinhTaiSanSearch").change(function () {
+                                genUrlExport();
+                            });
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val(),
+									LoaiHinhTaiSan: $('#@Html.IdFor(model => model.LoaiHinhTaiSan)').val(),
+									ThangKhauHao: $('#@Html.IdFor(model => model.ThangKhauHao)').val(),
+									NamKhauHao: $('#@Html.IdFor(model => model.NamKhauHao)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "KhauHaoTaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    { field: 'MA_TAI_SAN', title: 'Mã tài sản' },
+                                    { field: 'THANG_KHAU_HAO', title: 'Tháng khấu hao' },
+                                    { field: 'NAM_KHAU_HAO', title: 'Năm khấu hao' },
+                                    { field: 'GIA_TRI_KHAU_HAO', title: 'Giá trị khấu hao' },
+                                    { field: 'TONG_KHAU_HAO_LUY_KE', title: 'Tổng khấu hao lũy kế' },
+                                    { field: 'TONG_GIA_TRI_CON_LAI', title: 'Tổng giá trị còn lại' },
+                                    { field: 'TY_LE_KHAU_HAO', title: 'Tỷ lệ khấu hao' },
+                                    { field: 'TONG_NGUYEN_GIA', title: 'Tổng nguyên giá' },
+                                    {
+                                        @*field: "ID",
+                                        title: "Thao tác",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>',*@
+
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: function (dataItem) {
+                                            //if (dataItem.IsLock == false) {
+                                            return '<button type="button" class="btn btn-sm btn-primary" onclick="EditKhauHao(' + dataItem.ID + ',' + dataItem.THANG_KHAU_HAO + ',' + dataItem.NAM_KHAU_HAO + ')" >Sửa</button>'
+                                            //}
+                                            //return '';
+                                        }
+                                    }
+                                ]
+                            });
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+	function EditKhauHao(id, month, year) {
+		var url = '@Url.Action("Edit", "KhauHaoTaiSan")'+'?id='+id;
+        OpenModalManual("Điều chỉnh khấu hao tháng " + month + " năm " + year, url);
+    }
+
+	function Chot1TaiSan() {
+		var url = '@Url.Action("ChotKhauHaoOneTaiSan", "KhauHaoTaiSan")';
+		OpenModalManual("Chốt khấu hao tài sản theo mã tài sản", url);
+	}
+    </script>

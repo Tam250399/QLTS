@@ -1,0 +1,75 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model HoatDongModel
+@{
+    //page title
+    ViewBag.Title = "Nhật ký hoạt động";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("HeThongNhatKyHoatDong");
+}
+<form asp-controller="HoatDong" asp-action="Detail">
+    <div class="card">
+        <div class="card-body">
+            <input asp-for="ID" type="hidden" />
+            <div class="content">
+
+                @*<div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">ID người dùng:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.NGUOI_DUNG_ID)</label>
+                </div>*@
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Tên đăng nhập:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.TEN_DANG_NHAP)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Tên đầy đủ:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.TEN_DAY_DU)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Loại hoạt động:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.TEN_KIEU_HOAT_DONG)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Đối tượng:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.TEN_DOI_TUONG)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Mô tả:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.MO_TA)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-right">Ngày thực hiện:</label>
+                    <label class="col-form-label col-sm-8 text-sm-left">@Html.DisplayFor(model => model.NGAY_TAO)</label>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-sm-4 text-sm-left">Dữ liệu:</label>
+                    <div class="form-group col-sm-12">
+                        @*<textarea class="area-DU_LIEU">@Html.DisplayFor(model => model.DU_LIEU)</textarea>*@
+                        <nop-editor asp-for="@Model.DU_LIEU" />
+                    </div>
+                </div>
+
+
+            </div>
+
+            <style>
+
+                .card-body{padding:10px;}
+                .form-group {
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+                    text-align: left;
+                }
+
+                .area-DU_LIEU {
+                    width: 100%;
+                    height: 100%;
+                    min-height: 100px;
+                    display: block;
+                }
+            </style>
+
+        </div>
+    </div>
+</form>

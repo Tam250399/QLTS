@@ -1,0 +1,46 @@
+@model LogQueueProcessModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">STATUS:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="STATUS" />
+<span asp-validation-for="STATUS"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">ACTION:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="ACTION" />
+<span asp-validation-for="ACTION"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">OUTPUT:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="OUTPUT" />
+<span asp-validation-for="OUTPUT"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">TIME_START_SCAN:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="TIME_START_SCAN" />
+<span asp-validation-for="TIME_START_SCAN"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">TIME_STOP_SCAN:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="TIME_STOP_SCAN" />
+<span asp-validation-for="TIME_STOP_SCAN"></span>
+</div>
+</div>
+<div class="form-group row">
+<label class="col-form-label col-sm-2 text-sm-right">QUEUE_ID:</label>
+<div class="col-sm-10">
+<nop-editor asp-for="QUEUE_ID" />
+<span asp-validation-for="QUEUE_ID"></span>
+</div>
+</div>
+

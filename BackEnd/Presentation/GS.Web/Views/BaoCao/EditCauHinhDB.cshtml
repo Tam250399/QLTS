@@ -1,0 +1,179 @@
+﻿@model CauHinhBaoCaoDBModel
+@{
+    //page title
+    ViewBag.Title = "Cấu hình báo cáo đồng bộ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CauHinhThamSoBaoCaoDB");
+}
+@*<form asp-controller="BaoCao" asp-action="EditCauHinhDB" method="post">
+        <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin cấu hình
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListCauHinhDB">Quay lại danh sách</a>
+            </small>
+            <button id="btnDelete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </button>
+            <button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdateCauHinhDB", Model)
+
+        </div>
+    </div>
+    </form>
+
+    <script>
+            $("#btnDelete").click(function () {
+                bootbox.confirm({
+                    message: 'Bạn có chắc chắn muốn xóa ?',
+                    className: 'bootbox-sm',
+                    buttons: {
+                        confirm: {
+                            label: '@T("admin.common.yes")',
+                        },
+                        cancel: {
+                            label: '@T("admin.common.no")',
+                        },
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            var MaBaoCao = $("#MaBaoCao").val();
+                            $.ajax({
+                                url: "/BaoCao/DeleteCauHinhDB?maBaoCao=" + MaBaoCao,
+                                type: "POST",
+                                success: function (data) {
+                                    if (CheckValidMessageReturn(data)) {
+                                        ShowSuccessMessage(data.Message);
+                                    }
+                                },
+                                error: function (data) {
+
+                                }
+                            })
+                        }
+                    }
+                })
+            })
+        </script>*@
+<div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin cấu hình
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListCauHinhDB">Quay lại danh sách</a>
+            </small>
+            <button id="btnDelete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </button>
+            <button id="btnSave" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Tên báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="TenBaoCao" />
+                    <span asp-validation-for="TenBaoCao"></span>
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-left text-required">Mã báo cáo</label>
+                <div class="col-sm-4">
+                    <input asp-for="MaBaoCao" hidden />
+                    <input class="form-control text-box single-line" disabled="" value="@Model.MaBaoCao">
+                </div>
+            </div>
+            @await Html.PartialAsync("_CreateOrUpdateCauHinhDB", Model)
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                var a = $('.cau-hinh-bc-input input');
+                var dictBody = [];
+                $.each(a, function (key, val) {
+                    //this;
+                    dictBody.push({ key: this.id, value: this.value })
+                });
+                var b = $('.cau-hinh-bc-output input');
+                var dictRepostdata = [];
+                $.each(b, function (key, val) {
+                    //this;
+                    if (this.value != "" || this.value != null){
+                        dictRepostdata.push({ key: this.id, value: this.value })
+                    }
+                });
+                var _data = {
+                    TenBaoCao: $('#@Html.IdFor(c => c.TenBaoCao)').val(),
+                    MaBaoCao: $('#@Html.IdFor(c => c.MaBaoCao)').val(),
+                    MaBaoCaoKho: $('#@Html.IdFor(c => c.MaBaoCaoKho)').val(),
+                    Model: $('#@Html.IdFor(c => c.Model)').val(),
+                    ExcecuteStatment: $('#@Html.IdFor(c => c.ExcecuteStatment)').val(),
+                    FullName_ReportClass: $('#@Html.IdFor(c => c.FullName_ReportClass)').val(),
+                    FullName_SearchModelClass: $('#@Html.IdFor(c => c.FullName_SearchModelClass)').val(),
+                    Lstbody: dictBody,
+                    LstreportData: dictRepostdata,
+                };
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/BaoCao/EditCauHinhDB",
+                    data: _data,
+                    success: function (data) {
+                        if (data.Code == '00') {
+                            document.location.href = 'ListCauHinhDB',
+                                ShowSuccessMessage(data.Message);
+                        } else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ShowErrorMessage(data.Message);
+                        alert('error');
+                    },
+                });
+            });
+        });
+        
+        $("#btnDelete").click(function () {
+            bootbox.confirm({
+                message: 'Bạn có chắc chắn muốn xóa cấu hình báo cáo này?',
+                className: 'bootbox-sm',
+                buttons: {
+                    confirm: {
+                        label: '@T("admin.common.yes")',
+                    },
+                    cancel: {
+                        label: '@T("admin.common.no")',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                        var MaBaoCao = $("#MaBaoCao").val();
+                        $.ajax({
+                            url: "/BaoCao/DeleteCauHinhBaoCaoDB?maBaoCao=" + MaBaoCao,
+                            type: "POST",
+                            success: function (data) {
+                                if (CheckValidMessageReturn(data)) {
+                                    ShowSuccessMessage(data.Message);
+                                }
+                            },
+                            error: function (data) {
+
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    </script>

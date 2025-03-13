@@ -1,0 +1,113 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>Copyright © GS Solutions, Ltd</Copyright>
+    <Company>GS Solutions, Ltd</Company>
+    <Authors>GS Solutions, Ltd</Authors>
+    <Version>4.1.0.0</Version>
+    <Description>The GS.Data project contains a set of classes and functions for reading from and writing to a database or other data store. It helps separate data-access logic from your business objects. nopCommerce uses the Entity Framework (EF) Code-First approach. It allows you to define entities in the source code (all core entities are defined into GS.Core project), and then get EF to generate the database from that. That's why it's called Code-First. You can then query your objects using LINQ, which gets translated to SQL behind the scenes and executed against the database. nopCommerces use a fluent code API to fully customize the persistence mapping.</Description>
+    <PackageLicenseUrl></PackageLicenseUrl> 
+    <PackageProjectUrl></PackageProjectUrl> 
+    <RepositoryUrl></RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType> 
+    <AssemblyName>GS.Data</AssemblyName> 
+    <RootNamespace>GS.Data</RootNamespace>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mapping\AdvancePayment\**" />
+    <Compile Remove="Mapping\Affiliates\**" />
+    <Compile Remove="Mapping\Blogs\**" />
+    <Compile Remove="Mapping\Catalog\**" />
+    <Compile Remove="Mapping\Common\**" />
+    <Compile Remove="Mapping\Configuration\**" />
+    <Compile Remove="Mapping\Contracts\**" />
+    <Compile Remove="Mapping\Customers\**" />
+    <Compile Remove="Mapping\Directory\**" />
+    <Compile Remove="Mapping\Forums\**" />
+    <Compile Remove="Mapping\Gdpr\**" />
+    <Compile Remove="Mapping\Logging\**" />
+    <Compile Remove="Mapping\Media\**" />
+    <Compile Remove="Mapping\Messages\**" />
+    <Compile Remove="Mapping\News\**" />
+    <Compile Remove="Mapping\Polls\**" />
+    <Compile Remove="Mapping\Security\**" />
+    <Compile Remove="Mapping\Seo\**" />
+    <Compile Remove="Mapping\Stores\**" />
+    <Compile Remove="Mapping\Tasks\**" />
+    <Compile Remove="Mapping\Tax\**" />
+    <Compile Remove="Mapping\Topics\**" />
+    <Compile Remove="Mapping\Vendors\**" />
+    <Compile Remove="Mapping\WidgetApps\**" />
+    <Compile Remove="Mapping\Works\**" />
+    <EmbeddedResource Remove="Mapping\AdvancePayment\**" />
+    <EmbeddedResource Remove="Mapping\Affiliates\**" />
+    <EmbeddedResource Remove="Mapping\Blogs\**" />
+    <EmbeddedResource Remove="Mapping\Catalog\**" />
+    <EmbeddedResource Remove="Mapping\Common\**" />
+    <EmbeddedResource Remove="Mapping\Configuration\**" />
+    <EmbeddedResource Remove="Mapping\Contracts\**" />
+    <EmbeddedResource Remove="Mapping\Customers\**" />
+    <EmbeddedResource Remove="Mapping\Directory\**" />
+    <EmbeddedResource Remove="Mapping\Forums\**" />
+    <EmbeddedResource Remove="Mapping\Gdpr\**" />
+    <EmbeddedResource Remove="Mapping\Logging\**" />
+    <EmbeddedResource Remove="Mapping\Media\**" />
+    <EmbeddedResource Remove="Mapping\Messages\**" />
+    <EmbeddedResource Remove="Mapping\News\**" />
+    <EmbeddedResource Remove="Mapping\Polls\**" />
+    <EmbeddedResource Remove="Mapping\Security\**" />
+    <EmbeddedResource Remove="Mapping\Seo\**" />
+    <EmbeddedResource Remove="Mapping\Stores\**" />
+    <EmbeddedResource Remove="Mapping\Tasks\**" />
+    <EmbeddedResource Remove="Mapping\Tax\**" />
+    <EmbeddedResource Remove="Mapping\Topics\**" />
+    <EmbeddedResource Remove="Mapping\Vendors\**" />
+    <EmbeddedResource Remove="Mapping\WidgetApps\**" />
+    <EmbeddedResource Remove="Mapping\Works\**" />
+    <None Remove="Mapping\AdvancePayment\**" />
+    <None Remove="Mapping\Affiliates\**" />
+    <None Remove="Mapping\Blogs\**" />
+    <None Remove="Mapping\Catalog\**" />
+    <None Remove="Mapping\Common\**" />
+    <None Remove="Mapping\Configuration\**" />
+    <None Remove="Mapping\Contracts\**" />
+    <None Remove="Mapping\Customers\**" />
+    <None Remove="Mapping\Directory\**" />
+    <None Remove="Mapping\Forums\**" />
+    <None Remove="Mapping\Gdpr\**" />
+    <None Remove="Mapping\Logging\**" />
+    <None Remove="Mapping\Media\**" />
+    <None Remove="Mapping\Messages\**" />
+    <None Remove="Mapping\News\**" />
+    <None Remove="Mapping\Polls\**" />
+    <None Remove="Mapping\Security\**" />
+    <None Remove="Mapping\Seo\**" />
+    <None Remove="Mapping\Stores\**" />
+    <None Remove="Mapping\Tasks\**" />
+    <None Remove="Mapping\Tax\**" />
+    <None Remove="Mapping\Topics\**" />
+    <None Remove="Mapping\Vendors\**" />
+    <None Remove="Mapping\WidgetApps\**" />
+    <None Remove="Mapping\Works\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.0.133" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GS.Core\GS.Core.csproj" />
+  </ItemGroup>
+  
+</Project>

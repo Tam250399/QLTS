@@ -1,0 +1,313 @@
+﻿@model BaoCaoDienTuSearchModel
+@{
+    //page title
+    ViewBag.Title = "Báo cáo điện tử";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoDienTu");
+}
+
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        Danh sách báo cáo
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Từ khoá:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="KeySearch" placeholder="Tiêu đề...." />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Ngày báo cáo:</label>
+                <div class="col-sm-4 ">
+                    <nop-editor asp-for="NGAY_BAO_CAO" />
+                    <span asp-validation-for="NGAY_BAO_CAO"></span>
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Trạng thái:</label>
+                    <div class="col-md-4">
+                        <app-select asp-for="TRANG_THAI_ID" asp-items="Model.ddlTrangThai" asp-filter="true" />
+                    </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <style>
+        .link_href {
+            color: #007bff !important;
+        }
+
+            .link_href:hover {
+                cursor: pointer !important;
+                text-decoration: underline !important;
+            }
+    </style>
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                            $(document).ready(function () {
+                                function SearchData() {
+                                    var _data = {
+                                        keysearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                        NGAY_BAO_CAO: $('#@Html.IdFor(model => model.NGAY_BAO_CAO)').val(),
+                                        TRANG_THAI_ID: $('#@Html.IdFor(model => model.TRANG_THAI_ID)').val(),
+                                        DonVi: $('#@Html.IdFor(model => model.DonVi)').val()
+                                    };
+                                    addAntiForgeryToken(_data);
+                                    return _data;
+                                }
+                                $("#btnSearch").click(function () {
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false;
+                                });
+                                $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                    if (event.keyCode === 13) {
+                                        $("#btnSearch").click();
+                                        return false;
+                                    }
+                                });
+                                $("#items-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("List", "BaoCaoDienTu"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: SearchData
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    dataBinding: function () {
+                                        record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            title: "STT",
+                                            template: "#= ++record #",
+                                            width: 35,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "TEN",
+                                            title: "Tiêu đề",
+                                            template: function (item) {
+                                                return `<a class='link_href'  href ="/BaoCaoDienTu/ViewReport?Id=${item.ID}">${item.TEN}</a>`
+                                            }
+                                        },
+                                        {
+                                            field: "NGAY_BAO_CAO",
+                                            title: "Ngày báo cáo",
+                                            type: "Date",
+                                            format: "{0:dd/MM/yyyy}",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "TenTrangThai",
+                                            title: "Trạng thái",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "TenNguoiDuyet",
+                                            title: "Người duyệt/ từ chối",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "ID",
+                                            title: "Thao tác",
+                                            width: 150,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: function (item) {
+                                                var GuiYeuCau = "";
+                                                var SuaThongTin = "";
+                                                var GuiCapTren = "";
+                                                if (item.TRANG_THAI_ID == 0 ) {
+                                                    SuaThongTin = `<a class="btn btn-sm btn-outline-primary" href="Edit?Id=${item.ID}">Sửa</a>`;
+                                                    GuiYeuCau = `<a class="btn btn-sm btn-outline-success" href="javascript:void(0)" onclick = guiYeuCauDuyetBaoCao('${item.ID}') )>Gửi</a>`;
+                                                }
+                                                if (item.TRANG_THAI_ID == 2) {
+                                                    SuaThongTin = `<a class="btn btn-sm btn-outline-primary" href="Edit?Id=${item.ID}">Sửa</a>`;
+                                                }
+                                                if (item.TRANG_THAI_ID == 3) {
+                                                    GuiCapTren = `<a class="btn btn-sm btn-outline-success" href="javascript:void(0)" onclick = guiBaoCaoCapTren('${item.ID}') )>Gửi cấp trên</a>`;
+                                                }
+                                                return `<div class="btn-group" >
+														${GuiYeuCau}${SuaThongTin}${GuiCapTren}
+													 </div>`;
+                                            }
+                                                
+                                            
+                                                
+                                                
+                                        }
+                                    ]
+                                });
+                            });
+
+                        //function guiYeuCauDuyetBaoCao(id) {
+                        //    showThrobber("Đang lấy dữ liệu...");
+                        //    try {
+                        //        $.ajax({
+                        //            type: "GET",
+                        //            url: "/BaoCaoDienTu/GuiYeuCauDuyetBaoCao?id=" + id,
+                        //            success: function (data) {
+                        //                hideThrobber();
+                        //                var grid = $('#items-grid').data('kendoGrid');
+                        //                grid.dataSource.page(1); //new search. Set page size to 1
+                        //                if (data.Status) {
+                        //                    ShowSuccessMessage(data.Message);
+                        //                } else {
+                        //                    ShowErrorMessage("Có lỗi xảy ra: " + data.Message)
+                        //                }
+                        //            }
+                        //        })
+
+                        //    } catch (e) {
+                        //        ShowErrorMessage('Lỗi: ' + e)
+                        //        hideThrobber()
+                        //    }
+
+                        //}
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function guiYeuCauDuyetBaoCao(id) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn gửi báo cáo này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        ID: id
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/BaoCaoDienTu/GuiYeuCauDuyetBaoCao",
+                        success: function (result) {
+                            if (result) {
+							    if (result.Code == '00') {
+                                    ShowSuccessMessage(result.Message);
+									 $("#btnSearch").click();
+                                }
+                                else {
+								    ShowErrorMessage(result.Message);
+                                }
+							}
+                        }
+                    })
+                }
+                return;
+
+            }
+        })
+        }
+</script>
+<script>
+    function guiBaoCaoCapTren(id) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn gửi báo cáo lên cấp trên không?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        ID: id
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/BaoCaoDienTu/GuiBaoCaoCapTren",
+                        success: function (result) {
+                            if (result) {
+							    if (result.Code == '00') {
+                                    ShowSuccessMessage(result.Message);
+									 $("#btnSearch").click();
+                                }
+                                else {
+								    ShowErrorMessage(result.Message);
+                                }
+							}
+                        }
+                    })
+                }
+                return;
+
+            }
+        })
+        }
+</script>

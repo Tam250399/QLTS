@@ -1,0 +1,52 @@
+﻿@model YeuCauModel
+@await Html.PartialAsync("_BDThongTinTaiSan", Model)
+<div class="gs-form-group">
+	<h6>Thông tin biến động</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Lý do tăng</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" asp-disabled="true" />
+		</div>
+		<label class="col-form-label col-sm-2">Ngày biến động</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGAY_BIEN_DONG" asp-disabled="true" />
+			<span asp-validation-for="NGAY_BIEN_DONG"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  ">Chứng từ số</label>
+		<div class="col-md-6">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Số</span>
+				</div>
+				<nop-editor asp-for="CHUNG_TU_SO" asp-disabled="true" />
+			</div>
+		</div>
+		<div class="col-md-4">
+			<nop-editor asp-for="CHUNG_TU_NGAY" asp-disabled="true" placeholder="Ngày" />
+			<span asp-validation-for="CHUNG_TU_NGAY"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  ">Số quyết định</label>
+		<div class="col-md-6">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Số</span>
+				</div>
+				<nop-editor asp-for="QUYET_DINH_SO" asp-disabled="true" />
+			</div>
+		</div>
+		<div class="col-md-4">
+			<nop-editor asp-for="QUYET_DINH_NGAY" asp-disabled="true" placeholder="Ngày" />
+			<span asp-validation-for="QUYET_DINH_NGAY"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Diễn giải</label>
+		<div class="col-sm-10">
+			<nop-textarea asp-for="GHI_CHU" asp-disabled="true" />
+		</div>
+	</div>
+</div>

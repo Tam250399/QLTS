@@ -1,0 +1,441 @@
+﻿@model YeuCauModel
+@{
+	//page title
+	ViewBag.Title = "Giảm tài sản";
+	//active menu item (system name)
+	if (Model.IsTaiSanDuAn == true)
+	{
+		Html.SetActiveMenuItemSystemName("GiamTaiSanDuAn");
+
+	}
+	else
+	{
+		Html.SetActiveMenuItemSystemName("GiamTaiSan");
+	}
+	var _str = "";
+	if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+	{
+		_str = "Điều chuyển nhà theo đất";
+	}
+	if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA)
+	{
+		_str = "Điều chuyển đất theo nhà";
+	}
+	string _strBool = "";
+}
+<input asp-for="ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="LOAI_BIEN_DONG_ID" type="hidden" />
+<input asp-for="LOAI_TAI_SAN_ID" type="hidden" />
+<input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+<input asp-for="TAI_SAN_MA" type="hidden" />
+<input asp-for="TAI_SAN_TEN" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+
+<div class="card mb-4">
+	<h6 class="card-header">
+		Giảm  tài sản
+		@*<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a href="/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID">Quay lại danh sách</a>
+			</small>*@
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID&isDanhSachTaiSanDuAn=@Model.IsTaiSanDuAn';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		@if (Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+		{
+			if (Model.ID > 0)
+			{
+				<span id="item-delete" onclick="deleteYeuCauBienDong()" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+					<i class="fas fa-trash"></i>
+					Xóa
+				</span>
+			}
+		}
+		<button type="button" class="btn btn-sm btn-primary btnAdd" style="float:right;margin-right:5px;">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+	</h6>
+	<div class="card-body">
+		@await Html.PartialAsync("_BDThongTinTaiSan", Model)
+        <div class="gs-form-group  ">
+            <h6>Thông tin giảm tài sản</h6>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-required">Quyết định xử lý </label>
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Số</span>
+                        </div>
+                        <nop-editor asp-for="QUYET_DINH_SO" /><br />
+                    </div>
+                    <span asp-validation-for="QUYET_DINH_SO"></span>
+                </div>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="QUYET_DINH_NGAY" /><br />
+                    <span asp-validation-for="QUYET_DINH_NGAY"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-required">Lý do giảm</label>
+                <div class="col-sm-4">
+                    <app-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="@Model.LyDoTangAvailable" />
+                    <span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+                </div>
+                <label class="col-form-label col-sm-2 text-required">Ngày giảm</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="NGAY_BIEN_DONG" /><br />
+                    <span asp-validation-for="NGAY_BIEN_DONG"></span>
+                </div>
+            </div>
+            <div id="Lydokhac">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-required ">Biên bản</label>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Số</span>
+                            </div>
+                            <nop-editor asp-for="CHUNG_TU_SO" id="CHUNG_TU_SO_BIENBAN" /><br />                           
+                        </div>
+                            <span asp-validation-for="CHUNG_TU_SO"></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <nop-editor asp-for="CHUNG_TU_NGAY" id="CHUNG_TU_NGAY_BIENBAN" /><br />
+                        <span asp-validation-for="CHUNG_TU_NGAY"></span>
+                    </div>                      
+                </div>
+            </div>
+                <div id="DonViNhanDieuChuyen">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 text-required">Đơn vị nhận điều chuyển</label>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="DonViNhanDieuChuyenTen" asp-disabled="true" />
+                            <span asp-validation-for="DonViNhanDieuChuyenId"></span>
+                        </div>
+                        <div class="col-sm-2" style="text-align:right">
+                            <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/GiamDieuChuyen/_ChonDonViDieuChuyen?isStayInPage=true">
+                                <i class="fab fa-sistrix"></i>
+                                Chọn đơn vị
+                            </button>
+                        </div>
+                        @Html.HiddenFor(c => c.DonViNhanDieuChuyenId)
+
+                    </div>
+                    @if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT || Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA)
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2"></label>
+                            <label class="custom-control custom-checkbox col-sm-3" style="margin-left:7px;">
+                                @Html.CheckBoxFor(c => c.YCCTModel.DIEU_CHUYEN_KEM_THEO, new { @class = "custom-control-input" })
+                                <span class="custom-control-label"><small>@_str</small></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+
+
+                <div id="HinhThucThanhLy">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 text-required">Hình thức </label>
+                        <div class="col-sm-10">
+                            <app-select asp-for="HINH_THUC_XU_LY_ID" asp-items="Model.ddlPhuongAnXuLy" />
+                            <span asp-validation-for="YCCTModel.HINH_THUC_XU_LY_ID"></span>
+                        </div>
+                        <div class="col-sm-2"></div>
+                        <label class="custom-control custom-radio col-sm-4 gs-mg-top-10">
+                            @Html.RadioButtonFor(c => c.YCCTModel.IS_BAN_THANH_LY, false, new { @class = "custom-control-input", @id = "YCCTModel_CHUA_BAN_THANH_LY" })
+                            <span class="custom-control-label"><small>Chưa thực hiện bán, thanh lý</small></span>
+                        </label>
+                        <label class="custom-control custom-radio col-sm-4 gs-mg-top-10">
+                            @Html.RadioButtonFor(c => c.YCCTModel.IS_BAN_THANH_LY, true, new { @class = "custom-control-input" })
+                            <span class="custom-control-label"><small>Đã thực hiện bán, thanh lý</small></span>
+                        </label>
+                    </div>
+                    
+                    <div class="ThuTuGiam" id="ThuTuGiam">
+                        <div id="Ban_thanhly" style="display:none">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2 text-required " >Hợp đồng/ hóa đơn</label>
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Số</span>
+                                        </div>
+                                        <nop-editor id="CHUNG_TU_SO_HOPDONG" asp-for="CHUNG_TU_SO" /><br />
+                                    </div>
+                                        <span asp-validation-for="CHUNG_TU_SO"></span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <nop-editor asp-for="CHUNG_TU_NGAY" id="CHUNG_TU_NGAY_HOPDONG"/><br />
+                                    <span asp-validation-for="CHUNG_TU_NGAY"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row ThuTuGiam" id="ThuTuGiam">
+                        <label class="col-form-label col-sm-2 ">Số tiền thu được</label>
+                        <div class="col-sm-4">
+                            <nop-editor asp-for="YCCTModel.PHI_THU" asp-min-number="0" asp-dvt="c" />
+                            <span asp-validation-for="YCCTModel.PHI_THU"></span>
+                        </div>
+                        <label class="col-form-label col-sm-2">Chi phí xử lý tài sản</label>
+                        <div class="col-sm-4">
+                            <nop-editor asp-for="YCCTModel.PHI_BU_DAP" asp-min-number="0" asp-max-number="@Model.YCCTModel.NGUYEN_GIA_CU" asp-dvt="c" />
+                            <span asp-validation-for="YCCTModel.PHI_BU_DAP"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row ThuTuGiam">
+                        <label class="col-form-label col-sm-2">Nộp tài khoản tạm giữ</label>
+                        <div class="col-sm-4">
+                            <nop-editor asp-for="YCCTModel.PHI_NOP_NGAN_SACH" asp-min-number="0" asp-max-number="@Model.YCCTModel.NGUYEN_GIA_CU" asp-dvt="c" />
+                            <span asp-validation-for="YCCTModel.PHI_NOP_NGAN_SACH"></span>
+                        </div>
+                        @*<label class="col-form-label col-sm-2">Khác</label>
+                    <div class="col-sm-4">
+                        <nop-editor asp-for="YCCTModel.PHI_KHAC" asp-min-number="0" asp-max-number="@Model.YCCTModel.NGUYEN_GIA_CU" asp-dvt="c" />
+                        <span asp-validation-for="YCCTModel.PHI_KHAC"></span>
+                    </div>*@
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2">Diễn giải</label>
+                    <div class="col-sm-10">
+                        <nop-textarea asp-for="GHI_CHU" placeholder="Ghi rõ trường hợp áp dụng xử lý tài sản, ví dụ: điều chuyển từ nơi thừa sang nơi thiếu so với tiêu chuẩn định mức; thanh lý do hết hạn sử dụng; bán do không còn nhu cầu sử dụng..." />
+                    </div>
+                </div>
+            </div>
+        </div>
+	<div class="card-footer">
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID&isDanhSachTaiSanDuAn=@Model.IsTaiSanDuAn';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		@if (Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+		{
+			if (Model.ID > 0)
+			{
+				<span onclick="deleteYeuCauBienDong()" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+					<i class="fas fa-trash"></i>
+					Xóa
+				</span>
+			}
+		}
+		<button type="button" class="btn btn-sm btn-primary btnAdd" style="float:right;margin-right:5px;">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+	</div>
+</div>
+
+<script>
+	let isFirst = true;
+</script>
+<script>
+	$(document).ready(function () {
+		// event change ly do bien dong
+		var DDlLyDoBienDong = $('#LY_DO_BIEN_DONG_ID')
+			.data("kendoDropDownList");
+		DDlLyDoBienDong.bind("change", onChangeLyDoBienDong);
+		var LDBDId = $('#LY_DO_BIEN_DONG_ID').val();
+		@if (Model.ID<=0) {
+			<text>LyDoBienDongChange(LDBDId); </text>
+		}
+
+		//---------
+		$('input[type=radio][name="YCCTModel.IS_BAN_THANH_LY"]').change(ChangeDaBanThanhLy);
+		if (LDBDId != 0) {
+            DDlLyDoBienDong.trigger("change");
+        }
+
+		$('input[type=radio][name="YCCTModel.IS_BAN_THANH_LY"]').change();
+        $(".btnAdd").click(function () {
+			var chungTuSo;
+			var chungTuNgay;
+			var LDBDId = $('#LY_DO_BIEN_DONG_ID').val();
+			getMaByIdLyDoTangGiam(LDBDId).done((maLyDo) => {
+				if (maLyDo != '@(enum_LY_DO_BIEN_DONG.BAN_CHUYEN_NHUONG)' && maLyDo != '@(enum_LY_DO_BIEN_DONG.THANH_LY)') {
+					chungTuSo = $('#CHUNG_TU_SO_BIENBAN').val();
+					chungTuNgay = $('#CHUNG_TU_NGAY_BIENBAN').val();
+
+				} else {
+					chungTuSo = $('#CHUNG_TU_SO_HOPDONG').val();
+					chungTuNgay = $('#CHUNG_TU_NGAY_HOPDONG').val();
+				}
+			});
+			var _data = {
+				ID: $('#@Html.IdFor(c => c.ID)').val(),
+				LY_DO_BIEN_DONG_ID: $('#@Html.IdFor(c => c.LY_DO_BIEN_DONG_ID)').val(),
+				LOAI_BIEN_DONG_ID: $('#@Html.IdFor(c => c.LOAI_BIEN_DONG_ID)').val(),
+				LOAI_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_TAI_SAN_ID)').val(),
+				LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_HINH_TAI_SAN_ID)').val(),
+				TAI_SAN_MA: $('#@Html.IdFor(c => c.TAI_SAN_MA)').val(),
+				TAI_SAN_TEN: $('#@Html.IdFor(c => c.TAI_SAN_TEN)').val(),
+				TAI_SAN_ID: $('#@Html.IdFor(c => c.TAI_SAN_ID)').val(),
+				NGAY_BIEN_DONG: $('#@Html.IdFor(c => c.NGAY_BIEN_DONG)').val(),
+				QUYET_DINH_SO: $('#@Html.IdFor(c => c.QUYET_DINH_SO)').val(),
+				QUYET_DINH_NGAY: $('#@Html.IdFor(c => c.QUYET_DINH_NGAY)').val(),
+				CHUNG_TU_SO: chungTuSo,
+				CHUNG_TU_NGAY: chungTuNgay,
+				GHI_CHU: $('#@Html.IdFor(c => c.GHI_CHU)').val(),
+				pageIndex: $("#@Html.IdFor(c=>c.pageIndex)").val(),
+				DonViNhanDieuChuyenId: $("#DonViNhanDieuChuyenId").val(),
+				YCCTModel: {
+					PHI_THU: $("#YCCTModel_PHI_THU").val(),
+                    PHI_BU_DAP: $("#YCCTModel_PHI_BU_DAP").val(),
+                    PHI_NOP_NGAN_SACH: $("#YCCTModel_PHI_NOP_NGAN_SACH").val(),
+                    //PHI_KHAC: $("#YCCTModel_PHI_KHAC").val(),
+					IS_BAN_THANH_LY: $("input[name='YCCTModel.IS_BAN_THANH_LY']:checked").val(),
+					HINH_THUC_XU_LY_ID: $("#HINH_THUC_XU_LY_ID").val(),
+					DON_VI_NHAN_DIEU_CHUYEN_ID: $("#DonViNhanDieuChuyenId").val(),
+					DIEU_CHUYEN_KEM_THEO: $("#YCCTModel_DIEU_CHUYEN_KEM_THEO").is(':checked'),
+				}
+			}
+			let url = "/YeuCau/InsertGiamTaiSan";
+			let ajaxPostInserGiamTaiSan = ajaxPost(_data, url, null);
+			ajaxPostInserGiamTaiSan.done(function (data) {
+				if (CheckValidMessageReturn(data)) {
+							ShowSuccessMessage(data.Message);
+							location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_BIEN_DONG_ID + '&pageIndex=' + _data.pageIndex;
+						}
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                // If fail
+                console.log(textStatus + ': ' + errorThrown);
+                ShowErrorMessage('Có lỗi xảy ra');
+                $(this).removeClass('disabled');
+            });
+		});
+
+
+	});
+	function ChangeDaBanThanhLy(e) {
+		let this_value = $('input:radio[name="YCCTModel.IS_BAN_THANH_LY"]:checked').val();
+
+		if (this_value === 'False') {
+			$(".ThuTuGiam").hide();
+			$("#YCCTModel_PHI_THU").data("kendoNumericTextBox").value(0);
+			$("#YCCTModel_PHI_BU_DAP").data("kendoNumericTextBox").value(0);
+			$("#YCCTModel_PHI_NOP_NGAN_SACH").data("kendoNumericTextBox").value(0);
+		}
+		else {
+			$(".ThuTuGiam").show();
+		}
+	}
+	function onChangeLyDoBienDong() {
+		var _strVal = this.value();
+		LyDoBienDongChange(parseFloat(_strVal));
+		if (parseFloat(_strVal) != @((int)enumLY_DO_GIAM_TOAN_BO.DIEU_CHUYEN)) {
+			var textbox = $("#DonViNhanDieuChuyenTen").data("kendoTextBox");
+			if (textbox) {
+				textbox.value("");
+			}
+			$("#DonViNhanDieuChuyenId").val("");
+		}
+	}
+    function showLyDoKhac() {
+        $("#Lydokhac").show();
+        $("#Ban_thanhly").hide();
+        if (isFirst == true) {
+            isFirst = false;
+        } else {
+            clearSoLieu();
+        }
+	}
+	function showBanThanhLy() {
+        $("#Lydokhac").hide();
+        $("#Ban_thanhly").show();
+        if (isFirst == true) {
+            isFirst = false;
+        } else {
+            clearSoLieu();
+        }
+
+	}
+    function clearSoLieu() {
+        $("#CHUNG_TU_SO_BIENBAN").val("");
+		$("#CHUNG_TU_NGAY_BIENBAN").val("");
+        $("#CHUNG_TU_SO_HOPDONG").val("");
+        $("#CHUNG_TU_NGAY_HOPDONG").val("");
+    }
+	function LyDoBienDongChange(LyDoId) {
+		getMaByIdLyDoTangGiam(LyDoId).done((maLyDo) => {
+
+			if (maLyDo == '@(enum_LY_DO_BIEN_DONG.DIEU_CHUYEN)') {
+				$("#DonViNhanDieuChuyen").show();
+			} else {
+				$("#DonViNhanDieuChuyen").hide();
+			}
+			if (maLyDo != '@(enum_LY_DO_BIEN_DONG.BAN_CHUYEN_NHUONG)' && maLyDo != '@(enum_LY_DO_BIEN_DONG.THANH_LY)' ) {
+				showLyDoKhac();
+
+            } else {
+				showBanThanhLy();
+            }
+			if (maLyDo == '@(enum_LY_DO_BIEN_DONG.THANH_LY)' ||
+				maLyDo == '@(enum_LY_DO_BIEN_DONG.BAN_CHUYEN_NHUONG)' ) {
+			@{
+				_strBool = Model.YCCTModel.IS_BAN_THANH_LY.ToString();
+			}
+				$("#DonViNhanDieuChuyen").hide();
+				$("#HinhThucThanhLy").show();
+				$("input:radio[name='YCCTModel.IS_BAN_THANH_LY'][value='@_strBool']").prop('checked', true);
+				ChangeDaBanThanhLy();
+				if (maLyDo == '@(enum_LY_DO_BIEN_DONG.BAN_CHUYEN_NHUONG)' && @Model.LOAI_HINH_TAI_SAN_ID != @((int)enumLOAI_HINH_TAI_SAN.DAT) ){
+					var ddlTT = $("#HINH_THUC_XU_LY_ID").data("kendoDropDownList");
+					ddlTT.setDataSource(JSON.parse(String.raw`@Html.Raw(((Model.ddlPhuongAnXuLy).toStringJson()))`));
+					var oldData = ddlTT.dataSource.data();
+					ddlTT.dataSource.remove(oldData[1]);
+				}
+				else {
+					$("#HINH_THUC_XU_LY_ID").data("kendoDropDownList").setDataSource(JSON.parse(String.raw`@Html.Raw(((Model.ddlPhuongAnXuLy).toStringJson()))`));
+				}
+				//$("input[id='YCCTModel_IS_BAN_THANH_LY']:checked").attr('checked', true);
+			} else {
+				var dropdownlist = $("#HINH_THUC_XU_LY_ID").data("kendoDropDownList");
+				dropdownlist.value("0");
+				$(".ThuTuGiam").hide();
+				$("#HinhThucThanhLy").hide();
+				//$("input[id='YCCTModel_IS_BAN_THANH_LY']:checked").attr('checked', false);
+				$("#YCCTModel_IS_BAN_THANH_LY").prop('checked', false);
+				$("#YCCTModel_PHI_THU").data("kendoNumericTextBox").value(0);
+				$("#YCCTModel_PHI_BU_DAP").data("kendoNumericTextBox").value(0);
+				$("#YCCTModel_PHI_NOP_NGAN_SACH").data("kendoNumericTextBox").value(0);
+			}
+		})
+	}
+	function deleteYeuCauBienDong() {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa biến động này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var _url = "@(Url.Action("DeleteYeuCauBienDong", "YeuCau"))?yeuCauId=" + @Model.ID + "&loaiBienDongId=" +@Model.LOAI_BIEN_DONG_ID;
+					var deleteYeuCau = ajaxDelete(_url, false);
+					deleteYeuCau.done(function (result) {
+						if (result.Code == '00') {
+							ShowSuccessMessage(result.Message);
+							location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_BIEN_DONG_ID;
+						} else if (result.Code == '01') {
+							ShowErrorMessage(result.Message);
+							//location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_BIEN_DONG_ID;
+						}
+					}).fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+				}
+			}
+		});
+	}
+</script>

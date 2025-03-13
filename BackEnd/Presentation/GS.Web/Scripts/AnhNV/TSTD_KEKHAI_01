@@ -1,0 +1,62 @@
+   PROCEDURE SP_TSTD_KEKHAI_TAISAN_TD_BAOCAO(
+        p_QUYET_DINH_ID IN NUMBER,
+        p_LOAI_TAI_SAN_ID IN VARCHAR2,
+        p_DON_VI_ID IN NUMBER,
+        p_DON_VI_KHOI_LUONG IN NUMBER,
+        p_DON_VI_TIEN IN NUMBER,
+        p_DON_VI_DIEN_TICH IN NUMBER,
+        TBL_OUT OUT SYS_REFCURSOR)
+        AS
+    BEGIN
+        open TBL_OUT for 
+            select 
+            tstd.ten as tai_san_ten, 
+            lts.ten as loai_tai_san_ten,
+            tstd.so_luong as so_luong,
+            case when tstd.khoi_luong is null then tstd.dien_tich else tstd.khoi_luong end as khoi_luong_dien_tich,
+            case when tstd.nguyen_gia is null then tstd.GIA_TRI else tstd.nguyen_gia end as nguyen_gia,
+            xldx.QUYET_DINH_SO as de_xuat_quyet_dinh_so,
+            xldx.QUYET_DINH_NGAY as de_xuat_quyet_dinh_ngay,
+            '' as hinh_thuc_xu_ly,
+            qdtt.QUYET_DINH_SO as ket_qua_quyet_dinh_so,
+            qdtt.QUYET_DINH_NGAY as ket_qua_quyet_dinh_ngay,
+            xlts.hop_dong_so as ket_qua_hop_dong_so,
+            xlts.hop_dong_ngay as ket_qua_hop_dong_ngay,
+            xlts.so_tien_thu as so_tien_thu_duoc,
+            xlts.CHI_PHI_XU_LY as CHI_PHI_XU_LY,
+            xlts.GIA_TRI_TKTG as GIA_TRI_TKTG,
+            xlts.GIA_TRI_NSNN as GIA_TRI_NSNN,
+            xlts.GHI_CHU as GHI_CHU,
+            xlts.PHUONG_AN_XU_LY_ID as PHUONG_AN_XU_LY_ID,
+            xlts.HINH_THUC_XU_LY_ID as HINH_THUC_XU_LY_ID
+            from  shtd_tai_san_td tstd
+            left join shtd_tai_san_td_xu_ly xlts on tstd.id = xlts.tai_san_id
+            left join (select * from shtd_xu_ly where loai_xu_ly_id =2) xl on xl.id = xlts.xu_ly_id
+            join shtd_quyet_dinh_tich_thu qdtt on qdtt.id = tstd.QUYET_DINH_TICH_THU_ID
+            left join 
+            (select xl2.*,xlts2.tai_san_id,xlts2.so_luong from shtd_xu_ly xl2 join shtd_tai_san_td_xu_ly xlts2 on xlts2.xu_ly_id = xl2.id
+            where loai_xu_ly_id =1 and ROWNUM <=1 ORDER by xl2.ngay_xu_ly DESC) xldx            
+            on xldx.tai_san_id = xlts.tai_san_id and xldx.so_luong = xlts.so_luong
+            left join (select d.*,ttdt.TAI_SAN_TD_XU_LY_ID from tt_thuoc_tinh_data ttdt, JSON_TABLE(ttdt.DATA, '$'
+                    COLUMNS
+                      (NAME1 VARCHAR2(255) PATH '$.NAME',
+                      TYPE1 VARCHAR2(255) PATH '$.TYPE',
+                      VALUE1 VARCHAR2(255) PATH '$.VALUE',
+                      FIELD1 VARCHAR2(255) PATH '$.FIELD',
+                      NESTED PATH '$.THUOC_TINH[*]'
+                                      COLUMNS (
+                                        NAME2 VARCHAR2(255) PATH '$.NAME',
+                      TYPE2 VARCHAR2(255) PATH '$.TYPE',
+                      VALUE2 VARCHAR2(255) PATH '$.VALUE',
+                      FIELD2 VARCHAR2(255) PATH '$.FIELD'))) d where ttdt.tai_san_td_xu_ly_id is not null and ttdt.don_vi_id = p_DON_VI_ID) tt on tt.TAI_SAN_TD_XU_LY_ID = xlts.ID
+            join dm_loai_tai_san lts on lts.id = tstd.loai_tai_san_id
+            where qdtt.id = p_QUYET_DINH_ID 
+            AND
+            (case when
+                p_LOAI_TAI_SAN_ID is null then 1
+            when
+                (p_LOAI_TAI_SAN_ID is not null and tstd.loai_tai_san_id in (select regexp_substr(p_LOAI_TAI_SAN_ID,'[^,]+', 1, level) from dual connect by regexp_substr(p_LOAI_TAI_SAN_ID, '[^,]+', 1, level) is not null)) then 1
+            else 0 end) =1;
+        
+    END SP_TSTD_KEKHAI_TAISAN_TD_BAOCAO;
+    

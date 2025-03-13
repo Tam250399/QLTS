@@ -1,0 +1,138 @@
+﻿@model TaiSanDatModel
+
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required ">Địa chỉ</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="DIA_CHI" />
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required ">Tỉnh/Thành phố</label>
+	<div class="col-sm-4">
+		<app-select asp-for="TinhId" asp-items="Model.AvailableTinh" asp-filter="true" />
+	</div>
+	<label class="col-form-label col-sm-2 text-required ">Quận/Huyện</label>
+	<div class="col-sm-4">
+		<app-select asp-for="HuyenId" asp-items="Model.AvailableHuyen" asp-filter="true" />
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required ">Xã/Phường</label>
+	<div class="col-sm-4">
+		<app-select asp-for="XaId" asp-items="Model.AvailableXa" asp-filter="true" />
+		<span asp-validation-for="DIA_BAN_ID"></span>
+		@*<span id="checkdiaban" class="field-validation-error text-danger" style="display:none ;color:red"> Chưa chọn địa bàn </span>*@
+	</div>
+	<label class="col-form-label col-sm-2 ">Diện tích khuôn viên</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="DAT_DIEN_TICH" asp-disabled="true" asp-dvt="m2" />
+		<span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích khuôn viên</span>
+		<span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích khuôn viên</span>
+		<span asp-validation-for="DAT_DIEN_TICH"></span>
+	</div>
+</div>
+<script>
+	$(function () {
+		$("#TinhId").change(function () {
+			$("#HuyenId").val(0);
+			var quocgiaId = $("#QuocGiaId").val();
+			var _ParentId = $(this).val();
+			var _str = "-- Chọn quận/huyện --";
+			var _data = {
+				QuocGiaId: quocgiaId,
+				ParentId: _ParentId,
+				str: _str
+			}
+			$.ajax({
+				url: "/TaiSan/GetDataSource",
+				type: "POST",
+				data: _data,
+				success: function (result) {
+					var dropdownlistHuyen = $("#HuyenId").data("kendoDropDownList");
+                    if (dropdownlistHuyen) {
+                        dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+                    }
+					
+					$("#HuyenId").val(0);
+					var text = $("#HuyenId option:first-child").text();
+					$("#HuyenId").parent().find(".k-input").text(text);
+					$("#XaId").val(0);
+					var text = $("#XaId option:first-child").text();
+					$("#XaId").parent().find(".k-input").text(text);
+				}
+			});
+		});
+		$("#HuyenId").change(function () {
+			$("#XaId").val(0);
+			var quocgiaId = $("#QuocGiaId").val();
+			var _ParentId = $(this).val();
+			var _str = "-- Chọn xã/phường --";
+			var _data = {
+				QuocGiaId: quocgiaId,
+				ParentId: _ParentId,
+				str: _str
+			}
+			$.ajax({
+				url: "/TaiSan/GetDataSource",
+				type: "POST",
+				data: _data,
+				success: function (result) {
+					var dropdownlistXa = $("#XaId").data("kendoDropDownList");
+                    if (dropdownlistXa) {
+                        dropdownlistXa.setDataSource(new kendo.data.DataSource({ data: result }));
+                    }
+					
+					$("#XaId").val(0);
+					var text = $("#XaId option:first-child").text();
+					$("#XaId").parent().find(".k-input").text(text);
+				}
+			});
+		});
+		//$("#XaId").each(checknullDiaban);
+		CompareDientich();
+		$(".HienTrang").change(CompareDientich);
+	})
+	//function checknullDiaban() {
+	//	var DiaBanid = $("#XaId").val();
+	//	if (DiaBanid <= 0) {
+	//		$("#checkdiaban").show();
+	//		$("#btnSave").prop("disabled", true);
+	//		$(".btnAdd").prop("disabled", true);
+	//	}
+	//	else {
+	//		$("#checkdiaban").hide();
+	//		$("#btnSave").prop("disabled", false);
+	//		$(".btnAdd").prop("disabled", false);
+	//	}
+	//};
+	function CompareDientich() {
+		var total = 0;
+		$(".HienTrang").each(function () {
+			var _hientrangId = $(this).data("idhientrang");
+			var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+			total = total + _Value
+		});
+		var tonghientrang = total.toFixed(2);
+		var gt = ConvertToNumber("#DAT_DIEN_TICH");
+		if (tonghientrang != gt) {
+			if (tonghientrang > gt) {
+				$("#checkhientrangmax").show();
+				$("#checkhientrangmin").hide();
+				$("#btnSave").prop("disabled", true);
+				$(".btnAdd").prop("disabled", true);
+			}
+			if (tonghientrang < gt) {
+				$("#checkhientrangmin").show();
+				$("#checkhientrangmax").hide();
+				$("#btnSave").prop("disabled", true);
+				$(".btnAdd").prop("disabled", true);
+			}
+		}
+		else {
+			$("#checkhientrangmin").hide();
+			$("#checkhientrangmax").hide();
+			$("#btnSave").prop("disabled", false);
+			$(".btnAdd").prop("disabled", false);
+		}
+	}
+</script>

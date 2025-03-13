@@ -1,0 +1,145 @@
+﻿@model YeuCauModel
+<!-- Thong tin chung end --------->
+<input asp-for="LOAI_HINH_TAI_SAN_ID" id="LOAI_HINH_TAI_SAN_ID_2" type="hidden" />
+<input asp-for="TAI_SAN_MA" id="TAI_SAN_MA_2" type="hidden" />
+<input asp-for="TaiSanGuid" id="TaiSanGuid_2" type="hidden" />
+<input asp-for="TAI_SAN_ID" id="TAI_SAN_ID_2" type="hidden" />
+<input asp-for="LOAI_BIEN_DONG_ID" id="LOAI_BIEN_DONG_ID_2" type="hidden" />
+<input asp-for="DON_VI_ID" id="DON_VI_ID_2" type="hidden" />
+<input asp-for="LOAI_TAI_SAN_ID" id="LOAI_TAI_SAN_ID_2" type="hidden" />
+<div id="div_main">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Cập nhật hiện trạng biến động
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="javascript:void(0)" id="btnBackToListBienDong">Quay lại danh sách</a>
+            </small>
+        </h6>
+
+        <div class="card-body">
+            @await Html.PartialAsync("../TaiSan/_BDThongTinTaiSan", Model)
+            <div class="gs-form-group  ">
+                <h6>Nguyên giá</h6>
+                <div class="form-group row">
+                    <div class="font-weight-bold col-sm-6">Giá trị tài sản cũ:</div>
+                    <div class="font-weight-bold col-sm-6 text-required">Giá trị tài sản mới:</div>
+                </div>
+                @if (Model.lstNguonVonModel != null && Model.lstNguonVonModel.Count > 0)
+                {
+                    foreach (var itemNV in Model.lstNguonVonModel)
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">@itemNV.TEN</label>
+                            <div class="col-sm-4">
+                                @itemNV.GiaTri.ToVNStringNumber() đ
+                            </div>
+                            <label class="col-form-label col-sm-2">@itemNV.TEN</label>
+                            <div class="col-sm-4 NguonVon" data-idnguonvon="@itemNV.ID" data-tennguonvon="@itemNV.TEN">
+                                <input class="form-control text-box single-line NguonVonid" id="NguonVon_@itemNV.ID" type="text">
+                            </div>
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $("#NguonVon_@itemNV.ID").change(function () {
+                                    //var val = $(this).val();
+                                    TinhTongNguyenGia();
+                                });
+                            });
+                        </script>
+                    }
+                }
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2">Nguyên Giá</label>
+                    <div class="col-sm-4">
+                        @Model.NGUYEN_GIA.ToVNStringNumber() đ
+                    </div>
+                    <label class="col-form-label col-sm-2">Nguyên Giá</label>
+                    <div class="col-sm-4">
+                        <input class="form-control text-box single-line" type="text" id="NguyenGia" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="btnSaveNguyenGia" class="btn btn-sm btn-outline-primary " style="float:right;margin-right:5px;">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string loadingGuid = Guid.NewGuid().ToString();
+}
+@await Html.PartialAsync("LoadingView", loadingGuid)
+
+<script>
+    @*var TotalNguyenGia = 0
+    function TinhTongNguyenGia(val) {
+        TotalNguyenGia = parseFloat(TotalNguyenGia) + parseFloat(val);
+        console.log(TotalNguyenGia);
+        $("#TongNguyenGia").data("kendoNumericTextBox").value(TotalNguyenGia);
+        $("#TongNguyenGia").data("kendoNumericTextBox").trigger('change');
+    }*@
+    $(document).ready(function () {
+
+        $("#btnSaveNguyenGia").click(function () {
+            showThrobber("Đang cập nhật...");
+            var _lstNguonVon = [];
+            $(".NguonVon").each(function () {
+                var nguonvonId = $(this).data("idnguonvon");
+                var _tennguonvon = $(this).data("tennguonvon");
+                var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+                _lstNguonVon.push({
+                    ID: nguonvonId,
+                    GiaTri: parseFloat(_ValueNguonVon),
+                    TEN: _tennguonvon,
+                });
+            });
+            var TotalNguyenGia = ConvertToNumber("#NguyenGia");
+            var _data = {
+                taiSanId: $("#TAI_SAN_ID_2").val(),
+                LOAI_BIEN_DONG_ID: $("#LOAI_BIEN_DONG_ID_2").val(),
+                LOAI_TAI_SAN_ID: $("#LOAI_TAI_SAN_ID_2").val(),
+                LOAI_HINH_TAI_SAN_ID: $("#LOAI_HINH_TAI_SAN_ID_2").val(),
+                DON_VI_ID: $("#DON_VI_ID_2").val(),
+                nguons: _lstNguonVon,
+                nguyengia: TotalNguyenGia,
+            }
+
+            jQuery.ajax({
+                type: "POST",
+                url: "/ThayDoiThongTin/ThayDoiThongTinNguyenGia",
+                data: _data,
+                success: function (result) {
+                    hideThrobber();
+                    $(".loader").hide();
+                    if (CheckValidMessageReturn(result)) {
+                        if (result.Code == '00') {
+                            ShowSuccessMessage(result.Message);
+                            location.href = '/TaiSan/ListTaiSanNguyenGiaDuoi10Trieu';
+                        }
+                    }
+                },
+                error: function (xhr, textStatus, thrownError) {
+                    hideThrobber();
+                    console.log(textStatus + ': ' + thrownError);
+                }
+            });
+        })
+    });
+    function TinhTongNguyenGia() {
+        var TotalNguyenGia = 0;
+        $(".NguonVon").each(function () {
+            var nguonvonId = $(this).data("idnguonvon");
+            var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+            TotalNguyenGia = parseFloat(TotalNguyenGia) + parseFloat(_ValueNguonVon);
+            var _varstringnguonvon = _ValueNguonVon.toLocaleString('vi-VN');
+            $("#NguonVon_" + nguonvonId).val(_varstringnguonvon);
+
+        });
+        TotalNguyenGia = TotalNguyenGia.toLocaleString('vi-VN');
+        $("#NguyenGia").val(TotalNguyenGia);
+    }
+</script>

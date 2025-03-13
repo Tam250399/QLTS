@@ -1,0 +1,230 @@
+﻿@model NguoiDungSearchModel
+@{
+    //page title
+    ViewBag.Title = "Import người dùng";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportExcelNguoiDung");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+        Nhập file người dùng
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportExcelNguoiDung" asp-controller="NguoiDung" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label w-100">Nhập file người dùng</label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnDongBo" class="btn btn-success">Đồng bộ người dùng</button>
+            <br />
+            <span id="logTime"></span>
+        </form>
+    </div>
+</div>
+<div id="NguoiDung">
+    Danh sách người dùng đã nhập thành công
+    <div id="NguoiDung-success-grid">
+    </div>
+    Danh sách người dùng đã nhập thất bại
+    <a href="#" id="downloadListErr"><i class="fas fa-download"></i></a>
+    <div id="NguoiDung-error-grid">
+    </div>
+</div>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnDongBo").click(function (evt) {
+        $('#NguoiDung-success-grid').empty();
+        $('#NguoiDung-error-grid').empty();
+        var d = new Date();
+        var logTime = ("0" + d.getDate()).slice(-2) + "/" +
+            ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            d.getFullYear() + " " +
+            ("0" + d.getHours()).slice(-2) + ":" +
+            ("0" + d.getMinutes()).slice(-2) + ":" +
+            ("0" + d.getSeconds()).slice(-2);
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        data.append("LoaiTaiSan", $('#LoaiTaiSan').val());
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        $.ajax({
+            type: "post",
+            url: "/NguoiDung/ImportExcelNguoiDung",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (result) {
+                d = new Date();
+                logTime = logTime + " => " + ("0" + d.getDate()).slice(-2) + "/" +
+                    ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                    d.getFullYear() + " " +
+                    ("0" + d.getHours()).slice(-2) + ":" +
+                    ("0" + d.getMinutes()).slice(-2) + ":" +
+                    ("0" + d.getSeconds()).slice(-2);
+                $("#logTime").html(logTime);
+
+                $('#NguoiDung').show();
+                if (result.success) {
+                    NguoiDungSuccess(result.ListSuccess);
+                    hideThrobber();
+                }
+                else {
+                    if (result.ListSuccess == undefined) {
+                        ShowErrorMessage("Có lỗi trong quá trình xử lý");
+                        hideThrobber();
+                    }
+                    else {
+                        NguoiDungSuccess(result.ListSuccess);
+                        NguoiDungError(result.ListError);
+                        $("#downloadListErr").attr("href", "/FileCongViec/DownloadFileInDb?downloadGuid=" + result.fileGuid);
+                        hideThrobber();
+                    }
+
+                }
+
+            },
+            error: function () {
+                $("#logTime").html("");
+                ShowErrorMessage("there was error uploading files!");
+            }
+        });
+    });
+    function NguoiDungSuccess(data) {
+        var record = 1;
+      
+        $("#NguoiDung-success-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#NguoiDung-success-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#NguoiDung-success-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Tên đăng nhập',
+                    field: 'TEN_DANG_NHAP',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Họ tên',
+                    field: 'TEN_DAY_DU',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mật khẩu',
+                    field: 'MAT_KHAU',
+                },
+                {
+                    title: 'Mã vai trò',
+                    field: 'MA_VAI_TRO',
+                },
+                {
+                    title: 'Mã đơn vị',
+                    field: 'MA_DON_VI',
+                }
+
+            ]
+        });
+
+    }
+    function NguoiDungError(data) {
+        var record = 1;
+        //var _dataSource = new kendo.data.DataSource({
+        //    data: data,
+        //    pageSize: 10,
+        //    change: function (e) {
+        //        record = 1;
+        //    }
+        //});
+        $("#NguoiDung-error-grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 10,
+                change: function (e) {
+                    record = 1;
+                }
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+            },
+            scrollable: false,
+            columns: [
+                {
+                    title: 'STT',
+                    width: 50,
+                    template: function () {
+                        let pageSize = $("#NguoiDung-error-grid").data("kendoGrid").dataSource.pageSize();
+                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                        let page = $("#NguoiDung-error-grid").data("kendoGrid").dataSource.page();
+                        page = typeof page == 'undefined' ? 0 : page;
+                        let i = record++;
+                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                    }
+                },
+                {
+                    title: 'Tên đăng nhập',
+                    field: 'TEN_DANG_NHAP',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Họ tên',
+                    field: 'TEN_DAY_DU',
+                    attributes: { style: "text-align:center" },
+                },
+                {
+                    title: 'Mật khẩu',
+                    field: 'MAT_KHAU',
+                },
+                {
+                    title: 'Mã vai trò',
+                    field: 'MA_VAI_TRO',
+                },
+                {
+                    title: 'Mã đơn vị',
+                    field: 'MA_DON_VI',
+                },
+                {
+                    title: 'Lỗi',
+                    field: 'ERROR_MESSGAE',
+                }
+            ]
+        });
+        //hideThrobber();
+    }
+    $(function () {
+        $('#NguoiDung').hide();
+    })
+</script>

@@ -1,0 +1,96 @@
+﻿@model TaiSanTdModel
+
+    <div class="gs-form-group">
+        <h6>Tài sản khác</h6>
+        <input asp-for="GUID" type="hidden" />
+        <input asp-for="SO_LUONG" type="hidden" />
+        <input asp-for="QUYET_DINH_TICH_THU_ID" type="hidden" />
+        <input asp-for="NGUON_GOC_TAI_SAN_ID" type="hidden" />
+        <input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+        <input asp-for="quyetdinh.is_vali" value="false" hidden />
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Tên sản khác:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Loại tài sản:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TEN_LOAI_TAI_SAN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN_LOAI_TAI_SAN"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Giá trị tịch thu/ xác lập:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" asp-disabled="@Model.is_detail" asp-dvt="đồng" />
+                <span asp-validation-for="GIA_TRI_XAC_LAP"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Giá trị tính:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_TINH" asp-min-number="0" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="GIA_TRI_TINH"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị tính:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="DON_VI_TINH" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="DON_VI_TINH"></span>
+            </div>
+        </div>
+        @if (Model.is_detail == false)
+        {
+            <div class="form-group row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2 text-right">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnSave">
+                        <i class="fa fa-save"></i>
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+<script>
+    var _url = "/TaiSanTd/CreateTSTD";
+    @if (Model.ID > 0)
+    {
+        <text>
+        _url = "/TaiSanTd/EditTSTD";
+        </text>
+    }
+    $("#btnSave").click(function () {
+        var _data = {
+            GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            LOAI_HINH_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_HINH_TAI_SAN_ID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)").val(),
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+            TEN_LOAI_TAI_SAN: $("#@Html.IdFor(c=>c.TEN_LOAI_TAI_SAN)").val(),
+            GIA_TRI_TINH: $("#@Html.IdFor(c=>c.GIA_TRI_TINH)").val(),
+            SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+            @*NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)").val(),*@
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)").val(),
+            DON_VI_TINH: $("#@Html.IdFor(c=>c.DON_VI_TINH)").val(),
+            @*KHOI_LUONG: $("#@Html.IdFor(c=>c.KHOI_LUONG)").val(),*@
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: _url,
+            success: function (result) {
+            if (CheckValidMessageReturn(result)) {
+                ShowSuccessMessage(result.Message);
+                HideModalManual();
+                $("#btnSearchDetail").click();
+                    $("#btnSearch").click();
+            }
+            else {
+                ShowErrorMessage(result.Message);
+            }
+        }
+    })
+    })
+</script>

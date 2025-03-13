@@ -1,0 +1,32 @@
+﻿@model Decimal
+@{
+    var _idClient = Html.IdForModel();
+    var htmlAttributes = new Dictionary<string, object>();
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        htmlAttributes.Add("class", "form-control");
+        htmlAttributes.Add("style", "width:60px;text-align:center;");
+        object _idclientOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+    }
+}
+    @Html.TextBoxFor(m => m, htmlAttributes)
+<script>
+    $(document).ready(function() {
+        vanillaTextMask.maskInput({
+            inputElement: $("#@_idClient")[0],
+            mask: textMaskAddons.createNumberMask({
+                thousandsSeparatorSymbol: '',
+                prefix:'',
+                integerLimit: 4
+            })
+        });
+
+    });
+</script>
+
+

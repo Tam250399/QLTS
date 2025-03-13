@@ -1,0 +1,328 @@
+﻿@model TaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh mục tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CCKTTaiSanDat");
+}
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Thuộc cấp:</label>
+        <div class="col-sm-10">
+            @*<nop-select asp-items="Model.dllCapDonVi" asp-for="CapDonViSearch" />*@
+            <nop-select asp-for="SelectedCapDonVis" id="SelectedCapDonVis" asp-items="Model.ddlCapDonVi" asp-multiple="true" asp-arrow="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Loại hình đơn vị:</label>
+        <div class="col-sm-10">
+            <nop-select asp-items="Model.ddlLoaiDonVi" asp-filter="true" asp-for="LoaiDonViSearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Loại tài sản:</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="LOAI_TAI_SAN_ID" asp-filter="true" asp-items="Model.DDLLoaiTaiSan" asp-arrow="true">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Mục đích sử dụng:</label>
+        <div class="col-sm-10">
+            <nop-select asp-items="Model.DDLMucDichSuDung" asp-filter="true" asp-for="MucDichSuDungSearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Diện tích:</label>
+        <div class="col-sm-2">
+            <nop-select asp-for="DienTich_CompareSign" asp-items="Model.DDLCompareSign" />
+        </div>
+        <label class="col-form-label col-sm-1 text-sm-left DienTich_Value2_div" style="display:none;">Từ </label>
+        <div class="col-sm-3 DienTich_Value1_div" style="display:none;">
+            <nop-editor asp-for="DienTich_Value1"  />
+            <span asp-validation-for="DienTich_Value1"></span>
+        </div>
+        <label class="col-form-label col-sm-1 text-sm-left DienTich_Value2_div" style="display:none;">Đến </label>
+        <div class="col-sm-3 DienTich_Value2_div" style="display:none;">
+            <nop-editor asp-for="DienTich_Value2"  />
+            <span asp-validation-for="DienTich_Value2"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-11 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài sản</span>
+        </div>
+    </div>
+    <div class="col-sm-1 text-right">
+        <a id="ExportDanhMuc" class="btn btn-sm btn-outline-primary">
+            Xuất excel
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            @*function genUrlExport() {
+                                var url = "/DonVi/ExportDonViChuaNhapTaiSan?donViId=" + parseInt($('#@Html.IdFor(model => model.donViId)').val())
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LoaiTaiSanId=" + $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val();
+                                $("#ExportDanhMuc").attr('href', url);
+                            };
+                            genUrlExport();
+                            $("#KeySearch,#LoaiDonViSearch,#CapDonViSearch,#donViId,#LoaiTaiSanId").change(function () {
+                                genUrlExport();
+                            });*@
+                            $("#ExportDanhMuc").click(function () {
+                                var listCapDonVisKendo = $('#SelectedCapDonVis').data("kendoMultiSelect");
+                                let listCapDonVis = [];
+                                if (listCapDonVisKendo) {
+                                    listCapDonVis = listCapDonVisKendo.value();
+                                }
+                                var url = "/TaiSan/ExportTaiSanKiemTra?donViId=" + parseInt($('#@Html.IdFor(model => model.donviId)').val())
+                                    + "&LoaiDonViSearch="+$('#@Html.IdFor(model => model.LoaiDonViSearch)').val()
+                                    + "&CapDonViSearch="+$('#@Html.IdFor(model => model.CapDonViSearch)').val()
+                                    + "&KeySearch=" + $('#@Html.IdFor(model => model.KeySearch)').val()
+                                    + "&LOAI_TAI_SAN_ID=" + $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val()
+                                    + "&DienTich_CompareSign=" + $("#DienTich_CompareSign").val()
+                                    + "&MucDichSuDungSearch=" + $('#@Html.IdFor(model => model.MucDichSuDungSearch)').val()
+                                    + "&DienTich_CompareSign=" + $("#DienTich_CompareSign").val()
+                                    + "&DienTich_Value1=" + $("#DienTich_Value1").data("kendoNumericTextBox").value()
+                                    + "&DienTich_Value2=" + $("#DienTich_Value2").data("kendoNumericTextBox").value()
+                                    + "&SelectedCapDonVis=" + listCapDonVis;
+                                window.open(url, "_blank");
+                            });
+                            function SearchData() {
+                                var listCapDonVisKendo = $('#SelectedCapDonVis').data("kendoMultiSelect");
+                                let listCapDonVis = [];
+                                if (listCapDonVisKendo) {
+                                    listCapDonVis = listCapDonVisKendo.value();
+                                }
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDonViSearch: $('#@Html.IdFor(model => model.LoaiDonViSearch)').val(),
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+                                    donViId: $('#@Html.IdFor(model => model.donviId)').val(),
+                                    LOAI_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val(),
+                                    SelectedCapDonVis: listCapDonVis,
+                                    DienTich_CompareSign: $("#DienTich_CompareSign").val(),
+                                    MucDichSuDungSearch: $('#@Html.IdFor(model => model.MucDichSuDungSearch)').val(),
+                                    DienTich_CompareSign: $("#DienTich_CompareSign").val(),
+                                    DienTich_Value1: $("#DienTich_Value1").data("kendoNumericTextBox").value(),
+                                    DienTich_Value2: $("#DienTich_Value2").data("kendoNumericTextBox").value()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                var record = 0;
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("KiemTraTaiSanDatNha", "TaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page: @(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 35,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'MA', title: 'Mã tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "white-space: nowrap" },
+                                    },
+                                    {
+                                        field: 'TEN', title: 'Tên tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template: function (dataItem) {
+                                            return "<a class='link_href' Onclick='OpenViewTaiSan(&#39;" + dataItem.GUID + "&#39;,&#39;" + dataItem.TEN + "&#39;)' >" + dataItem.TEN + "</a>";
+                                        }
+                                    },
+                                    {
+                                        field: 'DiaChi', title: 'Địa Chỉ',
+                                        template: function (dataItem) {
+                                            return "<a class='link_href' Onclick='OpenViewTaiSan(&#39;" + dataItem.GUID + "&#39;,&#39;" + dataItem.TEN + "&#39;)' >" + (dataItem.DiaChi ?? "") + "</a>";
+                                        }
+                                    },
+                                    {
+                                        field: 'TenLoaiTaiSan', title: 'Loại tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                    { field: "TenDonVi", title: "Đơn vị được giao SD", headerAttributes: { style: "text-align:center" } },
+                                    { field: 'TongDienTich', title: "Tổng diện tích", headerAttributes: { style: "text-align:center" } },
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function OpenViewTaiSan(guid, tsTen) {
+        var _url = "@(Url.Action("_ViewThongTinTaiSan", "TaiSan"))?guid=" + guid;
+        var titlePopup = "Thông tin tài sản: " + tsTen;
+        OpenModalManual(titlePopup, _url,80);
+    }
+    function onDataBound(e) {
+        //onDataBoundFixed(this);
+        var view = this.dataSource.view();
+        for (var i = 0; i < view.length; i++) {
+            if (checkedIds[view[i].ID]) {
+                this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                    .addClass("k-state-selected")
+                    .find(".k-checkbox")
+                    .attr("checked", "checked");
+            }
+        }
+    }
+	$(function () {
+		Prepare();
+		// hiển thị lịch sử xuất báo cáo ngầm
+    });
+    function checkvaliDate() {
+        var check = true;
+		if (checkInRange('DienTich', 'Diện tích đến nhỏ hơn hoặc bằng diện tích bắt đầu') == false || checkNotNull('DienTich') == false) {
+			check = false
+		}
+        return check;
+	}
+	function checkInRange(prefix, errorString) {
+		let compareSign = prefix + "_CompareSign";
+		let value1 = prefix +"_Value1"
+		let value2 = prefix +"_Value2"
+		if ($("#" + compareSign).val() == '@((int)enumCompare.InRange)') {
+			if (checkValidateIsNumberLowerThan('#' + value1, value1, ConvertToNumber('#' +value2), false, errorString)!=true)
+				return false;
+		}
+		return true;
+	}
+	function checkNotNull(prefix) {
+		let res = true;
+		let compareSign = prefix + "_CompareSign";
+		let value1 = prefix + "_Value1"
+		let value2 = prefix + "_Value2"
+		if ($("#" + compareSign).val() == '@((int)enumCompare.InRange)') {
+			if ($('#' + value1).val() == '' || $('#' + value2).val() == '')
+				res =  false;
+		}
+		else if ($("#" + compareSign).val() != '@((int)enumCompare.All)' && $("#" + compareSign).val() != '@((int)enumCompare.InRange)') {
+			if ($('#' + value1).val() == '')
+				res= false;
+		}
+		if (res == false) {
+			showInvalidMessage(value1, 'Nhập thiếu dữ liệu');
+		}
+		else
+			hideValmsg(value1)
+		return res;
+	}
+	//kiểm tra lúc thay đổi toán tử so sánh
+	function checkChangeCompareSigns(e) {
+		let id = e.sender.element[0].id;
+		let prefix = id.split('_')[0];
+		if ($("#" + prefix + "_CompareSign").val() == '@((int)enumCompare.All)') {
+			$('.' + prefix + '_Value1_div').hide('fast');
+			$('.' + prefix + '_Value2_div').hide('fast');
+		}
+		else if ($("#" + prefix + "_CompareSign").val() == '@((int)enumCompare.InRange)') {
+			$('.' + prefix + '_Value1_div').show('fast');
+			$('.' + prefix + '_Value2_div').show('fast');
+		}
+		else {
+			$('.' + prefix + '_Value1_div').show('fast');
+			$('.' + prefix + '_Value2_div').hide('fast');
+		}
+	}
+
+	function Prepare() {
+		let ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		let ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		let ddlDienTich = $("#DienTich_CompareSign").data("kendoDropDownList");
+		if (ddlDienTich) {
+			ddlDienTich.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNguyenGiaNS = $("#NguyenGiaNS_CompareSign").data("kendoDropDownList");
+		if (ddlNguyenGiaNS) {
+			ddlNguyenGiaNS.bind("change", checkChangeCompareSigns);
+		}
+	}
+</script>
+

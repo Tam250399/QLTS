@@ -1,0 +1,126 @@
+@model CauHinhChungModel
+@{
+    //page title
+    ViewBag.Title = "Tham số hệ thống";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CauHinhThamSoHeThong");
+}
+<form asp-controller="CauHinh" asp-action="ThamSoHeThong" method="post">
+    <div class="card mb-4">
+        <h5 class="card-header">
+            Sửa thông tin tham số hệ thống
+            <button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+            <form asp-controller="CauHinh" asp-action="ClearCache">
+                <input name="returnurl" type="hidden" value="AppWork/Index">
+                <button id="btnClearCache" class="btn btn-danger" type="submit" style="float:right; margin-right: 5px;">
+                    <i class="fas fa-trash"></i>
+                    <span>Xóa cache</span>
+                </button>
+                <script>
+                    $(document).ready(function () {
+                        $("#btnClearCache").click(function (e) {
+                            showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+                        });
+                    });
+                </script>
+            </form>
+            @*<form asp-controller="Common" asp-action="RestartApplication">
+                <input name="returnurl" type="hidden" value="AppWork/Index">
+                <button id="btnRestartApplication" class="btn btn-dark" type="submit" style="float:right; margin-right: 5px;">
+                    <i class="fas fa-cog"></i>
+                    Restart application
+                </button>
+                <script>
+                    $(document).ready(function () {
+                        $("#btnRestartApplication").click(function (e) {
+                            showThrobber("Đang xử lý dữ liệu. Xin vui lòng chờ.");
+                        });
+                    });
+                </script>
+            </form>*@
+        </h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Danh sách IP có thể sử dụng hệ thống (cách nhau bằng dấu ;):</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="IPTruyCapHeThong" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Danh sách IP có thể sử dụng phân hệ Quản trị(cách nhau bằng dấu ;):</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="IPTruyCapQuanTri" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Địa chỉ máy chủ SMTP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="SMTPServerIP" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Địa chỉ cổng SMTP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="SMTPPort" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Kích hoạt LDAP:</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="LDAPEnable" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Địa chỉ máy chủ LDAP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="LDAPServerIP" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Cổng LDAP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="LDAPPort" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Admin LDAP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="LDAPAdminUser" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Mật khẩu Admin LDAP:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="LDAPAdminPassword" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Lưu log những trang không tìm thấy:</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="Log404Errors" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Giá trị đăng ký tài sản khác:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="ValueDKTSKhac" class="custom-control-input" />(triệu đồng)
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Nhắc việc dự án kết thúc trước/sau:</label>
+                <div class="col-sm-7">
+                    <nop-editor asp-for="NhacNgayKetThucDuAn" class="custom-control-input" />(ngày)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

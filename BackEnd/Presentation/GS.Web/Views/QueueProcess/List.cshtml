@@ -1,0 +1,214 @@
+﻿@model QueueProcessSearchModel
+@{
+	//page title
+	ViewBag.Title = "Danh sách tác vụ";
+	//active menu item (system name)
+}
+
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4">
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+		<div class="col-sm-8">
+			<nop-editor asp-for="KeySearch" placeholder="Mã báo cáo..." />
+		</div>
+		
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left">Trạng thái:</label>
+		<div class="col-sm-8">
+			<nop-select asp-for="TrangThaiId" asp-items="Model.ddlTrangThai" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left">Từ ngày:</label>
+		<div class="col-sm-2">
+			<nop-editor asp-for="FromDate" />
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left">Đến ngày:</label>
+		<div class="col-sm-2">
+			<nop-editor asp-for="ToDate" />
+		</div>
+		<div class="col-sm-2 text-right">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+                    <script>
+						$(document).ready(function () {
+							$('.btn-download').click(function () {
+								$("#btnSearch").click();
+							});
+							function SearchData() {
+								var _data = {
+									KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val(),
+									FromDate:$('#@Html.IdFor(model => model.FromDate)').val(),
+									ToDate:$('#@Html.IdFor(model => model.ToDate)').val(),
+									TrangThaiId:$('#@Html.IdFor(model => model.TrangThaiId)').val(),
+								};
+								addAntiForgeryToken(_data);
+								return _data;
+							}
+							$("#btnSearch").click(function () {
+								var grid = $('#items-grid').data('kendoGrid');
+								grid.dataSource.page(1); //new search. Set page size to 1
+								return false;
+							});
+							 $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+								if (event.keyCode === 13) {
+									$("#btnSearch").click();
+									return false;
+								}
+							});
+							$("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("List", "QueueProcess"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function(e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+									@await Html.PartialAsync("_GridPagerMessages")
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								scrollable: false,
+								columns: [
+									{
+										field: 'MA_BAO_CAO',
+										title: 'Mã báo cáo',
+									},
+									{
+										field: 'TenBaoCao',
+										title: 'Tên báo cáo',
+									},
+									{
+										field: 'NGAY_TAO',
+										title: 'Ngày tạo',
+										attributes: { style: "text-align:center" },
+										type: "Date",
+										format: "{0:dd/MM/yyyy}",},
+									{
+										field: 'TIME_START_GET_DATA',
+										title: 'Thời gian bắt đầu lấy dữ liệu',
+										attributes: { style: "text-align:center" },
+										type: "Date",
+										format: "{0:dd/MM/yyyy hh:mm}",},
+									{
+										field: 'TIME_END_GET_DATA',
+										title: 'Thời gian kết thúc lấy dữ liệu',
+										attributes: { style: "text-align:center" },
+										type: "Date",
+										format: "{0:dd/MM/yyyy hh:mm}",},
+								{
+									field: "ID",
+									title: "Trạng thái",
+									width: 150,
+									headerAttributes: { style: "text-align:center" },
+									attributes: { style: "text-align:center" },
+                                    template: kendo.template($("#thao-tac-template").html())
+								}
+								]
+							});
+						});
+                    </script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function DeleteQueue(guid) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa báo cáo này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					let _data = {
+						guid: guid
+					};
+					let _url = '@Url.Action("Delete","QueueProcess")';
+					ajaxPost(_data, _url, false).done((res) => {
+						//Success
+						debugger
+						if (res.Code == "00") {
+							ShowSuccessMessage(res.Message);
+							let grid = $('#items-grid').data('kendoGrid');
+							grid.dataSource.page(grid.dataSource.page());
+						}
+						else if (res.Code == "01") {
+							ShowErrorMessage(res.Message);
+						}
+					});
+				}
+			},
+		});
+
+	}
+	function AddToQueueDongbo(id) {
+		var _data = {
+			ID: id
+		};
+        ajaxPost(_data, "@Url.Action("AddToQueueDongbo", "QueueProcess")", false).done((res) => {
+            //Success
+            if (res.Code == "00") {
+                ShowSuccessMessage(res.Message);
+                //let grid = $('#items-grid').data('kendoGrid');
+                //grid.dataSource.page(grid.dataSource.page());
+            }
+            else if (res.Code == "01") {
+                ShowErrorMessage(res.Message);
+            }
+        });
+    }
+</script>
+<script id="thao-tac-template" type="text/x-kendo-template">
+    #if((TRANG_THAI_ID!= @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DA_LUU_FILE) && TRANG_THAI_ID!= @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DB_DA_LUU_FILE))&& (TRANG_THAI_ID!= @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DA_EXPORT_FILE) && TRANG_THAI_ID!= @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DB_DA_EXPORT_FILE))){# #=strTrangThai#  #}  else {#
+    <a class="btn btn-sm btn-outline-secondary btn-download" target="_blank" href="Download?guid=#=GUID#"><i class="fas fa-download d-block"></i></a>#}# #if(TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DA_LUU_FILE) || TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DA_EXPORT_FILE) || TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.LOI) || TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DB_DA_LUU_FILE) || TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.DB_DA_EXPORT_FILE) || TRANG_THAI_ID== @((int)enumTRANG_THAI_QUEUE_BAO_CAO.LOI)){# &nbsp;
+    <button class="btn btn-sm btn-danger btn-delete" onclick="DeleteQueue('#=GUID#')" alt="Xóa"><i class="fas fa-trash "></i></button> #}#
+	<br/>
+    @*<button class="btn btn-sm btn-outline-success" onclick="AddToQueueDongbo(#=ID#)">Đồng bộ</button>*@
+    @*<div class="btn-group-vertical" id="vertical-button-group-demo">
+            <a class="btn btn-sm btn-outline-primary" href="/NoBase/GetDataReport?queueID=#:ID#" target="_blank"> Lấy dữ liệu</a>
+            <a class="btn btn-sm btn-outline-success" href="/NoBase/RenderReportDongBo?queueID=#:ID#" target="_blank">Prepare dữ liệu</a>
+        </div>*@
+</script>
+

@@ -1,0 +1,182 @@
+﻿@model TaiSanMayMocModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="CHE_DO_HACH_TOAN_ID" type="hidden" />
+<div class="gs-form-group mb-4">
+    <h6>Thông tin hao mòn, khấu hao</h6>
+    @if (Model.CHE_DO_HACH_TOAN_ID != (int)GS.Core.Domain.DanhMuc.enumCHE_DO_HACH_TOAN.KHAU_HAO)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2  "><b>Tính hao mòn</b></label>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-2">
+                <label class="col-form-label">Tỷ lệ hao mòn</label>
+                @*<input class="form-control" type="text" id="HM_TiLe" name="tylehaomon" readonly />*@
+                <nop-editor asp-for="LoaiTaiSanModel.HM_TyLe" asp-dvt="%" id="HM_TiLe" asp-disabled="true" />
+            </div>
+            <div class="col-sm-4">
+                <label class="col-form-label ">hao mòn luỹ kế</label>
+                <nop-editor asp-for="NVYeuCauChiTietModel.HM_LUY_KE" asp-min-number="0" />
+                <span asp-validation-for="NVYeuCauChiTietModel.HM_LUY_KE"></span>
+                <span id="checklkhm" class="field-validation-error text-danger" style="display:none ;color:red"> Luỹ kế hao mòn không được lớn hơn tổng nguyên giá </span>
+            </div>
+            <div class="col-sm-4">
+                <label class="col-form-label">Giá trị còn lại</label>
+                <nop-editor asp-for="NVYeuCauChiTietModel.HM_GIA_TRI_CON_LAI" asp-min-number="0" asp-dvt="c" />
+                <span asp-validation-for="NVYeuCauChiTietModel.HM_GIA_TRI_CON_LAI"></span>
+                <span id="checkgtcl" class="field-validation-error text-danger" style="display:none ;color:red"> Giá trị còn lại không được lớn hơn tổng nguyên giá </span>
+            </div>
+        </div>
+    }
+    @*Hiển thị chế độ tính khấu hao*@
+    @if (Model.CHE_DO_HACH_TOAN_ID != (int)GS.Core.Domain.DanhMuc.enumCHE_DO_HACH_TOAN.HAO_MON)
+    {
+        <div class="form-group row">
+            @if (Model.CHE_DO_HACH_TOAN_ID == (int)GS.Core.Domain.DanhMuc.enumCHE_DO_HACH_TOAN.HAO_MON_VA_KHAU_HAO)
+            {
+                <label class="custom-control custom-checkbox" style="margin-left: 12px;">
+                    @Html.CheckBoxFor(c => c.TRANG_THAI_KH, new { @class = "custom-control-input", id = "checktinhkhauhao" })
+                    <span class="custom-control-label font-weight-bold">Tính khấu hao </span>
+                </label>
+            }
+            @if (Model.CHE_DO_HACH_TOAN_ID == (int)enumCHE_DO_HACH_TOAN.KHAU_HAO)
+            {
+                <script>
+                    $(document).ready(function () {
+                        $("#tinhkhauhao").show();
+                        //bind thong tin khau hao hao mon
+                        if ($("#LOAI_TAI_SAN_ID").val() > 0) {
+                            getThongTinKHHM();
+                        };
+                    })
+                    //Chuyển nguyên giá từ tổng nguyên giá sang giá trị trích khấu hao
+                    $("input[type='text']").change(function () {
+                        var TotalNguyenGia = 0;
+                        if ($("#TongNguyenGia").val() > 0) {
+                            TotalNguyenGia = parseFloat($("#TongNguyenGia").val());
+                            $("#NVYeuCauChiTietModel_KH_GIA_TINH_KHAU_HAO").data("kendoNumericTextBox").value(TotalNguyenGia);
+                        }
+
+                    });
+                </script>
+            }
+        </div>
+        <div id="tinhkhauhao" style="display: none">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 ">Phương pháp trích KH</label>
+                <div class="col-sm-4">
+                    <nop-select asp-for="NVYeuCauChiTietModel.PHUONG_PHAP_TINH_KHAU_HAO_ID" asp-items="Model.NVYeuCauChiTietModel.PhuongPhapTinhKhauHaoAvailable" />
+                </div>
+            </div>
+            <div class="form-group row" style="border-top:1px solid #ececec">
+                <div class="col-sm-2">
+                    <label class="col-form-label">Tỷ lệ KH theo QĐ</label>
+                    @*<input class="form-control" type="text" id="KH_TiLe" name="" disabled />*@
+                    <nop-editor asp-for="LoaiTaiSanModel.KH_TyLe" id="KH_TiLe" asp-dvt="%" asp-disabled="true" />
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-form-label">Nguyên giá trích KH</label>
+                    <nop-editor asp-for="NVYeuCauChiTietModel.KH_GIA_TINH_KHAU_HAO" asp-min-number="0" asp-dvt="c" />
+                    <span asp-validation-for="NVYeuCauChiTietModel.KH_GIA_TINH_KHAU_HAO"></span>
+                    <span id="checkNGKH" class="field-validation-error text-danger" style="display:none ;color:red"> Nguyên giá khấu hao không được lớn hơn tổng nguyên giá </span>
+                </div>
+
+                <div class="col-sm-4">
+                    <label class="col-form-label ">Giá trị KH/tháng tiếp theo</label>
+                    <nop-editor asp-for="NVYeuCauChiTietModel.KH_GIA_TRI_TRICH_THANG" asp-min-number="0" asp-disabled="true" asp-dvt="c" />
+                    <span asp-validation-for="NVYeuCauChiTietModel.KH_GIA_TRI_TRICH_THANG"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="col-form-label">Số tháng KH còn lại</label>
+                    <nop-editor asp-for="NVYeuCauChiTietModel.KH_THANG_CON_LAI" asp-min-number="0" asp-dvt="tháng" />
+                    <span asp-validation-for="NVYeuCauChiTietModel.KH_THANG_CON_LAI"></span>
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-form-label">Số KH luỹ kế</label>
+                    <nop-editor asp-for="NVYeuCauChiTietModel.KH_LUY_KE" asp-min-number="0" asp-dvt="c" />
+                    <span asp-validation-for="NVYeuCauChiTietModel.KH_LUY_KE"></span>
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-form-label">Giá trị KH còn lại</label>
+                    <nop-editor asp-for="NVYeuCauChiTietModel.KH_CON_LAI" asp-min-number="0" asp-dvt="c" />
+                    <span asp-validation-for="NVYeuCauChiTietModel.KH_CON_LAI"></span>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="gs-form-group mb-4">
+    <h6>
+        Thông tin chi tiết tài sản hữu hình khác
+    </h6>
+    <div class="">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2  ">Thông số kỹ thuật</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="THONG_SO_KY_THUAT" maxlength="255" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-3   "><b>Hiện trạng sử dụng</b></label>
+        </div>
+
+        <div class="form-group row ">
+            @foreach (var obj in Model.lstHienTrang)
+            {
+                @await Html.PartialAsync("_HienTrangSuDung", obj)
+            }
+        </div>
+        <span class="field-validation-valid" data-valmsg-for="HIEN_TRANG_SU_DUNG_ALL" data-valmsg-replace="true"></span>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+         if ($("#checktinhkhauhao").is(":checked")) { $("#tinhkhauhao").show(); }
+         //bind thong tin khau hao hao mon
+         if ($("#LOAI_TAI_SAN_ID").val() > 0) {
+             getThongTinKHHM();
+        };
+    })
+    $(function () {
+        $("#checktinhkhauhao").click(function () {
+            if ($(this).is(":checked")) {
+                $("#tinhkhauhao").show();
+            } else {
+                $("#tinhkhauhao").hide();
+            }
+        });
+    });
+    function openPopupPhuKien()
+    {
+        var _url = "@(Url.Action("_AddPhuKienTSHuuHinh", "TaiSan"))";
+        OpenModalManual("Phụ kiện", _url,35);
+    }
+    function deletePhuKien(elemenId) {
+        $(elemenId).remove();
+    }
+</script>
+@*//bind dữ liệu với phụ kiện hữu hình*@
+@*@if (Model.ListPhuKienHuuHinh != null)
+{
+    @foreach (var itemPK in Model.ListPhuKienHuuHinh)
+    {
+        <script>
+        var _dataItem = {
+            PHU_KIEN_MA: @itemPK.PHU_KIEN_MA,
+            PHU_KIEN_TEN:@itemPK.PHU_KIEN_TEN,
+            PHU_KIEN_SO_LUONG: @((int)itemPK.PHU_KIEN_SO_LUONG),
+            PHU_KIEN_DON_GIA: @((int)itemPK.PHU_KIEN_DON_GIA),
+            PHU_KIEN_MO_TA: @itemPK.PHU_KIEN_MO_TA,
+            PHU_KIEN_GHI_CHU: @itemPK.PHU_KIEN_GHI_CHU,
+        };
+        $("[name='@itemPK.PHU_KIEN_MA']").data("phu-kien", _dataItem);
+        </script>
+    }
+}*@

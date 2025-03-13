@@ -1,0 +1,149 @@
+﻿@model KiemTraLoaiHinhDonViModel
+@{
+	//page title
+	ViewBag.Title = "Kiểm tra loại hình đơn vị";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CCKTLoaiHinhDonVi");
+}
+<form asp-controller="DonVi" asp-action="UpdateKiemTraLoaiHinhDonVi" method="post">
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Sửa thông tin đơn vị
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="ListKiemTraLoaiHinhDonVi">Quay lại danh sách</a>
+			</small>
+			<button type="submit" name="save" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h6>
+		<div class="card-body">
+			<div class="nav-tabs-top mb-4">
+				<div class="card-body">
+
+					<input asp-for="DonViIds" type="hidden" />
+					<div class="form-group row">
+						<label class="col-form-label col-sm-2 text-sm-right text-required">Loại hình đơn vị:</label>
+						<div class="col-sm-10">
+							<nop-select asp-for="LOAI_DON_VI_ID" asp-items="Model.dllLoaiDonVi" asp-filter="true" />
+							<span asp-validation-for="LOAI_DON_VI_ID"></span>
+						</div>
+
+					</div>
+					<div class="form-group row">
+						<label class="col-form-label col-sm-2 text-sm-right text-required">Thuộc cấp:</label>
+						<div class="col-sm-4">
+							<nop-select asp-for="LOAI_CAP_DON_VI_ID" asp-items="Model.ddlLoaiCapDonVi" />
+						</div>
+						<div class="col-sm-4">
+							<nop-select asp-for="CAP_DON_VI_ID" asp-items="Model.dllCapDonVi" />
+							<span asp-validation-for="CAP_DON_VI_ID"></span>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-form-label col-sm-2 text-sm-right">Địa bàn:</label>
+						<div class="col-sm-10">
+							<input id="DiaBanInput" class="form-control" style="width: 100%" value="@Model.TEN_DIA_BAN" />
+							@Html.HiddenFor(c => c.DIA_BAN_ID)
+							<span asp-validation-for="DIA_BAN_ID"></span>
+						</div>
+					</div>
+
+
+					<script>
+    // input DonViCha
+
+    // input DiaBan-------------------------------------//
+						function SearchDiaBanData() {
+							var _data = { TenDiaBan: $("#DiaBanInput").data("kendoComboBox").text() };
+							return _data;
+						}
+						function onDiaBanEditChange() {
+							var value = this.value();
+							$("#DIA_BAN_ID").val(value);
+							//alert(value);
+						}
+						$(document).ready(function () {
+							$('#LOAI_CAP_DON_VI_ID').on('change', ddlLoaiCapDV_change)
+							$("#DiaBanInput").kendoComboBox({
+								placeholder: "Nhập địa bàn...",
+								dataTextField: "TEN",
+								dataValueField: "ID",
+								filter: "contains",
+								autoBind: true,
+								minLength: 3,
+								dataSource: {
+									type: "json",
+									serverFiltering: true,
+									transport: {
+										read: {
+											url: "/Diaban/SearchDiaBan",
+											data: SearchDiaBanData
+										},
+									},
+								},
+								change: onDiaBanEditChange
+							});
+						});
+
+
+						function ddlLoaiCapDV_change() {
+							let _data = {
+								LoaiCapDV: $('#LOAI_CAP_DON_VI_ID').val()
+							}
+							let _url = '@Url.Action("ddlLoaiCapDV_change","DonVi")';
+							ajaxPost(_data, _url, true).done(function (data) {
+								let ddlCapDV = $('#CAP_DON_VI_ID').data("kendoDropDownList");
+								if (ddlCapDV) {
+									ddlCapDV.setDataSource(data);
+									ddlCapDV.select(0);
+								}
+							});
+						}
+						$(document).ready(function () {
+							if ($('input[value="False"][name="DA_CO_QUYET_DINH_GIAO_VON"]').is(":checked")) {
+								$("#QuyetDinh").show();
+								$("#QuyetDinhGiaoVon").hide();
+							}
+							if ($('input[value="True"][name="DA_CO_QUYET_DINH_GIAO_VON"]').is(":checked")) {
+								$("#QuyetDinh").hide();
+								$("#QuyetDinhGiaoVon").show();
+							}
+
+
+							$('input[value="False"][name="DA_CO_QUYET_DINH_GIAO_VON"]').on("click", function () {
+								$("#QuyetDinh").show();
+								$("#QuyetDinhGiaoVon").hide();
+							});
+							$('input[value="True"][name="DA_CO_QUYET_DINH_GIAO_VON"]').on("click", function () {
+								$("#QuyetDinh").hide();
+								$("#QuyetDinhGiaoVon").show();
+							});
+
+							$('input[name="LA_DON_VI_TU_CHU_TAI_CHINH"]').on("click", function () {
+								if ($(this).is(":checked"))
+									$("#quyetdinh").show();
+								if (!$(this).is(":checked"))
+									$("#quyetdinh").hide();
+							});
+							if ($('input[name="LA_DON_VI_TU_CHU_TAI_CHINH"]').is(":checked"))
+								$("#quyetdinh").show();
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<style>
+	.my-custom-scrollbar {
+		position: relative;
+		max-height: 500px;
+		overflow: auto;
+	}
+
+	.table-wrapper-scroll-y {
+		display: block;
+	}
+</style>

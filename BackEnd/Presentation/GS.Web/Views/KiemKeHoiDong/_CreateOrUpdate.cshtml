@@ -1,0 +1,75 @@
+﻿@model KiemKeHoiDongModel
+@{
+    var idf = @Guid.NewGuid().ToString().Replace("-", "");
+}
+<div class="gs-form-group mb-4 list-hoidongkiemke" style="margin-top:25px;" data-guid="@idf" id="divKiemKeHoiDong_@idf">
+   @if (!Model.isFirst)
+    {
+        <div class="row" style="margin-bottom:10px;">
+            <div class="col-md-11"></div>
+            <div class="col-md-1" style="text-align:right">
+                <a onclick="XoaDivKiemKeHoiDong('@idf')" href="javascript:void(0);">
+                    <i style="color:red" class="ion ion-md-remove-circle d-block"></i>
+                </a>
+            </div>
+        </div>
+        <script>
+            function XoaDivKiemKeHoiDong(e) {
+                if (@Model.ID > 0) {
+                    XoaDataKiemKeHoiDong();
+                }
+                $("#divKiemKeHoiDong_" + e).remove();
+            }
+            function XoaDataKiemKeHoiDong() {
+                bootbox.confirm({
+                    message: 'Bạn có chắc chắn muốn xóa ?',
+                    className: 'bootbox-sm',
+                    buttons: {
+                        confirm: {
+                            label: '@T("admin.common.yes")',
+                        },
+                        cancel: {
+                            label: '@T("admin.common.no")',
+                        },
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            kendo.ui.progress($(".progress-bar"), true);
+                            $.ajax({
+                                type: "POST",
+                                url: "/KiemKeHoiDong/Delete?id=@Model.ID",
+                                success: function (data) {
+                                    ShowSuccessMessage(data.Message);
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+        </script>
+    }
+    <input asp-for="ID" type="hidden" id="ID_@idf"/>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Họ và tên</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="HO_TEN" id="HO_TEN_@idf" />
+            <span id="err_HO_TEN_@idf" style="display:none;" class="field-validation-error">Tên không được để trống </span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Chức vụ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="CHUC_VU" id="CHUC_VU_@idf" />
+            <span id="err_CHUC_VU_@idf" style="display:none;" class="field-validation-error">Chức vụ không được để trống </span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Đại diện</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="DAI_DIEN" id="DAI_DIEN_@idf" />
+            <span id="err_DAI_DIEN_@idf" style="display:none;" class="field-validation-error">Đại diện không được để trống </span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Vị trí</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="VI_TRI_ID" asp-items="Model.DDLViTriHoiDong" id="VI_TRI_ID_@idf" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,251 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="App_Data\WorkFiles\2020\**" />
+    <Content Remove="App_Data\WorkFiles\2020\**" />
+    <EmbeddedResource Remove="App_Data\WorkFiles\2020\**" />
+    <None Remove="App_Data\WorkFiles\2020\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="App_Data\browscap.crawlersonly.xml" />
+    <None Remove="App_Data\browscap.xml" />
+    <None Remove="App_Data\GeoLite2-Country.mmdb" />
+    <None Remove="App_Data\Install\Fast\create_required_data.sql" />
+    <None Remove="App_Data\Install\Fast\create_sample_data.sql" />
+    <None Remove="App_Data\Install\Fast\readme.txt" />
+    <None Remove="App_Data\Install\SqlServer.Indexes.sql" />
+    <None Remove="App_Data\Install\SqlServer.StoredProcedures.sql" />
+    <None Remove="App_Data\Localization\defaultResources.nopres.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.ar.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.bg.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.bn-bd.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.bs-Latn-BA.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.cz.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.da.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.de.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.en.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.fr.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.gr.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.he.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.hi.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.hr-HR.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.hu.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.hy-am.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.id.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.is.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.it.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.jp.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.lt.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.nl.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.pl.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.pt-br.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.ro.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.ru.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.sk.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.sp.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.sv.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.tr.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.ur.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.vi.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.zhs.xml" />
+    <None Remove="App_Data\Pdf\FreeSerif.ttf" />
+    <None Remove="App_Data\TempUploads\Index.htm" />
+    <None Remove="App_Data\TrashFiles\readme.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Data\browscap.crawlersonly.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\browscap.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\GeoLite2-Country.mmdb">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Install\Fast\create_required_data.sql">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Install\Fast\create_sample_data.sql">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Install\Fast\readme.txt">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Install\SqlServer.Indexes.sql">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Install\SqlServer.StoredProcedures.sql">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\defaultResources.nopres.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.ar.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.bg.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.bn-bd.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.bs-Latn-BA.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.cz.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.da.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.de.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.en.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.fr.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.gr.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.he.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.hi.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.hr-HR.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.hu.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.hy-am.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.id.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.is.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.it.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.jp.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.lt.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.nl.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.pl.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.pt-br.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.ro.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.ru.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.sk.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.sp.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.sv.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.tr.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.ur.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.vi.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Localization\Installation\installation.zhs.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Pdf\FreeSerif.ttf">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\TempUploads\Index.htm">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\TrashFiles\readme.txt">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Cache\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="Themes\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\GS.Core\GS.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\GS.Data\GS.Data.csproj" />
+    <ProjectReference Include="..\..\Libraries\GS.Services\GS.Services.csproj" />
+    <ProjectReference Include="..\GS.Web.Framework\GS.Web.Framework.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="App_Data\dataSettings.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="App_Data\dataSettings_Oracle.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="App_Data\dataSettings_Sqlserver.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="App_Data\installedPlugins.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

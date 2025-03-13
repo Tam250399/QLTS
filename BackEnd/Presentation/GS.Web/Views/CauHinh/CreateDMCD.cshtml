@@ -1,0 +1,68 @@
+﻿@model DinhMucChucDanhModel
+@{
+    //page title
+    ViewBag.Title = "Thêm mới định mức tài sản";
+    //active menu item (system name)
+    //Html.SetActiveMenuItemSystemName("DanhMucDiaBan");
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thêm mới
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="ListDMCD">Quay lại danh sách</a>
+        </small>
+        <button class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdateDMCD", Model);
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            var ChiTietDinhMuc = [];
+            $(".contentChiTietDMCD").each(function () {
+                var IDF = $(this).data("guid");
+                var CHUC_DANH_ID_VAL = $("#CHUC_DANH_ID_" + IDF).val();
+                var SO_LUONG_VAL = $("#SO_LUONG_" + IDF).val();
+                var DINH_MUC_VAL = $("#DINH_MUC_" + IDF).val();
+                var NHOM_TAI_SAN_ID_VAL = $("#NHOM_TAI_SAN_ID_" + IDF).val();
+                var ChiTietDMCD = {
+                    CHUC_DANH_ID: CHUC_DANH_ID_VAL,
+                    SO_LUONG: SO_LUONG_VAL,
+                    DINH_MUC: DINH_MUC_VAL,
+                    NHOM_TAI_SAN_ID: NHOM_TAI_SAN_ID_VAL,
+                };
+                ChiTietDinhMuc.push(ChiTietDMCD);
+            });
+            var _data = {
+                ChiTietDinhMuc: ChiTietDinhMuc,
+                MA: $("#MA").val(),
+                TU_NGAY: $("#TU_NGAY").val(),
+                DEN_NGAY: $("#DEN_NGAY").val(),
+                SO_QUYET_DINH: $("#SO_QUYET_DINH").val(),
+                NGAY_QUYET_DINH: $("#NGAY_QUYET_DINH").val(),
+                THONG_TU_NGHI_DINH: $("#THONG_TU_NGHI_DINH").val()
+            }
+            $.ajax({
+                url: "/CauHinh/CreateDMCD",
+                type: "POST",
+                data: _data,
+                success: function (data) {
+                    ShowSuccessMessage(data.Message);
+                    document.location.href = '/CauHinh/ListDMCD';
+                },
+                error: function (data) {
+
+                }
+            })
+
+        })
+    })
+       
+</script>
+

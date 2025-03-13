@@ -1,0 +1,115 @@
+﻿@model List<int>
+@{
+    var _idClient = Html.IdForModel();
+    var _class = "form-control";
+    var _disable = "";
+    var htmlAttributes = new Dictionary<string, object>();
+    var _placeholder = "";
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        object _idclientOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+        object _classOut;
+        if (htmlAttributes.TryGetValue("class", out _classOut))
+        {
+            _class += " " + _classOut.ToString();
+        }
+        object _disableOut;
+        if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+        {
+            _disable = _disableOut.ToString();
+        }
+        object _placeholderOut;
+        if (htmlAttributes.TryGetValue("placeholder", out _placeholderOut))
+        {
+            _placeholder = _placeholderOut.ToString();
+        }
+    }
+}
+<div style="display:flex">
+    <select id="@_idClient" asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" class="@_class"></select>
+    <div class="span_arrow_containner">
+        <span id="span_arrow_@_idClient" unselectable="on" class="k-select" aria-label="select" style="margin-right: 6px;line-height: 2;"><span class="k-icon k-i-arrow-60-down"></span></span>
+    </div>
+</div>
+
+<script>
+    var PopUpID = "";
+    $(".modal").each(function (index) {
+        if ($(this).data('bs.modal') && $(this).data('bs.modal')._isShown) {
+            PopUpID = $(this).attr("id");
+            return;
+        }
+    });
+    $(document).ready(function () {
+        $("#@_idClient").kendoMultiSelect({
+            dataTextField: "Text",
+			dataValueField: "Value",
+            filter: "contains",
+            placeholder:'@Html.Raw(_placeholder)',
+            select: function (e) {
+                var current = this.value();
+
+                if (this.dataSource.view()[e.item.index()].value === "0") {
+                    this.value("");
+                }
+                else if (current.indexOf("0") !== -1) {
+                    current = $.grep(current, function (value) {
+                        return value !== "0";
+                    });
+
+                    this.value(current);
+                }
+            },
+            change: function (e) {
+                if (this.value().length === 0)
+                    this.value(["0"]);
+            },
+            popup: {
+                    appendTo: PopUpID==""? $("body"):$("#" + PopUpID)
+                }
+        }).data("kendoMultiSelect");
+
+        if ("@_disable"== "disabled") {
+            $("#@_idClient").data("kendoMultiSelect").enable(false);
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.span_arrow_containner').each(function () {
+            let divArrow = $(this);
+           /* divArrow.parent().css("display", "flex");*/
+            var select = divArrow.parent().find('select');
+            if (select) {
+                select.on('change', function () {
+                    var listSelected = $(this).val();
+                    if (listSelected.length > 0) {
+                        divArrow.hide();
+                    } else {
+                        divArrow.show();
+                    }
+                })
+            }
+        })
+        if ("@_disable"== "disabled") {
+            $("#span_arrow_@_idClient").css('color', '#bfb8b8');
+        }
+       
+    });
+</script>
+<style>
+    .span_arrow_containner {
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+        padding-right: 20px;
+        padding-left: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>

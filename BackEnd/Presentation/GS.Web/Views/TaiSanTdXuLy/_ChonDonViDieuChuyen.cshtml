@@ -1,0 +1,330 @@
+﻿@model DonViSearchModel
+
+<input asp-for="nguoiDungId" hidden />
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row" style="margin-bottom: 0px !important">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa</label>
+        <div class="col-sm-10">
+            <input id="KeySearch" class="form-control" style="width:100%" placeholder="Tên/ Mã đơn vị" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Thuộc khối</label>
+        <div class="col-sm-10">
+            <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                <label class="custom-control custom-radio col-sm-5">
+                    @Html.RadioButtonFor(c => c.isTinh, false, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>Trung ương</small></span>
+                </label>
+                <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                    @Html.RadioButtonFor(c => c.isTinh, true, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>Địa phương</small></span>
+                </label>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-group row" id="chontinh">
+        <label class="col-form-label col-sm-2 text-sm-left">Cấp địa phương:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="CapDonViSearch" asp-items="Model.DLLCapDiaPhuong"  />
+        </div>
+    </div>
+    @*<div class="form-group row" id="chonBoNganh">
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ Ngành:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="boNganhId" asp-items="Model.dllboNganh" asp-filter="true" />
+        </div>
+    </div>*@
+
+    <div class="form-group row" id="chonBoNganh">
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ Ngành:</label>
+        <div class="col-sm-4">
+            <input id="DonViInput" class="form-control" style="width: 100%" value="@Model.TenBoNganh" />
+            @Html.HiddenFor(m => m.boNganhId)
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="Chondonvi-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            var istinh = false;
+                            $('input[value="True"][name="isTinh"]').on("click", function () {
+                                $("#chontinh").show();
+                                $("#chonBoNganh").hide();
+                                if ($('input[value="True"][name="isTinh"]').is(":checked")) {
+                                     istinh = true;
+                                }
+                                if ($('input[value="False"][name="isTinh"]').is(":checked")) {
+                                     istinh = false;
+                                }
+                            });
+                            $('input[value="False"][name="isTinh"]').on("click", function () {
+                                $("#chontinh").hide();
+                                $("#chonBoNganh").show();
+                                if ($('input[value="True"][name="isTinh"]').is(":checked")) {
+                                    istinh = true;
+                                }
+                                if ($('input[value="False"][name="isTinh"]').is(":checked")) {
+                                    istinh = false;
+                                }
+							});
+							$('input[value="False"][name="isTinh"]').click();
+                            function SearchData() {
+                                console.log(istinh);
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDonViSearch: $('#@Html.IdFor(model => model.LoaiDonViSearch)').val(),
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    isTinh: istinh,
+                                    tinhId: $('#@Html.IdFor(model => model.tinhId)').val(),
+									isIncludeAll: true,
+                                    isOnlyNhapLieu: true,
+                                    boNganhId: $('#@Html.IdFor(model => model.boNganhId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#Chondonvi-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+
+                            $("#Chondonvi-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListChonDonViDieuChuyen", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: 7,
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    //confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns:
+                                    [
+                                        {
+                                            field: "MA",
+                                            title: "Mã đơn vị",
+                                            template: '#=SO_DON_VI_CON>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+SO_DON_VI_CON+"</span>)":MA#'
+                                        },
+                                        {
+                                            field: "TEN",
+                                            title: "Tên đơn vị"
+
+                                        },
+                                        {
+                                            field: "DIA_CHI",
+                                            title: "Địa chỉ"
+
+                                        },
+                                        {
+                                            field: "ID",
+                                            title: "Chọn",
+                                             width: 150,
+                                            headerAttributes: {
+                                                style: "text-align:center"
+                                            },
+                                            attributes: {
+                                                style: "text-align:center"
+                                            },
+                                            //template: '<a data-id="#=ID#" class="btn btn-sm btn-outline-secondary" href="javascript:void(0);" onclick="SelectDonViDieuChuyen(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>',
+                                            template: (dataItem) => {
+                                                if (dataItem.LA_DON_VI_NHAP_LIEU) {
+													return '<a data-id="' + dataItem.ID +'" class="btn btn-sm btn-outline-secondary" href="javascript:void(0);" onclick="SelectDonViDieuChuyen(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>'
+                                                } else {
+													return '<a data-id="' + dataItem.ID +'" class="btn btn-sm btn-outline-secondary disabled" href="javascript:void(0);" onclick="SelectDonViDieuChuyen(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>'
+                                                }
+                                            },
+                                        }
+                                    ]
+                            });
+                            function detailInit(e) {
+                                var data = {
+                                    ParentID: e.data.ID,
+                                    TreeLevel: 0,
+                                    isTinh: istinh,
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    //IsSearchSub: true
+                                };
+                                addAntiForgeryToken(data);
+                                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ListChonDonViDieuChuyen", "DonVi"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: data
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: 7,
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        //confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                        mode: "inline"
+                                    },
+                                    detailInit: detailInit,
+                                    scrollable: false,
+                                    columns:
+                                        [
+                                            {
+                                                field: "MA",
+                                                title: "Mã",
+                                                width: 300,
+                                                template: '#=SO_DON_VI_CON>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+SO_DON_VI_CON+"</span>)":MA#'
+                                            },
+                                            {
+                                                field: "TEN",
+                                                title: "Tên đơn vị"
+
+											},
+											{
+												field: "DIA_CHI",
+												title: "Địa chỉ"
+
+											},
+                                            {
+                                                field: "ID",
+                                                title: "Chọn",
+                                                width: 150,
+                                                headerAttributes: {
+                                                    style: "text-align:center"
+                                                },
+                                                attributes: {
+                                                    style: "text-align:center"
+                                                },
+                                                template: (dataItem) => {
+                                                    if (dataItem.LA_DON_VI_NHAP_LIEU) {
+														return '<a data-id="' + dataItem.ID+'" class="btn btn-sm btn-outline-secondary" href="javascript:void(0);" onclick="SelectDonViDieuChuyen(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>'
+                                                    } else {
+														return '<a data-id="' + dataItem.ID +'" class="btn btn-sm btn-outline-secondary disabled" href="javascript:void(0);" onclick="SelectDonViDieuChuyen(this)"><i class="fas fa-pencil-alt d-block"></i>chọn</a>'
+                                                    }
+                                                },
+                                            }
+                                        ]
+                                });
+                            };
+                                // input DiaBanCha
+                            function SearchDonViData() {
+                                var _data = { tenDonVi: $("#DonViInput").data("kendoComboBox").text() };
+                                return _data;
+
+                            }
+                            function onDonViEditChange() {
+                                var value = this.value();
+                                $("#boNganhId").val(value);
+                            }
+                            $("#DonViInput").kendoComboBox({
+                                placeholder: "Nhập tên bộ, ngành...",
+                                dataTextField: "TEN",
+                                dataValueField: "ID",
+                                filter: "contains",
+                                autoBind: true,
+                                minLength: 3,
+                                dataSource: {
+                                    type: "json",
+                                    serverFiltering: true,
+                                    transport: {
+                                        read: {
+                                            url: "/DonVi/SearchDonViDieuChuyen",
+                                            data: SearchDonViData
+                                        },
+                                    },
+                                },
+                                change: onDonViEditChange
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	function SelectDonViDieuChuyen(e) {
+        var donviId = $(e).attr("data-id");
+        $(e).hide();
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "/GiamDieuChuyen/GetJsonDonVi?DonViId=" + donviId,
+            success: function (data) {
+                showKQXLModal();
+                if (data) {
+                    $("#TenDonViTo").val(data);
+                    $("#DON_VI_ID").val(donviId);
+                    //
+                    $("#DON_VI_DIEU_CHUYEN_ID").val(donviId);
+                    $("#DonViNhanDieuChuyenTen").val(data);
+                   
+                }
+            }
+        });
+    }
+</script>

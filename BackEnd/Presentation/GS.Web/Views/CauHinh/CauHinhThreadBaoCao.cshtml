@@ -1,0 +1,67 @@
+﻿@model CauHinhThreadBaoCaoModel
+@{
+	//page title
+	ViewBag.Title = "Cấu hình luồng báo cáo";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhThreadBaoCao");
+}
+<form asp-controller="CauHinh" asp-action="CauHinhThreadBaoCao" method="post">
+	<div class="card mb-4">
+		<h5 class="card-header">
+			Sửa thông tin cấu hình luồng báo cáo
+			<button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h5>
+		<div class="card-body">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-5 text-sm-right required">Số BC tối đa được chờ</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="ThreadBaoCao_MaxThreadWaiting" />
+				</div>
+				<div class="col-sm-2">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-5 text-sm-right required">Số BC tối đa được chạy</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="ThreadBaoCao_MaxThreadRunning" />
+				</div>
+				<div class="col-sm-2">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-5 text-sm-right required">Thời gian mỗi lần kiểm tra điều kiện</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="ThreadBaoCao_TimePerCheck" />
+				</div>
+				<div class="col-sm-2">
+					<label class="col-form-label text-sm-left" style="padding-left:0px !important;">(phút)</label>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-5 text-sm-right required">Thời gian tối đa được chờ</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="ThreadBaoCao_MaxWaitingTimePerThread" />
+				</div>
+				<div class="col-sm-2">
+					<label class="col-form-label text-sm-left" style="padding-left:0px !important;">(phút)</label>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-5 text-sm-right required">Quá thời gian chờ vẫn được chạy</label>
+				<div class="col-sm-4">
+					<label class="custom-control custom-checkbox">
+						<nop-editor asp-for="ThreadBaoCao_isContinueWhenOverMaxTime" class="custom-control-input" />
+						<span class="custom-control-label"></span>
+					</label>
+				</div>
+				<div class="col-sm-2">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+

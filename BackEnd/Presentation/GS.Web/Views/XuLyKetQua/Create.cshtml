@@ -1,0 +1,55 @@
+﻿@model XuLyKetQuaModel
+@{
+    //page title
+    ViewBag.Title = "Thêm mới quyết định tịch thu";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("XuLyKetQua");
+}
+<form asp-controller="XuLyKetQua" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a id="btnSaveXLKQ" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </a>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+<script>
+        $("#btnSaveXLKQ").click(function () {
+            var _data = {
+                ID: $("#@(Html.IdFor(c=>c.ID))").val(),
+                XU_LY_ID: $("#@(Html.IdFor(c=>c.XU_LY_ID))").val(),
+                NGAY_TAO: $("#@(Html.IdFor(c=>c.NGAY_TAO))").val(),
+                NGUOI_TAO_ID: $("#@(Html.IdFor(c=>c.NGUOI_TAO_ID))").val(),
+                CHUNG_TU_NOP_TIEN_SO: $("#@(Html.IdFor(c=>c.CHUNG_TU_NOP_TIEN_SO))").val(),
+                CHUNG_TU_NOP_TIEN_NGAY: $("#@(Html.IdFor(c=>c.CHUNG_TU_NOP_TIEN_NGAY))").val(),
+                NGAY_NOP_TIEN: $("#@(Html.IdFor(c=>c.NGAY_NOP_TIEN))").val(),
+                SO_TIEN: $("#@(Html.IdFor(c=>c.SO_TIEN))").val(),
+                GHI_CHU: $("#@(Html.IdFor(c=>c.GHI_CHU))").val(),
+            }
+        $.ajax({
+           type: "POST",
+            data: _data,
+            url: "/XuLyKetQua/Create",
+            success: function (result) {
+                if (CheckValidMessageReturn(result)){
+                    ShowSuccessMessage(result.Message);
+                    location.href = "/XuLyKetQua/List";
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+
+        })
+    });
+</script>

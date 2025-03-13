@@ -1,0 +1,69 @@
+﻿@model DoiMatKhauModel
+
+    <form asp-controller="NguoiDung" asp-action="DoiMatKhau" method="post">
+        <input asp-for="IDNguoiDung" type="hidden" />
+        <div class="page account-page change-password-page">
+            <div class="card mb-4">
+                <div class="page-title">
+                    <h4 class="card-header">
+                        Đổi mật khẩu
+                        <button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px; ">
+                            <i class="fas fa-save" style="margin-right:5px;"></i>
+                            Đổi mật khẩu
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="page-body">
+                        @if (!string.IsNullOrEmpty(Model.KETQUA))
+                        {
+                            <div class="result">
+                                <span style="color:red;">@Model.KETQUA</span>
+                            </div>
+                        }
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                        <div class="fieldset">
+                            <div class="form-fields">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label class="col-form-label text-sm-right text-required" style="width:100%">Mật khẩu cũ: </label>
+                                            @*<app-label asp-for="MATKHAUCU" text-required @*asp-postfix=":" />*@
+                                        </div>
+                                        <div class="col-md-5">
+                                            <nop-editor asp-for="MATKHAUCU" />
+                                            <span asp-validation-for="MATKHAUCU"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label class="col-form-label text-sm-right text-required" style="width:100%">Mật khẩu Mới: </label>
+                                            @*<app-label asp-for="MATKHAUMOI" asp-postfix=":" />*@
+                                        </div>
+                                        <div class="col-md-5">
+                                            <nop-editor asp-for="MATKHAUMOI" />
+                                            <span asp-validation-for="MATKHAUMOI"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label class="col-form-label text-sm-right text-required" style="width:100%">Xác nhận mật khẩu: </label>
+                                            @*<app-label asp-for="XACNHANMK" asp-postfix=":" />*@
+                                        </div>
+                                        <div class="col-md-5">
+                                            <nop-editor asp-for="XACNHANMK" />
+                                            <span asp-validation-for="XACNHANMK"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>

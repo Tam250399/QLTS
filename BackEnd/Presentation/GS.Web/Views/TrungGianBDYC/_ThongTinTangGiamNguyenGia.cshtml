@@ -1,0 +1,267 @@
+﻿@model TrungGianBDYCModel
+<div class="font-weight-bold mb-2">Thông tin biến động:</div>
+
+<div class="row">
+	<div class="col-sm-4 mb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">
+						@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+						{
+							<text>Ngày giảm:</text>
+						}
+						else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+						{
+							<text>Ngày tăng:</text>
+						}
+					</td>
+					<td class="text-sm-right">
+						@Model.NGAY_BIEN_DONG.toDateVNString()
+					</td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA && !(Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.GIAM_DANH_GIA_LAI_GIA_TRI_TAI_SAN || Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.TANG_DANH_GIA_LAI_GIA_TRI))
+				{
+					<tr>
+						<td><text>DT cũ:</text></td>
+						<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD_CU m²</td>
+					</tr>
+				}
+				else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td><text>DT cũ:</text></td>
+						<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH_CU m²</td>
+					</tr>
+				}
+				<tr>
+					<td><text>NG cũ:</text></td>
+					<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.NGUYEN_GIA_CU.ToVNStringNumber() đ</td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td><text>GTCL cũ:</text></td>
+                        <td class="text-sm-right">
+                            @if (Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI_CU == null)
+                            {
+                                @((Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI - Model.NGUYEN_GIA).ToVNStringNumber())
+                            }
+                            else
+                            {
+                                @Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI_CU
+                            }
+                            đ
+                        </td>
+					</tr>
+				}
+				<tr>
+					<td class="pr-3">Số quyết định:</td>
+					<td>
+						@Model.QUYET_DINH_SO
+					</td>
+				</tr>
+				@*<tr>
+					<td class="pr-3">Chứng từ số:</td>
+					<td>
+						@Model.CHUNG_TU_SO
+					</td>
+				</tr>*@
+				<tr>
+					<td class="pr-3"><text>Diễn giải:</text></td>
+					<td>@Model.GHI_CHU</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-4 mb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3"><br /></td>
+					<td></td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA && !(Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.GIAM_DANH_GIA_LAI_GIA_TRI_TAI_SAN|| Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.TANG_DANH_GIA_LAI_GIA_TRI))
+				{
+					<tr>
+						<td>
+							@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+							{
+								<text>DT giảm:</text>
+							}
+							else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+							{
+								<text>DT tăng:</text>
+							}
+						</td>
+                        <td class="text-sm-right">
+                            @if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+                            {
+                                @if (Model.TrungGianBDYCChiTietModel.NHA_DIEN_TICH_XD > 0)
+                                 {
+                                    <text>@((Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD )) m²</text>
+								 }
+                            
+                                 else
+                                 {
+                                    <text>@((Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD* -1 )) m²</text>
+                                 }
+                            }
+                            else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+                            {
+                            <text>@Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD m²</text>
+                            }
+
+                        </td>
+						
+					</tr>
+				}
+				else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td>
+							@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+							{
+								<text>DT giảm:</text>
+							}
+							else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+							{
+								<text>DT tăng:</text>
+							}
+						</td>
+                        <td class="text-sm-right">
+                            @if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+                            {
+                                @if (Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH > 0)
+                                {
+                                    <text>@((Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH )) m²</text>
+                                }
+                                else
+                                {
+                                    <text>@((Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH* -1 )) m²</text>
+                                }
+                            }
+                            else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+                            {
+                                <text>@Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH m²</text>
+                            }
+
+                        </td>
+					</tr>
+				}
+				<tr>
+					<td class="pr-3">
+						@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+						{
+							<text>NG giảm:</text>
+						}
+						else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+						{
+							<text>NG tăng:</text>
+						}
+					</td>
+                    <td class="text-sm-right">
+                        @if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+                        {
+                            @if (Model.NGUYEN_GIA > 0)
+                            {
+                                @((Model.NGUYEN_GIA ).ToVNStringNumber())
+                            }
+                            else
+                            {
+                                @((Model.NGUYEN_GIA* -1 ).ToVNStringNumber())
+                            }
+                        }
+                        else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+                        {
+                            @Model.NGUYEN_GIA.ToVNStringNumber()
+                        }
+                        đ
+                    </td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-4 mb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">
+						@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+						{
+							<text>Lý do giảm:</text>
+						}
+						else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI)
+						{
+							<text>Lý do tăng:</text>
+						}
+					</td>
+					<td>@Model.TenLyDoBienDong</td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA && !(Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.GIAM_DANH_GIA_LAI_GIA_TRI_TAI_SAN || Model.MaLoaiLyDoBienDong == enum_LY_DO_BIEN_DONG.TANG_DANH_GIA_LAI_GIA_TRI))
+				{
+					<tr>
+						<td><text>DT mới:</text></td>
+						<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD_SAU_BD m²</td>
+					</tr>
+				}
+				else if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td><text>DT mới:</text></td>
+						<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.DAT_TONG_DIEN_TICH_SAU_BD m²</td>
+					</tr>
+				}
+				<tr>
+					<td class="pr-3">NG mới:</td>
+					<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.NGUYEN_GIA_SAU_BD.ToVNStringNumber() đ</td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td class="pr-3">GTCL mới:</td>
+                        <td class="text-sm-right">
+                            @if (Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI_CU == null)
+                            {
+
+                                @Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI.ToVNStringNumber()
+                            }
+                            else if ((Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI_CU + Model.NGUYEN_GIA) < 0)
+                            {
+                                <text>0</text>
+                            }
+                            else
+                            {
+                                @((Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI_CU + Model.NGUYEN_GIA).ToVNStringNumber())
+                            }
+                            đ
+                        </td>
+					</tr>
+				}
+				<tr>
+					<td class="pr-3">Ngày:</td>
+					<td class="text-sm-right">
+						@Model.QUYET_DINH_NGAY.toDateVNString()
+					</td>
+				</tr>
+				@*<tr>
+			<td class="pr-3">Ngày:</td>
+			<td class="text-sm-right">
+				@Model.CHUNG_TU_NGAY.toDateVNString()
+			</td>
+		</tr>*@
+</tbody>
+		</table>
+	</div>
+</div>
+@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA || Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+{
+	<hr />
+	<div class="font-weight-bold mb-2">Hiện trạng sử dụng:</div>
+	<div class="form-group row ">
+		@foreach (var obj in Model.TrungGianBDYCChiTietModel.lstHienTrang)
+		{
+			@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+		}
+	</div>
+}

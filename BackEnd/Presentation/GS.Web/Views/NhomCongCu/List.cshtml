@@ -1,0 +1,298 @@
+@model NhomCongCuSearchModel
+@{
+    //page title
+    ViewBag.Title = "Nhóm công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucNhomCongCu");
+}
+<style>
+	.btn-outline-danger:hover{
+        color:#fff!important;
+	}
+</style>
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @*@ViewBag.Title*@
+        <br />
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" placeholder="Nhập từ khóa" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách nhóm công cụ, dụng cụ</span>
+        </div>
+    </div>
+    <div class="col-sm-2 text-right">
+        <a type="button" class="btn  btn-sm btn-outline-primary" href="Create?ParentId=0">
+            <i class="fa fa-plus-square" style="margin-right:5px;"></i>Thêm mới
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        var recordCon = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                record = 0;
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "NhomCongCu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                 dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+								detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                      {
+                                      title: "STT",
+                                      template: "#= ++record #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'MA',
+                                        title: 'Mã nhóm CCDC',
+                                        template: '#=CountSub>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+CountSub+"</span>)":MA#'
+                                    },
+                                    {field: 'TEN',title: 'Tên nhóm CDCC'},
+                                    {field: 'THOI_HAN_PHAN_BO',title: 'Thời hạn phân bổ'},
+                                    {field: 'DON_VI_TINH_ID',title: 'Đơn vị tính'},
+                                    {field: 'TEN_CHA', title: 'Tên nhóm CCDC cha' },
+                                    //{field: 'TEN_DON_VI',title: 'Tên đơn vị'},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 200,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: (dataItem) => {
+                                            if (dataItem.CountSub > 0) {
+                                                return '<a class="btn btn-sm btn-outline-primary" href="Create?ParentId=' + dataItem.ID + '">Thêm nhóm con</a>'
+													+ "&nbsp;" +'<a class="btn btn-sm btn-outline-secondary" href = "Edit?Id=' + dataItem.ID + '" >Sửa</a>'
+													+ "&nbsp;" +'<a class="btn btn-sm btn-outline-danger disabled text-white" onclick="XoaCCDC(' + dataItem.ID + ')">Xóa</a>'
+
+
+                                            } else {
+
+                                                return '<a class="btn btn-sm btn-outline-primary" href="Create?ParentId=' + dataItem.ID + '">Thêm nhóm con</a>'
+													+ "&nbsp;" + '<a class="btn btn-sm btn-outline-secondary" href = "Edit?Id=' + dataItem.ID + '" > Sửa</a>'
+													+ "&nbsp;" + '<a class="btn btn-sm btn-outline-danger" onclick="XoaCCDC(' + dataItem.ID + ')">Xóa</a>'
+                                                    //+ '< a class="btn btn-sm btn-outline-danger" onclick = "XoaCCDC(' + dataItem.ID + ')" > Xóa</a > '
+
+
+                                            }
+                                        }
+                                        //template: kendo.template($("#ThaoTacTemplate").html())
+                                    }
+                                ]
+                            });
+						});
+                        function detailInit(e) {
+                            recordCon = 0;
+							var data = {
+								ParentId: e.data.ID,
+                                @* KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val() *@
+                            };
+							addAntiForgeryToken(data);
+							$("<div/>").appendTo(e.detailCell).kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "NhomCongCu"))",
+                                            type: "POST",
+                                            dataType: "json",
+											data: data
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+								},
+								detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                      title: "STT",
+                                      template: "#= ++recordCon #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'MA',
+                                        title: 'Mã nhóm CCDC',
+                                        template: '#=CountSub>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+CountSub+"</span>)":MA#'
+                                    },
+                                    {field: 'TEN',title: 'Tên nhóm CCDC'},
+                                    {field: 'THOI_HAN_PHAN_BO',title: 'Thời hạn phân bổ'},
+                                    {field: 'DON_VI_TINH_ID',title: 'Đơn vị tính'},
+                                    {field: 'TEN_CHA',title: 'Tên nhóm CCDC cha'},
+                                    //{field: 'TEN_DON_VI',title: 'Tên đơn vị'},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 200,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                       
+                                        //template: kendo.template($("#ThaoTacTemplate").html())
+                                        template: (dataItem) => {
+                                            console.log(dataItem);
+                                            if (dataItem.CountSub > 0) {
+                                                return '<a class="btn btn-sm btn-outline-secondary" href="Create?ParentId=' + dataItem.ID + '">Thêm nhóm con</a>'
+                                                    + "&nbsp;" +'<a class="btn btn-sm btn-outline-secondary" href = "Edit?Id=' + dataItem.ID + '" > Sửa</a>'
+													+ "&nbsp;" + '<a class="btn btn-sm btn-outline-danger disabled" onclick="XoaCCDC(' + dataItem.ID + ')">Xóa</a>'
+
+
+                                            } else {
+
+                                                return '<a class="btn btn-sm btn-outline-secondary" href="Create?ParentId=' + dataItem.ID + '">Thêm nhóm con</a>'
+                                                    + "&nbsp;" + '<a class="btn btn-sm btn-outline-secondary" href = "Edit?Id=' + dataItem.ID + '" >Sửa</a>'
+                                                    + "&nbsp;" + '<a class="btn btn-sm btn-outline-danger" onclick="XoaCCDC(' + dataItem.ID + ')">Xóa</a>'
+
+
+                                            }
+                                        }
+                                    }
+                                ]
+                            });
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="ThaoTacTemplate" type="text/x-kendo-template">
+    <a class="btn btn-sm btn-outline-secondary" href="Create?ParentId=#=ID#"><i class="fa fa-plus-square d-block"></i>Thêm nhóm con</a>
+    <a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>
+    <a class="btn btn-sm btn-outline-secondary" onclick="XoaCCDC(#=ID#)"><i class="fas fa-trash-alt d-block"></i>Xóa</a>
+</script>
+<script>
+    function XoaCCDC(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa nhóm công cụ, dụng cụ này không?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/NhomCongCu/Xoa?ID=" + ID,
+                        success: function (data) {
+                            
+                            if (data.Code == 00) {
+                                ShowSuccessMessage(data.Message);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+
+    }
+</script>
+
+

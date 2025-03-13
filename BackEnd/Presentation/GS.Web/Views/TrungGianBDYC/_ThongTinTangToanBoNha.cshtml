@@ -1,0 +1,176 @@
+﻿@model TrungGianBDYCModel
+
+<div id="thong-tin-chung-TS">
+	<div class="font-weight-bold mb-2">Thông tin chung:</div>
+	<div class="row">
+		<div class="col-sm-6 pb-4">
+			<table>
+				<tbody>
+					@if (Model.DU_AN_ID > 0)
+					{
+						<tr>
+							<td class="pr-3">Tên dự án:</td>
+							<td>
+								@Model.TenDuAn
+							</td>
+						</tr>
+					}
+					<tr>
+						<td class="pr-3">Tên đơn vị:</td>
+						<td>
+							@Model.TenDonVi
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Tên ngôi nhà:</td>
+						<td>
+							@Model.TAI_SAN_TEN
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Địa chỉ:</td>
+						<td>
+							@Model.TrungGianBDYCChiTietModel.DIA_CHI
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Lý do tăng:</td>
+						<td>
+							@Model.TenLyDoBienDong
+						</td>
+					</tr>
+					@if (Model.TrungGianBDYCChiTietModel.HINH_THUC_MUA_SAM_ID > 0)
+					{
+						<tr>
+							<td class="pr-3">Hình thức mua sắm:</td>
+							<td>
+								@Model.TenHinhThucMuaSam
+							</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Giá mua trên hóa đơn:</td>
+							<td>
+								@Model.GIA_MUA_TIEP_NHAN.ToVNStringNumber() đ
+							</td>
+						</tr>
+					}
+					<tr>
+						<td class="pr-3">Cấp nhà:</td>
+						<td>
+							@Model.TenLoaiTaiSan
+						</td>
+					</tr>
+
+					<tr>
+						<td class="pr-3">Diện tích XD:</td>
+						<td class="">@Model.TrungGianBDYCChiTietModel.NHA_DIEN_TICH_XD.ToVNStringNumber() (m<sup>2</sup>)</td>
+					</tr>
+
+					@*<tr>
+						<td class="pr-3">Năm xây dựng:</td>
+						<td>@Model.taisanNhaModel.NAM_XAY_DUNG</td>
+					</tr>*@
+					<tr>
+						<td class="pr-3">Bộ phận sử dụng:</td>
+						<td>@Model.TenDonViBoPhan</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-6 pb-4">
+			<table>
+				<tbody>
+					<tr>
+						<td class="pr-3"><br /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="pr-3"><br /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="pr-3">Mã tài sản</td>
+						<td>@Model.TAI_SAN_MA</td>
+					</tr>
+					<tr>
+						@if (Model.NGAY_BIEN_DONG.Value.Year < 2018)
+						{
+							<td class="pr-3">Ngày kê khai:</td>
+						}
+						else
+						{
+							<td class="pr-3">Ngày tăng:</td>
+						}
+						<td>
+							@Model.NGAY_BIEN_DONG.toDateVNString()
+						</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Số tầng:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.NHA_SO_TANG</td>
+					</tr>
+
+					<tr>
+						<td class="pr-3">Diện tích sàn SD:</td>
+						<td class="">@Model.TrungGianBDYCChiTietModel.NHA_TONG_DIEN_TICH_XD.ToVNStringNumber() (m<sup>2</sup>)</td>
+					</tr>
+
+					<tr>
+						<td class="pr-3">Ngày đưa vào sử dụng</td>
+						<td>
+							@Model.NGAY_SU_DUNG.toDateVNString()
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<hr />
+<div class="font-weight-bold mb-2">Giá trị, hao mòn/ khấu hao</div>
+<div class="row">
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+
+				<tr>
+					<td class="pr-3">Nguyên giá:</td>
+					<td class="text-sm-right">@Model.NGUYEN_GIA.ToVNStringNumber() đ</td>
+				</tr>
+				<tr>
+					<td class="pr-3 font-weight-bold">Trong đó:</td>
+					<td class=""></td>
+				</tr>
+				@if (Model.lstNguonVonModel != null && Model.lstNguonVonModel.Count > 0)
+				{
+					foreach (var itemNV in Model.lstNguonVonModel)
+					{
+						<tr>
+							<td class="pr-3">@itemNV.TEN:</td>
+							<td class="text-sm-right">@itemNV.GiaTri.ToVNStringNumber() đ</td>
+						</tr>
+					}
+				}
+				<tr>
+					<td class="pr-3 ">GTCL:</td>
+					<td class="text-sm-right">@Model.TrungGianBDYCChiTietModel.HM_GIA_TRI_CON_LAI.ToVNStringNumber() đ</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6 pb-4">
+		<table>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+<hr />
+
+<div class="font-weight-bold mb-2">Hiện trạng sử dụng:</div>
+<div class="form-group row ">
+	@foreach (var obj in Model.TrungGianBDYCChiTietModel.lstHienTrang)
+	{
+		@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+	}
+</div>

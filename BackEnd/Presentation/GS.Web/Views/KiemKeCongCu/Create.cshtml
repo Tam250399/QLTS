@@ -1,0 +1,93 @@
+@model KiemKeCongCuModel
+
+<div class="card mb-4">
+    <h6 class="card-header">
+        <button type="button" class="btn btn-default" style="float:right;margin-right:5px;" id="btnClosePhatHienThua">
+            <i class="ion ion-ios-close-circle-outline" style="margin-right:5px;"></i>
+            Đóng
+        </button>
+        <button type="button" class="btn btn-success" style="float:right;margin-right:5px;" id="btnSaveKiemKeCongCu">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+
+<script>
+    $("#btnClosePhatHienThua").click(function () {
+        HideModalManual();
+    });
+    $("#btnSaveKiemKeCongCu").click(function () {
+        var data = {
+            TEN_CONG_CU_THUA: $("#TEN_CONG_CU_THUA").val(),
+            NHOM_CONG_CU_ID: $("#NHOM_CONG_CU_ID").val(),
+            SO_LUONG_KIEM_KE: $("#SO_LUONG_KIEM_KE").val(),
+            TINH_TRANG_ID: $("#TINH_TRANG_ID").val(),
+            DE_NGHI_XU_LY: $("#DE_NGHI_XU_LY").val(),
+            DON_GIA_THUA: $("#DON_GIA_THUA").val(),
+            GHI_CHU: $("#GHI_CHU").val(),
+            MaCongCu: $("#MaCongCu").val(),
+            TenCongCu: $("#TenCongCu").val(),
+            IS_PHAT_HIEN_THUA: $("#IS_PHAT_HIEN_THUA").val(),
+            KIEM_KE_ID: $("#KIEM_KE_ID").val()
+        }
+        ClearValidationCongCuThua();
+        if (ValidationCongCuThua()) {
+            $.ajax({
+                url: "/KiemKeCongCu/Create",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (data.Code == '00') {
+                        ShowSuccessMessage(data.Message);
+                        HideModalManual();
+                        LoadCongCuThuaKiemKe();
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function ValidationCongCuThua() {
+        var check = true;
+        var TEN_CONG_CU_THUA = $("#TEN_CONG_CU_THUA").val();
+        if (TEN_CONG_CU_THUA != undefined && (TEN_CONG_CU_THUA == "" || TEN_CONG_CU_THUA == null)) {
+              $("#err_TEN_CONG_CU_THUA").removeClass("field-validation-valid").addClass("field-validation-error text-danger");
+            $("#err_TEN_CONG_CU_THUA").text("Tên không được để trống");          
+            check = false;
+        }
+         var NHOM_CONG_CU_ID = $("#NHOM_CONG_CU_ID").val();
+        if (NHOM_CONG_CU_ID != undefined && (NHOM_CONG_CU_ID == 0 || NHOM_CONG_CU_ID == null)) {
+              $("#err_NHOM_CONG_CU_ID").removeClass("field-validation-valid").addClass("field-validation-error text-danger");
+            $("#err_NHOM_CONG_CU_ID").text("Nhóm không được để trống ");
+            check = false;
+        }
+         var DON_GIA_THUA = $("#DON_GIA_THUA").val();
+        if (DON_GIA_THUA != undefined && (DON_GIA_THUA <= 0 /*|| DON_GIA_THUA == null*/)) {
+              $("#err_DON_GIA_THUA").removeClass("field-validation-valid").addClass("field-validation-error text-danger");
+            //$("#err_DON_GIA_THUA").text("Đơn giá không được để trống ");
+            check = false;
+        }
+        var SO_LUONG_KIEM_KE = $("#SO_LUONG_KIEM_KE").val();
+        if (SO_LUONG_KIEM_KE != undefined && (SO_LUONG_KIEM_KE <= 0 || SO_LUONG_KIEM_KE == null)) {
+              $("#err_SO_LUONG_KIEM_KE").removeClass("field-validation-valid").addClass("field-validation-error text-danger");
+            $("#err_SO_LUONG_KIEM_KE").text("Số lượng không được để trống ");
+            check = false;
+        }
+        return check;
+    }
+    function ClearValidationCongCuThua() {
+              $("span").filter(function () {
+            return $(this).attr('data-valmsg-for') != null;
+        }).text('').removeClass("field-validation-error text-danger").addClass("field-validation-valid");
+    }
+
+</script>

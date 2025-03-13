@@ -1,0 +1,91 @@
+﻿@model object
+<style>
+    .k-input::selection {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .k-dropdown-wrap {
+        background-color: #fff !important;
+        background-image: none !important;
+    }
+</style>
+@{
+	string valSelect = Model != null ? Model.ToString() : "";
+	var _idClient = Html.IdForModel();
+	var _name = Html.NameForModel();
+	var _class = "form-control";
+	var _style = "";
+	var _disable = "";
+	var _readonly = "";
+	var htmlAttributes = new Dictionary<string, object>();
+	if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+	{
+		htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+		object _idclientOut;
+		if (htmlAttributes.TryGetValue("id", out _idclientOut))
+		{
+			_idClient = _idclientOut.ToString();
+		}
+		object _classOut;
+		if (htmlAttributes.TryGetValue("class", out _classOut))
+		{
+			_class += " " + _classOut.ToString();
+		}
+		object _styleOut;
+		if (htmlAttributes.TryGetValue("style", out _styleOut))
+		{
+			_style = _styleOut.ToString();
+		}
+		object _nameOut;
+		if (htmlAttributes.TryGetValue("name", out _nameOut))
+		{
+			_name = _nameOut.ToString();
+		}
+		object _disableOut;
+		if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+		{
+			_disable = _disableOut.ToString();
+		}
+		object _readonlyOut;
+		if (htmlAttributes.TryGetValue("readonly", out _readonlyOut))
+		{
+			_readonly = _readonlyOut.ToString();
+		}
+	}
+}
+<div id="select-content-@_idClient">
+    <select id="@_idClient" name="@_name" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" style="@_style" class="@_class"></select>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@_idClient").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+			dataSource: JSON.parse(String.raw`@Html.Raw((((IEnumerable<SelectListItem>)ViewData["SelectList"])).toStringJson())`),
+			template: function (e) {
+                return `<span class="${e.Disabled ? 'k-state-disabled' : ''}">
+                         ${e.Text}
+                       </span>`;
+			},
+            popup: {
+                appendTo: $("#select-content-@_idClient"),
+            }
+        });
+        
+        if ("@valSelect" != "") {
+            $("#@_idClient").data("kendoDropDownList").value(@valSelect);
+        }
+        if ("@_disable"== "disabled") {
+            $("#@_idClient").data("kendoDropDownList").enable(false);
+		}
+		if ("@_readonly" == "readonly") {
+			$("#@_idClient").data("kendoDropDownList").readonly();
+		}
+    });
+</script>

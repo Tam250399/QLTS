@@ -1,0 +1,41 @@
+﻿@using GS.Services.Security
+@using GS.Web.Framework.Menu
+@using Nop.Web.Framework.Menu
+@inject IQuyenService permissionService
+@inject IXmlSiteMap siteMap
+@{
+    //load sitemap
+    await siteMap.LoadFromAsync("~/sitemap.config");
+}
+<ul class="sidenav-inner py-1" data-widget="tree" style="padding: 0px !important;font-size:14px">
+    @{
+        //standard (default) items
+        var rootNode = siteMap.RootNode;
+       
+    }
+    @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
+    {
+        @await Html.PartialAsync("_MenuItem", item)
+    }
+</ul>
+<script>
+    $(document).ready(function () {
+        //load thong tin badge cho menu
+        //$.ajax({
+        //    cache: false,
+        //    type: "GET",
+        //    url: "/AppWork/GetMenuBadge",
+        //    complete: function (data) {
+        //        var _item = data.responseJSON;
+                
+        //        $(".BadgeContract").html(_item.BadgeContract);
+        //        $(".BadgeTask").html(_item.BadgeTask);
+        //        $(".BadgeCustomer").html(_item.BadgeCustomer);
+        //    },
+        //    error: function (xhr, ajaxOptions, thrownError) {
+                
+        //    },
+        //    traditional: true
+        //});
+    })
+</script>

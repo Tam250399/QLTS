@@ -1,0 +1,63 @@
+@model NguonGocTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Nguồn gốc tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucNguonGocTaiSan");
+}
+<form asp-controller="NguonGocTaiSan" asp-action="Edit" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin nguồn gốc tài sản
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            @*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>*@
+			<button class="btn btn-danger" type="button" onclick="GS_Delete('Bạn có chắc chắn muốn xóa nguồn gốc tài sản này không?',deleteNguonGocTaiSan,@Model.ID)" title="Xóa" style="float:right;margin-right: 5px;"><i class="fas fa-trash"> </i> Xóa</button>
+            @*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+                <i class="far fa-save"></i>
+                Lưu và tiếp tục sửa
+            </button>*@
+            <button type="submit" name="save" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+</form>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+
+
+<script>
+
+    function deleteNguonGocTaiSan(ID) {
+        $.ajax({
+            url: "/NguonGocTaiSan/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (data) {
+                if (data.Code == '00') {
+                    document.location.href = 'List',
+                    ShowSuccessMessage(data.Message);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+            },
+
+        });
+
+    }
+
+
+</script>

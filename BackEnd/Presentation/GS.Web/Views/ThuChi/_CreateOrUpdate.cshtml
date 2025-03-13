@@ -1,0 +1,235 @@
+﻿@model ThuChiModel
+@{
+    var IsDisable = !Model.Is_First;
+
+}
+
+<div id="ThuChiModalContent" class="content">
+    @*form thu*@
+    <div class="gs-form-group" style="border: 1px solid #84b2e0">
+        <input asp-for="ID" id="IdThuChiChiTiet" type="hidden" />
+        <input asp-for="LIST_XU_LY_ID" id="LIST_XU_LY_ID_CHI_TIET" type="hidden" />
+        <div style="display:none">
+            <nop-editor asp-for="NGAY_THU_FIRST" />
+        </div>
+
+        <input id="NGAY_HIEN_TAI" value="@DateTime.Now.toDateVNString()" type="hidden" />
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Số tiền phải thu:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_PHAI_THU" asp-dvt="đồng" asp-disabled="@IsDisable" />
+                <span asp-validation-for="SO_TIEN_PHAI_THU"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Số tiền đã thu:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_THU" asp-dvt="đồng" />
+                <span asp-validation-for="SO_TIEN_THU"></span>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Số tiền còn phải thu:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_CON_PHAI_THU" asp-dvt="đồng" asp-disabled="true" />
+                <span asp-validation-for="SO_TIEN_CON_PHAI_THU"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày thu:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_THU" />
+                <br />
+                <span asp-validation-for="NGAY_THU"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+    @*form chi*@
+<div class="gs-form-group" style="border: 1px solid #84b2e0">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Chi phí xử lý:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="CHI_PHI" asp-dvt="đồng" />
+            <span asp-validation-for="CHI_PHI"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left ">Số tiền nộp tài khoản tạm giữ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TG_SO_TIEN" asp-dvt="đồng" />
+            <span asp-validation-for="TG_SO_TIEN"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left ">Ngày nộp TKTG:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TG_NGAY_NOP" />
+            <br />
+            <span asp-validation-for="TG_NGAY_NOP"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left ">Số tiền phải nộp NSNN:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="SO_TIEN_NOP_NSNN" asp-dvt="đồng" asp-disabled="true"/>
+            <span asp-validation-for="SO_TIEN_NOP_NSNN"></span>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#SO_TIEN_PHAI_THU').on('change', onTienPhaiThuChange);
+        $('#SO_TIEN_THU').on('change', onTienThuDuocChange);
+        $('#SO_TIEN_THU').on('change', onTienNopNSNNChange);
+        $('#CHI_PHI').on('change', onChiPhiChange);
+        $('#NGAY_THU').on('change', CheckValidNgayThu);
+    });
+    function convertStringToDate(dateString) {
+
+        if (dateString) {
+            var temp = dateString.split('/');
+            var d = new Date(temp[1] + '/' + temp[0] + '/' + temp[2]);
+            return d;
+        }
+        return new Date('01/01/1752');
+    }
+    function onTienPhaiThuChange() {
+        var SoTienPhaiThu = $(this).val();
+        var SoTienThu = $('#SO_TIEN_THU').val();
+        var SoTienPhaiThuDec = parseInt(SoTienPhaiThu == '' ? "0" : SoTienPhaiThu);
+        var SoTienThuDec = parseInt(SoTienThu == '' ? "0" : SoTienThu);
+        if (SoTienPhaiThuDec < SoTienThuDec) {
+            showInvalidMessage('SO_TIEN_THU', "Số tiền đã thu phải <= số tiền phải thu!");
+            IsFullValid = false;
+        } else {
+            IsFullValid = true;
+            hideValmsg('SO_TIEN_THU');
+            var SoTienConPhaiThu = SoTienPhaiThuDec - SoTienThuDec;
+            $('#SO_TIEN_CON_PHAI_THU').data('kendoNumericTextBox').value(SoTienConPhaiThu);
+        }
+    }
+    function onTienThuDuocChange() {
+        var SoTienPhaiThu = $('#SO_TIEN_PHAI_THU').val();
+        var SoTienThu = $(this).val();
+        var SoTienPhaiThuDec = parseInt(SoTienPhaiThu == '' ? "0" : SoTienPhaiThu);
+        var SoTienThuDec = parseInt(SoTienThu == '' ? "0" : SoTienThu);
+        if (SoTienPhaiThuDec < SoTienThuDec) {
+            showInvalidMessage('SO_TIEN_THU', "Số tiền đã thu phải <= số tiền phải thu!");
+            IsFullValid = false;
+        } else {
+            IsFullValid = true;
+            hideValmsg('SO_TIEN_THU');
+            var SoTienConPhaiThu = SoTienPhaiThuDec - SoTienThuDec;
+            $('#SO_TIEN_CON_PHAI_THU').data('kendoNumericTextBox').value(SoTienConPhaiThu);
+        }
+    }
+    function onTienNopNSNNChange() {
+        var SoTienDaThu = $(this).val();
+        var ChiPhiXuLy = $('#CHI_PHI').val();
+        var SoTienDaThuDec = parseInt(SoTienDaThu == '' ? "0" : SoTienDaThu);
+        var ChiPhiXuLyDec = parseInt(ChiPhiXuLy == '' ? "0" : ChiPhiXuLy);
+        if (SoTienDaThuDec < ChiPhiXuLy) {
+            showInvalidMessage('CHI_PHI', "Chi phí xử lý phải <= Số tiền đã thu !");
+            IsFullValid = false;
+        } else {
+            IsFullValid = true;
+            hideValmsg('CHI_PHI');
+            var SoTienNopNSNN = SoTienDaThuDec - ChiPhiXuLyDec;
+            $('#SO_TIEN_NOP_NSNN').data('kendoNumericTextBox').value(SoTienNopNSNN);
+        }
+    }
+    function onChiPhiChange() {
+        var SoTienDaThu = $('#SO_TIEN_THU').val();
+        var ChiPhiXuLy = $(this).val();
+        var SoTienDaThuDec = parseInt(SoTienDaThu == '' ? "0" : SoTienDaThu);
+        var ChiPhiXuLyDec = parseInt(ChiPhiXuLy == '' ? "0" : ChiPhiXuLy);
+        if (SoTienDaThuDec < ChiPhiXuLy) {
+            showInvalidMessage('CHI_PHI', "Chi phí xử lý phải <= Số tiền đã thu !");
+            IsFullValid = false;
+        } else {
+            IsFullValid = true;
+            hideValmsg('CHI_PHI');
+            var SoTienNopNSNN = SoTienDaThuDec - ChiPhiXuLyDec;
+            $('#SO_TIEN_NOP_NSNN').data('kendoNumericTextBox').value(SoTienNopNSNN);
+        }
+    }
+
+    function CheckFullValid() {
+        IsFullValid = true;
+        if (CheckValidNgayThu() == false) {
+            IsFullValid = false;
+        }
+        if (CheckValidSoTien() == false) {
+            IsFullValid = false;
+        }
+    }
+
+    function CheckValidNgayThu() {
+        var isValidDate = true
+        let NgayThuFirst = convertStringToDate($('#NGAY_THU_FIRST').val());
+        let NgayThuString = $('#NGAY_THU').val();
+        let NgayThu = convertStringToDate(NgayThuString);
+
+        if (NgayThuString == "") {
+            showInvalidMessage('NGAY_THU', "Ngày thu không được bỏ trống");
+            return false;
+        }
+        if (!checkValidateFromDateToDate("#@(Html.IdFor(c=>c.NGAY_THU))", "#NGAY_HIEN_TAI", "@(Html.IdFor(c=>c.NGAY_THU))" , "Ngày thu phải nhỏ hơn ngày hiện tại")) {
+            showInvalidMessage('NGAY_THU', "Ngày thu phải nhỏ hơn ngày hiện tại");
+            isValidDate = false;
+        }
+
+        //check so với ngày thu đầu tiên
+        if (NgayThu < NgayThuFirst) {
+
+            showInvalidMessage('NGAY_THU', "Ngày thu không được nhỏ hơn ngày Thu ban đầu");
+            isValidDate = false;
+        }
+
+        if (isValidDate == true) {
+            hideValmsg('NGAY_THU');
+        }
+        return isValidDate;
+    }
+    function CheckValidSoTien() {
+        var checkTSK = true ;
+        var SO_TIEN_CON_PHAI_THU = $("#@(Html.IdFor(c=>c.SO_TIEN_CON_PHAI_THU))").val();
+        var SO_TIEN_PHAI_THU = $("#@(Html.IdFor(c=>c.SO_TIEN_PHAI_THU))" ).val();
+        var SO_TIEN_THU = $("#@(Html.IdFor(c=>c.SO_TIEN_THU))" ).val();
+        var NGAY_THU = $("#@(Html.IdFor(c=>c.NGAY_THU))" ).val();
+        var CHI_PHI = $("#@(Html.IdFor(c=>c.CHI_PHI))" ).val();
+        var TG_NGAY_NOP = $("#@(Html.IdFor(c=>c.TG_NGAY_NOP))").val();
+        //let NgayThuFirst = convertStringToDate($('#NGAY_THU_FIRST').val());
+        if (SO_TIEN_PHAI_THU == null || SO_TIEN_PHAI_THU == "" || SO_TIEN_PHAI_THU < 0 ) {
+            checkTSK = false;
+            showInvalidMessage("@(Html.IdFor(c=>c.SO_TIEN_PHAI_THU))" , "Số tiền phải thu không được để trống");
+        } else {
+            hideValmsg('SO_TIEN_PHAI_THU');
+        }
+        if (SO_TIEN_THU == null || SO_TIEN_THU == "" || SO_TIEN_THU < 0 ) {
+            checkTSK = false;
+            showInvalidMessage("@(Html.IdFor(c=>c.SO_TIEN_THU))" , "Số tiền đã thu không được để trống");
+        } else {
+            hideValmsg('SO_TIEN_THU');
+        }
+
+        @*if (CHI_PHI == null || CHI_PHI == "" || CHI_PHI < 0) {
+            if (true) {
+
+            }
+            checkTSK = false;
+            showInvalidMessage("@(Html.IdFor(c=>c.CHI_PHI))", "Chi phí xử lý không được để trống");
+        }
+        else {
+            hideValmsg('CHI_PHI');
+        }*@
+
+        if (!checkValidateFromDateToDate("#@(Html.IdFor(c=>c.TG_NGAY_NOP))", "#NGAY_HIEN_TAI", "@(Html.IdFor(c=>c.TG_NGAY_NOP))", "Ngày nộp phải nhỏ hơn ngày hiện tại")) {
+            checkTSK = false;
+        } else {
+            hideValmsg('TG_NGAY_NOP');
+        }
+        return checkTSK;
+
+    }
+</script>

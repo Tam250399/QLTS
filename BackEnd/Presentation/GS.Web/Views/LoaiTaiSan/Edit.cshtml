@@ -1,0 +1,104 @@
+@model LoaiTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Sửa nhóm tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucLoaiTaiSan");
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa thông tin nhóm tài sản
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        <a href="~/LoaiTaiSan/List" class="btn btn-primary" role="button" style=" float:right;margin-right:5px; width:63px;">Đóng</a>
+
+        @*<span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>*@
+        
+        
+		<button class="btn btn-danger" type="button" onclick="GS_Delete('Bạn có chắc chắn muốn xóa loại tài sản này không?',deleteLoaiTaiSan,@Model.ID)" title="Xóa" style="float:right;margin-right: 5px;"><i class="fas fa-trash"></i> Xóa</button>
+        
+        
+        <button name="save" id="btnSave" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+            if (@Model.LOAI_HINH_TAI_SAN_ID == @((int)enumLOAI_HINH_TAI_SAN.OTO)) {
+                $("#oto_gioi_han_cho_ngoi").removeClass("d-none");
+            }
+            $("#btnSave").click(function () {
+                var _data = {
+                    ID: $('#@Html.IdFor(c => c.ID)').val(),
+                    MA: $('#@Html.IdFor(c => c.MA)').val(),
+                    TEN: $('#@Html.IdFor(c => c.TEN)').val(),
+                    PARENT_ID: $('#@Html.IdFor(c => c.PARENT_ID)').val(),
+                    MO_TA: $('#@Html.IdFor(c => c.MO_TA)').val(),
+                    LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_HINH_TAI_SAN_ID)').val(),
+                    CHE_DO_HAO_MON_ID: $('#@Html.IdFor(c => c.CHE_DO_HAO_MON_ID)').val(),
+                    HM_THOI_HAN_SU_DUNG: $('#@Html.IdFor(c => c.HM_THOI_HAN_SU_DUNG)').val(),
+                    HM_TY_LE: $('#@Html.IdFor(c => c.HM_TY_LE)').val(),
+                    KH_THOI_HAN_SU_DUNG: $('#@Html.IdFor(c => c.KH_THOI_HAN_SU_DUNG)').val(),
+                    KH_TY_LE: $('#@Html.IdFor(c => c.KH_TY_LE)').val(),
+                    DON_VI_TINH: $('#@Html.IdFor(c => c.DON_VI_TINH)').val(),
+                    OTO_CHO_NGOI_TU: $('#@Html.IdFor(c => c.OTO_CHO_NGOI_TU)').val(),
+                    OTO_CHO_NGOI_DEN: $('#@Html.IdFor(c => c.OTO_CHO_NGOI_DEN)').val(),
+					OTO_LOAI_XE_ID: $('#@Html.IdFor(c => c.OTO_LOAI_XE_ID)').val(),
+                };
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/LoaiTaiSan/Edit",
+                data: _data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        location.href = '/LoaiTaiSan/List';
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                   ShowErrorMessage(data.Message);
+                     alert('error');
+                }
+            });
+            });
+        });
+</script>
+@*<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />*@
+<script>
+
+    function deleteLoaiTaiSan(ID) {
+        $.ajax({
+            url: "/LoaiTaiSan/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (data) {
+                if (data.Code == '00') {
+                    document.location.href = 'List',
+                        ShowSuccessMessage(data.Message);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+            },
+
+        });
+
+    }
+
+
+</script>
+
+

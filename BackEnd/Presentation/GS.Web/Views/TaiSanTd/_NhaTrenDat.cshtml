@@ -1,0 +1,96 @@
+﻿@model TaiSanTdModel
+
+    <div class="gs-form-group">
+        <h6>Thông tin thêm tài sản nhà trên đất</h6>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Tên nhà:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN" id="TEN_@Model.GUID" />
+                <span data-valmsg-for="TEN_@Model.GUID"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Cấp nhà:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="LOAI_TAI_SAN_ID" id="LOAI_TAI_SAN_ID_@Model.GUID" asp-items="Model.DDLLoaiTaiSan" asp-filter="true" />
+                <span data-valmsg-for="LOAI_TAI_SAN_ID_@Model.GUID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Diện tích xây dựng:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_TINH" id="GIA_TRI_TINH_@Model.GUID" asp-dvt="m2"/>
+                <span data-valmsg-for="GIA_TRI_TINH_@Model.GUID"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            @*<label class="col-form-label col-sm-2 text-sm-left text-required">Năm đưa vào sử dụng:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_SU_DUNG" asp-disabled="@Model.is_detail" />
+            <span asp-validation-for="NGAY_SU_DUNG"></span>
+        </div>*@
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Năm đưa vào sử dụng:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NamSuDung" asp-disabled="@Model.is_detail" asp-amount="true" asp-min-number="0" asp-max-number="@DateTime.Now.Year"/>
+                <span data-valmsg-for="NamSuDung_@Model.GUID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Giá trị tịch thu/ xác lập:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" id="GIA_TRI_XAC_LAP_@Model.GUID" asp-dvt="đồng"/>
+                <span data-valmsg-for="GIA_TRI_XAC_LAP_@Model.GUID"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-2 text-right">
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnSaveNhaTrenDat">
+                    <i class="fa fa-save"></i>
+                    Lưu nhà
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger" id="btnCloseNhaTrenDat">
+                    <i class="fa fa-close"></i>
+                    Đóng
+                </a>
+            </div>
+        </div>
+    </div>
+<script>
+    $("#btnSaveNhaTrenDat").click(function () {
+        var _data = {
+            GUID: "@Model.GUID.ToString()",
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            LOAI_HINH_TAI_SAN_ID: @Model.LOAI_HINH_TAI_SAN_ID,
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)_@Model.GUID").val(),
+            LOAI_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_TAI_SAN_ID)_@Model.GUID").val(),
+            GIA_TRI_TINH: $("#@Html.IdFor(c=>c.GIA_TRI_TINH)_@Model.GUID").val(),
+             @*NGAY_SU_DUNG: $("#@Html.IdFor(c=>c.NGAY_SU_DUNG)").val(),*@
+            NamSuDung: $("#@Html.IdFor(c=>c.NamSuDung)").val(),
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)_@Model.GUID").val(),
+            SO_LUONG: @Model.SO_LUONG,
+            DON_VI_TINH: "@Model.DON_VI_TINH",
+            TAI_SAN_DAT_ID: @Model.TAI_SAN_DAT_ID,
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/TaiSanTd/_NhaTrenDat",
+            success: function (result) {
+                if (CheckValidMessageReturnWithParam(result, "_@Model.GUID.ToString()")) {
+                    if (result.ObjectInfo > 0) {
+                        listNhaNhapId.push(result.ObjectInfo);
+                    }
+                    LoadListNhaTrenDat();
+                    $("#tbNha").show();
+                    $("#View_addNha").hide();
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+        })
+    })
+    $("#btnCloseNhaTrenDat").click(function () {
+        $("#View_addNha").hide();
+    });
+</script>
+

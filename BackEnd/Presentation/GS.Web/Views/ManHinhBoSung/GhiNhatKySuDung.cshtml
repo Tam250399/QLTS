@@ -1,0 +1,196 @@
+﻿@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model NhatKySearchModel
+@{
+	//page title
+	ViewBag.Title = "Ghi nhật ký sử dụng";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("GhiNhatKySuDung");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h3 class="pull-left">
+		Ghi nhật ký sử dụng
+	</h3>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+
+	<div class=" row">
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Từ khóa:</label>
+				<div class="col-sm-8">
+
+					<nop-editor asp-for="KeySearch" placeholder="Tên đăng nhập hoặc địa chỉ IP...." />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Cấp độ:</label>
+				<div class="col-sm-8">
+					<nop-select asp-for="CAP_DO" asp-items="Model.CAPDOlist" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class=" row">
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Từ ngày:</label>
+				<div class="col-sm-9">
+					<nop-editor asp-for="Fromdate" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Đến Ngày:</label>
+				<div class="col-sm-9">
+					<nop-editor asp-for="Todate" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-10">
+
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="NhatKy-grid"></div>
+					<script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    Username: $('#@Html.IdFor(model => model.Username)').val(),
+                                    Fromdate: $('#@Html.IdFor(model=>model.Fromdate)').val(),
+                                    Todate: $('#@Html.IdFor(model=>model.Todate)').val(),
+                                    CAP_DO: $('#@Html.IdFor(model=>model.CAP_DO)').val(),
+
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#NhatKy-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.Username)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.Fromdate)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.Todate)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.CAP_DO)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#NhatKy-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "NhatKy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: false,
+                                    serverSorting: false
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "IP_ADDRESS",
+                                        title: "Địa chỉ IP",
+                                        width: 120,
+
+                                    }, {
+                                        field: "TEN_DANG_NHAP",
+                                        title: "Tên đăng nhập",
+                                        width: 120,
+                                    },
+                                    {
+                                        field: "MO_TA",
+                                        title: "Mô tả",
+                                        encoded: false,
+                                        template:'#=MO_TA.length<1000?MO_TA:MO_TA.substring(0,1000)+"..."#'
+                                    },
+                                    {
+                                        field: "NGAY_TAO",
+                                        title: "Ngày tạo",
+                                        type: "Date",
+                                        format: "{0:dd/MM/yyyy}",
+                                        width: 150,
+                                    },
+                                    {
+                                    field: "GUID",
+                                    title: "Chi tiết",
+                                    width: 50,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="/NhatKy/Detail?ID=#=ID#"><i class="fas fa-align-justify d-block"></i>Xem</a>'
+                                    }
+                                ]
+                            });
+                        });
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

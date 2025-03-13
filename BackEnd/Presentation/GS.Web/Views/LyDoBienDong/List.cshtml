@@ -1,0 +1,181 @@
+@model LyDoBienDongSearchModel
+@{
+	//page title
+	ViewBag.Title = "Lý do tăng, giảm";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhMucLyDoBienDong");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+	@*<div class="pull-right" style="margin-bottom:5px;">
+		<a asp-action="Create" class="btn btn-success">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã" />
+        </div>
+        <div class="col-md-2" style=" padding-left: 0px; padding-top: 5px;">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Loại lý do:</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="LOAI_LY_DO_ID" asp-items="Model.LoaiLyDoTangGiamAvaliable" />
+        </div>
+    </div>
+    <div class=" form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Loại tài sản:</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvaliable" />
+        </div>
+        <div class="col-sm-4"></div>
+        @*<label class="col-form-label col-sm-2 text-sm-right">Kiểu dữ liệu:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="KieuDuLieuId" asp-items="Model.KieuDuLieuAvailable" />
+            </div>*@
+
+    </div>
+    @*<div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Loại tài sản:</label>
+        <div class="col-sm-8">
+            <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                @foreach (var loaiHinhTaiSan in Model.LoaiHinhTaiSanAvaliable)
+                {
+                    if (loaiHinhTaiSan.Value.ToNumberInt32() > 0)
+                    {
+                        <label class="custom-control custom-checkbox col-md-2" style="margin-left:0px;">
+                            @Html.CheckBoxFor(c => c.loaihinhtaisancheck, new { @class = "custom-control-input ", @id = loaiHinhTaiSan.Value })
+                            <span class="custom-control-label">@(loaiHinhTaiSan.Text)</span>
+                        </label>
+                    }
+                }
+            </div>
+        </div>
+    </div>*@
+    <div class="form-group row">
+        <div class="col-md-5"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách Lý do tăng, giảm</span>
+        </div>
+    </div>
+    <div class="col-sm-2 text-right">
+        <a asp-action="Create" class="btn btn-sm btn-outline-primary" style="margin-right:7px;">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="items-grid"></div>
+                        <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                //var _arrayloaihinhtaisan = [];
+                                //$("input[name='loaihinhtaisancheck']:checked").each(function () {
+                                //    var _loaitaisanId = $(this).attr("id");
+                                //    _arrayloaihinhtaisan.push(_loaitaisanId);
+                                //});
+                                //console.log(_arrayloaihinhtaisan);
+                                    var _data = {
+                                        KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                        LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)').val(),
+                                        LOAI_LY_DO_ID: $('#@Html.IdFor(model => model.LOAI_LY_DO_ID)').val(),
+                                        //strLoaiHinhTSIds: _arrayloaihinhtaisan.toString()
+                                };
+                                //console.log(_data)
+                                    addAntiForgeryToken(_data);
+                                    return _data;
+                                };
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "LyDoBienDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {field: 'MA',title: 'Mã'},
+                                    {field: 'TEN',title: 'Tên'},
+                                    {field: 'TenLoaiHinhTaiSan',title: 'Nhóm tài sản'},
+                                    {field: 'TenLyDoBienDong',title: 'Loại lý do'},
+                                    //{field: 'TRUONG_SAP_XEP',title: 'Trường sắp xếp'},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'}
+                                ]
+                            });
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

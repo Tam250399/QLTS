@@ -1,0 +1,235 @@
+@model XuLyModel
+@using GS.Core.Domain.SHTD;
+@{
+    //page title
+    ViewBag.Title = "Thêm mới phương án xử lý";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("PhuongAnXuLyTaiSanToanDan");
+}
+@*@if (Model.LOAI_XU_LY_ID == (int)enumLoaiXuLy.PhuongAn)
+    {
+        //page title
+        ViewBag.Title = "Thêm mới phương án xử lý";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("PhuongAnXuLyTaiSanToanDan");
+    }
+    @if (Model.LOAI_XU_LY_ID == (int)enumLoaiXuLy.KetQua)
+    {
+        //page title
+        ViewBag.Title = "Thêm mới kết quả xử lý";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("KetQuaXuLyTaiSanToanDan");
+    }*@
+
+<div class="card mb-4">
+    <h6 class="card-header">
+        Xử lý tài sản được xác lập quyền SHTD
+
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/XuLy/ListPhuongAn">Quay lại danh sách</a>
+        </small>
+        <a class="btn btn-default btnClose btn-sm" onclick="CanhBao()" style="float:right;margin-right:5px;" href="/XuLy/ListPhuongAn">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </a>
+
+        @*<small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="/XuLy/ListKetQua">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-default btnClose btn-sm" style="float:right;margin-right:5px;" href="/XuLy/ListKetQua">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>*@
+
+        <button name="save" class="btn btn-sm btn-outline-primary btnSave" style="float:right;margin-right:5px;">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+        <div id="list-view">
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-sm btn-default btnClose" onclick="CanhBao()" style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+        <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary btnSave" style="float:right; margin-right: 5px;">
+            <i class="fas fa-save"></i>
+            Lưu
+        </a>
+    </div>
+</div>
+<script>
+    $(".btnSave").click(function () {
+        Save();
+    })
+</script>
+<script>
+
+     $(document).ready(function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/TaiSanTdXuLy/ListPhuongAn?XuLyGuid=@Model.GUID",
+                    success: function (data) {
+                        $("#list-view").html(data);
+                    }
+                })
+
+        })
+        function Save() {
+            var tstdxl = {
+                is_vali: false
+            };
+            var _data = {
+                QUYET_DINH_NGAY: $("#@Html.IdFor(c => c.QUYET_DINH_NGAY)_@Model.GUID").val(),
+                QUYET_DINH_SO: $("#@Html.IdFor(c => c.QUYET_DINH_SO)_@Model.GUID").val(),
+                GUID: $("#@Html.IdFor(c => c.GUID)_@Model.GUID").val(),
+                ID: $("#@Html.IdFor(c => c.ID)_@Model.GUID").val(),
+                @*LOAI_XU_LY_ID: $("#@Html.IdFor(c => c.LOAI_XU_LY_ID)_@Model.GUID").val(),*@
+                CO_QUAN_BAN_HANH_ID: $("#@Html.IdFor(c => c.CO_QUAN_BAN_HANH_ID)_@Model.GUID").val(),
+                NGUOI_QUYET_DINH: $("#@Html.IdFor(c => c.NGUOI_QUYET_DINH)_@Model.GUID").val(),
+                GHI_CHU: $("#@Html.IdFor(c => c.GHI_CHU)_@Model.GUID").val(),
+                listQuyetDinh: $("#@Html.IdFor(c => c.listQuyetDinh)_@Model.GUID").val(),
+                taisanxuly: tstdxl,
+                listTaiSanXuLyModel: [ tstdxl ]
+            }
+            $.ajax({
+                type: "POST",
+                data: _data,
+                url: "/XuLy/Edit",
+                success: function (data) {
+                    if (data.Code == "00") {
+                        ShowSuccessMessage(data.Message);
+                        location.href = "/XuLy/ListPhuongAn";
+                    }
+                    else {
+                        
+                        ShowErrorMessage(data.Message);
+                        CheckValidMessageReturnWithParam(data, "_@Model.GUID.ToString()");
+                        $("#btnSearch").click();
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(ajaxOptions + ": " + thrownError);
+                }
+            })
+    }
+    function CanhBao() {
+        bootbox.confirm({
+            message: "Phương án xử lý chưa được lưu, bạn có muốn chắc chắn thoát không ?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    window.location.href = "/XuLy/ListPhuongAn";
+                }
+                return;
+            }
+        })
+    }
+</script>
+@*@if (Model.LOAI_XU_LY_ID == (int)enumLoaiXuLy.PhuongAn)
+    {
+        <script>
+            function Save() {
+                var tstdxl = {
+                    is_vali: false
+                };
+                var _data = {
+                    QUYET_DINH_NGAY: $("#@Html.IdFor(c => c.QUYET_DINH_NGAY)_@Model.GUID").val(),
+                    QUYET_DINH_SO: $("#@Html.IdFor(c => c.QUYET_DINH_SO)_@Model.GUID").val(),
+                    GUID: $("#@Html.IdFor(c => c.GUID)_@Model.GUID").val(),
+                    ID: $("#@Html.IdFor(c => c.ID)_@Model.GUID").val(),
+                    LOAI_XU_LY_ID: $("#@Html.IdFor(c => c.LOAI_XU_LY_ID)_@Model.GUID").val(),
+                    CO_QUAN_BAN_HANH_ID: $("#@Html.IdFor(c => c.CO_QUAN_BAN_HANH_ID)_@Model.GUID").val(),
+                    NGUOI_QUYET_DINH: $("#@Html.IdFor(c => c.NGUOI_QUYET_DINH)_@Model.GUID").val(),
+                    GHI_CHU: $("#@Html.IdFor(c => c.GHI_CHU)_@Model.GUID").val(),
+                    listQuyetDinh: $("#@Html.IdFor(c => c.listQuyetDinh)_@Model.GUID").val(),
+                    taisanxuly: tstdxl,
+                    listTaiSanXuLyModel: [ tstdxl ]
+                }
+                $.ajax({
+                    type: "POST",
+                    data: _data,
+                    url: "/XuLy/Edit",
+                    success: function (data) {
+                        if (data.Code == "00") {
+                            ShowSuccessMessage(data.Message);
+                            location.href = "/XuLy/ListPhuongAn";
+                        }
+                        else {
+                            
+                            ShowErrorMessage(data.Message);
+                            CheckValidMessageReturnWithParam(data, "_@Model.GUID.ToString()");
+                            $("#btnSearch").click();
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log(ajaxOptions + ": " + thrownError);
+                    }
+                })
+            }
+        </script>
+    }
+    else
+    {
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/XuLy/List",
+                    success: function (data) {
+                        $("#list-view").html(data);
+                    }
+                })
+            });
+            function Save() {
+               var tstdxl = {
+                    is_vali: false
+                };
+                var _data = {
+                    QUYET_DINH_NGAY: $("#@Html.IdFor(c => c.QUYET_DINH_NGAY)_@Model.GUID").val(),
+                    QUYET_DINH_SO: $("#@Html.IdFor(c => c.QUYET_DINH_SO)_@Model.GUID").val(),
+                    GUID: $("#@Html.IdFor(c => c.GUID)_@Model.GUID").val(),
+                    ID: $("#@Html.IdFor(c => c.ID)_@Model.GUID").val(),
+                    LOAI_XU_LY_ID: $("#@Html.IdFor(c => c.LOAI_XU_LY_ID)_@Model.GUID").val(),
+                    CO_QUAN_BAN_HANH_ID: $("#@Html.IdFor(c => c.CO_QUAN_BAN_HANH_ID)_@Model.GUID").val(),
+                    NGUOI_QUYET_DINH: $("#@Html.IdFor(c => c.NGUOI_QUYET_DINH)_@Model.GUID").val(),
+                    GHI_CHU: $("#@Html.IdFor(c => c.GHI_CHU)_@Model.GUID").val(),
+                    PhuongAnId: $("#@Html.IdFor(c => c.PhuongAnId)_@Model.GUID").val(),
+                    taisanxuly: tstdxl,
+                    listTaiSanXuLyModel: [ tstdxl ]
+                }
+                $.ajax({
+                    type: "POST",
+                    data: _data,
+                    url: "/XuLy/Create",
+                    success: function (data) {
+                        if (CheckValidMessageReturn(data)) {
+                            ShowSuccessMessage(data.Message);
+                            location.href = "/TaiSanTdXuLy/ListKetQua?XuLyId=" + data.ObjectInfo;
+                        }
+                        else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log(ajaxOptions + ": " + thrownError);
+                    }
+                })
+            }
+        </script>
+    }*@
+

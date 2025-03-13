@@ -1,0 +1,199 @@
+@model DBTaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Nhật ký đồng bộ tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NhatKyNhanTaiSan");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fa fa-plus-square"></i>
+                Thêm mới
+            </a>
+        </div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Mã tài sản:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Mã đồng bộ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaTaiSanDB" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Nhóm tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiHinhTaiSan" asp-items="@Model.ddlLoaiHinhTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Loại tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiTaiSan" asp-items="@Model.ddlLoaiTaiSan" asp-filter="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Trạng thái:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="TrangThai" asp-items="@Model.ddlTrangThai" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Ngày đồng bộ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayDB" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right"></label>
+        <div class="col-sm-4">
+            <div class="custom-content-checkbox">
+                <div class="custom-controls-stacked" style="margin-right: 5px;">
+                    <label class="custom-control custom-radio">
+                        @Html.RadioButtonFor(Model => Model.IS_TaiSanToanDan, 0, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"> Tài sản nhà nước</span>
+                    </label>
+                </div>
+                <div class="custom-controls-stacked" style="margin-right: 5px;">
+                    <label class="custom-control custom-radio">
+                        @Html.RadioButtonFor(Model => Model.IS_TaiSanToanDan, 1, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"> Tài sản toàn dân</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    MaTaiSan:$('#MaTaiSan').val(),
+                                    MaTaiSanDB: $('#MaTaiSanDB').val(),
+                                    LoaiHinhTaiSan: $('#LoaiHinhTaiSan').val(),
+                                    LoaiTaiSan: $('#LoaiTaiSan').val(),
+                                    TrangThai: $('#TrangThai').val(),
+                                    NgayDB: $('#NgayDB').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DBTaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+								{
+                                        field: 'QLDKTS_MA',
+                                        title: 'Mã tài sản'
+								},
+								{
+                                    field: 'DB_MA',
+                                    title: 'Mã QLDLQGTSC'
+								},
+								{
+                                    field: 'LOAI_HINH_TAI_SAN_TEN',
+                                    title: 'Nhóm tài sản'
+								},
+								{
+                                    field: 'LOAI_TAI_SAN_TEN',
+                                    title: 'Loại tài sản'
+								},
+								{
+                                    field: 'NGAY_DONG_BO',
+                                    title: 'Ngày đồng bộ',
+                                    type: "Date",
+                                    format: "{0:dd/MM/yyyy}"
+								},
+								{
+                                    field: 'TAI_KHOAN_DONG_BO_ID',
+                                    title: 'Tài khoản đồng bộ'
+								},
+								{
+                                    field: 'TRANG_THAI_TEN',
+                                    title: 'Trạng thái'
+								},
+                                {
+                                    field: "ID",
+                                    title: "Xem",
+                                    width: 75,
+                                    headerAttributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-sm btn-outline-secondary" style="margin-left:30px;"  href="javascript:OpenActivityDetailModal(#=ID#)"<i class="fas fa-eye d-block"></i>Xem</a>'
+                                }
+                                ]
+                            });
+                        });
+                        function OpenActivityDetailModal(id)
+                            {
+                              var _url = "@(Url.Action("_Detail", "DBTaiSan"))?ID=" + id ;
+                              OpenModalManual("Chi tiết hoạt động", _url, 1028, 600);
+                            }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

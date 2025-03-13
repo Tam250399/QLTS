@@ -1,0 +1,128 @@
+﻿@model object
+<style>
+    .k-input::selection {
+        background-color: #ff6a00;
+        color: #000;
+       
+    }
+    
+    .k-dropdown-wrap {
+        background-color: #fff !important;
+        background-image: none !important;
+    }
+    span.k-list-filter {
+        padding: 1.5px 8px 8px 8px !important;
+    }
+</style>
+@{
+	string valSelect =Model != null ? Model.ToString() : "";
+	decimal out_val = 0;
+	if (Decimal.TryParse(valSelect,out out_val))
+	{
+        valSelect = Math.Truncate(out_val).ToString();
+	}
+	var _idClient = Html.IdForModel();
+	var _name = Html.NameForModel();
+	var _class = "form-control";
+	var _disable = "";
+	var htmlAttributes = new Dictionary<string, object>();
+	if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+	{
+		htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+		object _idclientOut;
+		if (htmlAttributes.TryGetValue("id", out _idclientOut))
+		{
+			_idClient = _idclientOut.ToString();
+		}
+		object _classOut;
+		if (htmlAttributes.TryGetValue("class", out _classOut))
+		{
+			_class += " " + _classOut.ToString();
+		}
+		object _disableOut;
+		if (htmlAttributes.TryGetValue("disabled", out _disableOut))
+		{
+			_disable = _disableOut.ToString();
+		}
+	}
+}
+@*<input id="@_idClient" name="@Html.NameForModel()" class="form-control" />*@
+<div id="select-content-@_idClient">
+    <select  id="@_idClient"  name="@_name" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" class="@_class"></select>
+</div>
+<script>
+    var PopUpID = "";
+    $(".modal").each(function (index) {
+        if ($(this).data('bs.modal') && $(this).data('bs.modal')._isShown) {
+            PopUpID = $(this).attr("id");
+            return;
+        }
+    });
+    @*function formatValue(value) {
+        console.log($("#@_idClient").data("kendoDropDownList"));
+        var text = $("#@_idClient").data("kendoDropDownList")._prev;
+        if (text != undefined && text != "") {
+            var textMatcher = new RegExp(text, "ig");
+            var rs = value.replace(textMatcher, function (match) {
+                return "<u>" + match + "</u>";
+            });
+            console.log(rs);
+            return rs;
+        } else {
+            return value;
+        }
+    }*@
+    
+    $(document).ready(function () {
+        function SetPopup() {
+                if (PopUpID != "") {
+                    return { appendTo: $("#" + PopUpID), origin: "top left" }
+                } else {
+                    return { origin: "top left" }
+                }           
+        }
+        $("#@_idClient").kendoDropDownList({
+            filter: "contains",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            // template:"#=formatValue(data.Text)#",
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+            template: function (e) {
+                return `<span class="${e.Disabled ? 'k-state-disabled' : ''}">
+                         ${e.Text}
+                       </span>`;
+            },
+            dataSource: JSON.parse(String.raw`@Html.Raw((((IEnumerable<SelectListItem>)ViewData["SelectList"])).toStringJson())`),
+            popup: SetPopup()
+        }).data("kendoDropDownList");
+        if ("@valSelect" != "" && "@valSelect" != "0") {
+            $("#@_idClient").data("kendoDropDownList").value(@valSelect);
+        }
+        if ("@_disable" == "disabled") {
+            $("#@_idClient").data("kendoDropDownList").enable(false);
+        }
+    });
+    @*$(document).ready(function () {
+        $("#@Html.IdForModel()").kendoDropDownList({
+            filter: "contains",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@ViewData["url"]",
+                        type: "GET",
+                        dataType: "json",
+                    }
+                }
+            }
+
+        }).data("kendoDropDownList");
+    });*@
+          //optionLabel: "Tất cả",
+
+</script>

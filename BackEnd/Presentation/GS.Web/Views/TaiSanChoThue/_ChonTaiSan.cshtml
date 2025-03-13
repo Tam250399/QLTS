@@ -1,0 +1,178 @@
+﻿@model TaiSanSearchModel
+
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4">
+
+	<div class="form-group row">
+		<label class="col-form-label col-md-2">Từ khóa</label>
+		<div class="col-md-10">
+			<nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." id="chon-tai-san-keysearch" />
+		</div>
+	</div>
+	<div class=" form-group row">
+		<label class="col-form-label col-md-2">Loại tài sản</label>
+		<div class="col-md-4">
+			<app-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvailable" asp-filter="true" id="chon-tai-san-loai-hinh" />
+		</div>
+		@* Search trạng thái không sử dụng trong trường hợp này, chỉ lấy tài sản đã duyệt *@
+		<label class="col-form-label col-md-2">Trạng thái</label>
+		<div class="col-md-4">
+			<nop-select asp-for="TRANG_THAI_ID" asp-items="Model.Trangthailist" id="chon-tai-san-trang-thai" />
+		</div>
+	</div>
+	@*<div class="form-group row">
+		<label class="col-form-label col-md-2">Từ ngày</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="Fromdate" id="chon-tai-san-fromdate" /><br />
+			<span asp-validation-for="Fromdate"></span>
+		</div>
+		<label class="col-form-label col-md-2 ">Đến ngày</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="Todate" id="chon-tai-san-todate" /><br />
+			<span asp-validation-for="Todate"></span>
+		</div>
+	</div>*@
+	<div class="form-group row">
+		<div class="col-sm-6"></div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnsearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body" style="max-height:400px;">
+					<div id="list-congcu-grid" style="max-height:400px;"></div>
+					<script>
+					var recordChonTS = 0;
+                    $(document).ready(function () {
+                        function SearchData() {
+                            var _data = {
+										KeySearch: $('#chon-tai-san-keysearch').val(),
+										TRANG_THAI_ID: $('#chon-tai-san-trang-thai').val(),
+										//DON_VI_BO_PHAN_ID: $('#chon-tai-san-bo-phan').val(),
+										LOAI_HINH_TAI_SAN_ID: $('#chon-tai-san-loai-hinh').val(),
+										Fromdate: $('#chon-tai-san-fromdate').val(),
+										Todate: $('#chon-tai-san-todate').val(),
+										donviId: $('#@Html.IdFor(c => c.donviId)').val(),
+									};
+                            addAntiForgeryToken(_data);
+                            return _data;
+                        }
+                        $("#btnsearch").click(function () {
+                            var grid = $('#list-congcu-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            return false;
+                        });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                            if (event.keyCode === 13) {
+                                $("#btnsearch").click();
+                                return false;
+                            }
+                        });
+						$("#list-congcu-grid").kendoGrid({
+							dataSource: {
+								type: "json",
+								transport: {
+									read: {
+										url: "@Html.Raw(Url.Action("_ChonTaiSan", "TaiSanChoThue"))",
+										type: "POST",
+										dataType: "json",
+										data: SearchData
+									}
+								},
+								schema: {
+									data: "Data",
+									total: "Total",
+									errors: "Errors"
+								},
+								error: function (e) {
+									display_kendoui_grid_error(e);
+									// Cancel the changes
+									this.cancelChanges();
+								},
+								pageSize: @(Model.PageSize),
+								serverPaging: true,
+								serverFiltering: true,
+								serverSorting: true
+							},
+							pageable: {
+								refresh: true,
+								pageSizes: [@(Model.AvailablePageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
+							},
+							editable: {
+								confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+								mode: "inline"
+							},
+							height: 350,
+							scrollable: true,
+							dataBinding: function () {
+								recordChonTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+							},
+							scrollable: true,
+							height: 350,
+							columns: [
+								{
+									title: "STT",
+									template: "#= ++recordChonTS#",
+									width: 55,
+									headerAttributes: { style: "text-align:center" },
+									attributes: { style: "text-align:center" },
+								},
+								{
+										field: "MA",
+										title: "Mã tài sản",
+										headerAttributes: { style: "text-align:center" },
+										//attributes: { style: "white-space: nowrap" },
+										template: function (dataItem) {
+											return "<a class='link_href' href='TaiSanChoThue/Create?guid=" + dataItem.GUID +"'>" + dataItem.MA + "</a>";
+										}
+									},
+                                {
+										field: "TEN",
+										title: "Tên TS",
+										headerAttributes: { style: "text-align:center" },
+									template: function (dataItem) {
+										return "<a class='link_href' href='TaiSanChoThue/Create?guid=" + dataItem.GUID +"'>" + dataItem.TEN + "</a>";
+										}
+									},
+								{ field: "TenLoaiTaiSan", title: "Loại Tài sản", headerAttributes: { style: "text-align:center" } },
+								{
+									field: "strNguyenGiaVN",
+									title: "Nguyên giá",
+									headerAttributes: { style: "text-align:center" },
+									attributes: { style: "text-align: right" }
+								},
+								{
+									field: "strHM_GIA_TRI_CON_LAI",
+									title: "GTCL",
+									headerAttributes: { style: "text-align:center" },
+									attributes: { style: "text-align: right" }
+								},
+								{
+									field: "NGAY_SU_DUNG", title: "Ngày SD",
+									type: "Date", format: "{0:dd/MM/yyyy}",
+									headerAttributes: { style: "text-align:center" },
+									attributes: { class: "text-center" },
+								},
+								{ field: "TenBoPhanSuDung", title: "Bộ phận" },
+								{
+									field: "ID",
+									title: "Chọn",
+									width: 150,
+									headerAttributes: { style: "text-align:center" },
+									attributes: { style: "text-align:center" },
+									template: '<a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Create","TaiSanChoThue")?guid=#=GUID#"><i class="fas fa-pencil-alt d-block"></i>Chọn</a>'
+								}
+							],
+						});
+                    });
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

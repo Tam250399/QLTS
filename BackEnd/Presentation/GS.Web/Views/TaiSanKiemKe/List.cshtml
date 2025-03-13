@@ -1,0 +1,221 @@
+@model TaiSanKiemKeSearchModel
+@{
+    //page title
+    ViewBag.Title = "Kiểm kê tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KiemKeTaiSan");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày kiểm kê từ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayKiemKeTu" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày kiểm kê đến:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayKiemKeDen" />
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i>Danh sách biên bản kiểm kê
+        </div>
+    </div>
+    <div class="col-sm-2 text-right">
+        <a asp-action="Create" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    NgayKiemKeDen: $('#@Html.IdFor(model => model.NgayKiemKeDen)').val(),
+                                    NgayKiemKeTu: $('#@Html.IdFor(model => model.NgayKiemKeTu)').val(),
+                                    Page: $("#items-grid").data("kendoGrid").dataSource.page(),
+                                    PageSize: $("#items-grid").data("kendoGrid").dataSource.pageSize(), 
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                record = 0;
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanKiemKe"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page:@(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                 dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                scrollable: false,
+                                columns: [
+                                    {
+										title: "STT",
+										template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'SO_BIEN_BAN',
+										title: 'Số biên bản',
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: 'NgayKiemKeText',
+										title: 'Ngày kiểm kê',
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'TenDonVi',
+										title: 'Đơn vị',
+										headerAttributes: { style: "text-align:center" },
+									},
+									{
+										field: 'DonViBoPhanText',
+										title: 'Bộ phận sử dụng',
+										headerAttributes: { style: "text-align:center" },
+									},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#ThaoTacTemplate").html())
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="ThaoTacTemplate" type="text/x-kendo-template">
+	<a class="btn icon-btn btn-sm btn-outline-info" title="In biên bản kiểm kê tài sản" data-toggle="modal" data-target="\\#globalModalIframe" data-title="In biên bản kiểm kê tài sản" data-width="1000" href="javascript: void(0); return;" data-src="/Report/CDKT_BienBanKiemKe?KiemKeId=#:ID#">In</a>&nbsp;
+    @*<a class="btn icon-btn btn-sm btn-outline-info" onclick="PrintKK(#=ID#)"><span class="ion ion-md-print"></span></a>&nbsp;*@
+    <a class="btn icon-btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#">Sửa</a>&nbsp;
+    <a class="btn icon-btn btn-sm btn-outline-danger" onclick="XoaKKTS(#=ID#)">Xóa</a>
+</script>
+<script>
+    function XoaKKTS(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa biên bản kiểm kê này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        id: ID
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/TaiSanKiemKe/DeleteForList",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                ShowSuccessMessage(data.Message);
+                               var pageindex = $('#items-grid').data('kendoGrid').dataSource.page();
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(pageindex);
+                            }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+    function PrintKK(ID) {
+        var data = {
+            KiemKeId: ID,
+        };
+        submit_post_via_hidden_form("/Report/CDKT_BienBanKiemKe", data, 'GET');
+    }
+</script>
+
+

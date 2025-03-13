@@ -1,0 +1,241 @@
+﻿@model TrungGianBDYCModel
+<div class="font-weight-bold mb-2">Thông tin biến động:</div>
+
+<div class="row">
+	<div class="col-sm-8 mb-4">
+
+		@*<div class="font-weight-bold mb-2">Payment Details:</div>*@
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3">Ngày thay đổi:</td>
+					<td class="text-sm-right">
+						@Model.NGAY_BIEN_DONG.toDateVNString()
+					</td>
+				</tr>
+				@switch (Model.LOAI_HINH_TAI_SAN_ID)
+				{
+					case (int)enumLOAI_HINH_TAI_SAN.DAT:
+						<tr>
+							<td class="pr-3">Địa chỉ:</td>
+							<td>
+								@Model.TrungGianBDYCChiTietModel.DIA_CHI
+							</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Quốc gia:</td>
+							<td>
+								@Model.TenQuocGia
+							</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Quận/huyện:</td>
+							<td>
+								@Model.TenHuyen
+							</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.NHA:
+						<tr>
+							<td class="pr-3">Thuộc khuôn viên đất:</td>
+							<td>@Model.taisanNhaModel.TenTaiSanDat</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Năm xây dựng:</td>
+							<td>@Model.taisanNhaModel.NAM_XAY_DUNG</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
+					case (int)enumLOAI_HINH_TAI_SAN.OTO:
+						<tr>
+							<td class="pr-3">Loại tài sản:</td>
+							<td> @Model.TenLoaiTaiSanParent - @Model.TenLoaiTaiSan</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Số chỗ ngồi:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OTO_SO_CHO_NGOI</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Chức danh:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OtoTenChucDanh</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
+					case (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
+					case (int)enumLOAI_HINH_TAI_SAN.DAC_THU:
+					case (int)enumLOAI_HINH_TAI_SAN.VO_HINH:
+						<tr>
+							<td class="pr-3">Loại tài sản:</td>
+							<td> @Model.TenLoaiTaiSanParent - @Model.TenLoaiTaiSan</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Thông số kỹ thuật:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.THONG_SO_KY_THUAT</td>
+						</tr>
+						break;
+					default:
+						break;
+				}
+				<tr>
+					<td class="pr-3">Diễn Giải:</td>
+					<td>
+						@Model.GHI_CHU
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-4 mb-4">
+		<table>
+			<tbody>
+				@switch (Model.LOAI_HINH_TAI_SAN_ID)
+				{
+					case (int)enumLOAI_HINH_TAI_SAN.DAT:
+						<tr>
+							<td class="pr-3"><br /></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="pr-3"><br /></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="pr-3">Tỉnh/thành phố:</td>
+							<td>
+								@Model.TenTinh
+							</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Xã/phường:</td>
+							<td>
+								@Model.TenXa
+							</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.NHA:
+						<tr>
+							<td class="pr-3">Địa chỉ:</td>
+                            <td>@Model.TrungGianBDYCChiTietModel.DIA_CHI</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Ngày sử dụng:</td>
+							<td class="text-sm-right">@Model.NGAY_SU_DUNG.toDateVNString()</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
+					case (int)enumLOAI_HINH_TAI_SAN.OTO:
+						<tr>
+							<td class="pr-3">Bộ phận sử dụng:</td>
+							<td> @Model.TenDonViBoPhan</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Biển kiểm soát:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OTO_BIEN_KIEM_SOAT</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Tải trọng:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OTO_TAI_TRONG (tấn)</td>
+						</tr>
+						<tr>
+							<td class="pr-3">Dung tích xi lanh:</td>
+							<td>@Model.TrungGianBDYCChiTietModel.OTO_XI_LANH (cc)</td>
+						</tr>
+						break;
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
+					case (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
+					case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
+					case (int)enumLOAI_HINH_TAI_SAN.DAC_THU:
+					case (int)enumLOAI_HINH_TAI_SAN.VO_HINH:
+						<tr>
+							<td class="pr-3">Bộ phận sử dụng:</td>
+							<td> @Model.TenDonViBoPhan</td>
+						</tr>
+						break;
+					default:
+						break;
+				}
+				@if (Model.TRANG_THAI_ID == (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.TU_CHOI)
+				{
+					<tr>
+						<td class="pr-3">Lý do không duyệt:</td>
+						<td>
+							@Model.LY_DO_KHONG_DUYET
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAT)
+{
+	<hr />
+	<div class="font-weight-bold mb-2">Hồ sơ giấy tờ:</div>
+	<div class="row">
+		<div class="col-sm-8 mb-4">
+			<table>
+				<tbody>
+					<tr>
+						<td class="pr-3">Giấy CNQSD đất:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_CNQSD_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_CNQSD_NGAY.toDateVNString()</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Quyết định giao đất:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_GIAO_NGAY.toDateVNString()</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Chuyển nhượng QSD đất:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_CHUYEN_NHUONG_SD_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_CHUYEN_NHUONG_SD_NGAY.toDateVNString()</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Quyết định cho thuê đất:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_SO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_CHO_THUE_NGAY.toDateVNString()</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-4 mb-4">
+			<table>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+}
+@if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.NHA)
+{
+	<hr />
+	<div class="font-weight-bold mb-2">Hồ sơ giấy tờ:</div>
+	<div class="row">
+		<div class="col-sm-8 mb-4">
+			<table>
+				<tbody>
+					<tr>
+						<td class="pr-3">Quyết định bàn giao:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_BAN_GIAO&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_QUYET_DINH_BAN_GIAO_NGAY.toDateVNString()</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Biên bản nghiệm thu:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_BIEN_BAN_NGHIEM_THU&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_BIEN_BAN_NGHIEM_THU_NGAY.toDateVNString()</td>
+					</tr>
+					<tr>
+						<td class="pr-3">Hồ sơ pháp lý khác:</td>
+						<td>@Model.TrungGianBDYCChiTietModel.HS_PHAP_LY_KHAC&nbsp;ngày&nbsp;@Model.TrungGianBDYCChiTietModel.HS_PHAP_LY_KHAC_NGAY.toDateVNString()</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+}
+
+<hr />
+<div class="font-weight-bold mb-2">Hiện trạng sử dụng:</div>
+<div class="form-group row ">
+	@foreach (var obj in Model.TrungGianBDYCChiTietModel.lstHienTrang)
+	{
+		@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+	}
+</div>

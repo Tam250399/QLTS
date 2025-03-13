@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+}
+@model DonViModel
+<div class="card mb-4" id="div_main">
+    <div class="card-body">
+
+        <div class="col-md">
+            <div class="card mb-3">
+                <div class="card-header with-elements">
+                    <span class="card-header-title mr-2">Yêu cầu kiểm tra lại thông tin tài sản đã nhập</span>
+                    <div class="card-header-elements ml-md-auto">
+                        <a class="btn btn-danger" href="/TaiSan/CanhBaoChung">Cập nhật</a>
+                    </div>
+                </div>
+            </div>
+            @if (Model.IsThongBaoChuyenMa)
+            {
+                <div class="card mb-3">
+                    <div class="card-header with-elements">
+                        <span class="card-header-title mr-2">Chuyển mã đơn vị đồng bộ từ mã QHNS về mã QLTSC</span>
+                        <div class="card-header-elements ml-md-auto">
+                            <a class="btn btn-danger" href="/DonVi/_ListDonViChuaCapNhatMaT">Cập nhật</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

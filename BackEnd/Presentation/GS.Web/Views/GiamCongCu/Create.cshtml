@@ -1,0 +1,136 @@
+﻿@model GiamDieuChuyenModel
+@using GS.Core.Domain.CCDC;
+    @{
+        //page title
+        ViewBag.Title = "Giảm công cụ, dụng cụ";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("GiamCongCuDungCu");
+    }
+<input id="NgayHienTai" value="@DateTime.Now.Date.toDateVNString()" type="hidden"/>
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/GiamCongCu/ChonTaiSan';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <button type="button" id="btnSaveGiamCongCu" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model);
+        </div>
+    </div>
+    <script>
+        var checkngay = true;
+        $("#btnSaveGiamCongCu").click(function () {
+            checkngay = true;
+            var checkValidation = true;
+            var ListCongCuDieuChuyen = [];
+            $(".listCongCuModel").each(function () {
+                var IDF = $(this).data("guid");
+                var MapId_VAL = IDF;
+                var SoLuongDieuChuyen_VAL = $("#SoLuongDieuChuyen_" + IDF).val();
+                var congcu = {
+                    MapId: MapId_VAL,
+                    SoLuongDieuChuyen: SoLuongDieuChuyen_VAL
+                };
+                ClearGiamValidated(IDF);
+                if (!CheckGiamValidation(IDF)) {
+                    checkValidation = false;
+                }
+                ListCongCuDieuChuyen.push(congcu);
+            });
+            var data = {
+                ListCongCuDieuChuyenModel: ListCongCuDieuChuyen,
+                SO_QUYET_DINH: $("#SO_QUYET_DINH").val(),
+                NGAY_QUYET_DINH: $("#NGAY_QUYET_DINH").val(),
+                NGAY_DIEU_CHUYEN: $("#NGAY_DIEU_CHUYEN").val(),
+                DON_VI_ID: $("#DON_VI_ID").val(),
+                SO_CHUNG_TU: $("#SO_CHUNG_TU").val(),
+                NGAY_CHUNG_TU: $("#NGAY_CHUNG_TU").val(),
+                GHI_CHU: $("#GHI_CHU").val(),
+                LoaiXuatNhapId: $("#LoaiXuatNhapId").val(),
+            };
+            if (checkValidation) {
+                $.ajax({
+                    url: "/GiamCongCu/Create",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (CheckValidMessageReturn(data)) {
+                            ShowSuccessMessage(data.Message);
+                            document.location.href = '/GiamCongCu/List';
+                        }
+                        else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    },
+                    error: function (data) {
+
+                    }
+                })
+            }
+        })
+        function CheckGiamValidation(e) {
+            var check = true;
+            var SoLuongDieuChuyen = $("#SoLuongDieuChuyen_" + e).val();
+            var SoLuongCoTheDieuChuyen = $("#SoLuongCoTheChuyen_" + e).text();
+            
+            if (SoLuongDieuChuyen == undefined || (Number(SoLuongDieuChuyen) == 0 || (Number(SoLuongDieuChuyen) > Number(SoLuongCoTheDieuChuyen)))) {
+                $("#err_SO_LUONG_" + e).show();
+                check = false;
+            }           
+			if ($("#NGAY_DIEU_CHUYEN").val() == null || $("#NGAY_DIEU_CHUYEN").val() == "") {
+				showInvalidMessage("NGAY_DIEU_CHUYEN", "Ngày không được để trống");
+                check = false;
+                checkngay = false;
+            }	
+            if (!checkValidateDateFormat("#NGAY_QUYET_DINH", "NGAY_QUYET_DINH", "Nhập sai định dạng ngày")) {
+                    check = false;
+                     checkngay = false;
+            }
+            if (!checkValidateDateFormat("#NGAY_CHUNG_TU", "NGAY_CHUNG_TU", "Nhập sai định dạng ngày")) {
+                    check = false;
+                     checkngay = false;
+            }
+            //tách riêng ra so sánh vì nếu đk trc sai => lỗi nhưng đk sau đúng lại ẩn lỗi của đk trc đi
+            if (checkngay == true) {
+                if (!checkValidateDateFormat("#NGAY_DIEU_CHUYEN", "NGAY_DIEU_CHUYEN", "Nhập sai định dạng ngày")) {
+                    check = false;
+                    checkngay = false;
+                }
+            }
+            if (checkngay == true) {
+                if (!checkValidateFromDateToDate("#NgayPhanBo_" + e, "#NGAY_DIEU_CHUYEN", "NGAY_DIEU_CHUYEN", "Ngày giảm phải lớn hơn ngày phân bổ")) {
+                    check = false;
+                    checkngay = false;
+                }
+            }
+            if (checkngay == true) {
+                if (!checkValidateFromDateToDate("#NGAY_DIEU_CHUYEN", "#NgayHienTai", "NGAY_DIEU_CHUYEN", "Ngày giảm phải nhỏ hơn ngày hiện tại")) {
+                    check = false;
+                    checkngay = false;
+                }
+            }
+            
+            
+            
+            var LoaiXuatNhapId = $("#LoaiXuatNhapId").val();
+            if (LoaiXuatNhapId == undefined || LoaiXuatNhapId == 0) {
+                showInvalidMessage("LoaiXuatNhapId", "Chọn lý do giảm");
+                check = false;
+            }
+            return check;
+        }
+        function ClearGiamValidated(e) {
+            $("#err_SO_LUONG_" + e).hide();
+            hideValmsg("LoaiXuatNhapId");
+        }
+    </script>

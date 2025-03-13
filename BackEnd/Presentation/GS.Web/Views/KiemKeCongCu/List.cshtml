@@ -1,0 +1,118 @@
+@model KiemKeCongCuSearchModel
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4" >
+     <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+            <input asp-for="KiemKeId" type="hidden" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchCongCuKK">Tìm kiếm</button>
+        </div>
+    </div>   
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="listCongCuKiemKe-grid"></div>
+                    <script>
+                         var record1 = 0;
+                        $(document).ready(function () {                          
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    KiemKeId: $("#KiemKeId").val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchCongCuKK").click(function () {
+                                record1 = 0;
+                                var grid = $('#listCongCuKiemKe-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchCongCuKK").click();
+                                    return false;
+                                }
+                            });
+                            $("#listCongCuKiemKe-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "KiemKeCongCu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                 dataBinding: function() {
+                                      record1 = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                      title: "STT",
+                                      template: "#= ++record1 #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    { field: 'MaCongCu', title: 'Mã CCDC' },
+                                    { field: 'TenCongCu', title: 'Tên CCDC' },
+                                    { field: 'SoLuongText', title: 'Số lượng' },
+                                    { field: 'DonGiaText', title: 'Đơn giá' },
+                                    //{ field: 'TrangThaiText', title: 'Tình trạng' },
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: kendo.template($("#edit-gird-Tem-KKCC").html())
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="edit-gird-Tem-KKCC" type="text/x-kendo-tmpl">
+    <a class="btn icon-btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Sửa công cụ, dụng cụ kiểm kê" data-src="/KiemKeCongCu/Edit?ID=#=ID#">Sửa</a>&nbsp;
+    @*<button class="btn icon-btn btn-sm btn-outline-danger" onclick="DeleteCongCuKiemKe(#=ID#)" title="Xóa"><i class="far fa-trash-alt" style=""></i></button>*@
+</script>
+
+

@@ -1,0 +1,138 @@
+@model CauHinhSearchModel
+@{
+    //page title
+    ViewBag.Title = "Cấu hình nâng cao";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CauHinhTatCaCauHinh");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Tên:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="TEN" />
+                </div>               
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Giá trị:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="GIA_TRI" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    TEN: $('#@Html.IdFor(model => model.TEN)').val(),
+                                    GIA_TRI:$('#@Html.IdFor(model => model.GIA_TRI)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.TEN)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.GIA_TRI)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "CauHinh"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,                                
+                                columns: [
+                                {field: 'TEN',title: 'Tên'},
+                                {
+                                        field: "GIA_TRI",
+                                        title: "Giá trị",
+                                        encoded: false,  
+                                        template:'#=(GIA_TRI!= null)?GIA_TRI.length<400?GIA_TRI:GIA_TRI.substring(0,400)+"...":""#'
+                                },
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'}
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

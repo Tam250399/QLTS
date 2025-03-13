@@ -1,0 +1,226 @@
+﻿@model GiamDieuChuyenSearchModel
+@{
+    //page title
+    ViewBag.Title = "Giảm công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GiamCongCuDungCu");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ ngày:</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="TuNgay" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Đến ngày:</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="DenNgay" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Lý do giảm:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="LoaiDieuChuyen" asp-items="Model.DDLLoaiXuatNhap" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Loại CCDC:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="LoaiCongCu" asp-items="Model.DDLNhomCongCu" asp-filter="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Bộ phận:</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="DonViBoPhanId" asp-items="Model.DDLDonViBoPhan" asp-filter="true" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+    <script>
+        function CheckVali() {
+            var check = true;
+            if (!checkValidateDateFormat("#TuNgay", "TuNgay", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateDateFormat("#DenNgay", "DenNgay", "Sai định dạng ngày")) {
+                check = false;
+            }
+            if (!checkValidateFromDateToDate("#TuNgay", "#DenNgay", "TuNgay", "Ngày phải bé hơn ngày đến")) {
+                check = false;
+            }
+            return check;
+        }
+    </script>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách công cụ, dụng cụ giảm</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a class="btn btn-sm btn-outline-primary" href="/GiamCongCu/ChonTaiSan" style="margin:10px;">
+			<i class="ion ion-md-add"></i>&nbsp; Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDieuChuyen:$('#@Html.IdFor(model => model.LoaiDieuChuyen)').val(),
+                                    TuNgay: $('#@Html.IdFor(model => model.TuNgay)').val(),
+                                    DenNgay: $('#@Html.IdFor(model => model.DenNgay)').val(),
+                                    LoaiCongCu: $('#@Html.IdFor(model => model.LoaiCongCu)').val(),
+                                    DonViBoPhanId: $('#@Html.IdFor(model => model.DonViBoPhanId)').val(),
+                                    Page: $("#items-grid").data("kendoGrid").dataSource.page(),
+                                    PageSize: $("#items-grid").data("kendoGrid").dataSource.pageSize(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                if (CheckVali()) {
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "GiamCongCu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    page:@(Model.Page),
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+								dataBinding: function () {
+									record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+                                scrollable: false,
+                                columns: [
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+                                    { field: 'MaCongCuText', title: 'Mã CCDC' },
+                                    { field: 'TenCongCuText', title: 'Tên CCDC' },
+                                    { field: 'NhomCongCuText', title: 'Nhóm CCDC' },
+                                    { field: 'BoPhanSuDungText', title: 'Bộ phận' },
+                                    { field: 'DonGiaText', title: 'Đơn giá' },
+                                    { field: 'SoLuongText', title: 'Số lượng' },
+                                    { field: 'NgayXuatNhapText', title: 'Ngày giảm' },
+                                    { field: 'TenLoaiXuatNhap', title: 'Lý do giảm' },
+                                    {
+                                        field: "MapId",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?MapId=#=MapId#">Sửa</a>&nbsp;<a class="btn btn-sm btn-outline-danger" onclick=Delete(#=MapId#)>Xóa</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function Delete(ID) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    console.log(ID);
+                    $.ajax({
+                        url: "/GiamCongCu/Delete?ID=" + ID,
+                        type: "GET",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                ShowSuccessMessage(data.Message);
+                                var pageindex = $('#items-grid').data('kendoGrid').dataSource.page();
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(pageindex);
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        },
+                        error: function (data) {
+
+                        }
+                    })
+                }
+            }
+        })
+    }
+</script>

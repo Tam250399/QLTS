@@ -1,0 +1,117 @@
+﻿@model GiamKhacSearchModel
+@{
+    //page title
+    ViewBag.Title = "Giảm khác";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GiamKhacCongCuDungCu");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#globalModalIframe" data-width="1100" data-title="Thêm mới" data-src="/GiamKhac/_ChonTaiSan" style="margin:10px;">
+            <i class="ion ion-md-add"></i>&nbsp; Thêm mới
+        </button>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "GiamKhac"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    { field: 'MaCongCuText', title: 'Mã CCDC' },
+                                    { field: 'TenCongCuText', title: 'Tên CCDC' },
+                                    { field: 'NhomCongCuText', title: 'Nhóm CCDC' },
+                                    { field: 'TenLoaiXuatNhap', title: 'Lý do giảm' },
+                                    { field: 'BoPhanSuDungText', title: 'Bộ phận' },
+                                    { field: 'DonGiaText', title: 'Đơn giá',attributes: { style: "text-align:right" } },
+                                    { field: 'SoLuongText', title: 'Số lượng',attributes: { style: "text-align:right" } },
+                                    { field: 'NgayXuatNhapText', title: 'Ngày giảm',attributes: { style: "text-align:center" } },
+                                    {
+                                        field: "MapId",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?MapId=#=MapId#&isDieuChuyenNgoai=false"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

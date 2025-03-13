@@ -1,0 +1,295 @@
+﻿@model GS.Web.Models.ImportTaiSan.ImportExcelTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Nhập file tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportTaiSanExcel");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+        Import tài sản
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportTaiSanExl" asp-controller="TaiSan" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file tài sản <i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImport" class="btn btn-success">Import</button>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import Khấu hao tài sản
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportGiamTaiSanExcel" asp-controller="BienDong" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file tài sản <i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="fileKh" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImportKhTaiSan" class="btn btn-success">Import tài sản khấu hao</button>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import biến động tăng giảm nguyên giá
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportBDTangGiamNguyenGiaExcel" asp-controller="BienDong" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file tài sản <i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="fileTangGiam" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImportBdTangGiam" class="btn btn-success">Import Tăng giảm nguyên giá</button>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import biến động giảm tài sản
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportGiamTaiSanExcel" asp-controller="BienDong" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file tài sản <i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="fileGiam" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImportBdGiam" class="btn btn-success">Import giảm tài sản</button>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        Import mã tài sản cũ
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportTaiSanExl" asp-controller="TaiSan" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file<i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="filematscu" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImportMaTaiSanCu" class="btn btn-success">Import mã tài sản cũ</button>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="card" id="listloi">
+    
+</div>
+
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnImport").click(function (evt) {
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+		$.ajax({
+			type: "post",
+            url: "/TaiSan/ImportTaiSanExcel",
+			contentType: false,
+			processData: false,
+			data: data,
+		}).done((result) => {
+            hideThrobber();
+            if (result.Code == "00") {
+                ShowSuccessMessage(result.Message);
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+            }
+            if (result.Code == "01") {
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+                ShowErrorMessage(result.Message);
+            }
+        }).fail((jqXHR, textStatus, errorThrow) => {
+			console.log(textStatus + ': ' + errorThrow);
+			//alert("there was error uploading files!");
+            hideThrobber();
+            //ShowErrorMessage(errorThrow);
+        });
+    });
+    $("#btnImportMaTaiSanCu").click(function (evt) {
+        evt.preventDefault();
+        var fileupload = $("#filematscu").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+        $.ajax({
+            type: "post",
+            url: "/TaiSan/ImportMaTaiSanCuExcel",
+            contentType: false,
+            processData: false,
+            data: data,
+        }).done((result) => {
+            hideThrobber();
+            if (result.Code == "00") {
+                ShowSuccessMessage(result.Message);
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+            }
+            if (result.Code == "01") {
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+                ShowErrorMessage(result.Message);
+            }
+        }).fail((jqXHR, textStatus, errorThrow) => {
+            console.log(textStatus + ': ' + errorThrow);
+            //alert("there was error uploading files!");
+            hideThrobber();
+            //ShowErrorMessage(errorThrow);
+        });
+    });
+    $("#btnImportKhTaiSan").click(function (evt) {
+        evt.preventDefault();
+        var fileupload = $("#fileKh").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+        $.ajax({
+            type: "post",
+            url: "/KhauHaoTaiSan/ImportKhauHaoTsExcel",
+            contentType: false,
+            processData: false,
+            data: data,
+        }).done((result) => {
+            hideThrobber();
+            if (result.Code == "00") {
+                ShowSuccessMessage(result.Message);
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+            }
+            if (result.Code == "01") {
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+                ShowErrorMessage(result.Message);
+            }
+        }).fail((jqXHR, textStatus, errorThrow) => {
+            console.log(textStatus + ': ' + errorThrow);
+            //alert("there was error uploading files!");
+            hideThrobber();
+            //ShowErrorMessage(errorThrow);
+        });
+    });
+    $("#btnImportBdTangGiam").click(function (evt) {
+        evt.preventDefault();
+        var fileupload = $("#fileTangGiam").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+        $.ajax({
+            type: "post",
+            url: "/BienDong/ImportBDTangGiamNguyenGiaExcel",
+            contentType: false,
+            processData: false,
+            data: data,
+        }).done((result) => {
+            hideThrobber();
+            if (result.Code == "00") {
+                ShowSuccessMessage(result.Message);
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+            }
+            if (result.Code == "01") {
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+                ShowErrorMessage(result.Message);
+            }
+        }).fail((jqXHR, textStatus, errorThrow) => {
+            console.log(textStatus + ': ' + errorThrow);
+            //alert("there was error uploading files!");
+            hideThrobber();
+            //ShowErrorMessage(errorThrow);
+        });
+    });
+    $("#btnImportBdGiam").click(function (evt) {
+        evt.preventDefault();
+        var fileupload = $("#fileGiam").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+        $.ajax({
+            type: "post",
+            url: "/BienDong/ImportGiamTaiSanExcel",
+            contentType: false,
+            processData: false,
+            data: data,
+        }).done((result) => {
+            hideThrobber();
+            if (result.Code == "00") {
+                ShowSuccessMessage(result.Message);
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+            }
+            if (result.Code == "01") {
+                console.log(result.ObjectInfo);
+                $('#listloi').text(result.ObjectInfo);
+                ShowErrorMessage(result.Message);
+            }
+        }).fail((jqXHR, textStatus, errorThrow) => {
+            console.log(textStatus + ': ' + errorThrow);
+            //alert("there was error uploading files!");
+            hideThrobber();
+            //ShowErrorMessage(errorThrow);
+        });
+    });
+</script>
+

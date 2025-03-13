@@ -1,0 +1,169 @@
+@model QuyetDinhTichThuModel
+@{
+    //page title
+    ViewBag.Title = "Sửa quyết định tịch thu/ xác lập";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhSachQuyetDinhTichThuTSTD");
+}
+<form asp-controller="QuyetDinhTichThu" asp-action="Edit" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin tài sản được xác lập quyền SHTD
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="javascript:CanhBao()">Quay lại danh sách</a>
+            </small>
+            @if (Model.is_detail == false)
+            {
+                <button type="button" class="btn btn-sm btn-default btnClose" onclick="CanhBao()" style="float:right; margin-right: 5px;">
+                    <i class="ion ion-ios-close-circle-outline"></i>
+                    Đóng
+                </button>
+                <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaQuyetDinh("@Model.GUID") style="float:right;margin-right: 5px;">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary btnSaveQuyetDinh" style="float:right; margin-right: 5px;">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </a>
+            }
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("Detail", Model)
+
+        </div>
+        <div class="card-footer">
+            @if (Model.is_detail == false)
+            {
+                <button type="button" class="btn btn-sm btn-default btnClose" onclick="CanhBao()" style="float:right; margin-right: 5px;">
+                    <i class="ion ion-ios-close-circle-outline"></i>
+                    Đóng
+                </button>
+                <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaQuyetDinh("@Model.GUID") style="float:right;margin-right: 5px;">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary btnSaveQuyetDinh" style="float:right; margin-right: 5px;">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </a>
+            }
+        </div>
+    </div>
+</form>
+<script>
+     $(document).ready(function () {
+        $('#span_TongGiaTriXacLap').hide();
+        $("#@(Html.IdFor(c=>c.TONG_GIA_TRI))_@Model.GUID").on("change", function () {
+           CheckTongGiaTriTichThu();
+        });
+     })
+
+    $(".btnSaveQuyetDinh").click(function () {
+        var _data = {
+            GUID: $("#@(Html.IdFor(c=>c.GUID))_@Model.GUID").val(),
+            TEN: $("#@(Html.IdFor(c=>c.TEN))_@Model.GUID").val(),
+            QUYET_DINH_SO: $("#@(Html.IdFor(c=>c.QUYET_DINH_SO))_@Model.GUID").val(),
+            QUYET_DINH_NGAY: $("#@(Html.IdFor(c=>c.QUYET_DINH_NGAY))_@Model.GUID").val(),
+            CO_QUAN_BAN_HANH_ID: $("#@(Html.IdFor(c=>c.CO_QUAN_BAN_HANH_ID))_@Model.GUID").val(),
+            NGUON_GOC_ID: $("#@(Html.IdFor(c=>c.NGUON_GOC_ID))_@Model.GUID").val(),
+            NGUOI_QUYET_DINH: $("#@(Html.IdFor(c=>c.NGUOI_QUYET_DINH))_@Model.GUID").val(),
+            GHI_CHU: $("#@(Html.IdFor(c=>c.GHI_CHU))_@Model.GUID").val(),
+            DON_VI_ID: $("#@(Html.IdFor(c=>c.DON_VI_ID))_@Model.GUID").val(),
+            TRANG_THAI_ID: $("#@(Html.IdFor(c=>c.TRANG_THAI_ID))_@Model.GUID").val(),
+            NGAY_TAO: $("#@(Html.IdFor(c=>c.NGAY_TAO))_@Model.GUID").val(),
+            NGUOI_TAO_ID: $("#@(Html.IdFor(c=>c.NGUOI_TAO_ID))_@Model.GUID").val()
+        }
+        if (CheckTongGiaTriTichThu()) {
+            $.ajax({
+           type: "POST",
+            data: _data,
+            url: "/QuyetDinhTichThu/EditQuyetDinh",
+            success: function (result) {
+                if (CheckValidMessageReturnWithParam(result,"_@Model.GUID.ToString()")) {
+                    ShowSuccessMessage(result.Message);
+                    location.href = "/QuyetDinhTichThu/List";
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+
+        })
+        }
+
+    });
+    function XoaQuyetDinh(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa quyết định tịch thu này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    var quyetDinhDelete = ajaxPost(data, "/QuyetDinhTichThu/Delete");
+                    quyetDinhDelete.done(function (result) {
+						if (result) {
+                            if (result.Code == '00') {
+                                ShowSuccessMessage(result.Message);
+                                location.href = "/QuyetDinhTichThu/List";
+                            }
+							else if (result.Code == '01') {
+								ShowErrorMessage(result.Message);
+							}
+						}
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+                    //$.ajax({
+                    //    type: "Post",
+                    //    data: data,
+                    //    url: "/QuyetDinhTichThu/Delete",
+                    //    success: function (data) {
+                    //        if (CheckValidMessageReturn(data)) { ShowSuccessMessage(data.message) }
+                    //        else {
+                    //            ShowErrorMessage(data.message)
+                    //        }
+                    //    }
+                    //})
+                }
+                return;
+
+            }
+        })
+    }
+    function CanhBao() {
+        bootbox.confirm({
+            message: "Quyết định chưa được lưu, bạn có muốn chắc chắn thoát không ?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    window.location.href = "/QuyetDinhTichThu/List";
+                }
+                return;
+            }
+        })
+    }
+</script>
+
+

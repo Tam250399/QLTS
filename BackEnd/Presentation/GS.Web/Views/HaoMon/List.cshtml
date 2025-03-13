@@ -1,0 +1,235 @@
+﻿@model HaoMonTaiSanSearchModel
+@{
+	ViewBag.Title = "Điều chỉnh hao mòn";
+	Html.SetActiveMenuItemSystemName("DieuChinhHaoMon");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@ViewBag.Title
+	</h5>
+
+</div>
+
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	<div class="form-group row">
+		<div class="col-md-10"></div>
+		<div class="col-md-2" style=" padding-left: 0px; padding-top: 5px;">
+
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">Từ khóa</label>
+		<div class="col-md-10">
+			<nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-md-2 text-sm-left">Loại tài sản</label>
+		<div class="col-md-4">
+			<app-select asp-for="LoaiHinhTaiSan" asp-items="Model.ddlLoaiHinhTaiSan" asp-filter="true" />
+		</div>
+		<label class="col-form-label col-md-2 text-sm-left">Năm hao mòn</label>
+		<div class="col-md-4">
+			<nop-editor asp-for="NamHaoMon" asp-amount="true" asp-min-number="0" asp-max-number="9999">
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-5">
+		</div>
+		<div class="col-md-6">
+			<div class="col-sm-6"></div>
+			<div class="col-sm-3">
+				<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="form-group row" id="TrinhDuyetAll" style="display:none;">
+	<div class="col-sm-10">
+	</div>
+	<div class="col-sm-2">
+		<button type="button" class="btn btn-outline-success" id="btnTrinhDuyetAll">Trình duyệt tất cả</button>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i>Danh sách hao mòn
+		</div>
+	</div>
+	
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>
+						var recordChonTS = 0;
+						$(document).ready(function () {
+							function SearchData() {
+								var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+									LoaiHinhTaiSan: $('#@Html.IdFor(model => model.LoaiHinhTaiSan)').val(),
+									NamHaoMon: $('#@Html.IdFor(model => model.NamHaoMon)').val(),
+
+								};
+								addAntiForgeryToken(_data);
+								return _data;
+							}
+							$("#btnSearch").click(function () {
+								var grid = $('#items-grid').data('kendoGrid');
+								recordChonTS = 0;
+								grid.dataSource.page(1); //new search. Set page size to 1
+								return false;
+							});
+							$("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+								if (event.keyCode === 13) {
+									$("#btnSearch").click();
+									return false;
+								}
+							});
+							var grid = $("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("List", "HaoMon"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									page:@(Model.Page),
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+
+								dataBinding: function () {
+									recordChonTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+								pageable: {
+									refresh: true,
+									input: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+									@await Html.PartialAsync("_GridPagerMessages")
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								scrollable: false,
+								columns: [
+									{
+										title: "STT",
+										template: "#= ++recordChonTS#",
+										width: 47,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: "MA_TAI_SAN",
+										title: "Mã tài sản",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "white-space: nowrap" },
+										
+									},
+									{
+										field: "TAI_SAN_TEN", title: "Tên tài sản",
+										headerAttributes: { style: "text-align:center" },
+										
+									},
+									//{ field: "NguyenGiaVNStringNumber", title: "Nguyên giá" },
+									{
+										field: "NAM_HAO_MON",
+										title: "Năm",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: "TONG_NGUYEN_GIA",
+										title: "Nguyên giá",
+										template: function (dataItem) {
+											return kendo.toString(dataItem.TONG_NGUYEN_GIA, "###,###,###")
+										},
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:right" },
+									},
+									{
+										field: "TONG_HAO_MON_LUY_KE_NAM_TRUOC",
+										title: "LKHM năm trước",
+										template: function (dataItem) {
+											return kendo.toString((dataItem.TONG_HAO_MON_LUY_KE_NAM_TRUOC != null ? dataItem.TONG_HAO_MON_LUY_KE_NAM_TRUOC : "0"), "###,###,###")
+										},
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:right" },
+									},									{
+										field: "GIA_TRI_HAO_MON",
+										title: "Hao mòn năm",
+										template: function (dataItem) {
+											return kendo.toString(dataItem.GIA_TRI_HAO_MON, "###,###,###")
+										},
+										attributes: { style: "text-align:right" },
+									},
+									{
+										field: "TONG_HAO_MON_LUY_KE",
+										title: "Tổng LKHM",
+										template: function (dataItem) {
+											return kendo.toString(dataItem.TONG_HAO_MON_LUY_KE, "###,###,###")
+										},
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:right" },
+
+									},
+									{
+										field: "TONG_GIA_TRI_CON_LAI",
+										title: "GTCL",
+										template: function (dataItem) {
+											return kendo.toString(dataItem.TONG_GIA_TRI_CON_LAI, "###,###,###")
+										},
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:right" },
+									},
+									{
+										field: "ID",
+										title: "Thao tác",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											if (dataItem.IsLock == false) {
+												return '<button type="button" class="btn btn-sm btn-primary" onclick="EditHaoMon(' + dataItem.ID + ',' + dataItem.NAM_HAO_MON+')" >Sửa</button>'
+											}
+											return '';
+										}
+									}
+								]
+							}).data("kendoGrid");
+
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function EditHaoMon(id,year) {
+		var url = '@Url.Action("EditHaoMon","HaoMon")'+'?id='+id;
+		OpenModalManual("Điều chỉnh hao mòn năm " + year, url);
+	}
+</script>

@@ -1,0 +1,227 @@
+﻿@model TrungGianBDYCModel
+@*@await Html.PartialAsync("_BDThongTinTaiSan", Model)*@
+
+<div class="gs-form-group">
+	<h6>Biến động - @Model.TenLyDoBienDong</h6>
+	@if (Model.LOAI_BIEN_DONG_ID != (int)enumLOAI_LY_DO_TANG_GIAM.TANG_TOAN_BO)
+	{
+		<div class=" form-grouprow" style="border-bottom: 1px solid #ececec">
+			@await Html.PartialAsync("_ThongTinChungTaiSan", Model.thongTinChungTaiSanModel)
+		</div>
+	}
+	<div class=" form-grouprow">
+		@if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.THAY_DOI_THONG_TIN)
+		{
+			@await Html.PartialAsync("_ThongTinTDTT", Model)
+		}
+		else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.TANG_TOAN_BO || Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.NHAP_SO_DU_DAU_KY)
+		{
+			@await Html.PartialAsync("_ThongTinTangToanBoNha", Model)
+		}
+		else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_TANG_GIA_TRI || Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.BIEN_DONG_GIAM_GIA_TRI)
+		{
+			@await Html.PartialAsync("_ThongTinTangGiamNguyenGia", Model)
+		}
+		else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.GIAM_TOAN_BO)
+		{
+			@await Html.PartialAsync("_ThongTinGiamToanBo", Model)
+		}
+		else if (Model.LOAI_BIEN_DONG_ID == (int)enumLOAI_LY_DO_TANG_GIAM.GIAM_DIEU_CHUYEN_MOT_PHAN)
+		{
+			@await Html.PartialAsync("_ThongTinDieuChuyenMotPhan", Model)
+		}
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-6">
+	</div>
+	<div class="col-sm-6 text-right">
+		@if (Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.TU_CHOI
+		 && Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.NHAP && Model.HasThaoTac.Value)
+		{
+			if (Model.TRANG_THAI_ID == (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+			{
+				if (Model.IS_BIENDONG_CUOI.HasValue && Model.IS_BIENDONG_CUOI.Value)
+				{
+					<button type="button" class="btn btn-outline-danger" Onclick="huyDuyetBienDongDetail(@Model.ID)" title="Bỏ duyệt">Hủy Duyệt</button>
+				}
+			}
+			else
+			{
+				if (Model.SoYCTruocChuaDuyet > 0)
+				{
+					<button type="button" class="btn btn-outline-danger" id="btnTuChoi-detail" Onclick="khongDuyetYeuCauDetail(@Model.ID)">Từ chối</button>
+				}
+				else
+				{
+					<button type="button" class="btn btn-outline-success" id="btnDuyet-detail" Onclick="duyetYeuCauIdDetail(@Model.ID)">Duyệt</button>
+					<button type="button" class="btn btn-outline-danger" id="btnTuChoi-detail" Onclick="khongDuyetYeuCauDetail(@Model.ID)">Từ chối</button>
+				}
+			}
+		}
+
+		<button type="button" class="btn btn-outline-info" data-dismiss="modal">Đóng</button>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$(".HienTrang").each(function () {
+			var _hientrangId = $(this).data("idhientrang");
+			var _val = $(this).data("val");
+			if (_val) {
+				$("#HienTrang_" + _hientrangId).prop("checked", true);
+			}
+		});
+	});
+
+	function duyetYeuCauIdDetail(YeuCauId) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn duyệt không?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var _data = {
+						YeuCauId: YeuCauId,
+					}
+					$.ajax({
+						cache: false,
+						type: "POST",
+						data: _data,
+						url: "/BienDong/DuyetYeuCau",
+						success: function (msg) {
+							if (msg.Code == "00") {
+								ShowSuccessMessage(msg.Message);
+								var grid = $('#items-grid').data('kendoGrid');
+								grid.dataSource.page(grid.dataSource.page());
+								//location.href = '/TaiSan/ListYeuCauDuyetTaiSan';
+								HideModalManual();
+							}
+							else {
+								ShowErrorMessage(msg.Message);
+							}
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							alert(thrownError);
+						},
+						traditional: true
+					});
+				}
+			},
+		});
+	}
+
+	function khongDuyetYeuCauDetail(_YeuCauId)
+	{
+		bootbox.prompt({
+			title: "Bạn có chắc chắn từ chối biến động này?",
+			buttons: {
+				confirm: {
+					label: '@T("admin.common.yes")',
+				},
+				cancel: {
+					label: '@T("admin.common.no")',
+				},
+			},
+			required: true,
+			placeholder: "Lý do từ chối tài sản(*)",
+			callback: function (_Note) {
+				if (_Note !== null) {
+					if (_Note !== '') {
+						let _data = {
+							YeuCauId: _YeuCauId,
+							Note: _Note,
+						}
+						let _url = '@(Url.Action("_KhongDuyetYeuCau", "BienDong"))';
+						ajaxPost(_data,_url,true).done(function (result) {
+							if (result.Code=="00") {
+								ShowSuccessMessage(result.Message);
+								var grid = $('#items-grid').data('kendoGrid');
+								grid.dataSource.page(grid.dataSource.page());
+								HideModalManual();
+							}
+							else {
+								ShowErrorMessage(result.Message);
+							}
+						}).fail(function (jqXHR, textStatus, errorThrown) {
+							// If fail
+							HideModalManual();
+							console.log(textStatus + ': ' + errorThrown);
+						});
+						return;
+					}
+					else {
+						ShowErrorMessage("Bắt buộc phải nhập lý do.");
+						return false;
+					}
+
+				}
+				return;
+			}
+		})
+	}
+
+	function huyDuyetBienDongDetail(_BienDongId) {
+		bootbox.prompt({
+			title: "Bạn có chắc chắn bỏ duyệt biến động này?",
+			buttons: {
+				confirm: {
+					label: '@T("admin.common.yes")',
+				},
+				cancel: {
+					label: '@T("admin.common.no")',
+				},
+			},
+			required: true,
+			placeholder: "Lý do bỏ duyệt tài sản(*)",
+			callback: function (_Note) {
+				if (_Note !== null ) {
+					if (_Note !== '') {
+						let _data = {
+							BienDongId: _BienDongId,
+							Note: _Note,
+						}
+						let _url = '@(Url.Action("_HuyDuyetBienDong", "BienDong"))';
+						ajaxPost(_data, _url, true).done(function (result) {
+							if (result.Code=="00") {
+								ShowSuccessMessage(result.Message);
+								var grid = $('#items-grid').data('kendoGrid');
+								grid.dataSource.page(grid.dataSource.page());
+								HideModalManual();
+							}
+							else {
+								ShowErrorMessage(result.Message);
+							}
+						}).fail(function (jqXHR, textStatus, errorThrown) {
+							// If fail
+							HideModalManual();
+							console.log(textStatus + ': ' + errorThrown);
+						});
+						return;
+					}
+					else {
+						ShowErrorMessage("Bắt buộc phải nhập lý do.");
+						return false;
+					}
+				}
+				return;
+			}
+		})
+	}
+</script>
+<style>
+	tbody {
+		vertical-align: top;
+	}
+	/*label {
+					margin-top: 8px;
+					color: #2673cc;
+				}*/
+</style>

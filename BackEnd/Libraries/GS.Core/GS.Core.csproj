@@ -1,0 +1,129 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>Copyright © GS Solutions, Ltd</Copyright> 
+    <Company>GS Solutions, Ltd</Company> 
+    <Authors>GS Solutions, Ltd</Authors> 
+    <Version>4.1.0.0</Version> 
+    <Description>The GS.Core project contains a set of core classes for nopCommerce, such as caching, events, helpers, and business objects (for example, Order and Customer entities).</Description> 
+    <PackageLicenseUrl></PackageLicenseUrl> 
+    <PackageProjectUrl></PackageProjectUrl> 
+    <RepositoryUrl></RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Domain\Advance\**" />
+    <Compile Remove="Domain\Affiliates\**" />
+    <Compile Remove="Domain\Blogs\**" />
+    <Compile Remove="Domain\Catalog\**" />
+    <Compile Remove="Domain\Cms\**" />
+    <Compile Remove="Domain\Dashboard\**" />
+    <Compile Remove="Domain\Directory\**" />
+    <Compile Remove="Domain\Forums\**" />
+    <Compile Remove="Domain\Gdpr\**" />
+    <Compile Remove="Domain\Media\**" />
+    <Compile Remove="Domain\Messages\**" />
+    <Compile Remove="Domain\News\**" />
+    <Compile Remove="Domain\Payments\**" />
+    <Compile Remove="Domain\Polls\**" />
+    <Compile Remove="Domain\Security\**" />
+    <Compile Remove="Domain\Seo\**" />
+    <Compile Remove="Domain\Stores\**" />
+    <Compile Remove="Domain\Tasks\**" />
+    <Compile Remove="Domain\Tax\**" />
+    <Compile Remove="Domain\Topics\**" />
+    <Compile Remove="Domain\Vendors\**" />
+    <Compile Remove="Domain\WidgetApps\**" />
+    <Compile Remove="Domain\Works\**" />
+    <EmbeddedResource Remove="Domain\Advance\**" />
+    <EmbeddedResource Remove="Domain\Affiliates\**" />
+    <EmbeddedResource Remove="Domain\Blogs\**" />
+    <EmbeddedResource Remove="Domain\Catalog\**" />
+    <EmbeddedResource Remove="Domain\Cms\**" />
+    <EmbeddedResource Remove="Domain\Dashboard\**" />
+    <EmbeddedResource Remove="Domain\Directory\**" />
+    <EmbeddedResource Remove="Domain\Forums\**" />
+    <EmbeddedResource Remove="Domain\Gdpr\**" />
+    <EmbeddedResource Remove="Domain\Media\**" />
+    <EmbeddedResource Remove="Domain\Messages\**" />
+    <EmbeddedResource Remove="Domain\News\**" />
+    <EmbeddedResource Remove="Domain\Payments\**" />
+    <EmbeddedResource Remove="Domain\Polls\**" />
+    <EmbeddedResource Remove="Domain\Security\**" />
+    <EmbeddedResource Remove="Domain\Seo\**" />
+    <EmbeddedResource Remove="Domain\Stores\**" />
+    <EmbeddedResource Remove="Domain\Tasks\**" />
+    <EmbeddedResource Remove="Domain\Tax\**" />
+    <EmbeddedResource Remove="Domain\Topics\**" />
+    <EmbeddedResource Remove="Domain\Vendors\**" />
+    <EmbeddedResource Remove="Domain\WidgetApps\**" />
+    <EmbeddedResource Remove="Domain\Works\**" />
+    <None Remove="Domain\Advance\**" />
+    <None Remove="Domain\Affiliates\**" />
+    <None Remove="Domain\Blogs\**" />
+    <None Remove="Domain\Catalog\**" />
+    <None Remove="Domain\Cms\**" />
+    <None Remove="Domain\Dashboard\**" />
+    <None Remove="Domain\Directory\**" />
+    <None Remove="Domain\Forums\**" />
+    <None Remove="Domain\Gdpr\**" />
+    <None Remove="Domain\Media\**" />
+    <None Remove="Domain\Messages\**" />
+    <None Remove="Domain\News\**" />
+    <None Remove="Domain\Payments\**" />
+    <None Remove="Domain\Polls\**" />
+    <None Remove="Domain\Security\**" />
+    <None Remove="Domain\Seo\**" />
+    <None Remove="Domain\Stores\**" />
+    <None Remove="Domain\Tasks\**" />
+    <None Remove="Domain\Tax\**" />
+    <None Remove="Domain\Topics\**" />
+    <None Remove="Domain\Vendors\**" />
+    <None Remove="Domain\WidgetApps\**" />
+    <None Remove="Domain\Works\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Domain\Common\Address.cs" />
+    <Compile Remove="Domain\Common\AddressAttribute.cs" />
+    <Compile Remove="Domain\Common\AddressAttributeValue.cs" />
+    <Compile Remove="Domain\Common\AddressSettings.cs" />
+    <Compile Remove="Infrastructure\Mapper\ChiTieuThongKeHoSoMappingMap.cs" />
+    <Compile Remove="IStoreContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Domain\Security\CaptchaSettings.cs" />
+    <Compile Include="Domain\Security\DefaultPermissionRecord.cs" />
+    <Compile Include="Domain\Security\PermissionRecord.cs" />
+    <Compile Include="Domain\Security\SecuritySettings.cs" />
+    <Compile Include="Domain\Tasks\ScheduleTask.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="18.2.6" />
+    <PackageReference Include="DevExpress.Xpo" Version="18.2.6" />
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.1.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.133" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.110" />
+    <PackageReference Include="RedLock.net.StrongName" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

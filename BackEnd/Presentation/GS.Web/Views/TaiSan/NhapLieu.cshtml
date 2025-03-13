@@ -1,0 +1,98 @@
+﻿@model NhapLieuModel
+@{
+	//page title
+	ViewBag.Title = "Nhập liệu";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("NhapLieu");
+}
+@if (Model.IS_LA_DON_VI_NHAP_LIEU)
+{
+	@*<div class="card mb-4">
+		<h4 class="card-header">
+			Chọn loại dữ liệu
+		</h4>
+		<div class="card-body">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-2 col-md-4 col-xs-6 test">
+						<div class="card mb-4">
+							<div class="card-body hoverlight">
+								<a href="/TaiSan/ChonLoaiTaiSan?isTangMoi=true">
+									<div class="d-flex align-items-center">
+										<div class="display-4 text-default"><span class="fas fa-building"></span></div>
+										<div class="ml-3">
+											<div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản công</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 col-md-4 col-xs-6 test">
+						<div class="card mb-4">
+							<div class="card-body hoverlight">
+								<a href="/QuyetDinhTichThu/List">
+									<div class="d-flex align-items-center">
+										<div class="display-4 text-default"><span class="fas fa-shapes"></span></div>
+										<div class="ml-3">
+											<div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản xác lập</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 col-md-4 col-xs-6 test">
+						<div class="card mb-4">
+							<div class="card-body hoverlight">
+								<a href="/XuatNhap/ListGhiTangCongCu">
+									<div class="d-flex align-items-center">
+										<div class="display-4 text-default"><span class="fas fa-pencil-ruler"></span></div>
+										<div class="ml-3">
+											<div style="font-size:15px;color:darkslategrey;font-weight:600">Công cụ, dụng cụ</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>*@
+}
+@*<div class="card mb-4">
+	<h4 class="card-header">
+		Thống kê số liệu tài sản công
+	</h4>
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-12">
+				@{
+					await Html.RenderPartialAsync("../Report/_GiaTriTaiSanTheoLoaiHinh");
+				}
+			</div>
+		</div>
+	</div>
+</div>*@
+<style>
+	.hoverlight:hover:before {
+		transform: scale(1.2);
+		box-shadow: 0 0 15px #85b2d5;
+		filter: blur(3px);
+	}
+
+	.hoverlight:hover {
+		color: #ffa502;
+		box-shadow: 0 0 15px #85b2d5;
+	}
+	/*#rowLoaiHinh{
+				align-items: center;
+				display: flex;
+				max-width:1000px;
+			}
+			#rowLoaiHinh test {
+				flex: 1;
+			}*/
+</style>

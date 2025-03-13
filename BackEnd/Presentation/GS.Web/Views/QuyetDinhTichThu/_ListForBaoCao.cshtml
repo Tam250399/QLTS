@@ -1,0 +1,186 @@
+﻿@model QuyetDinhTichThuSearchModel
+
+
+<nop-antiforgery-token />
+<input asp-for="KeySearch" hidden />
+<div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="SoQuyetDinh" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Quyết định từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayQuyetDinhTu" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Quyết định đến</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayQuyetDinhDen" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Loại tài sản</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiTaiSanId" asp-items="@Model.DDLLoaiTaiSan" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Nguồn gốc</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NguonGocTaiSanId" asp-items="@Model.DDLNguonGocTaiSan" asp-filter="true" />
+        </div>
+    </div>
+</div>
+<script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    SoQuyetDinh: $('#@Html.IdFor(model => model.SoQuyetDinh)').val(),
+                                    NgayQuyetDinhTu: $('#@Html.IdFor(model => model.NgayQuyetDinhTu)').val(),
+                                    NgayQuyetDinhDen: $('#@Html.IdFor(model => model.NgayQuyetDinhDen)').val(),
+                                    LoaiTaiSanId: $('#@Html.IdFor(model => model.LoaiTaiSanId)').val(),
+                                    NguonGocTaiSanId:$('#@Html.IdFor(model => model.NguonGocTaiSanId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "QuyetDinhTichThu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    { field: 'TEN', title: 'Tên',
+                                        headerAttributes: { style: "text-align:center" } },
+                                    { field: 'QUYET_DINH_SO', title: 'Số quyết định',
+                                        headerAttributes: { style: "text-align:center" } },
+                                    { field: 'QUYET_DINH_NGAY', title: 'Ngày quyết định',template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" ,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" }},
+                                    { field: 'GHI_CHU', title: 'Ghi chú' ,
+                                        headerAttributes: { style: "text-align:center" }},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" },
+                                        template: '<a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary" onclick=ExBaoCao(#=ID#)><i class="fas fa-pencil-alt d-block"></i>Chọn</a>'
+                                    }
+                                ]
+                            });
+                            function detailInit(e) {
+                                $('tr[data-uid="' + e.masterRow[0].dataset.uid + '"]').addClass("row-class");
+                                var data = {
+                                    QuyetDinhId: e.data.ID,
+                                };
+                                addAntiForgeryToken(data);
+                                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("List", "TaiSanTd"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: data
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                        mode: "inline"
+                                    },
+
+                                    scrollable: false,
+                                    columns: [
+                                        { field: 'TEN', title: 'Tên' ,
+                                        headerAttributes: { style: "text-align:center" }},
+                                        { field: 'TenLoaiTaiSan', title: 'Loại tài sản',template:kendo.template($("#loaitaisan").html()),
+                                        headerAttributes: { style: "text-align:center" }},
+                                        { field: 'NguyenGia', title: 'Nguyên giá',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" } },
+                                        { field: 'GiaTri', title: 'Giá trị',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" } },
+                                        { field: 'SO_LUONG', title: 'Số lượng',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" } },
+                                        {field: 'KHOI_LUONG',title: 'Khối lượng',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }},
+                                        {field: 'TenNguonGoc',title: 'Nguồn gốc',
+                                        headerAttributes: { style: "text-align:center" }}
+                                    ]
+                                });
+                            };
+                        });
+                        $(".k-hierarchy-cell").click(function () { console.log(this) });
+</script>
+<script type="text/x-kendo-template" id="loaitaisan">
+    <span data-toggle="tooltip" data-placement="top" data-state="primary" data-original-title="#:TenLoaiHinhTaiSan#">#:TenLoaiTaiSan#</span>
+</script>
+

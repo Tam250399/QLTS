@@ -1,0 +1,2306 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <Copyright>Copyright © GS Solutions, Ltd</Copyright>
+    <Company>GS Solutions, Ltd</Company>
+    <Authors>GS Solutions, Ltd</Authors>
+    <Version>4.1.0.0</Version>
+    <Description>GS.Web is also an MVC web application project, a presentation layer for public store and admin area.</Description>
+    <PackageLicenseUrl>
+    </PackageLicenseUrl>
+    <PackageProjectUrl>
+    </PackageProjectUrl>
+    <RepositoryUrl>
+    </RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\GS.Core\GS.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\GS.Data\GS.Data.csproj" />
+    <ProjectReference Include="..\..\Libraries\GS.Services\GS.Services.csproj" />
+    <ProjectReference Include="..\GS.Web.Framework\GS.Web.Framework.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- We copy the entire \App_Data directory. But we ignore JSON files and data protection keys  -->
+    <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
+    <Content Update="App_Data\*.json" CopyToPublishDirectory="Never" />
+    <Content Update="App_Data\DataProtectionKeys\*.xml" CopyToPublishDirectory="Never" />
+    <!--Add connectString by AnPX in Publish code-->
+    <None Include="App_Data\dataSettings*.json" CopyToPublishDirectory="Always" />
+    <None Include="App_Data\jsonSettings*.json" CopyToPublishDirectory="Always" />
+    <Compile Remove="App_Data\WorkFiles\2020\**" />
+    <Compile Remove="Areas\Admin\Helpers\**" />
+    <Compile Remove="Areas\Admin\Models\Blogs\**" />
+    <Compile Remove="Areas\Admin\Models\Catalog\**" />
+    <Compile Remove="Areas\Admin\Models\Cms\**" />
+    <Compile Remove="Areas\Admin\Models\Common\**" />
+    <Compile Remove="Areas\Admin\Models\Contract\**" />
+    <Compile Remove="Areas\Admin\Models\Customers\**" />
+    <Compile Remove="Areas\Admin\Models\Directory\**" />
+    <Compile Remove="Areas\Admin\Models\ExternalAuthentication\**" />
+    <Compile Remove="Areas\Admin\Models\Forums\**" />
+    <Compile Remove="Areas\Admin\Models\Home\**" />
+    <Compile Remove="Areas\Admin\Models\Localization\**" />
+    <Compile Remove="Areas\Admin\Models\Logging\**" />
+    <Compile Remove="Areas\Admin\Models\Messages\**" />
+    <Compile Remove="Areas\Admin\Models\News\**" />
+    <Compile Remove="Areas\Admin\Models\Plugins\**" />
+    <Compile Remove="Areas\Admin\Models\Polls\**" />
+    <Compile Remove="Areas\Admin\Models\Reports\**" />
+    <Compile Remove="Areas\Admin\Models\Security\**" />
+    <Compile Remove="Areas\Admin\Models\Settings\**" />
+    <Compile Remove="Areas\Admin\Models\Stores\**" />
+    <Compile Remove="Areas\Admin\Models\Tasks\**" />
+    <Compile Remove="Areas\Admin\Models\Tax\**" />
+    <Compile Remove="Areas\Admin\Models\Templates\**" />
+    <Compile Remove="Areas\Admin\Models\Topics\**" />
+    <Compile Remove="Areas\Admin\Models\Vendors\**" />
+    <Compile Remove="Areas\Admin\Models\WidgetApps\**" />
+    <Compile Remove="Areas\Admin\Validators\Blogs\**" />
+    <Compile Remove="Areas\Admin\Validators\Catalog\**" />
+    <Compile Remove="Areas\Admin\Validators\Common\**" />
+    <Compile Remove="Areas\Admin\Validators\Contract\**" />
+    <Compile Remove="Areas\Admin\Validators\Customers\**" />
+    <Compile Remove="Areas\Admin\Validators\Directory\**" />
+    <Compile Remove="Areas\Admin\Validators\Forums\**" />
+    <Compile Remove="Areas\Admin\Validators\Localization\**" />
+    <Compile Remove="Areas\Admin\Validators\Messages\**" />
+    <Compile Remove="Areas\Admin\Validators\News\**" />
+    <Compile Remove="Areas\Admin\Validators\Plugins\**" />
+    <Compile Remove="Areas\Admin\Validators\Polls\**" />
+    <Compile Remove="Areas\Admin\Validators\Settings\**" />
+    <Compile Remove="Areas\Admin\Validators\Stores\**" />
+    <Compile Remove="Areas\Admin\Validators\Tasks\**" />
+    <Compile Remove="Areas\Admin\Validators\Tax\**" />
+    <Compile Remove="Areas\Admin\Validators\Templates\**" />
+    <Compile Remove="Areas\Admin\Validators\Topics\**" />
+    <Compile Remove="Areas\Admin\Validators\Vendors\**" />
+    <Compile Remove="Components\**" />
+    <Compile Remove="Infrastructure\Installation\**" />
+    <Compile Remove="Plugins\**" />
+    <Compile Remove="Validators\Blogs\**" />
+    <Compile Remove="Validators\Boards\**" />
+    <Compile Remove="Validators\Catalog\**" />
+    <Compile Remove="Validators\Common\**" />
+    <Compile Remove="Validators\Contracts\**" />
+    <Compile Remove="Validators\Customer\**" />
+    <Compile Remove="Validators\News\**" />
+    <Compile Remove="Validators\PaymentAdvance\**" />
+    <Compile Remove="Validators\PrivateMessages\**" />
+    <Compile Remove="Validators\Unit\**" />
+    <Compile Remove="Validators\Vendors\**" />
+    <Compile Remove="Validators\Works\**" />
+    <Compile Remove="Views\CungDuongToaAn\**" />
+    <Content Remove="App_Data\WorkFiles\2020\**" />
+    <Content Remove="Areas\Admin\Helpers\**" />
+    <Content Remove="Areas\Admin\Models\Blogs\**" />
+    <Content Remove="Areas\Admin\Models\Catalog\**" />
+    <Content Remove="Areas\Admin\Models\Cms\**" />
+    <Content Remove="Areas\Admin\Models\Common\**" />
+    <Content Remove="Areas\Admin\Models\Contract\**" />
+    <Content Remove="Areas\Admin\Models\Customers\**" />
+    <Content Remove="Areas\Admin\Models\Directory\**" />
+    <Content Remove="Areas\Admin\Models\ExternalAuthentication\**" />
+    <Content Remove="Areas\Admin\Models\Forums\**" />
+    <Content Remove="Areas\Admin\Models\Home\**" />
+    <Content Remove="Areas\Admin\Models\Localization\**" />
+    <Content Remove="Areas\Admin\Models\Logging\**" />
+    <Content Remove="Areas\Admin\Models\Messages\**" />
+    <Content Remove="Areas\Admin\Models\News\**" />
+    <Content Remove="Areas\Admin\Models\Plugins\**" />
+    <Content Remove="Areas\Admin\Models\Polls\**" />
+    <Content Remove="Areas\Admin\Models\Reports\**" />
+    <Content Remove="Areas\Admin\Models\Security\**" />
+    <Content Remove="Areas\Admin\Models\Settings\**" />
+    <Content Remove="Areas\Admin\Models\Stores\**" />
+    <Content Remove="Areas\Admin\Models\Tasks\**" />
+    <Content Remove="Areas\Admin\Models\Tax\**" />
+    <Content Remove="Areas\Admin\Models\Templates\**" />
+    <Content Remove="Areas\Admin\Models\Topics\**" />
+    <Content Remove="Areas\Admin\Models\Vendors\**" />
+    <Content Remove="Areas\Admin\Models\WidgetApps\**" />
+    <Content Remove="Areas\Admin\Validators\Blogs\**" />
+    <Content Remove="Areas\Admin\Validators\Catalog\**" />
+    <Content Remove="Areas\Admin\Validators\Common\**" />
+    <Content Remove="Areas\Admin\Validators\Contract\**" />
+    <Content Remove="Areas\Admin\Validators\Customers\**" />
+    <Content Remove="Areas\Admin\Validators\Directory\**" />
+    <Content Remove="Areas\Admin\Validators\Forums\**" />
+    <Content Remove="Areas\Admin\Validators\Localization\**" />
+    <Content Remove="Areas\Admin\Validators\Messages\**" />
+    <Content Remove="Areas\Admin\Validators\News\**" />
+    <Content Remove="Areas\Admin\Validators\Plugins\**" />
+    <Content Remove="Areas\Admin\Validators\Polls\**" />
+    <Content Remove="Areas\Admin\Validators\Settings\**" />
+    <Content Remove="Areas\Admin\Validators\Stores\**" />
+    <Content Remove="Areas\Admin\Validators\Tasks\**" />
+    <Content Remove="Areas\Admin\Validators\Tax\**" />
+    <Content Remove="Areas\Admin\Validators\Templates\**" />
+    <Content Remove="Areas\Admin\Validators\Topics\**" />
+    <Content Remove="Areas\Admin\Validators\Vendors\**" />
+    <Content Remove="Components\**" />
+    <Content Remove="Infrastructure\Installation\**" />
+    <Content Remove="Validators\Blogs\**" />
+    <Content Remove="Validators\Boards\**" />
+    <Content Remove="Validators\Catalog\**" />
+    <Content Remove="Validators\Common\**" />
+    <Content Remove="Validators\Contracts\**" />
+    <Content Remove="Validators\Customer\**" />
+    <Content Remove="Validators\News\**" />
+    <Content Remove="Validators\PaymentAdvance\**" />
+    <Content Remove="Validators\PrivateMessages\**" />
+    <Content Remove="Validators\Unit\**" />
+    <Content Remove="Validators\Vendors\**" />
+    <Content Remove="Validators\Works\**" />
+    <Content Remove="Views\CungDuongToaAn\**" />
+    <EmbeddedResource Remove="App_Data\WorkFiles\2020\**" />
+    <EmbeddedResource Remove="Areas\Admin\Helpers\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Blogs\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Catalog\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Cms\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Common\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Contract\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Customers\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Directory\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\ExternalAuthentication\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Forums\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Home\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Localization\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Logging\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Messages\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\News\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Plugins\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Polls\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Reports\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Security\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Settings\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Stores\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Tasks\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Tax\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Templates\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Topics\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\Vendors\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\WidgetApps\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Blogs\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Catalog\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Common\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Contract\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Customers\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Directory\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Forums\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Localization\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Messages\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\News\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Plugins\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Polls\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Settings\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Stores\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Tasks\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Tax\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Templates\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Topics\**" />
+    <EmbeddedResource Remove="Areas\Admin\Validators\Vendors\**" />
+    <EmbeddedResource Remove="Components\**" />
+    <EmbeddedResource Remove="Infrastructure\Installation\**" />
+    <EmbeddedResource Remove="Plugins\**" />
+    <EmbeddedResource Remove="Validators\Blogs\**" />
+    <EmbeddedResource Remove="Validators\Boards\**" />
+    <EmbeddedResource Remove="Validators\Catalog\**" />
+    <EmbeddedResource Remove="Validators\Common\**" />
+    <EmbeddedResource Remove="Validators\Contracts\**" />
+    <EmbeddedResource Remove="Validators\Customer\**" />
+    <EmbeddedResource Remove="Validators\News\**" />
+    <EmbeddedResource Remove="Validators\PaymentAdvance\**" />
+    <EmbeddedResource Remove="Validators\PrivateMessages\**" />
+    <EmbeddedResource Remove="Validators\Unit\**" />
+    <EmbeddedResource Remove="Validators\Vendors\**" />
+    <EmbeddedResource Remove="Validators\Works\**" />
+    <EmbeddedResource Remove="Views\CungDuongToaAn\**" />
+    <None Remove="App_Data\WorkFiles\2020\**" />
+    <None Remove="Areas\Admin\Helpers\**" />
+    <None Remove="Areas\Admin\Models\Blogs\**" />
+    <None Remove="Areas\Admin\Models\Catalog\**" />
+    <None Remove="Areas\Admin\Models\Cms\**" />
+    <None Remove="Areas\Admin\Models\Common\**" />
+    <None Remove="Areas\Admin\Models\Contract\**" />
+    <None Remove="Areas\Admin\Models\Customers\**" />
+    <None Remove="Areas\Admin\Models\Directory\**" />
+    <None Remove="Areas\Admin\Models\ExternalAuthentication\**" />
+    <None Remove="Areas\Admin\Models\Forums\**" />
+    <None Remove="Areas\Admin\Models\Home\**" />
+    <None Remove="Areas\Admin\Models\Localization\**" />
+    <None Remove="Areas\Admin\Models\Logging\**" />
+    <None Remove="Areas\Admin\Models\Messages\**" />
+    <None Remove="Areas\Admin\Models\News\**" />
+    <None Remove="Areas\Admin\Models\Plugins\**" />
+    <None Remove="Areas\Admin\Models\Polls\**" />
+    <None Remove="Areas\Admin\Models\Reports\**" />
+    <None Remove="Areas\Admin\Models\Security\**" />
+    <None Remove="Areas\Admin\Models\Settings\**" />
+    <None Remove="Areas\Admin\Models\Stores\**" />
+    <None Remove="Areas\Admin\Models\Tasks\**" />
+    <None Remove="Areas\Admin\Models\Tax\**" />
+    <None Remove="Areas\Admin\Models\Templates\**" />
+    <None Remove="Areas\Admin\Models\Topics\**" />
+    <None Remove="Areas\Admin\Models\Vendors\**" />
+    <None Remove="Areas\Admin\Models\WidgetApps\**" />
+    <None Remove="Areas\Admin\Validators\Blogs\**" />
+    <None Remove="Areas\Admin\Validators\Catalog\**" />
+    <None Remove="Areas\Admin\Validators\Common\**" />
+    <None Remove="Areas\Admin\Validators\Contract\**" />
+    <None Remove="Areas\Admin\Validators\Customers\**" />
+    <None Remove="Areas\Admin\Validators\Directory\**" />
+    <None Remove="Areas\Admin\Validators\Forums\**" />
+    <None Remove="Areas\Admin\Validators\Localization\**" />
+    <None Remove="Areas\Admin\Validators\Messages\**" />
+    <None Remove="Areas\Admin\Validators\News\**" />
+    <None Remove="Areas\Admin\Validators\Plugins\**" />
+    <None Remove="Areas\Admin\Validators\Polls\**" />
+    <None Remove="Areas\Admin\Validators\Settings\**" />
+    <None Remove="Areas\Admin\Validators\Stores\**" />
+    <None Remove="Areas\Admin\Validators\Tasks\**" />
+    <None Remove="Areas\Admin\Validators\Tax\**" />
+    <None Remove="Areas\Admin\Validators\Templates\**" />
+    <None Remove="Areas\Admin\Validators\Topics\**" />
+    <None Remove="Areas\Admin\Validators\Vendors\**" />
+    <None Remove="Components\**" />
+    <None Remove="Infrastructure\Installation\**" />
+    <None Remove="Plugins\**" />
+    <None Remove="Validators\Blogs\**" />
+    <None Remove="Validators\Boards\**" />
+    <None Remove="Validators\Catalog\**" />
+    <None Remove="Validators\Common\**" />
+    <None Remove="Validators\Contracts\**" />
+    <None Remove="Validators\Customer\**" />
+    <None Remove="Validators\News\**" />
+    <None Remove="Validators\PaymentAdvance\**" />
+    <None Remove="Validators\PrivateMessages\**" />
+    <None Remove="Validators\Unit\**" />
+    <None Remove="Validators\Vendors\**" />
+    <None Remove="Validators\Works\**" />
+    <None Remove="Views\CungDuongToaAn\**" />
+    <!-- We copy the entire \Plugins and \Themes directories.
+	    But we ignore cshtml and JSON files to avoid "Duplicate 'Content' items were included" error during publishing.
+	    We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
+    <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.config;Plugins\**\*.cshtml;Plugins\**\*.json" />
+    <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml;Themes\**\*.json" />
+    <!-- We copy the \Logs directory -->
+    <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <Compile Remove="Areas\Admin\Components\AclDisabledWarning.cs" />
+    <Compile Remove="Areas\Admin\Components\AdminLanguageSelector.cs" />
+    <Compile Remove="Areas\Admin\Components\AdminWidget.cs" />
+    <Compile Remove="Areas\Admin\Components\CommonStatistics.cs" />
+    <Compile Remove="Areas\Admin\Components\MultistoreDisabledWarning.cs" />
+    <Compile Remove="Areas\Admin\Components\NopCommerceNewsViewComponent.cs" />
+    <Compile Remove="Areas\Admin\Components\SettingMode.cs" />
+    <Compile Remove="Areas\Admin\Components\StoreScopeConfiguration.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ActivityLogController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\AddressAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\BlogController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CategoryController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CommonController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ContractAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CountryController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CurrencyController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CustomerAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CustomerController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\CustomerRoleController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\DownloadController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\EmailAccountController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ExternalAuthenticationController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ForumController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\JbimagesController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\LanguageController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\LogController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ManufacturerController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\MeasureController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\MessageTemplateController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\NewsController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\NewsLetterSubscriptionController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\OnlineCustomerController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\PictureController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\PluginController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\PollController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\PreferencesController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\QueuedEmailController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ReportController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\RoxyFilemanController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\ScheduleTaskController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\SecurityController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\SettingController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\SpecificationAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\StoreController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\TaskAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\TemplateController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\TopicController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\VendorAttributeController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\VendorController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\WidgetAppController.cs" />
+    <Compile Remove="Areas\Admin\Controllers\WidgetController.cs" />
+    <Compile Remove="Areas\Admin\Factories\ActivityLogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\AddressAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\BaseAdminModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\BlogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CategoryModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CommonModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ContractAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CountryModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CurrencyModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CustomerAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CustomerModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\CustomerRoleModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\EmailAccountModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ExternalAuthenticationModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ForumModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\HomeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IActivityLogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IAddressAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IBaseAdminModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IBlogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICategoryModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICommonModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IContractAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICountryModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICurrencyModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICustomerAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICustomerModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ICustomerRoleModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IEmailAccountModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IExternalAuthenticationModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IForumModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IHomeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ILanguageModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ILogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IManufacturerModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IMeasureModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IMessageTemplateModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\INewsletterSubscriptionModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\INewsModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IPluginModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IPollModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IQueuedEmailModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IReportModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IReviewTypeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IScheduleTaskModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ISecurityModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ISettingModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ISpecificationAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IStoreModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ITaskAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ITemplateModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ITopicModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IVendorAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IVendorModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IWidgetAppModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\IWidgetModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\LanguageModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\LogModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ManufacturerModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\MeasureModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\MessageTemplateModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\NewsLetterSubscriptionModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\NewsModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\PluginModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\PollModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\QueuedEmailModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ReportModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ReviewTypeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\ScheduleTaskModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\SecurityModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\SettingModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\SpecificationAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\StoreModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\TaskAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\TemplateModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\TopicModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\VendorAttributeModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\VendorModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\WidgetAppModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Factories\WidgetModelFactory.cs" />
+    <Compile Remove="Areas\Admin\Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Compile Remove="Areas\Admin\Validators\ValidatorUtilities.cs" />
+    <Compile Remove="Controllers\AdvanceController.cs" />
+    <Compile Remove="Controllers\BackwardCompatibility1XController.cs" />
+    <Compile Remove="Controllers\BackwardCompatibility2XController.cs" />
+    <Compile Remove="Controllers\BlogController.cs" />
+    <Compile Remove="Controllers\BoardsController.cs" />
+    <Compile Remove="Controllers\BusinessPlanController.cs" />
+    <Compile Remove="Controllers\CatalogController.cs" />
+    <Compile Remove="Controllers\ConstructionCapitalController.cs" />
+    <Compile Remove="Controllers\ConstructionController.cs" />
+    <Compile Remove="Controllers\ConstructionTypeController.cs" />
+    <Compile Remove="Controllers\ContractAcceptanceController.cs" />
+    <Compile Remove="Controllers\ContractController.cs" />
+    <Compile Remove="Controllers\ContractFormController.cs" />
+    <Compile Remove="Controllers\ContractPeriodController.cs" />
+    <Compile Remove="Controllers\ContractTypeController.cs" />
+    <Compile Remove="Controllers\CountryController.cs" />
+    <Compile Remove="Controllers\CustomerController.cs" />
+    <Compile Remove="Controllers\EmployerController.cs" />
+    <Compile Remove="Controllers\KeepAliveController.cs" />
+    <Compile Remove="Controllers\NewsController.cs" />
+    <Compile Remove="Controllers\NewsletterController.cs" />
+    <Compile Remove="Controllers\PaymentExpenditureController.cs" />
+    <Compile Remove="Controllers\PollController.cs" />
+    <Compile Remove="Controllers\ProcuringAgencyController.cs" />
+    <Compile Remove="Controllers\ProfileController.cs" />
+    <Compile Remove="Controllers\SecurityController.cs" />
+    <Compile Remove="Controllers\TaskGroupController.cs" />
+    <Compile Remove="Controllers\TopicController.cs" />
+    <Compile Remove="Controllers\UnitController.cs" />
+    <Compile Remove="Controllers\VendorController.cs" />
+    <Compile Remove="Controllers\WorkFileController.cs" />
+    <Compile Remove="Controllers\WorksController.cs" />
+    <Compile Remove="Factories\AddressModelFactory.cs" />
+    <Compile Remove="Factories\BlogModelFactory.cs" />
+    <Compile Remove="Factories\CatalogModelFactory.cs" />
+    <Compile Remove="Factories\CommonModelFactory.cs" />
+    <Compile Remove="Factories\ConstructionModelFactory.cs" />
+    <Compile Remove="Factories\ContractModelFactory.cs" />
+    <Compile Remove="Factories\CountryModelFactory.cs" />
+    <Compile Remove="Factories\CustomerModelFactory.cs" />
+    <Compile Remove="Factories\ExternalAuthenticationModelFactory.cs" />
+    <Compile Remove="Factories\ForumModelFactory.cs" />
+    <Compile Remove="Factories\IAddressModelFactory.cs" />
+    <Compile Remove="Factories\IBlogModelFactory.cs" />
+    <Compile Remove="Factories\ICatalogModelFactory.cs" />
+    <Compile Remove="Factories\ICommonModelFactory.cs" />
+    <Compile Remove="Factories\IConstructionModelFactory.cs" />
+    <Compile Remove="Factories\IContractModelFactory.cs" />
+    <Compile Remove="Factories\ICountryModelFactory.cs" />
+    <Compile Remove="Factories\ICustomerModelFactory.cs" />
+    <Compile Remove="Factories\IExternalAuthenticationModelFactory.cs" />
+    <Compile Remove="Factories\IForumModelFactory.cs" />
+    <Compile Remove="Factories\INewsletterModelFactory.cs" />
+    <Compile Remove="Factories\INewsModelFactory.cs" />
+    <Compile Remove="Factories\IPaymentAdvanceFactory.cs" />
+    <Compile Remove="Factories\IPollModelFactory.cs" />
+    <Compile Remove="Factories\IPrivateMessagesModelFactory.cs" />
+    <Compile Remove="Factories\IProcuringAgencyModelFactory.cs" />
+    <Compile Remove="Factories\IProfileModelFactory.cs" />
+    <Compile Remove="Factories\ITaskModelFactory.cs" />
+    <Compile Remove="Factories\ITopicModelFactory.cs" />
+    <Compile Remove="Factories\IUnitModelFactory.cs" />
+    <Compile Remove="Factories\IVendorModelFactory.cs" />
+    <Compile Remove="Factories\IWidgetModelFactory.cs" />
+    <Compile Remove="Factories\IWorkModelFactory.cs" />
+    <Compile Remove="Factories\NewsletterModelFactory.cs" />
+    <Compile Remove="Factories\NewsModelFactory.cs" />
+    <Compile Remove="Factories\PaymentAdvanceFactory.cs" />
+    <Compile Remove="Factories\PollModelFactory.cs" />
+    <Compile Remove="Factories\PrivateMessagesModelFactory.cs" />
+    <Compile Remove="Factories\ProcuringAgencyModelFactory.cs" />
+    <Compile Remove="Factories\ProfileModelFactory.cs" />
+    <Compile Remove="Factories\TaskModelFactory.cs" />
+    <Compile Remove="Factories\TopicModelFactory.cs" />
+    <Compile Remove="Factories\UnitModelFactory.cs" />
+    <Compile Remove="Factories\VendorModelFactory.cs" />
+    <Compile Remove="Factories\WidgetModelFactory.cs" />
+    <Compile Remove="Factories\WorkModelFactory.cs" />
+    <Compile Remove="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Content Remove="Views\DonVi\ListDonViDaXacNhan.cshtml" />
+    <Content Remove="Views\LoaiTaiSanToanDan\Create.cshtml" />
+    <Content Remove="Views\LoaiTaiSanToanDan\Edit.cshtml" />
+    <Content Remove="Views\LoaiTaiSanToanDan\List.cshtml" />
+    <Content Remove="Views\LoaiTaiSanToanDan\_CreateOrUpdate.cshtml" />
+    <Content Remove="Views\TaiSan\CreateTest.cshtml" />
+    <Content Remove="wwwroot\images\thumbs\0000001_banner_1.jpg" />
+    <Content Remove="wwwroot\images\thumbs\0000002_banner_2.jpg" />
+    <Content Remove="wwwroot\images\thumbs\0000003_100.jpeg" />
+    <Content Remove="wwwroot\images\thumbs\0000004_100.jpeg" />
+    <None Remove="App_Data\jsonSettings_ImpExcelNguoiDung.json" />
+    <None Remove="App_Data\TrashFiles\readme.txt" />
+    <None Remove="Reports\BaoCaoDienTu\Report_Online.repx" />
+    <None Remove="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02A_DK_TSNN.repx" />
+    <None Remove="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02B_DK_TSNN.repx" />
+    <None Remove="Reports\CCDC\CCDC_BienBanKiemKe.repx" />
+    <None Remove="Reports\CCDC\CCDC_Giam.repx" />
+    <None Remove="Reports\CCDC\CCDC_GiamOrTang.repx" />
+    <None Remove="Reports\CCDC\CCDC_HongMat.repx" />
+    <None Remove="Reports\CCDC\CCDC_KiemKeBoPhan.repx" />
+    <None Remove="Reports\CCDC\CCDC_KiemKes.repx" />
+    <None Remove="Reports\CCDC\CCDC_LietKe.repx" />
+    <None Remove="Reports\CCDC\CCDC_LietKeBoPhans.repx" />
+    <None Remove="Reports\CCDC\CCDC_SuaChuaBaoDuong.repx" />
+    <None Remove="Reports\CCDC\CCDC_TangAndGiam.repx" />
+    <None Remove="Reports\CCDC\CCDC_TongHop.repx" />
+    <None Remove="Reports\CCDC\CCDC_TongHopKiemKe.repx" />
+    <None Remove="Reports\CCDC\CCDC_TongHopPhanBo.repx" />
+    <None Remove="Reports\CCDC\CCDC_TongHopTon.repx" />
+    <None Remove="Reports\CCDC\TestCacheSourchReport.repx" />
+    <None Remove="Reports\CCDC_KiemKe.repx" />
+    <None Remove="Reports\CCDC_TongHopKiemKe.repx" />
+    <None Remove="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL02.repx" />
+    <None Remove="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL03.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_Giam.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_KeKhaiThongTin.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_KetQuaXuLy.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_PhuongAnXuLy.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_Tang.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_TangGiam.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_TinhHinhXuLy.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_TongHop.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_TongHopSoTienThu.repx" />
+    <None Remove="Reports\Test\Report_Test.repx" />
+    <None Remove="Reports\Test\TestBolder.repx" />
+    <None Remove="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT107.repx" />
+    <None Remove="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT133.repx" />
+    <None Remove="Reports\TheTaiSan\rptTHE_KIEM_KE_TSCD.repx" />
+    <None Remove="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT107.repx" />
+    <None Remove="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT133.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_10b_CK_TSC_QLSD_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_10c_CK_TSC_XL_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_10d_CK_TSC_KTNL_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_11b_CK_TSC_QL_SD_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_11c_CK_TSC_XL_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_11d_CK_TSC_KTNL_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_9d_CK_TSC_XULY_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M01_KHMS_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M02_KQMS_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M03_QLNHA_DAT.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M04_QLOTO_KHAC.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M05_THUE_TS.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M06_CHUYENDOI_SOHUU.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_M07_KQ_MUASAM.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_TIEN_DO_MUA_SAM.repx" />
+    <None Remove="Reports\TS_BCCK\rptTS_BCCK_TINH_HINH_MUA_SAM.repx" />
+    <None Remove="Reports\TS_BCCT\CCThongTin_HuuHinh_B03_CCTT.repx" />
+    <None Remove="Reports\TS_BCCT\CCThongTin_VoHinh_B03_CCTT.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01B_TSC.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01C_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01D_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01E_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01F_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01G_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_01H_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_1A.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_1B.repx" />
+    <None Remove="Reports\TS_BCCT\rptTS_BCCT_BCTDXNTS_DKTS.repx" />
+    <None Remove="Reports\TS_BCCT\TS_BCCT_1B.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_01A_DK_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_01BC_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_01B_DK_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_01C_DK_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02A_CTDV_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02A_THC_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02BC_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02B_TS_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02C_OT_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02D_TSK_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02E_KT_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02F_KT_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02G_KT_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02H1_TS_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02H_TS_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02I_KT_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_02K1_TS_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_03BC_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_03_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04A_TRUSODENGHIXULY.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04BC_HTSD_KHAC.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04B_OTODENGHIXULY.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04C_KHACDENGHIXULY.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04_DK_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_05A_DM_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_05B_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\rptTS_BCDA_05_TSDA.repx" />
+    <None Remove="Reports\TS_BCDA\TS_BCDA_02K_TS_TSDA.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_02_DKTSNN_KEKHAIOTO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_02_DMTSNN_GIAM_OTO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_03_DKTSNN_KEKHAITS500.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_03_DMTSNN_GIAM_KHAC.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_04b_DKTSC_KEKHAIOTO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_06a_DKTSC_DVSDTS.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_06b_DKTSC_DVTSTRUSO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_06c_DKTSC_DVTDTTOTO.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.repx" />
+    <None Remove="Reports\TS_BCKK\rptTS_BCKK_07_DKTSC_XOATS_CSDL.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU01_THTSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU02_CCTSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU03_QUYDAT_MDSD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU04_TS_LTS.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU05_TS_CQ_TC_DV.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU06_TS_CAPQL.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU07_OTO_SD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU08_OTO_VSD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU09_DAT_SD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU10_TS_TREN500_MDSD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU11A_THTSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_MAU11B_THTSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL02_TANG_GIAM_TSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL06_TANG_GIAM_TSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL07_TANG_GIAM_TSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL08_OTO_VSD.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_PL10_TANG_GIAM_TSNN.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_QH14_OTO_CHUCDANH.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_QLSD_DAT_TSC.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.repx" />
+    <None Remove="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.repx" />
+    <None Remove="Reports\TS_BCQH\TS_TANG_GIAM_PL10_TSNN.repx" />
+    <None Remove="Reports\TS_BCTC\rptTS_BCTC_03_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTC\rptTS_BCTC_04_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02A_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02B_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02C_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02D_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02E_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02F_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02G_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_02H_DK_TSNN.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_08A_DK_TSC.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_08B_DK_TSC.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH.repx" />
+    <None Remove="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.repx" />
+    <None Remove="Reports\TS_CDKT\BienBanKiemKe.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_B09_S32H_SO_TS.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_B10_S32H_CCDC.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_B11_S32H_SO_TS_CDCC.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_BTC_B08_S24H_SO_TS.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_BTC_B11_S24H_SO_TS_CDCC.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_KiemKeTaiSan.repx" />
+    <None Remove="Reports\TS_CDKT\CDKT_KiemKeTaiSanPhongBan.repx" />
+    <None Remove="Reports\TaiSanToanDan\TSTD_ThonTinTaiSan.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS06_SOGHITANG_TSCD.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS07_SOGHIGIAM_TSCD.repx" />
+    <None Remove="Reports\TS_CDKT\TS_CDKT_BS08_MS_S31H_SO_TSCD.repx" />
+    <None Remove="Reports\TS_PXNTT\rptTS_PXNTT_MAU_01.repx" />
+    <None Remove="Reports\TS_PXNTT\rptTS_PXNTT_MAU_02.repx" />
+    <None Remove="Reports\TS_PXNTT\rptTS_PXNTT_MAU_03.repx" />
+    <None Remove="Themes\AppWork\Content\assets\chathub\jquery.signalr-2.2.2.min.js" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\banner1000.jpg" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\bg-header.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\bg-t.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\bgboxlogin.jpg" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\blur-26347-27038-hd-wallpapers.jpg" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\logo-BTC-removebg.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\logo-BTC.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\trongdong.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\user-512.png" />
+    <None Remove="Themes\AppWork\Content\assets\img\bg\user.jpg" />
+    <None Remove="Themes\AppWork\Content\assets\vendor\css\rtl\theme-settings.css" />
+    <Compile Include="Areas\Admin\Helpers\TinyMceHelper.cs" />
+    <EmbeddedResource Include="Reports\BaoCaoDienTu\Report_Online.repx" />
+    <EmbeddedResource Include="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02B_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02A_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_BienBanKiemKe.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_GiamOrTang.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_HongMat.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_KiemKeBoPhan.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_KiemKes.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_LietKe.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_LietKeBoPhans.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_SuaChuaBaoDuong.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_TangAndGiam.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_TongHop.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_TongHopKiemKe.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_TongHopPhanBo.repx" />
+    <EmbeddedResource Include="Reports\CCDC\CCDC_TongHopTon.repx" />
+    <EmbeddedResource Include="Reports\CCDC\TestCacheSourchReport.repx" />
+    <EmbeddedResource Include="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL02.repx" />
+    <EmbeddedResource Include="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL03.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_Giam.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_KeKhaiThongTin.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_KetQuaXuLy.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_PhuongAnXuLy.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_Tang.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_TangGiam.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_TinhHinhXuLy.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_TongHop.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_TongHopSoTienThu.repx" />
+    <EmbeddedResource Include="Reports\Test\Report_Test.repx" />
+    <EmbeddedResource Include="Reports\Test\TestBolder.repx" />
+    <EmbeddedResource Include="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT107.repx" />
+    <EmbeddedResource Include="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT133.repx" />
+    <EmbeddedResource Include="Reports\TheTaiSan\rptTHE_KIEM_KE_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT107.repx" />
+    <EmbeddedResource Include="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT133.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_10b_CK_TSC_QLSD_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_10c_CK_TSC_XL_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_10d_CK_TSC_KTNL_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_11b_CK_TSC_QL_SD_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_11c_CK_TSC_XL_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_11d_CK_TSC_KTNL_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_9d_CK_TSC_XULY_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M01_KHMS_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M02_KQMS_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M03_QLNHA_DAT.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M04_QLOTO_KHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M05_THUE_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M06_CHUYENDOI_SOHUU.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_M07_KQ_MUASAM.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_TIEN_DO_MUA_SAM.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCK\rptTS_BCCK_TINH_HINH_MUA_SAM.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\CCThongTin_HuuHinh_B03_CCTT.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\CCThongTin_VoHinh_B03_CCTT.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01B_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01C_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01D_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01E_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01F_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01G_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_01H_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_1A.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_1B.repx" />
+    <EmbeddedResource Include="Reports\TS_BCCT\rptTS_BCCT_BCTDXNTS_DKTS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_01A_DK_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_01BC_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_01B_DK_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_01C_DK_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02A_CTDV_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02A_THC_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02BC_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02B_TS_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02C_OT_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02D_TSK_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02E_KT_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02F_KT_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02G_KT_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02H1_TS_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02H_TS_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02I_KT_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_02K1_TS_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_03BC_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_03_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04A_TRUSODENGHIXULY.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04BC_HTSD_KHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04B_OTODENGHIXULY.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04C_KHACDENGHIXULY.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04_DK_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_05A_DM_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_05BC_TANG_GIAM_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_05B_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\rptTS_BCDA_05_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCDA\TS_BCDA_02K_TS_TSDA.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_02_DKTSNN_KEKHAIOTO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_02_DMTSNN_GIAM_OTO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_03_DKTSNN_KEKHAITS500.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_03_DMTSNN_GIAM_KHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_04b_DKTSC_KEKHAIOTO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_06a_DKTSC_DVSDTS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_06b_DKTSC_DVTSTRUSO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_06c_DKTSC_DVTDTTOTO.repx" />
+    <EmbeddedResource Include="Reports\TS_BCKK\rptTS_BCKK_07_DKTSC_XOATS_CSDL.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU01_THTSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU02_CCTSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU03_QUYDAT_MDSD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU04_TS_LTS.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU05_TS_CQ_TC_DV.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU06_TS_CAPQL.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU07_OTO_SD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU08_OTO_VSD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU09_DAT_SD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU10_TS_TREN500_MDSD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU11A_THTSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_MAU11B_THTSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL02_TANG_GIAM_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL06_TANG_GIAM_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL07_TANG_GIAM_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL08_OTO_VSD.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_PL10_TANG_GIAM_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_QH14_OTO_CHUCDANH.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_QLSD_DAT_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCQH\TS_TANG_GIAM_PL10_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTC\rptTS_BCTC_03_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTC\rptTS_BCTC_04_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02A_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02B_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02C_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02D_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02E_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02G_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02H_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_08A_DK_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_08B_DK_TSC.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_02F_DK_TSNN.repx" />
+    <EmbeddedResource Include="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\BienBanKiemKe.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_B10_S32H_CCDC.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_B09_S32H_SO_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_B11_S32H_SO_TS_CDCC.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_BTC_B08_S24H_SO_TS.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_BTC_B11_S24H_SO_TS_CDCC.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_KiemKeTaiSan.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\CDKT_KiemKeTaiSanPhongBan.repx" />
+    <EmbeddedResource Include="Reports\TaiSanToanDan\TSTD_ThonTinTaiSan.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS06_SOGHITANG_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS07_SOGHIGIAM_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TS_CDKT\TS_CDKT_BS08_MS_S31H_SO_TSCD.repx" />
+    <EmbeddedResource Include="Reports\TS_PXNTT\rptTS_PXNTT_MAU_01.repx" />
+    <EmbeddedResource Include="Reports\TS_PXNTT\rptTS_PXNTT_MAU_02.repx" />
+    <EmbeddedResource Include="Reports\TS_PXNTT\rptTS_PXNTT_MAU_03.repx" />
+    <None Update="Areas\Admin\sitemap.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Components\" />
+    <Folder Include="Areas\Admin\Factories\" />
+    <Folder Include="Areas\Admin\Infrastructure\Cache\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Validators\" />
+    <Folder Include="Infrastructure\Cache\" />
+    <Folder Include="Plugins\bin\" />
+    <Folder Include="Scripts\AnhNV\" />
+    <Folder Include="Themes\TSCV1\Content\" />
+    <Folder Include="Views\GiamDieuChuyenNgoai\" />
+    <Folder Include="wwwroot\lib\robotofont\fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\jsonSettings_ImpExcelCCDC.json" />
+    <None Include="Views\BaoCao\Create.cshtml" />
+    <None Include="Views\BaoCao\Edit.cshtml" />
+    <None Include="Views\BaoCao\List.cshtml" />
+    <None Include="Views\BaoCao\_CreateOrUpdate.cshtml" />
+    <None Include="Views\CauHinh\Create.cshtml" />
+    <None Include="Views\CauHinh\Edit.cshtml" />
+    <None Include="Views\CauHinh\List.cshtml" />
+    <None Include="Views\CauHinh\_CreateOrUpdate.cshtml" />
+    <None Include="Views\CheDoHaoMon\Create.cshtml" />
+    <None Include="Views\CheDoHaoMon\Edit.cshtml" />
+    <None Include="Views\CheDoHaoMon\List.cshtml" />
+    <None Include="Views\CheDoHaoMon\_CreateOrUpdate.cshtml" />
+    <None Include="Views\ChoThue\Create.cshtml" />
+    <None Include="Views\ChoThue\Edit.cshtml" />
+    <None Include="Views\ChoThue\List.cshtml" />
+    <None Include="Views\ChoThue\_CreateOrUpdate.cshtml" />
+    <None Include="Views\ChucDanh\Create.cshtml" />
+    <None Include="Views\ChucDanh\Edit.cshtml" />
+    <None Include="Views\ChucDanh\List.cshtml" />
+    <None Include="Views\ChucDanh\_CreateOrUpdate.cshtml" />
+    <None Include="Views\CongCuDonVi\Create.cshtml" />
+    <None Include="Views\CongCuDonVi\Edit.cshtml" />
+    <None Include="Views\CongCuDonVi\List.cshtml" />
+    <None Include="Views\CongCuDonVi\_CreateOrUpdate.cshtml" />
+    <None Include="Views\CongCu\Create.cshtml" />
+    <None Include="Views\CongCu\Edit.cshtml" />
+    <None Include="Views\CongCu\List.cshtml" />
+    <None Include="Views\CongCu\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DBTaiSan\Create.cshtml" />
+    <None Include="Views\DBTaiSan\Edit.cshtml" />
+    <None Include="Views\DBTaiSan\List.cshtml" />
+    <None Include="Views\DBTaiSan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DBTempTaiSanCu\Create.cshtml" />
+    <None Include="Views\DBTempTaiSanCu\Edit.cshtml" />
+    <None Include="Views\DBTempTaiSanCu\List.cshtml" />
+    <None Include="Views\DBTempTaiSanCu\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DB_QueueProcessHistory\Create.cshtml" />
+    <None Include="Views\DB_QueueProcessHistory\Edit.cshtml" />
+    <None Include="Views\DB_QueueProcessHistory\List.cshtml" />
+    <None Include="Views\DB_QueueProcessHistory\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DB_QueueProcess\Create.cshtml" />
+    <None Include="Views\DB_QueueProcess\Edit.cshtml" />
+    <None Include="Views\DB_QueueProcess\List.cshtml" />
+    <None Include="Views\DB_QueueProcess\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DeNghiXuLyTaiSan\Create.cshtml" />
+    <None Include="Views\DeNghiXuLyTaiSan\Edit.cshtml" />
+    <None Include="Views\DeNghiXuLyTaiSan\List.cshtml" />
+    <None Include="Views\DeNghiXuLyTaiSan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DeNghiXuLy\Create.cshtml" />
+    <None Include="Views\DeNghiXuLy\Edit.cshtml" />
+    <None Include="Views\DeNghiXuLy\List.cshtml" />
+    <None Include="Views\DeNghiXuLy\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DiaBanTest\Create.cshtml" />
+    <None Include="Views\DiaBanTest\Edit.cshtml" />
+    <None Include="Views\DiaBanTest\List.cshtml" />
+    <None Include="Views\DiaBanTest\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DiaBan\Create.cshtml" />
+    <None Include="Views\DiaBan\Edit.cshtml" />
+    <None Include="Views\DiaBan\List.cshtml" />
+    <None Include="Views\DiaBan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DoiTac\Create.cshtml" />
+    <None Include="Views\DoiTac\Edit.cshtml" />
+    <None Include="Views\DoiTac\List.cshtml" />
+    <None Include="Views\DoiTac\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DongXe\Create.cshtml" />
+    <None Include="Views\DongXe\Edit.cshtml" />
+    <None Include="Views\DongXe\List.cshtml" />
+    <None Include="Views\DongXe\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DonViBoPhan\Create.cshtml" />
+    <None Include="Views\DonViBoPhan\Edit.cshtml" />
+    <None Include="Views\DonViBoPhan\List.cshtml" />
+    <None Include="Views\DonViBoPhan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DonViChuyenDoi\Create.cshtml" />
+    <None Include="Views\DonViChuyenDoi\Edit.cshtml" />
+    <None Include="Views\DonViChuyenDoi\List.cshtml" />
+    <None Include="Views\DonViChuyenDoi\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DonVi\Create.cshtml" />
+    <None Include="Views\DonVi\Edit.cshtml" />
+    <None Include="Views\DonVi\ListDonViDaXacNhan.cshtml" />
+    <None Include="Views\DonVi\List.cshtml" />
+    <None Include="Views\DonVi\_CreateOrUpdate.cshtml" />
+    <None Include="Views\DuAn\Create.cshtml" />
+    <None Include="Views\DuAn\Edit.cshtml" />
+    <None Include="Views\DuAn\List.cshtml" />
+    <None Include="Views\DuAn\_CreateOrUpdate.cshtml" />
+    <None Include="Views\GiamHongmat\Create.cshtml" />
+    <None Include="Views\GiamHongmat\Edit.cshtml" />
+    <None Include="Views\GiamHongmat\List.cshtml" />
+    <None Include="Views\GiamHongmat\_CreateOrUpdate.cshtml" />
+    <None Include="Views\HienTrang\Create.cshtml" />
+    <None Include="Views\HienTrang\Edit.cshtml" />
+    <None Include="Views\HienTrang\List.cshtml" />
+    <None Include="Views\HienTrang\_CreateOrUpdate.cshtml" />
+    <None Include="Views\HinhThucMuaSam\Create.cshtml" />
+    <None Include="Views\HinhThucMuaSam\Edit.cshtml" />
+    <None Include="Views\HinhThucMuaSam\List.cshtml" />
+    <None Include="Views\HinhThucMuaSam\_CreateOrUpdate.cshtml" />
+    <None Include="Views\KiemKeCongCu\Create.cshtml" />
+    <None Include="Views\KiemKeCongCu\Edit.cshtml" />
+    <None Include="Views\KiemKeCongCu\List.cshtml" />
+    <None Include="Views\KiemKeCongCu\_CreateOrUpdate.cshtml" />
+    <None Include="Views\KiemKeHoiDong\Create.cshtml" />
+    <None Include="Views\KiemKeHoiDong\Edit.cshtml" />
+    <None Include="Views\KiemKeHoiDong\List.cshtml" />
+    <None Include="Views\KiemKeHoiDong\_CreateOrUpdate.cshtml" />
+    <None Include="Views\KiemKe\Create.cshtml" />
+    <None Include="Views\KiemKe\Edit.cshtml" />
+    <None Include="Views\KiemKe\List.cshtml" />
+    <None Include="Views\KiemKe\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LoaiBienDong\Create.cshtml" />
+    <None Include="Views\LoaiBienDong\Edit.cshtml" />
+    <None Include="Views\LoaiBienDong\List.cshtml" />
+    <None Include="Views\LoaiBienDong\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LoaIDonVi\Create.cshtml" />
+    <None Include="Views\LoaIDonVi\Edit.cshtml" />
+    <None Include="Views\LoaIDonVi\List.cshtml" />
+    <None Include="Views\LoaIDonVi\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LoaiTaiSanToanDan\Create.cshtml" />
+    <None Include="Views\LoaiTaiSanToanDan\Edit.cshtml" />
+    <None Include="Views\LoaiTaiSanToanDan\List.cshtml" />
+    <None Include="Views\LoaiTaiSanToanDan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LoaiTaiSan\Create.cshtml" />
+    <None Include="Views\LoaiTaiSan\Edit.cshtml" />
+    <None Include="Views\LoaiTaiSan\List.cshtml" />
+    <None Include="Views\LoaiTaiSan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LogQueueProcess\Create.cshtml" />
+    <None Include="Views\LogQueueProcess\Edit.cshtml" />
+    <None Include="Views\LogQueueProcess\List.cshtml" />
+    <None Include="Views\LogQueueProcess\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LogsDongBoCsdlqg\Create.cshtml" />
+    <None Include="Views\LogsDongBoCsdlqg\Edit.cshtml" />
+    <None Include="Views\LogsDongBoCsdlqg\List.cshtml" />
+    <None Include="Views\LogsDongBoCsdlqg\_CreateOrUpdate.cshtml" />
+    <None Include="Views\LyDoBienDong\Create.cshtml" />
+    <None Include="Views\LyDoBienDong\Edit.cshtml" />
+    <None Include="Views\LyDoBienDong\List.cshtml" />
+    <None Include="Views\LyDoBienDong\_CreateOrUpdate.cshtml" />
+    <None Include="Views\MucDichSuDung\Create.cshtml" />
+    <None Include="Views\MucDichSuDung\Edit.cshtml" />
+    <None Include="Views\MucDichSuDung\List.cshtml" />
+    <None Include="Views\MucDichSuDung\_CreateOrUpdate.cshtml" />
+    <None Include="Views\NguonVon\Create.cshtml" />
+    <None Include="Views\NguonVon\Edit.cshtml" />
+    <None Include="Views\NguonVon\List.cshtml" />
+    <None Include="Views\NguonVon\_CreateOrUpdate.cshtml" />
+    <None Include="Views\NhanXe\Create.cshtml" />
+    <None Include="Views\NhanXe\Edit.cshtml" />
+    <None Include="Views\NhanXe\List.cshtml" />
+    <None Include="Views\NhanXe\_CreateOrUpdate.cshtml" />
+    <None Include="Views\NhapXuatCongCu\Create.cshtml" />
+    <None Include="Views\NhapXuatCongCu\Edit.cshtml" />
+    <None Include="Views\NhapXuatCongCu\List.cshtml" />
+    <None Include="Views\NhapXuatCongCu\_CreateOrUpdate.cshtml" />
+    <None Include="Views\QuocGia\Create.cshtml" />
+    <None Include="Views\QuocGia\Edit.cshtml" />
+    <None Include="Views\QuocGia\List.cshtml" />
+    <None Include="Views\QuocGia\_CreateOrUpdate.cshtml" />
+    <None Include="Views\SuaChuaBaoDuong\Create.cshtml" />
+    <None Include="Views\SuaChuaBaoDuong\Edit.cshtml" />
+    <None Include="Views\SuaChuaBaoDuong\List.cshtml" />
+    <None Include="Views\SuaChuaBaoDuong\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSanChoThue\Create.cshtml" />
+    <None Include="Views\TaiSanChoThue\Edit.cshtml" />
+    <None Include="Views\TaiSanChoThue\List.cshtml" />
+    <None Include="Views\TaiSanChoThue\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSanKiemKeHoiDong\Create.cshtml" />
+    <None Include="Views\TaiSanKiemKeHoiDong\Edit.cshtml" />
+    <None Include="Views\TaiSanKiemKeHoiDong\List.cshtml" />
+    <None Include="Views\TaiSanKiemKeHoiDong\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSanKiemKeTaiSan\Create.cshtml" />
+    <None Include="Views\TaiSanKiemKeTaiSan\Edit.cshtml" />
+    <None Include="Views\TaiSanKiemKeTaiSan\List.cshtml" />
+    <None Include="Views\TaiSanKiemKeTaiSan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSanKiemKe\Create.cshtml" />
+    <None Include="Views\TaiSanKiemKe\Edit.cshtml" />
+    <None Include="Views\TaiSanKiemKe\List.cshtml" />
+    <None Include="Views\TaiSanKiemKe\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSanNhatKy\Create.cshtml" />
+    <None Include="Views\TaiSanNhatKy\Edit.cshtml" />
+    <None Include="Views\TaiSanNhatKy\List.cshtml" />
+    <None Include="Views\TaiSanNhatKy\_CreateOrUpdate.cshtml" />
+    <None Include="Views\TaiSan\CreateTest.cshtml" />
+    <None Include="Views\TaiSan\Create.cshtml" />
+    <None Include="Views\TaiSan\Edit.cshtml" />
+    <None Include="Views\TaiSan\List.cshtml" />
+    <None Include="Views\TaiSan\_CreateOrUpdate.cshtml" />
+    <None Include="Views\XuatNhap\Create.cshtml" />
+    <None Include="Views\XuatNhap\Edit.cshtml" />
+    <None Include="Views\XuatNhap\List.cshtml" />
+    <None Include="Views\XuatNhap\_CreateOrUpdate.cshtml" />
+    <None Include="Views\YeuCau\Edit.cshtml" />
+    <None Include="Views\YeuCau\_CreateOrUpdate.cshtml" />
+    <None Include="wwwroot\lib\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
+    <None Include="wwwroot\XtraReports\css\icons\dxicons.woff2" />
+    <None Include="wwwroot\XtraReports\js\bundle.min.js" />
+    <None Include="wwwroot\XtraReports\js\dx-analytics-core.js" />
+    <None Include="wwwroot\XtraReports\js\dx-analytics-core.min.js" />
+    <None Include="wwwroot\XtraReports\js\dx-querybuilder.js" />
+    <None Include="wwwroot\XtraReports\js\dx-querybuilder.min.js" />
+    <None Include="wwwroot\XtraReports\js\dx-reportdesigner.js" />
+    <None Include="wwwroot\XtraReports\js\dx-reportdesigner.min.js" />
+    <None Include="wwwroot\XtraReports\js\dx-webdocumentviewer.js" />
+    <None Include="wwwroot\XtraReports\js\dx-webdocumentviewer.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.AspNetCore.Bootstrap" Version="18.2.6" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="18.2.6" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="18.2.6" />
+    <PackageReference Include="DevExpress.Xpo" Version="18.2.6" />
+    <PackageReference Include="FreeSpire.XLS" Version="10.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Reports\BaoCaoDienTu\Report_Online.cs">
+      <DependentUpon>Report_Online.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\BaoCaoDienTu\Report_Online.Designer.cs">
+      <DependentUpon>Report_Online.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02B_DK_TSNN.cs">
+      <DependentUpon>rptTS_DOICHIEU_DATA_02B_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02B_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_DOICHIEU_DATA_02B_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02A_DK_TSNN.cs">
+      <DependentUpon>rptTS_DOICHIEU_DATA_02A_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\BC_DOI_CHIEU_DATA\rptTS_DOICHIEU_DATA_02A_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_DOICHIEU_DATA_02A_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_BienBanKiemKe.cs">
+      <DependentUpon>CCDC_BienBanKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_BienBanKiemKe.Designer.cs">
+      <DependentUpon>CCDC_BienBanKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_Giam.cs">
+      <DependentUpon>CCDC_Giam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_Giam.Designer.cs">
+      <DependentUpon>CCDC_Giam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_GiamOrTang.cs">
+      <DependentUpon>CCDC_GiamOrTang.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_GiamOrTang.Designer.cs">
+      <DependentUpon>CCDC_GiamOrTang.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_HongMat.cs">
+      <DependentUpon>CCDC_HongMat.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_HongMat.Designer.cs">
+      <DependentUpon>CCDC_HongMat.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_KiemKeBoPhan.cs">
+      <DependentUpon>CCDC_KiemKeBoPhan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_KiemKeBoPhan.Designer.cs">
+      <DependentUpon>CCDC_KiemKeBoPhan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_KiemKes.cs">
+      <DependentUpon>CCDC_KiemKes.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_KiemKes.Designer.cs">
+      <DependentUpon>CCDC_KiemKes.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_LietKe.cs">
+      <DependentUpon>CCDC_LietKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_LietKe.Designer.cs">
+      <DependentUpon>CCDC_LietKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_LietKeBoPhans.cs">
+      <DependentUpon>CCDC_LietKeBoPhans.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_LietKeBoPhans.Designer.cs">
+      <DependentUpon>CCDC_LietKeBoPhans.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_SuaChuaBaoDuong.cs">
+      <DependentUpon>CCDC_SuaChuaBaoDuong.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_SuaChuaBaoDuong.Designer.cs">
+      <DependentUpon>CCDC_SuaChuaBaoDuong.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TangAndGiam.cs">
+      <DependentUpon>CCDC_TangAndGiam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TangAndGiam.Designer.cs">
+      <DependentUpon>CCDC_TangAndGiam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHop.cs">
+      <DependentUpon>CCDC_TongHop.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHop.Designer.cs">
+      <DependentUpon>CCDC_TongHop.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopKiemKe.cs">
+      <DependentUpon>CCDC_TongHopKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopKiemKe.Designer.cs">
+      <DependentUpon>CCDC_TongHopKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopPhanBo.cs">
+      <DependentUpon>CCDC_TongHopPhanBo.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopPhanBo.Designer.cs">
+      <DependentUpon>CCDC_TongHopPhanBo.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopTon.cs">
+      <DependentUpon>CCDC_TongHopTon.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\CCDC_TongHopTon.Designer.cs">
+      <DependentUpon>CCDC_TongHopTon.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\TestCacheSourchReport.cs">
+      <DependentUpon>TestCacheSourchReport.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CCDC\TestCacheSourchReport.Designer.cs">
+      <DependentUpon>TestCacheSourchReport.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL02.cs">
+      <DependentUpon>rptCCKTSoLieuTaiSanDaNhap_PL02.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL02.Designer.cs">
+      <DependentUpon>rptCCKTSoLieuTaiSanDaNhap_PL02.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL03.cs">
+      <DependentUpon>rptCCKTSoLieuTaiSanDaNhap_PL03.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CongCuKiemTra\rptCCKTSoLieuTaiSanDaNhap_PL03.Designer.cs">
+      <DependentUpon>rptCCKTSoLieuTaiSanDaNhap_PL03.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_Giam.cs">
+      <DependentUpon>TSTD_Giam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_Giam.Designer.cs">
+      <DependentUpon>TSTD_Giam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_KeKhaiThongTin.cs">
+      <DependentUpon>TSTD_KeKhaiThongTin.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_KeKhaiThongTin.Designer.cs">
+      <DependentUpon>TSTD_KeKhaiThongTin.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_KetQuaXuLy.cs">
+      <DependentUpon>TSTD_KetQuaXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_KetQuaXuLy.Designer.cs">
+      <DependentUpon>TSTD_KetQuaXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_PhuongAnXuLy.cs">
+      <DependentUpon>TSTD_PhuongAnXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_PhuongAnXuLy.Designer.cs">
+      <DependentUpon>TSTD_PhuongAnXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_Tang.cs">
+      <DependentUpon>TSTD_Tang.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_Tang.Designer.cs">
+      <DependentUpon>TSTD_Tang.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TangGiam.cs">
+      <DependentUpon>TSTD_TangGiam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TangGiam.Designer.cs">
+      <DependentUpon>TSTD_TangGiam.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TinhHinhXuLy.cs">
+      <DependentUpon>TSTD_TinhHinhXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TinhHinhXuLy.Designer.cs">
+      <DependentUpon>TSTD_TinhHinhXuLy.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TongHop.cs">
+      <DependentUpon>TSTD_TongHop.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TongHop.Designer.cs">
+      <DependentUpon>TSTD_TongHop.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TongHopSoTienThu.cs">
+      <DependentUpon>TSTD_TongHopSoTienThu.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_TongHopSoTienThu.Designer.cs">
+      <DependentUpon>TSTD_TongHopSoTienThu.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Test\Report_Test.cs">
+      <DependentUpon>Report_Test.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Test\Report_Test.Designer.cs">
+      <DependentUpon>Report_Test.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Test\TestBolder.cs">
+      <DependentUpon>TestBolder.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Test\TestBolder.Designer.cs">
+      <DependentUpon>TestBolder.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT107.cs">
+      <DependentUpon>rptLIST_THE_TAI_SAN_CO_DINH_TT107.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT107.Designer.cs">
+      <DependentUpon>rptLIST_THE_TAI_SAN_CO_DINH_TT107.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT133.cs">
+      <DependentUpon>rptLIST_THE_TAI_SAN_CO_DINH_TT133.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptLIST_THE_TAI_SAN_CO_DINH_TT133.Designer.cs">
+      <DependentUpon>rptLIST_THE_TAI_SAN_CO_DINH_TT133.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_KIEM_KE_TSCD.cs">
+      <DependentUpon>rptTHE_KIEM_KE_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_KIEM_KE_TSCD.Designer.cs">
+      <DependentUpon>rptTHE_KIEM_KE_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT107.cs">
+      <DependentUpon>rptTHE_TAI_SAN_CO_DINH_TT107.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT107.Designer.cs">
+      <DependentUpon>rptTHE_TAI_SAN_CO_DINH_TT107.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT133.cs">
+      <DependentUpon>rptTHE_TAI_SAN_CO_DINH_TT133.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TheTaiSan\rptTHE_TAI_SAN_CO_DINH_TT133.Designer.cs">
+      <DependentUpon>rptTHE_TAI_SAN_CO_DINH_TT133.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.cs">
+      <DependentUpon>rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.Designer.cs">
+      <DependentUpon>rptTS_BCCK_10a_CK_TSC_DAUTU_XD_THUE.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10b_CK_TSC_QLSD_TS.cs">
+      <DependentUpon>rptTS_BCCK_10b_CK_TSC_QLSD_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10b_CK_TSC_QLSD_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_10b_CK_TSC_QLSD_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10c_CK_TSC_XL_TS.cs">
+      <DependentUpon>rptTS_BCCK_10c_CK_TSC_XL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10c_CK_TSC_XL_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_10c_CK_TSC_XL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10d_CK_TSC_KTNL_TS.cs">
+      <DependentUpon>rptTS_BCCK_10d_CK_TSC_KTNL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_10d_CK_TSC_KTNL_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_10d_CK_TSC_KTNL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.cs">
+      <DependentUpon>rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_11a_CK_TSC_NGUONLUC_TC_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11b_CK_TSC_QL_SD_TS.cs">
+      <DependentUpon>rptTS_BCCK_11b_CK_TSC_QL_SD_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11b_CK_TSC_QL_SD_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_11b_CK_TSC_QL_SD_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11c_CK_TSC_XL_TS.cs">
+      <DependentUpon>rptTS_BCCK_11c_CK_TSC_XL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11c_CK_TSC_XL_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_11c_CK_TSC_XL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11d_CK_TSC_KTNL_TS.cs">
+      <DependentUpon>rptTS_BCCK_11d_CK_TSC_KTNL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_11d_CK_TSC_KTNL_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_11d_CK_TSC_KTNL_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.cs">
+      <DependentUpon>rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.Designer.cs">
+      <DependentUpon>rptTS_BCCK_9a_CK_TSC_TINHHINH_DAUTU.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.cs">
+      <DependentUpon>rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.Designer.cs">
+      <DependentUpon>rptTS_BCCK_9c_CK_TSC_QL_SD_OTO_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.cs">
+      <DependentUpon>rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.Designer.cs">
+      <DependentUpon>rptTS_BCCK_9b_CK_TSC_QL_SD_TRU_SO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.cs">
+      <DependentUpon>rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.Designer.cs">
+      <DependentUpon>rptTS_BCCK_9dd_CK_TSC_KHAITHAC_TC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9d_CK_TSC_XULY_TS.cs">
+      <DependentUpon>rptTS_BCCK_9d_CK_TSC_XULY_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_9d_CK_TSC_XULY_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_9d_CK_TSC_XULY_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.cs">
+      <DependentUpon>rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.Designer.cs">
+      <DependentUpon>rptTS_BCCK_DM_TS_DIEU_CHUYEN_BAN_GIAO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M01_KHMS_TS.cs">
+      <DependentUpon>rptTS_BCCK_M01_KHMS_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M01_KHMS_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M01_KHMS_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M02_KQMS_TS.cs">
+      <DependentUpon>rptTS_BCCK_M02_KQMS_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M02_KQMS_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M02_KQMS_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M03_QLNHA_DAT.cs">
+      <DependentUpon>rptTS_BCCK_M03_QLNHA_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M03_QLNHA_DAT.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M03_QLNHA_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M04_QLOTO_KHAC.cs">
+      <DependentUpon>rptTS_BCCK_M04_QLOTO_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M04_QLOTO_KHAC.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M04_QLOTO_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M05_THUE_TS.cs">
+      <DependentUpon>rptTS_BCCK_M05_THUE_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M05_THUE_TS.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M05_THUE_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M06_CHUYENDOI_SOHUU.cs">
+      <DependentUpon>rptTS_BCCK_M06_CHUYENDOI_SOHUU.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M06_CHUYENDOI_SOHUU.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M06_CHUYENDOI_SOHUU.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M07_KQ_MUASAM.cs">
+      <DependentUpon>rptTS_BCCK_M07_KQ_MUASAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_M07_KQ_MUASAM.Designer.cs">
+      <DependentUpon>rptTS_BCCK_M07_KQ_MUASAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_TIEN_DO_MUA_SAM.cs">
+      <DependentUpon>rptTS_BCCK_TIEN_DO_MUA_SAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_TIEN_DO_MUA_SAM.Designer.cs">
+      <DependentUpon>rptTS_BCCK_TIEN_DO_MUA_SAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_TINH_HINH_MUA_SAM.cs">
+      <DependentUpon>rptTS_BCCK_TINH_HINH_MUA_SAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCK\rptTS_BCCK_TINH_HINH_MUA_SAM.Designer.cs">
+      <DependentUpon>rptTS_BCCK_TINH_HINH_MUA_SAM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\CCThongTin_HuuHinh_B03_CCTT.cs">
+      <DependentUpon>CCThongTin_HuuHinh_B03_CCTT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\CCThongTin_HuuHinh_B03_CCTT.Designer.cs">
+      <DependentUpon>CCThongTin_HuuHinh_B03_CCTT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\CCThongTin_VoHinh_B03_CCTT.cs">
+      <DependentUpon>CCThongTin_VoHinh_B03_CCTT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\CCThongTin_VoHinh_B03_CCTT.Designer.cs">
+      <DependentUpon>CCThongTin_VoHinh_B03_CCTT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01B_TSC.cs">
+      <DependentUpon>rptTS_BCCT_01B_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01B_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01B_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01C_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01C_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01C_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01C_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01D_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01D_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01D_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01D_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01E_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01E_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01E_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01E_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01F_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01F_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01F_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01F_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01G_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01G_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01G_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01G_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01H_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCCT_01H_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_01H_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCCT_01H_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_1A.cs">
+      <DependentUpon>rptTS_BCCT_1A.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_1A.Designer.cs">
+      <DependentUpon>rptTS_BCCT_1A.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_1B.cs">
+      <DependentUpon>rptTS_BCCT_1B.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_1B.Designer.cs">
+      <DependentUpon>rptTS_BCCT_1B.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_BCTDXNTS_DKTS.cs">
+      <DependentUpon>rptTS_BCCT_BCTDXNTS_DKTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\rptTS_BCCT_BCTDXNTS_DKTS.Designer.cs">
+      <DependentUpon>rptTS_BCCT_BCTDXNTS_DKTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\TS_BCCT_1B.cs">
+      <DependentUpon>TS_BCCT_1B.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCCT\TS_BCCT_1B.Designer.cs">
+      <DependentUpon>TS_BCCT_1B.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01A_DK_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_01A_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01A_DK_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_01A_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01BC_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_01BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01BC_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_01BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01B_DK_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_01B_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01B_DK_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_01B_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01C_DK_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_01C_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_01C_DK_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_01C_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02A_CTDV_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02A_CTDV_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02A_CTDV_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02A_CTDV_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02A_THC_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02A_THC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02A_THC_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02A_THC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02BC_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02BC_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02B_TS_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02B_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02B_TS_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02B_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02C_OT_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02C_OT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02C_OT_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02C_OT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02D_TSK_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02D_TSK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02D_TSK_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02D_TSK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02E_KT_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02E_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02E_KT_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02E_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02F_KT_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02F_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02F_KT_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02F_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02G_KT_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02G_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02G_KT_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02G_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02H1_TS_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02H1_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02H1_TS_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02H1_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02H_TS_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02H_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02H_TS_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02H_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02I_KT_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02I_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02I_KT_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02I_KT_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02K1_TS_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_02K1_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_02K1_TS_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_02K1_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_03BC_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_03BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_03BC_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_03BC_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_03_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_03_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_03_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_03_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04A_TRUSODENGHIXULY.cs">
+      <DependentUpon>rptTS_BCDA_04A_TRUSODENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04A_TRUSODENGHIXULY.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04A_TRUSODENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04BC_HTSD_KHAC.cs">
+      <DependentUpon>rptTS_BCDA_04BC_HTSD_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04BC_HTSD_KHAC.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04BC_HTSD_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04B_OTODENGHIXULY.cs">
+      <DependentUpon>rptTS_BCDA_04B_OTODENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04B_OTODENGHIXULY.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04B_OTODENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04C_KHACDENGHIXULY.cs">
+      <DependentUpon>rptTS_BCDA_04C_KHACDENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04C_KHACDENGHIXULY.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04C_KHACDENGHIXULY.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_DK_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_04_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_DK_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04_DK_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA_PHU_LUC_01_DINHKEM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.Designer.cs">
+      <DependentUpon>rptTS_BCDA_04_TSDA_PHU_LUC_02_DINHKEM.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05A_DM_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_05A_DM_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05A_DM_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_05A_DM_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05BC_TANG_GIAM_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_05BC_TANG_GIAM_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05BC_TANG_GIAM_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_05BC_TANG_GIAM_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05B_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_05B_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05B_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_05B_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05_TSDA.cs">
+      <DependentUpon>rptTS_BCDA_05_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\rptTS_BCDA_05_TSDA.Designer.cs">
+      <DependentUpon>rptTS_BCDA_05_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\TS_BCDA_02K_TS_TSDA.cs">
+      <DependentUpon>TS_BCDA_02K_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCDA\TS_BCDA_02K_TS_TSDA.Designer.cs">
+      <DependentUpon>TS_BCDA_02K_TS_TSDA.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.cs">
+      <DependentUpon>rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_01_DKTSNN_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.cs">
+      <DependentUpon>rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.Designer.cs">
+      <DependentUpon>rptTS_BCKK_01_DMTSNN_GIAM_NHA_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_02_DKTSNN_KEKHAIOTO.cs">
+      <DependentUpon>rptTS_BCKK_02_DKTSNN_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_02_DKTSNN_KEKHAIOTO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_02_DKTSNN_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_02_DMTSNN_GIAM_OTO.cs">
+      <DependentUpon>rptTS_BCKK_02_DMTSNN_GIAM_OTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_02_DMTSNN_GIAM_OTO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_02_DMTSNN_GIAM_OTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_03_DKTSNN_KEKHAITS500.cs">
+      <DependentUpon>rptTS_BCKK_03_DKTSNN_KEKHAITS500.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_03_DKTSNN_KEKHAITS500.Designer.cs">
+      <DependentUpon>rptTS_BCKK_03_DKTSNN_KEKHAITS500.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_03_DMTSNN_GIAM_KHAC.cs">
+      <DependentUpon>rptTS_BCKK_03_DMTSNN_GIAM_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_03_DMTSNN_GIAM_KHAC.Designer.cs">
+      <DependentUpon>rptTS_BCKK_03_DMTSNN_GIAM_KHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.cs">
+      <DependentUpon>rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_04a_DKTSC_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04b_DKTSC_KEKHAIOTO.cs">
+      <DependentUpon>rptTS_BCKK_04b_DKTSC_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04b_DKTSC_KEKHAIOTO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_04b_DKTSC_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.cs">
+      <DependentUpon>rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.Designer.cs">
+      <DependentUpon>rptTS_BCKK_04c_DKTSNN_KEKHAITSKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.cs">
+      <DependentUpon>rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_05a_DKTSDA_KEKHAITRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.cs">
+      <DependentUpon>rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_05b_DKTSDA_KEKHAIOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.cs">
+      <DependentUpon>rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.Designer.cs">
+      <DependentUpon>rptTS_BCKK_05c_DKTSDA_KEKHAIKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06a_DKTSC_DVSDTS.cs">
+      <DependentUpon>rptTS_BCKK_06a_DKTSC_DVSDTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06a_DKTSC_DVSDTS.Designer.cs">
+      <DependentUpon>rptTS_BCKK_06a_DKTSC_DVSDTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06b_DKTSC_DVTSTRUSO.cs">
+      <DependentUpon>rptTS_BCKK_06b_DKTSC_DVTSTRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06b_DKTSC_DVTSTRUSO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_06b_DKTSC_DVTSTRUSO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.cs">
+      <DependentUpon>rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.Designer.cs">
+      <DependentUpon>rptTS_BCKK_06d_DKTSC_DVTDTTKHAC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06c_DKTSC_DVTDTTOTO.cs">
+      <DependentUpon>rptTS_BCKK_06c_DKTSC_DVTDTTOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_06c_DKTSC_DVTDTTOTO.Designer.cs">
+      <DependentUpon>rptTS_BCKK_06c_DKTSC_DVTDTTOTO.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_07_DKTSC_XOATS_CSDL.cs">
+      <DependentUpon>rptTS_BCKK_07_DKTSC_XOATS_CSDL.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCKK\rptTS_BCKK_07_DKTSC_XOATS_CSDL.Designer.cs">
+      <DependentUpon>rptTS_BCKK_07_DKTSC_XOATS_CSDL.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU01_THTSNN.cs">
+      <DependentUpon>rptTS_BCQH_MAU01_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU01_THTSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU01_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU02_CCTSNN.cs">
+      <DependentUpon>rptTS_BCQH_MAU02_CCTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU02_CCTSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU02_CCTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU03_QUYDAT_MDSD.cs">
+      <DependentUpon>rptTS_BCQH_MAU03_QUYDAT_MDSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU03_QUYDAT_MDSD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU03_QUYDAT_MDSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU04_TS_LTS.cs">
+      <DependentUpon>rptTS_BCQH_MAU04_TS_LTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU04_TS_LTS.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU04_TS_LTS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU05_TS_CQ_TC_DV.cs">
+      <DependentUpon>rptTS_BCQH_MAU05_TS_CQ_TC_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU05_TS_CQ_TC_DV.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU05_TS_CQ_TC_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU06_TS_CAPQL.cs">
+      <DependentUpon>rptTS_BCQH_MAU06_TS_CAPQL.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU06_TS_CAPQL.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU06_TS_CAPQL.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU07_OTO_SD.cs">
+      <DependentUpon>rptTS_BCQH_MAU07_OTO_SD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU07_OTO_SD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU07_OTO_SD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU08_OTO_VSD.cs">
+      <DependentUpon>rptTS_BCQH_MAU08_OTO_VSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU08_OTO_VSD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU08_OTO_VSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU09_DAT_SD.cs">
+      <DependentUpon>rptTS_BCQH_MAU09_DAT_SD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU09_DAT_SD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU09_DAT_SD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU10_TS_TREN500_MDSD.cs">
+      <DependentUpon>rptTS_BCQH_MAU10_TS_TREN500_MDSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU10_TS_TREN500_MDSD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU10_TS_TREN500_MDSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU11A_THTSNN.cs">
+      <DependentUpon>rptTS_BCQH_MAU11A_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU11A_THTSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU11A_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU11B_THTSNN.cs">
+      <DependentUpon>rptTS_BCQH_MAU11B_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_MAU11B_THTSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_MAU11B_THTSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.cs">
+      <DependentUpon>rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL012_TANG_GIAM_NHOM_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL02_TANG_GIAM_TSNN.cs">
+      <DependentUpon>rptTS_BCQH_PL02_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL02_TANG_GIAM_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL02_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.cs">
+      <DependentUpon>rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL03_TANG_GIAM_MUC_DICH_SD_QUY_DAT.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.cs">
+      <DependentUpon>rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL05_TANG_GIAM_TSNN_NHOM_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL06_TANG_GIAM_TSNN.cs">
+      <DependentUpon>rptTS_BCQH_PL06_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL06_TANG_GIAM_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL06_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL07_TANG_GIAM_TSNN.cs">
+      <DependentUpon>rptTS_BCQH_PL07_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL07_TANG_GIAM_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL07_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL08_OTO_VSD.cs">
+      <DependentUpon>rptTS_BCQH_PL08_OTO_VSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL08_OTO_VSD.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL08_OTO_VSD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.cs">
+      <DependentUpon>rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL09_TANG_GIAM_TS_TREN500.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL10_TANG_GIAM_TSNN.cs">
+      <DependentUpon>rptTS_BCQH_PL10_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_PL10_TANG_GIAM_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCQH_PL10_TANG_GIAM_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.cs">
+      <DependentUpon>rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.Designer.cs">
+      <DependentUpon>rptTS_BCQH_QH14C_OTO_CHUCDANH_DV.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QH14_OTO_CHUCDANH.cs">
+      <DependentUpon>rptTS_BCQH_QH14_OTO_CHUCDANH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QH14_OTO_CHUCDANH.Designer.cs">
+      <DependentUpon>rptTS_BCQH_QH14_OTO_CHUCDANH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QLSD_DAT_TSC.cs">
+      <DependentUpon>rptTS_BCQH_QLSD_DAT_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_QLSD_DAT_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCQH_QLSD_DAT_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_KHUONVIEN_DAT_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_NHA_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCQH_TH_QUAN_LY_SD_OTO_TS_KHAC_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\TS_TANG_GIAM_PL10_TSNN.cs">
+      <DependentUpon>TS_TANG_GIAM_PL10_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCQH\TS_TANG_GIAM_PL10_TSNN.Designer.cs">
+      <DependentUpon>TS_TANG_GIAM_PL10_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTC\rptTS_BCTC_03_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTC_03_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTC\rptTS_BCTC_03_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTC_03_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTC\rptTS_BCTC_04_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTC_04_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTC\rptTS_BCTC_04_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTC_04_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02A_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02A_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02A_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02A_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02B_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02B_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02B_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02B_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02C_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02C_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02C_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02C_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02D_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02D_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02D_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02D_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02E_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02E_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02E_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02E_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02F_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02F_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02F_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02F_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02G_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02G_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02G_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02G_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02H_DK_TSNN.cs">
+      <DependentUpon>rptTS_BCTH_02H_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_02H_DK_TSNN.Designer.cs">
+      <DependentUpon>rptTS_BCTH_02H_DK_TSNN.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_08A_DK_TSC.cs">
+      <DependentUpon>rptTS_BCTH_08A_DK_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_08A_DK_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCTH_08A_DK_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_08B_DK_TSC.cs">
+      <DependentUpon>rptTS_BCTH_08B_DK_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_08B_DK_TSC.Designer.cs">
+      <DependentUpon>rptTS_BCTH_08B_DK_TSC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH.cs">
+      <DependentUpon>rptTS_BCTH_TT_CUNGCAP_TAICHINH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH.Designer.cs">
+      <DependentUpon>rptTS_BCTH_TT_CUNGCAP_TAICHINH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.cs">
+      <DependentUpon>rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_BCTH\rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.Designer.cs">
+      <DependentUpon>rptTS_BCTH_TT_CUNGCAP_TAICHINH_HUU_HINH.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\BienBanKiemKe.cs">
+      <DependentUpon>BienBanKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\BienBanKiemKe.Designer.cs">
+      <DependentUpon>BienBanKiemKe.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B10_S32H_CCDC.cs">
+      <DependentUpon>CDKT_B10_S32H_CCDC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B10_S32H_CCDC.Designer.cs">
+      <DependentUpon>CDKT_B10_S32H_CCDC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B09_S32H_SO_TS.cs">
+      <DependentUpon>CDKT_B09_S32H_SO_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B09_S32H_SO_TS.Designer.cs">
+      <DependentUpon>CDKT_B09_S32H_SO_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B11_S32H_SO_TS_CDCC.cs">
+      <DependentUpon>CDKT_B11_S32H_SO_TS_CDCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_B11_S32H_SO_TS_CDCC.Designer.cs">
+      <DependentUpon>CDKT_B11_S32H_SO_TS_CDCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_BTC_B08_S24H_SO_TS.cs">
+      <DependentUpon>CDKT_BTC_B08_S24H_SO_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_BTC_B08_S24H_SO_TS.Designer.cs">
+      <DependentUpon>CDKT_BTC_B08_S24H_SO_TS.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_BTC_B11_S24H_SO_TS_CDCC.cs">
+      <DependentUpon>CDKT_BTC_B11_S24H_SO_TS_CDCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_BTC_B11_S24H_SO_TS_CDCC.Designer.cs">
+      <DependentUpon>CDKT_BTC_B11_S24H_SO_TS_CDCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_KiemKeTaiSan.cs">
+      <DependentUpon>CDKT_KiemKeTaiSan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_KiemKeTaiSan.Designer.cs">
+      <DependentUpon>CDKT_KiemKeTaiSan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_KiemKeTaiSanPhongBan.cs">
+      <DependentUpon>CDKT_KiemKeTaiSanPhongBan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\CDKT_KiemKeTaiSanPhongBan.Designer.cs">
+      <DependentUpon>CDKT_KiemKeTaiSanPhongBan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_ThonTinTaiSan.cs">
+      <DependentUpon>TSTD_ThonTinTaiSan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TaiSanToanDan\TSTD_ThonTinTaiSan.Designer.cs">
+      <DependentUpon>TSTD_ThonTinTaiSan.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.cs">
+      <DependentUpon>TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.Designer.cs">
+      <DependentUpon>TS_CDKT_BS03_MS_B04H_BC_THTANGGIAM_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.cs">
+      <DependentUpon>TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.Designer.cs">
+      <DependentUpon>TS_CDKT_BS04_MS_C55A_HD_BANG_TINH_HAO_MON.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.cs">
+      <DependentUpon>TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.Designer.cs">
+      <DependentUpon>TS_CDKT_BS05_BANG_TINH_KHAU_HAO_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS06_SOGHITANG_TSCD.cs">
+      <DependentUpon>TS_CDKT_BS06_SOGHITANG_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS06_SOGHITANG_TSCD.Designer.cs">
+      <DependentUpon>TS_CDKT_BS06_SOGHITANG_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS07_SOGHIGIAM_TSCD.cs">
+      <DependentUpon>TS_CDKT_BS07_SOGHIGIAM_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS07_SOGHIGIAM_TSCD.Designer.cs">
+      <DependentUpon>TS_CDKT_BS07_SOGHIGIAM_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS08_MS_S31H_SO_TSCD.cs">
+      <DependentUpon>TS_CDKT_BS08_MS_S31H_SO_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_CDKT\TS_CDKT_BS08_MS_S31H_SO_TSCD.Designer.cs">
+      <DependentUpon>TS_CDKT_BS08_MS_S31H_SO_TSCD.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_01.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_01.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_01.Designer.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_01.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_02.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_02.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_02.Designer.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_02.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_03.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_03.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TS_PXNTT\rptTS_PXNTT_MAU_03.Designer.cs">
+      <DependentUpon>rptTS_PXNTT_MAU_03.repx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Shared\ViewReport.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="18.2.6" />
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.0.0" />
+  </ItemGroup>
+  <!-- This target execute after "Build" target.
+    We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
+  <Target Name="GSTarget" AfterTargets="Build">
+    <ItemGroup>
+      <!-- Get plugin description files to get plugin paths -->
+      <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
+      <!-- Get paths for all plugins -->
+      <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
+      <!-- Get all the libraries from the shadow copy folder to remove them,
+        because depending on the settings, this may not happen when the application is starting,
+        but this can lead to unpredictable results during debugging of the project. -->
+      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" Exclude="$(MSBuildProjectDirectory)\Plugins\bin\placeholder.txt" />
+    </ItemGroup>
+    <PropertyGroup>
+      <PluginsFolders>@(PluginsFolders)</PluginsFolders>
+    </PropertyGroup>
+    <!-- Delete libraries from the shadow copy folder -->
+    <Delete Files="@(ShadowCopiesLibraries)" />
+    <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
+      For plugins it creates too many unnecessary files that just take up space.
+      At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
+  </Target>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--The common language runtime (CLR) supports two types of garbage collection:
+      workstation garbage collection, which is available on all systems, and server garbage collection,
+      which is available on multiprocessor systems.
+      
+      For single-processor computers, the default workstation garbage collection should be the fastest option.
+      Either workstation or server can be used for two-processor computers.
+      Server garbage collection should be the fastest option for more than two processors.
+      
+      More details about GC you can see here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals-->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <!--In workstation or server garbage collection, you can enable concurrent garbage collection,
+      which enables threads to run concurrently with a dedicated thread that performs the garbage
+      collection for most of the duration of the collection.
+      
+      Concurrent garbage collection enables interactive applications to be more responsive by
+      minimizing pauses for a collection. Managed threads can continue to run most of the time while
+      the concurrent garbage collection thread is running. This results in shorter pauses while
+      a garbage collection is occurring.
+      
+      To improve performance when several processes are running, disable concurrent garbage collection.
+      
+      More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <ApplicationIcon />
+    <OutputType>WinExe</OutputType>
+    <StartupObject />
+    <UserSecretsId>83243515-f338-4e5f-a31a-aff9aedc20db</UserSecretsId>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <!--<LangVersion>latest</LangVersion>-->
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio><UserProperties app_3data_4datasettings_1json__JsonSchema="https://datahubproject.io/schemas/datahub_ingestion_schema.json" appsettings_1json__JsonSchema="https://json.schemastore.org/appsscript.json" /></VisualStudio>
+  </ProjectExtensions>
+</Project>

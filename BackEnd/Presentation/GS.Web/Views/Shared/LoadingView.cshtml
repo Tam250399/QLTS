@@ -1,0 +1,33 @@
+﻿@model string
+<div style="display:none; width: 100%" id="div_loading_@Model">
+    <div style="display:flex; justify-content:center">
+        <h4>Đang xử lý dữ liệu, xin vui lòng chờ trong giây lát...</h4>
+    </div>
+    <div class="sk-double-bounce sk-primary">
+        <div class="sk-child sk-double-bounce1"></div>
+        <div class="sk-child sk-double-bounce2"></div>
+    </div>
+</div>
+<script>
+    /**
+ * Description: Hàm gọi view loading
+ * isShow: đóng hooặc mở loading
+ * main_div: id maindiv
+ * loadingDivGuid: guid string của loading để tránh trùng
+ * 
+ */
+    function ShowOrHideLoading(isShow, main_div,loadingDivGuid) {
+        var loadingDiv = $(`#div_loading_${loadingDivGuid}`);
+        var maindiv = $(`#${main_div}`);
+        if (loadingDiv && maindiv) {
+            if (isShow) {
+                loadingDiv.show();
+                maindiv.hide();
+            } else {
+                loadingDiv.hide();
+                maindiv.show();
+            }
+        }
+
+    }
+</script>

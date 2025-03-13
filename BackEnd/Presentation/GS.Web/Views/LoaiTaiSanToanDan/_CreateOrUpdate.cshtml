@@ -1,0 +1,190 @@
+﻿@model LoaiTaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Mã nhóm tài sản</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="MA" />
+		<span asp-validation-for="MA"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Tên nhóm tài sản</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="TEN" />
+		<span asp-validation-for="TEN"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Loại tài sản</label>
+	<div class="col-sm-4"> 
+		<app-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.LoaiHinhTaiSanAvaliable" />
+		<span asp-validation-for="LOAI_HINH_TAI_SAN_ID"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 ">Chế độ hao mòn</label>
+	<div class="col-sm-4">
+		<app-select asp-for="CHE_DO_HAO_MON_ID" asp-items="Model.CheDoHaoMonAvaliable" />
+		<span asp-validation-for="CHE_DO_HAO_MON_ID"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Nhóm tài sản cha</label>
+    <div class="col-sm-4">
+        <input id="TaiSanChaInput" class="form-control" style="width: 100%" value="@Model.TaiSanChaName" />
+        @Html.HiddenFor(c => c.PARENT_ID)
+        <span asp-validation-for="PARENT_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Mô tả</label>
+	<div class="col-sm-4">
+		<nop-textarea asp-for="MO_TA" />
+		<span asp-validation-for="MO_TA"></span>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Thời hạn sử dụng (hao mòn)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="HM_THOI_HAN_SU_DUNG" />
+		<span asp-validation-for="HM_THOI_HAN_SU_DUNG"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Tỷ lệ hao mòn</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="HM_TY_LE" />
+		<span asp-validation-for="HM_TY_LE"></span>
+	</div>
+</div>
+@*<div class="form-group row">
+	<label class="col-form-label col-sm-2">Thời hạn sử dụng (khấu hao)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="KH_THOI_HAN_SU_DUNG" />
+		<span asp-validation-for="KH_THOI_HAN_SU_DUNG"></span>
+	</div>
+</div>*@
+@*<div class="form-group row">
+	<label class="col-form-label col-sm-2">Tỷ lệ khấu hao</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="KH_TY_LE" />
+		<span asp-validation-for="KH_TY_LE"></span>
+	</div>
+</div>*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Đơn vị tính</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="DON_VI_TINH" />
+	</div>
+</div>
+<div class="d-none" id="oto-loaiXe">
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Loại xe ô tô</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="OTO_LOAI_XE_ID" asp-items="Model.DDLLoaiXe" />
+		</div>
+	</div>
+
+</div>
+<div class="d-none" id="oto_gioi_han_cho_ngoi">
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" id="lbl_oto_value_from">Số chỗ ngồi từ</label>
+		<div class="col-sm-2">
+			<nop-editor asp-for="OTO_CHO_NGOI_TU" />
+		</div>
+
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" id="lbl_oto_value_to">Số chỗ ngồi đến</label>
+		<div class="col-sm-2">
+			<nop-editor asp-for="OTO_CHO_NGOI_DEN" />
+		</div>
+	</div>
+</div>
+<script>
+    function SearchLoaiTaiSanCha() {
+        var _data = {
+            KeySearch: $("#TaiSanChaInput").data("kendoComboBox").text(),
+            LOAI_HINH_TAI_SAN_ID: $("#LOAI_HINH_TAI_SAN_ID").val(),
+            CHE_DO_HAO_MON_ID: $("#CHE_DO_HAO_MON_ID").val()
+        };
+        return _data;
+    }
+    function onLoaiTaiSanChaEditChange() {
+        var value = this.value();
+        $("#PARENT_ID").val(value);
+        //alert(value);
+    }
+	$(document).ready(function () {
+		//declare var
+		let oto_value_tu = $("#OTO_CHO_NGOI_TU").data("kendoNumericTextBox");
+		let oto_value_den = $("#OTO_CHO_NGOI_DEN").data("kendoNumericTextBox");
+
+        $("#CHE_DO_HAO_MON_ID").change(function () {
+            GetSoureTaiSanChaInput();
+        });
+		$("#LOAI_HINH_TAI_SAN_ID").change(function () {
+			GetSoureTaiSanChaInput();
+			if ($("#LOAI_HINH_TAI_SAN_ID").val() == @((int)enumLOAI_HINH_TAI_SAN.OTO)) {
+				$("#oto_gioi_han_cho_ngoi").removeClass("d-none");
+				$('#oto-loaiXe').removeClass('d-none');
+			}
+			else {
+				$("#oto_gioi_han_cho_ngoi").addClass("d-none");
+				$("#oto-loaiXe").addClass("d-none");
+			}
+		});
+
+        $("#TaiSanChaInput").kendoComboBox({
+            placeholder: "Tên hoặc mã...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/LoaiTaiSanToanDan/SearchLoaiTaiSan",
+                        data: SearchLoaiTaiSanCha
+                    },
+                },
+            },
+            change: onLoaiTaiSanChaEditChange
+		});
+		$("#LOAI_HINH_TAI_SAN_ID").change();
+		$("#OTO_LOAI_XE_ID").change(function () {
+			if ($("#OTO_LOAI_XE_ID").val() == @((int)enumLoaiXe.XeTai)) {
+				$('#lbl_oto_value_from').text('Tải trọng từ (tấn)')
+				$('#lbl_oto_value_to').text('Tải trọng đến (tấn)')
+			}
+			else {
+				$('#lbl_oto_value_from').text('Số chỗ ngồi từ')
+				$('#lbl_oto_value_to').text('Số chỗ ngồi đến')
+			}
+			//oto_value_tu.value(null);
+			//oto_value_den.value(null);
+		});
+		$("#OTO_LOAI_XE_ID").change();
+    });
+    function GetSoureTaiSanChaInput() {
+        var cb = new kendo.data.DataSource({
+            type: "json",
+            serverFiltering: true,
+            transport: {
+                read: {
+                    url: "/LoaiTaiSanToanDan/SearchLoaiTaiSan",
+                    data: SearchLoaiTaiSanCha
+                },
+            }
+        });
+        $("#TaiSanChaInput").data("kendoComboBox").setDataSource(cb);
+    }
+</script>
+
+
+

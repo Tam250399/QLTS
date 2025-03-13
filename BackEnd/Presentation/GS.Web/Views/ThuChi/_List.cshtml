@@ -1,0 +1,135 @@
+﻿@model ThuChiSearchModel
+<input asp-for="KetQuaId" hidden/>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;display:none">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        kendo.culture("vi-VN");
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KetQuaId: $('#@Html.IdFor(model => model.KetQuaId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                record = 0;
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "ThuChi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'SO_TIEN_PHAI_THU',
+                                        title: 'Số tiền phải thu',
+                                        format: "{0:#,#}",                                        
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_THU',
+                                        title: 'Số tiền đã thu',
+                                        format: "{0:#,#}",                                       
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_CON_PHAI_THU',
+                                        title: 'Số tiền còn phải thu đã thu',
+                                        format: "{0:#,#}",                                       
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'NGAY_THU',
+                                        title: 'Ngày thu',
+                                        template: "#= kendo.toString(kendo.parseDate(NGAY_THU, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" }
+                                    },
+                                    {
+                                        field: 'CHI_PHI',
+                                        title: 'Chi phí',
+                                        format: "{0:#,#}",
+                                        // template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

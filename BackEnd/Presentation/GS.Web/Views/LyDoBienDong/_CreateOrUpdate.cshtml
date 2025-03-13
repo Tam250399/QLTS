@@ -1,0 +1,54 @@
+﻿@model LyDoBienDongModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="SelectedLoaiDonVi" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Mã:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Tên:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Nhóm tài sản:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="SelectedLoaiHinhTSIds" id="SelectedLoaiHinhTSIds" asp-items="Model.LoaiHinhTaiSanAvaliable" asp-multiple="true" />
+        @*<nop-select asp-for="SelectedLoaiDonViIds" asp-items="Model.LoaiHinhDonViAvailable"  />*@
+        <span asp-validation-for="SelectedLoaiHinhTSIds"></span>
+    </div>
+
+    @*<nop-editor asp-for="LOAI_HINH_TAI_SAN_AP_DUNG_ID.ToNumberInt32()" />*@
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Loại lý do:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="LOAI_LY_DO_ID" asp-items="Model.LyDoTangGiamSanAvaliable" />
+        <span asp-validation-for="LOAI_LY_DO_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Loại hình đơn vị:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="SelectedLoaiDonViIds" id="SelectedLoaiDonViIds" asp-items="Model.LoaiHinhDonViAvailable" asp-multiple="true" />
+        @*<nop-select asp-for="SelectedLoaiDonViIds" asp-items="Model.LoaiHinhDonViAvailable"  />*@
+        <span asp-validation-for="SelectedLoaiDonViIds"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Trường sắp xếp:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TRUONG_SAP_XEP" />
+        <span asp-validation-for="TRUONG_SAP_XEP"></span>
+    </div>
+</div>
+
+
+

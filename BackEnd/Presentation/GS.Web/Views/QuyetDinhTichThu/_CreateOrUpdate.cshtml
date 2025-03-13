@@ -1,0 +1,47 @@
+﻿@model QuyetDinhTichThuModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="GUID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Tên quyết định:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-left">Nguồn gốc tài sản:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="NGUON_GOC_ID" asp-items="Model.DDLNguonGoc" asp-filter="true" />
+        <span asp-validation-for="NGUON_GOC_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Số quyết định:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="QUYET_DINH_SO" />
+        <span asp-validation-for="QUYET_DINH_SO"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày quyết định:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="QUYET_DINH_NGAY" />
+        <span asp-validation-for="QUYET_DINH_NGAY"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Chức danh người QĐ:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="NGUOI_QUYET_DINH" />
+        <span asp-validation-for="NGUOI_QUYET_DINH"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-left">Thuộc Bộ/Tỉnh:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="CO_QUAN_BAN_HANH_ID" asp-items="Model.DDLBoNganh" asp-filter="true"/>
+        <span asp-validation-for="CO_QUAN_BAN_HANH_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Ghi chú:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="GHI_CHU" />
+        <span asp-validation-for="GHI_CHU"></span>
+    </div>
+</div>

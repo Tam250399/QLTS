@@ -1,0 +1,119 @@
+﻿@model TaiSanKiemKeTaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="KIEM_KE_ID" type="hidden" />
+<input asp-for="IS_PHAT_HIEN_THUA" type="hidden" />
+<input asp-for="TaiSanKeKhaiId" type="hidden" />
+<input asp-for="SoLuongKiemKe" type="hidden" />
+@if (Model.IS_PHAT_HIEN_THUA)
+{
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Tên tài sản</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN_TAI_SAN_THUA" />
+            <span asp-validation-for="TEN_TAI_SAN_THUA"></span>
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Loại tài sản</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="NHOM_TAI_SAN_ID" asp-items="Model.DDLNhomTaiSan" asp-filter="true" />
+            <span asp-validation-for="NHOM_TAI_SAN_ID"></span>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var nhomTS = $("#NHOM_TAI_SAN_ID").data("kendoDropDownList");
+            @*nhomTS.value(@Model.NHOM_TAI_SAN_ID);*@
+        });
+    </script>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số lượng</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="SO_LUONG_KIEM_KE" asp-amount="true" asp-disabled="true" />
+            <span asp-validation-for="SO_LUONG_KIEM_KE"></span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Mã tài sản</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="MaTaiSan" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Tên tài sản</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TenTaiSan" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Tình trạng</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="TINH_TRANG_ID" asp-items="Model.DDLTinhTrangEnum" />
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#TINH_TRANG_ID").change(function () {
+                if ($(this).val() == @((decimal)enumTinhTrang.THIEU)) {
+                    $("#SO_LUONG_KIEM_KE").val(0);
+                    $("#NGUYEN_GIA_KIEM_KE").val(0);
+                    $("#GIA_TRI_CON_LAI_KIEM_KE").val(0);
+
+                    $("#SO_LUONG_KIEM_KE").data("kendoNumericTextBox").value(0);
+                    $("#NGUYEN_GIA_KIEM_KE").data("kendoNumericTextBox").value(0);
+                    $("#GIA_TRI_CON_LAI_KIEM_KE").data("kendoNumericTextBox").value(0);
+                    //$("#lbKIEN_NGHI_GQTST").text("Kiến nghị giải quyết tài sản thiếu");
+                } else {
+                    //$("#lbKIEN_NGHI_GQTST").text("Kiến nghị giải quyết tài sản thừa");
+                }
+            });
+        });
+    </script>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số lượng</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="SO_LUONG_KIEM_KE" asp-amount="true" />
+            <span asp-validation-for="SO_LUONG_KIEM_KE"></span>
+        </div>
+    </div>
+}
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left" >Nguyên giá</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="NGUYEN_GIA_KIEM_KE" asp-amount="true" asp-dvt="đồng"/>
+        <span asp-validation-for="NGUYEN_GIA_KIEM_KE"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left" >Giá trị còn lại</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="GIA_TRI_CON_LAI_KIEM_KE" asp-amount="true" asp-dvt="đồng" />
+        <span asp-validation-for="GIA_TRI_CON_LAI_KIEM_KE"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left" id="lbKIEN_NGHI_GQTST">Kiến nghị giải quyết tài sản thiếu</label>
+    <div class="col-sm-10">
+        <app-textarea asp-for="KIEN_NGHI_GQTST" />
+        @*<nop-select asp-for="DE_NGHI_XU_LY_ID" asp-items="Model.DDLDeNghiXuLyEnum" />*@
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Ghi chú</label>
+    <div class="col-sm-10">
+        <app-textarea asp-for="GHI_CHU" />
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var isTaiSanThua = '@Model.IS_PHAT_HIEN_THUA'
+        if (isTaiSanThua == 'True') {
+            $('#lbKIEN_NGHI_GQTST').text('Kiến nghị giải quyết tài sản thừa');
+        }
+    })
+</script>

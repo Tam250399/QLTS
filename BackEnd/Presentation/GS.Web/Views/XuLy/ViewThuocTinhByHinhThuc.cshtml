@@ -1,0 +1,28 @@
+﻿@model List<modelThuocTinh>
+@using GS.Core.Domain.ThuocTinhs
+
+    @foreach (var item in Model)
+    {
+        if (item.LoaiDuLieuId == (int)enumLoaiDuLieuCauHinh.OBJ)
+        {
+            <div class="form-group row" style="display:none">
+                <label id="NAME_@item.Ma" class="col-form-label col-sm-12 " style="font-weight: bold;">@item.NAME</label>
+                <input class="LoadObject" id="@item.Ma" data-id="@item.GUID" value="@item.GuidParrent" data-guid="@item.GuidView" hidden />
+                <input id="Loai_@item.Ma" value="@item.LoaiDuLieuId" hidden />
+                <input id="VL_@item.Ma" value="@item.VALUE" hidden />
+                <span id="Vali_@item.Ma" data-value="@item.IS_VALIDATE" data-id="@item.Ma" style="display:none;color:red"></span>
+            </div>
+            foreach (var tt in item.THUOC_TINH)
+            {
+                @await Html.PartialAsync("_ViewThuocTinhByHinhThuc", tt)
+            }
+            @*<hr style="margin:2px;color:#2e79b8" />*@
+
+        }
+        else
+        {
+            @await Html.PartialAsync("_ViewThuocTinhByHinhThuc", item)
+            @*<hr style="margin:2px;color:red" />*@
+
+        }
+    }

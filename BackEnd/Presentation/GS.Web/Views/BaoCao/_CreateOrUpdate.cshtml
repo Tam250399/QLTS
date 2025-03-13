@@ -1,0 +1,27 @@
+﻿@model BaoCaoModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Mã báo cáo</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA_BAO_CAO" />
+        <span asp-validation-for="MA_BAO_CAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Nội dung</label>
+    <div class="col-sm-10">
+        <app-textarea asp-for="NOI_DUNG" />
+        <span asp-validation-for="NOI_DUNG"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Có ID hàng</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="HAS_ROW_ID" asp-items="Model.DDLTrueOrFalse" />
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right">Có ID cột</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="HAS_COL_ID" asp-items="Model.DDLTrueOrFalse" />
+    </div>
+</div>

@@ -1,0 +1,221 @@
+﻿@model SuaChuaBaoDuongModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="MapId" type="hidden" />
+<input asp-for="SoLuongText" type="hidden" />
+<input asp-for="TongNguyenGia" type="hidden" />
+<input asp-for="NgayXnBefore" type="hidden" />
+<style>
+    .list-cong-cu td{
+        padding: 8px 4px 4px 4px;
+    }
+</style>
+<table class="list-cong-cu table card-table table-bordered table-striped">
+    <thead class="thead-light">
+        <tr>
+            <th class="text-center font-weight-bold">STT</th>
+            <th class="text-center font-weight-bold">Mã CCDC</th>
+            <th class="text-center font-weight-bold">Tên CCDC</th>
+            <th class="text-center font-weight-bold">Nhóm CCDC</th>
+            <th class="text-center font-weight-bold">Đơn giá</th>
+            <th class="text-center font-weight-bold">Số lượng</th>
+            <th class="text-center font-weight-bold">Bộ phận sử dụng</th>
+            <th class="text-center font-weight-bold">Ngày phân bổ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>@Model.MaCongCuText</td>
+            <td>@Model.TenCongCuText</td>
+            <td>@Model.NhomCongCuText</td>
+            <td class="text-right">@Model.DonGiaText</td>
+            <td class="text-right">@Model.SoLuongText</td>
+            <td>@Model.BoPhanSuDungText</td>
+            <td class="text-center">@(Model.NgayXnBefore != null ? Model.NgayXnBefore.toDateVNString() : "")</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin sửa chữa CCDC</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_QUYET_DINH" />
+            <span asp-validation-for="SO_QUYET_DINH"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_QUYET_DINH" placeholder="dd/mm/yyyy" />
+            <span asp-validation-for="NGAY_QUYET_DINH"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Cấp quyết định</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="CAP_QUYET_DINH" />
+            <span asp-validation-for="CAP_QUYET_DINH"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày sửa chữa</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_SUA_CHUA_FROM" placeholder="dd/mm/yyyy" />
+            <span asp-validation-for="NGAY_SUA_CHUA_FROM"></span>
+        </div>
+        @*<label class="col-form-label col-sm-2 text-sm-left text-required">Đến ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_SUA_CHUA_TO"  placeholder="dd/mm/yyyy"/>
+                <span asp-validation-for="NGAY_SUA_CHUA_TO"></span>
+            </div>*@
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Số lượng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_LUONG_SUA_CHUA" asp-min-number="0" asp-amount="true" />
+            <span asp-validation-for="SO_LUONG_SUA_CHUA"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Chi phí sửa chữa</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="GIA_TRI_SUA_CHUA" asp-min-number="0" asp-dvt="c" asp-amount="true" />
+            <span asp-validation-for="GIA_TRI_SUA_CHUA"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị sửa chữa</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="KHACH_HANG_ID" asp-items="Model.DDLDoiTac" asp-filter="true" />
+        </div>
+        <div class="col-sm-1" style="padding-left: -5px;">
+            <button type="button" title="Thêm trực tiếp" class="btn icon-btn btn-sm btn-outline-primary" id="btnThemBoPhan" style="margin:3px 0px 0px 2px;">
+                <span class="ion ion-md-add"></span>
+            </button>
+            <button type="button" title="Lưu" class="btn icon-btn btn-sm btn-outline-success" id="btnLuuBoPhan" style="margin:3px 0px 0px 2px;">
+                Lưu
+            </button>
+            <button type="button" title="Hủy" class="btn icon-btn btn-sm btn-outline-danger" id="btnHuyBoPhan" style="margin:3px 0px 0px 2px;">
+                Hủy
+            </button>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="row form-group" style="padding-top: 6px;">
+            <div class="col-md-12" id="frmThemDonViBoPhan" style="display:none">
+                <div class="gs-form-group" style=" border-width:1px">
+                    <h6>Thêm mới đơn vị sửa chữa</h6>
+                    <div class="">
+                        <input asp-for="DoiTacId" type="hidden" id="phongBanId" />
+                        <input asp-for="DON_VI_ID" type="hidden" />
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2  text-required">Mã đơn vị sửa chữa</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" id="DoiTacMa" />
+                                <span data-valmsg-for="MADoiTac" class="field-validation-valid"></span>
+                            </div>
+                            <label class="col-form-label col-sm-2  text-required">Tên đơn vị sửa chữa</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" id="DoiTacTen" />
+                                <span data-valmsg-for="TENDoiTac" class="field-validation-valid"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Số chứng từ/hóa đơn</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="CHUNG_TU_SO" />
+                    <span asp-validation-for="CHUNG_TU_SO"></span>
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-left">Ngày chứng từ/hóa đơn</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="CHUNG_TU_NGAY" />
+                    <span asp-validation-for="CHUNG_TU_NGAY"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-left">Diễn giải</label>
+                <div class="col-sm-10">
+                    <app-textarea asp-for="GHI_CHU" />
+                </div>
+            </div>
+        </div>
+        <style>
+            th {
+                text-align: left !important;
+            }
+        </style>
+        <script>
+                        $(document).ready(function () {
+                            $('#frmThemDonViBoPhan').hide();
+                            $('#btnLuuBoPhan').hide();
+                            $('#btnHuyBoPhan').hide();
+                            $("#btnThemBoPhan").click(function () {
+                                //$('#_FrmThemMoiBoPhan').modal('show');
+                                $('#frmThemDonViBoPhan').show('fast');
+                                $('#btnLuuBoPhan').show();
+                                $('#btnHuyBoPhan').show();
+                                $('#btnThemBoPhan').hide();
+                            });
+                            $("#btnLuuBoPhan").click(function () {
+                                var url = "/DoiTac/_Create";
+                                var _data = {
+                                    MA: $("#DoiTacMa").val(),
+                                    TEN: $("#DoiTacTen").val(),
+                                };
+
+                                var phongBan = ajaxPost(_data, url, false);
+                                phongBan.done(function (result) {
+                                    if (CheckValidMessageReturnWithParam(result, 'DoiTac')) {
+                                        if (result.Code == "00") {
+                                            // ShowSuccessMessage(result.Message);
+                                            var phongBanModel = result.ObjectInfo;
+                                            $("#BoPhanSuDungId").kendoDropDownList({
+                                                dataSource: phongBanModel.dllDonViBoPhan,
+                                                dataTextField: "Text",
+                                                dataValueField: "Value",
+                                                text: phongBanModel.TEN,
+                                                value: phongBanModel.ID
+                                            });
+                                            $('#frmThemDonViBoPhan').hide('fast');
+                                            $('#btnLuuBoPhan').hide();
+                                            $('#btnHuyBoPhan').show();
+                                            $('#btnThemBoPhan').show();
+                                            $("#phongBanTen").val('');
+                                            $("#phongBanDiaChi").val('');
+                                            $("#phongBanDienThoai").val('');
+                                            $("#DoiTacId").val(result.ObjectInfo.ID);
+                                            // get lại list đơn vị để chọn
+                                            var urlList = "/DoiTac/GetDoiTacsForInput";
+                                            var ajaxGetListPhongBan = ajaxGet(urlList, false);
+                                            ajaxGetListPhongBan.done(function (res) {
+                                                var ddldoitac = $('#KHACH_HANG_ID').data('kendoDropDownList');
+                                                if (ddldoitac) {
+                                                    ddldoitac.setDataSource(res);
+                                                }
+                                            });
+
+                                        }
+                                    } else {
+                                        //alert(result.ObjectInfo)
+                                        $(".TEN").hide();
+                                    }
+
+                                })
+                                    .fail(function (jqXHR, textStatus, errorThrown) {
+                                        // If fail
+                                        console.log(textStatus + ': ' + errorThrown);
+                                    });
+                            });
+                            $("#btnHuyBoPhan").click(function () {
+                                //$('#_FrmThemMoiBoPhan').modal('show');
+                                $('#frmThemDonViBoPhan').hide('fast');
+                                $('#btnLuuBoPhan').hide();
+                                $('#btnHuyBoPhan').hide();
+                                $('#btnThemBoPhan').show();
+                            });
+                        })
+        </script>

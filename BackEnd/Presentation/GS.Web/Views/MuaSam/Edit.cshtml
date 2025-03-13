@@ -1,0 +1,42 @@
+@model MuaSamModel
+@{
+    //page title
+    ViewBag.Title = "Kế hoạch mua sắm";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KeHoachMuaSam");
+}
+
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa kế hoạch mua sắm
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-default btnClose" style="float:right;margin-right: 5px;" asp-action="List">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <span id="btnDeleteMuaSam" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            @*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+            <i class="far fa-save"></i>
+            Lưu và tiếp tục sửa
+        </button>*@
+            <button id="btnSaveMuaSam" name="save" class="btn bt-sm btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />
+
+

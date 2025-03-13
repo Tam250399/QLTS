@@ -1,0 +1,146 @@
+@model DinhMucSearchModel
+@{
+    ViewData["Title"] = "Quản lý tiêu chuẩn định mức tài sản";
+    Html.SetActiveMenuItemSystemName("DinhMucChucDanh");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="row form-group">
+        <div class="col-sm-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 ">Từ ngày </label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="TuNgay" />
+                </div>
+                <label class="col-form-label col-sm-2 ">Đến ngày </label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="DenNgay" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 ">Số quyết định:</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="SoQuyetDinh" />
+                </div>
+                <label class="col-form-label col-sm-2 ">Ngày quyết định:</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="NgayQuyetDinh" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    TuNgay: $('#@Html.IdFor(model => model.TuNgay)').val(),
+                                    DenNgay: $('#@Html.IdFor(model => model.DenNgay)').val(),
+                                    SoQuyetDinh: $('#@Html.IdFor(model => model.SoQuyetDinh)').val(),
+                                    NgayQuyetDinh: $('#@Html.IdFor(model => model.NgayQuyetDinh)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DinhMuc"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    page:@(Model.Page),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,                                
+                                columns: [
+                                    {
+                                        field: 'MA',
+                                        title: 'Mã'
+                                    },
+                                    {
+                                        field: 'TU_NGAY',
+                                        title: 'Từ ngày',
+                                        template: "#=  (TU_NGAY == null)? '' : kendo.toString(kendo.parseDate(TU_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                                    },
+                                    {
+                                        field: 'DEN_NGAY',
+                                        title: 'Đến ngày',
+                                        template: "#=  (DEN_NGAY == null)? '' : kendo.toString(kendo.parseDate(DEN_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"},
+                                    { field: 'QUYET_DINH_SO',title: 'Số quyết định'},
+                                    {
+                                        field: 'QUYET_DINH_NGAY', title: 'Ngày quyết định',
+                                        template: "#=  (QUYET_DINH_NGAY == null)? '' : kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                                    },
+                                    { field: 'THONG_TU', title: 'Nội dung' },
+                                    {
+                                        field: "ID",
+                                        title: "Sửa",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?ID=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

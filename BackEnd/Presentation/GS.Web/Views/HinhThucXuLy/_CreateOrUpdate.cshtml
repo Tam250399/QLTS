@@ -1,0 +1,32 @@
+﻿@model HinhThucXuLyModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Mã hình thức xử lý:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tên hình thức xử lý:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Thuộc phương án xử lý:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="PHUONG_AN_XU_LY_ID" asp-items="Model.DDLPhuongAnXuLy" />
+        <span asp-validation-for="ListHinhXuLyId"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Sắp xếp:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="SAP_XEP" />
+        <span asp-validation-for="SAP_XEP"></span>
+    </div>
+</div>
+

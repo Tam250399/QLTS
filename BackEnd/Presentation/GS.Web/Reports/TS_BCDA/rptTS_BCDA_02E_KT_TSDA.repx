@@ -1,0 +1,1255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="18.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="rptTS_BCDA_02E_KT_TSDA" Landscape="true" Margins="59, 30, 50, 50" PaperKind="A4" PageWidth="1169" PageHeight="827" Version="18.2" EventsInfo="|rptTS_BCDA_02E_KT_TSDA,BeforePrint,rptTS_BCDA_02E_KT_TSDA_BeforePrint;taisanten,BeforePrint,taisanten_BeforePrint;Detail,BeforePrint,Detail_BeforePrint;ReportHeader,BeforePrint,ReportHeader_BeforePrint;PageHeader,BeforePrint,PageHeader_BeforePrint;ReportFooter,BeforePrint,ReportFooter_BeforePrint;tendv,BeforePrint,tendv_BeforePrint;dv,BeforePrint,dv_BeforePrint;tenduan,BeforePrint,tenduan_BeforePrint;duan,BeforePrint,duan_BeforePrint;tenphanloai,BeforePrint,tenphanloai_BeforePrint;phanloai,BeforePrint,phanloai_BeforePrint;ten1,BeforePrint,ten1_BeforePrint;cap1,BeforePrint,cap1_BeforePrint;ten2,BeforePrint,ten2_BeforePrint;cap2,BeforePrint,cap2_BeforePrint;ten3,BeforePrint,ten3_BeforePrint;cap3,BeforePrint,cap3_BeforePrint;ten4,BeforePrint,ten4_BeforePrint;cap4,BeforePrint,cap4_BeforePrint;ten5,BeforePrint,ten5_BeforePrint;cap5,BeforePrint,cap5_BeforePrint" DataSource="#Ref-0" Font="Arial, 9.75pt">
+  <Bands>
+    <Item1 Ref="2" ControlType="TopMarginBand" Name="TopMargin" HeightF="50" />
+    <Item2 Ref="3" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="50">
+      <Controls>
+        <Item1 Ref="4" ControlType="XRPageInfo" Name="pageInfo1" TextFormatString="Trang {0}/{1}" TextAlignment="MiddleRight" SizeF="100,23" LocationFloat="979, 0" Padding="2,2,0,0,100">
+          <StylePriority Ref="5" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="6" ControlType="DetailBand" Name="Detail" HeightF="35">
+      <Controls>
+        <Item1 Ref="7" ControlType="XRTable" Name="table10" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="8" ControlType="XRTableRow" Name="tableRow12" Weight="0.7">
+              <Cells>
+                <Item1 Ref="9" ControlType="XRTableCell" Name="taisanten" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="10" Expression="[tai_san_ten]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="11" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="12" ControlType="XRTableCell" Name="tableCell137" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="13" Expression="[so_luong_dc]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="14" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="15" ControlType="XRTableCell" Name="tableCell138" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="16" Expression="[nguyen_gia_dc]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="17" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="18" ControlType="XRTableCell" Name="tableCell139" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="19" Expression="[gia_tri_con_lai_dc]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="20" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="21" ControlType="XRTableCell" Name="tableCell140" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="22" Expression="[so_luong_ban]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="23" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="24" ControlType="XRTableCell" Name="tableCell141" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="25" Expression="[nguyen_gia_ban]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="26" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="27" ControlType="XRTableCell" Name="tableCell142" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="28" Expression="[gia_tri_con_lai_ban]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="29" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="30" ControlType="XRTableCell" Name="tableCell143" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="31" Expression="[so_luong_tl]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="32" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="33" ControlType="XRTableCell" Name="tableCell144" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="34" Expression="[nguyen_gia_tl]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="35" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="36" ControlType="XRTableCell" Name="tableCell145" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="37" Expression="[gia_tri_con_lai_tl]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="38" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="39" ControlType="XRTableCell" Name="tableCell146" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="40" Expression="[so_luong_khac]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="41" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="42" ControlType="XRTableCell" Name="tableCell147" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="43" Expression="[nguyen_gia_khac]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="44" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="45" ControlType="XRTableCell" Name="tableCell148" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="46" Expression="[gia_tri_con_lai_khac]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="47" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="48" ControlType="XRTableCell" Name="tableCell149" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, charSet=0" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="49" Expression="[phi_thu]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="50" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="51" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item3>
+    <Item4 Ref="52" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="142.916672">
+      <Controls>
+        <Item1 Ref="53" ControlType="XRLabel" Name="maubaocao" Multiline="true" Text="Phần 1: Tổng hợp chung" TextAlignment="TopCenter" SizeF="1079,23.0000076" LocationFloat="0, 78.20831" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="54" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="55" ControlType="XRLabel" Name="lblDonVi" Multiline="true" Text="Bộ, ngành, tỉnh:&#xD;&#xA;Tên đơn vị:&#xD;&#xA;Mã đơn vị:" TextAlignment="TopLeft" SizeF="899.3749,55.2083321" LocationFloat="0, 0" Font="Times New Roman, 9.75pt, style=Bold, charSet=0" Padding="0,10,0,0,100">
+          <StylePriority Ref="56" UsePadding="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="57" ControlType="XRLabel" Name="label2" Multiline="true" Text="TỔNG HỢP KẾT QUẢ XỬ LÝ TÀI SẢN DỰ ÁN&#xD;" TextAlignment="TopCenter" SizeF="1079,22.9999962" LocationFloat="0, 55.2083321" Font="Times New Roman, 12.75pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="58" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="59" ControlType="XRLabel" Name="ngayandbactaisan" Multiline="true" Text="Thời điểm báo cáo: 01/01/2020&#xD;&#xA;Chi tiết bậc báo cáo: 1" TextAlignment="TopCenter" SizeF="1079,39.7083359" LocationFloat="0, 103.208336" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="60" UseFont="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="61" ControlType="XRLabel" Name="mauso" Multiline="true" Text="Mẫu số: 02E-2-KT/TSDA&#xD;" TextAlignment="TopRight" SizeF="179.625,23" LocationFloat="899.375, 0" Font="Times New Roman, 9.75pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="62" UseFont="false" UseTextAlignment="false" />
+        </Item5>
+      </Controls>
+    </Item4>
+    <Item5 Ref="63" ControlType="PageHeaderBand" Name="PageHeader" HeightF="112.000031">
+      <Controls>
+        <Item1 Ref="64" ControlType="XRLabel" Name="chuthich" Multiline="true" Text="ĐVT cho: Diện tích đất là: Mét vuông; Diện tích nhà là: Mét vuông; Số lượng là: Cái, Khuôn viên; Giá trị là: Nghìn đồng" TextAlignment="MiddleRight" SizeF="1079,25" LocationFloat="0, 7.00003052" Font="Times New Roman, 11pt, style=Italic" Padding="2,2,0,0,100">
+          <StylePriority Ref="65" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="66" ControlType="XRTable" Name="table1" TextAlignment="MiddleCenter" SizeF="1079,80" LocationFloat="0, 32.00003" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Borders="All">
+          <Rows>
+            <Item1 Ref="67" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+              <Cells>
+                <Item1 Ref="68" ControlType="XRTableCell" Name="tableCell1" Weight="1.5000772979990877" RowSpan="3" Multiline="true" Text="Đơn vị/Tài sản" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="69" UseFont="false" />
+                </Item1>
+                <Item2 Ref="70" ControlType="XRTableCell" Name="tableCell2" Weight="11.629674054164374" Multiline="true" Text="KẾT QUẢ XỬ LÝ TÀI SẢN" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="71" UseFont="false" />
+                </Item2>
+                <Item3 Ref="72" ControlType="XRTableCell" Name="tableCell14" Weight="0.87024864783653844" RowSpan="3" Multiline="true" Text="Số tiền thu được từ xử lý" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="73" UseFont="false" />
+                </Item3>
+              </Cells>
+            </Item1>
+            <Item2 Ref="74" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="75" ControlType="XRTableCell" Name="tableCell15" Weight="1.5000772979990877" Multiline="true" Text="tableCell15" Padding="2,2,0,0,100" />
+                <Item2 Ref="76" ControlType="XRTableCell" Name="tableCell16" Weight="3.0135158648415779" Multiline="true" Text="Giao, Điều chuyển" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="77" UseFont="false" />
+                </Item2>
+                <Item3 Ref="78" ControlType="XRTableCell" Name="tableCell19" Weight="3.0135160628240123" Multiline="true" Text="Bán" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="79" UseFont="false" />
+                </Item3>
+                <Item4 Ref="80" ControlType="XRTableCell" Name="tableCell22" Weight="2.8297052109429304" Multiline="true" Text="Thanh lý" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="81" UseFont="false" />
+                </Item4>
+                <Item5 Ref="82" ControlType="XRTableCell" Name="tableCell25" Weight="2.7729369155558534" Multiline="true" Text="Khác" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="83" UseFont="false" />
+                </Item5>
+                <Item6 Ref="84" ControlType="XRTableCell" Name="tableCell28" Weight="0.87024864783653844" Multiline="true" Text="tableCell28" Padding="2,2,0,0,100" />
+              </Cells>
+            </Item2>
+            <Item3 Ref="85" ControlType="XRTableRow" Name="tableRow3" Weight="1">
+              <Cells>
+                <Item1 Ref="86" ControlType="XRTableCell" Name="tableCell29" Weight="1.5000772979990877" Multiline="true" Text="tableCell29" Padding="2,2,0,0,100" />
+                <Item2 Ref="87" ControlType="XRTableCell" Name="tableCell30" Weight="0.66210971439845923" Multiline="true" Text="Số lượng" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="88" UseFont="false" />
+                </Item2>
+                <Item3 Ref="89" ControlType="XRTableCell" Name="tableCell31" Weight="1.1757032732039938" Multiline="true" Text="Nguyên giá" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="90" UseFont="false" />
+                </Item3>
+                <Item4 Ref="91" ControlType="XRTableCell" Name="tableCell32" Weight="1.1757032732039938" Multiline="true" Text="Giá trị còn lại" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="92" UseFont="false" />
+                </Item4>
+                <Item5 Ref="93" ControlType="XRTableCell" Name="tableCell33" Weight="0.67562493579712468" Multiline="true" Text="Số lượng" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="94" UseFont="false" />
+                </Item5>
+                <Item6 Ref="95" ControlType="XRTableCell" Name="tableCell34" Weight="1.1689454645222266" Multiline="true" Text="Nguyên giá" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="96" UseFont="false" />
+                </Item6>
+                <Item7 Ref="97" ControlType="XRTableCell" Name="tableCell35" Weight="1.1689454645222266" Multiline="true" Text="Giá trị còn lại" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="98" UseFont="false" />
+                </Item7>
+                <Item8 Ref="99" ControlType="XRTableCell" Name="tableCell36" Weight="0.62156266432542062" Multiline="true" Text="Số lượng" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="100" UseFont="false" />
+                </Item8>
+                <Item9 Ref="101" ControlType="XRTableCell" Name="tableCell37" Weight="1.1689450685573575" Multiline="true" Text="Nguyên giá" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="102" UseFont="false" />
+                </Item9>
+                <Item10 Ref="103" ControlType="XRTableCell" Name="tableCell38" Weight="1.0391970820952832" Multiline="true" Text="Giá trị còn lại" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="104" UseFont="false" />
+                </Item10>
+                <Item11 Ref="105" ControlType="XRTableCell" Name="tableCell39" Weight="0.64318393003730656" Multiline="true" Text="Số lượng" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="106" UseFont="false" />
+                </Item11>
+                <Item12 Ref="107" ControlType="XRTableCell" Name="tableCell40" Weight="1.148670281382818" Multiline="true" Text="Nguyên giá" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="108" UseFont="false" />
+                </Item12>
+                <Item13 Ref="109" ControlType="XRTableCell" Name="tableCell41" Weight="0.98108211018842506" Multiline="true" Text="Giá trị còn lại" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="110" UseFont="false" />
+                </Item13>
+                <Item14 Ref="111" ControlType="XRTableCell" Name="tableCell42" Weight="0.87024943976627656" Multiline="true" Text="tableCell42" Padding="2,2,0,0,100" />
+              </Cells>
+            </Item3>
+          </Rows>
+          <StylePriority Ref="112" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+        </Item2>
+      </Controls>
+    </Item5>
+    <Item6 Ref="113" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="253.749939" KeepTogether="true">
+      <Controls>
+        <Item1 Ref="114" ControlType="XRLabel" Name="label6" Multiline="true" Text="Nguồn: Cơ sở dữ liệu quốc gia về tài sản công" TextAlignment="MiddleLeft" SizeF="358.119,23" LocationFloat="0, 35" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="115" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="116" ControlType="XRLabel" Name="ChucDanhNguoiLapBieu" Multiline="true" Text="Kế toán" TextAlignment="MiddleCenter" SizeF="150,23" LocationFloat="101.458328, 65.58331" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="117" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="118" ControlType="XRLabel" Name="lb_GhiChuNLB" Multiline="true" Text="(Ký, ghi rõ họ tên)" TextAlignment="MiddleCenter" SizeF="150,23" LocationFloat="101.458328, 88.58334" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="119" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="120" ControlType="XRLabel" Name="TenNguoiLapBieu" Multiline="true" Text="TenNguoiLapBieu" TextAlignment="MiddleCenter" SizeF="150,23" LocationFloat="101.458328, 188.249985" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="121" UseFont="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="122" ControlType="XRLabel" Name="TenThuTruongDonVi" Multiline="true" Text="TenThuTruongDonVi" TextAlignment="MiddleCenter" SizeF="160.624939,22.9999924" LocationFloat="815.833435, 188.249985" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="123" UseFont="false" UseTextAlignment="false" />
+        </Item5>
+        <Item6 Ref="124" ControlType="XRLabel" Name="lb_GhiChuThuTruong" Multiline="true" Text="(Ký, đóng dấu, ghi rõ họ tên)" TextAlignment="MiddleCenter" SizeF="202.946228,23" LocationFloat="802.291748, 88.58334" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="125" UseFont="false" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="126" ControlType="XRLabel" Name="ChucDanhThuTruongDonVi" Multiline="true" Text="Giám đốc" TextAlignment="MiddleCenter" SizeF="154.166626,23" LocationFloat="815.833435, 65.58331" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="127" UseFont="false" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="128" ControlType="XRLabel" Name="label5" Multiline="true" Text=", ngày ..... tháng ..... năm ......" TextAlignment="MiddleLeft" SizeF="202.083313,22.9999981" LocationFloat="839.2225, 35" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="129" UseFont="false" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="130" ControlType="XRLabel" Name="DiaDanhBaoCao" Multiline="true" TextAlignment="MiddleRight" SizeF="154.166626,23" LocationFloat="685.0559, 35" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="131" UseFont="false" UseTextAlignment="false" />
+        </Item9>
+        <Item10 Ref="132" ControlType="XRTable" Name="table11" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="133" ControlType="XRTableRow" Name="tableRow13" Weight="0.7">
+              <Cells>
+                <Item1 Ref="134" ControlType="XRTableCell" Name="tableCell150" Weight="1.5000774959815222" Multiline="true" Text="Tổng cộng" TextAlignment="MiddleCenter" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="135" Expression="Tổng cộng" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="136" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="137" ControlType="XRTableCell" Name="tableCell151" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="138" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="139" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="140" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="141" ControlType="XRTableCell" Name="tableCell152" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="142" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="143" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="144" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="145" ControlType="XRTableCell" Name="tableCell153" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="146" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="147" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="148" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="149" ControlType="XRTableCell" Name="tableCell154" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="150" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="151" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="152" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="153" ControlType="XRTableCell" Name="tableCell155" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="154" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="155" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="156" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="157" ControlType="XRTableCell" Name="tableCell156" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="158" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="159" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="160" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="161" ControlType="XRTableCell" Name="tableCell157" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="162" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="163" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="164" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="165" ControlType="XRTableCell" Name="tableCell158" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="166" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="167" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="168" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="169" ControlType="XRTableCell" Name="tableCell159" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="170" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="171" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="172" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="173" ControlType="XRTableCell" Name="tableCell160" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="174" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="175" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="176" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="177" ControlType="XRTableCell" Name="tableCell161" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="178" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="179" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="180" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="181" ControlType="XRTableCell" Name="tableCell162" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="182" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="183" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="184" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="185" ControlType="XRTableCell" Name="tableCell163" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="186" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="187" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="188" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="189" UseBorders="false" />
+        </Item10>
+      </Controls>
+    </Item6>
+    <Item7 Ref="190" ControlType="GroupHeaderBand" Name="dv" Level="7" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="191" FieldName="DON_VI_ID" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="192" ControlType="XRTable" Name="table2" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="193" ControlType="XRTableRow" Name="tableRow4" Weight="0.7">
+              <Cells>
+                <Item1 Ref="194" ControlType="XRTableCell" Name="tendv" Weight="1.5000774959815222" Multiline="true" Text="tendv" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="195" Expression="[TEN_DON_VI]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="196" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="197" ControlType="XRTableCell" Name="tableCell4" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="198" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="199" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="200" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="201" ControlType="XRTableCell" Name="tableCell5" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="202" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="203" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="204" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="205" ControlType="XRTableCell" Name="tableCell6" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="206" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="207" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="208" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="209" ControlType="XRTableCell" Name="tableCell7" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="210" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="211" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="212" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="213" ControlType="XRTableCell" Name="tableCell8" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="214" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="215" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="216" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="217" ControlType="XRTableCell" Name="tableCell9" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="218" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="219" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="220" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="221" ControlType="XRTableCell" Name="tableCell10" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="222" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="223" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="224" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="225" ControlType="XRTableCell" Name="tableCell11" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="226" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="227" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="228" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="229" ControlType="XRTableCell" Name="tableCell12" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="230" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="231" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="232" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="233" ControlType="XRTableCell" Name="tableCell13" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="234" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="235" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="236" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="237" ControlType="XRTableCell" Name="tableCell17" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="238" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="239" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="240" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="241" ControlType="XRTableCell" Name="tableCell18" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="242" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="243" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="244" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="245" ControlType="XRTableCell" Name="tableCell20" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="246" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="247" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="248" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="249" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item7>
+    <Item8 Ref="250" ControlType="GroupHeaderBand" Name="duan" Level="6" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="251" FieldName="du_an_id" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="252" ControlType="XRTable" Name="table3" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="253" ControlType="XRTableRow" Name="tableRow5" Weight="0.7">
+              <Cells>
+                <Item1 Ref="254" ControlType="XRTableCell" Name="tenduan" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="255" Expression="[ten_du_an]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="256" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="257" ControlType="XRTableCell" Name="tableCell23" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="258" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="259" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="260" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="261" ControlType="XRTableCell" Name="tableCell24" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="262" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="263" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="264" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="265" ControlType="XRTableCell" Name="tableCell26" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="266" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="267" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="268" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="269" ControlType="XRTableCell" Name="tableCell27" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="270" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="271" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="272" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="273" ControlType="XRTableCell" Name="tableCell43" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="274" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="275" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="276" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="277" ControlType="XRTableCell" Name="tableCell44" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="278" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="279" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="280" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="281" ControlType="XRTableCell" Name="tableCell45" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="282" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="283" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="284" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="285" ControlType="XRTableCell" Name="tableCell46" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="286" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="287" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="288" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="289" ControlType="XRTableCell" Name="tableCell47" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="290" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="291" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="292" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="293" ControlType="XRTableCell" Name="tableCell48" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="294" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="295" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="296" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="297" ControlType="XRTableCell" Name="tableCell49" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="298" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="299" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="300" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="301" ControlType="XRTableCell" Name="tableCell50" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="302" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="303" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="304" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="305" ControlType="XRTableCell" Name="tableCell51" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="306" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="307" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="308" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="309" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item8>
+    <Item9 Ref="310" ControlType="GroupHeaderBand" Name="phanloai" Level="5" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="311" FieldName="phan_loai_tai_san" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="312" ControlType="XRTable" Name="table4" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="313" ControlType="XRTableRow" Name="tableRow6" Weight="0.7">
+              <Cells>
+                <Item1 Ref="314" ControlType="XRTableCell" Name="tenphanloai" Weight="1.5000774959815222" Multiline="true" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <StylePriority Ref="315" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="316" ControlType="XRTableCell" Name="tableCell53" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="317" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="318" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="319" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="320" ControlType="XRTableCell" Name="tableCell54" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="321" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="322" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="323" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="324" ControlType="XRTableCell" Name="tableCell55" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="325" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="326" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="327" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="328" ControlType="XRTableCell" Name="tableCell56" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="329" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="330" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="331" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="332" ControlType="XRTableCell" Name="tableCell57" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="333" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="334" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="335" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="336" ControlType="XRTableCell" Name="tableCell58" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="337" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="338" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="339" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="340" ControlType="XRTableCell" Name="tableCell59" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="341" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="342" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="343" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="344" ControlType="XRTableCell" Name="tableCell60" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="345" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="346" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="347" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="348" ControlType="XRTableCell" Name="tableCell61" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="349" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="350" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="351" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="352" ControlType="XRTableCell" Name="tableCell62" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="353" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="354" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="355" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="356" ControlType="XRTableCell" Name="tableCell63" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="357" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="358" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="359" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="360" ControlType="XRTableCell" Name="tableCell64" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="361" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="362" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="363" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="364" ControlType="XRTableCell" Name="tableCell65" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="365" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="366" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="367" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="368" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item9>
+    <Item10 Ref="369" ControlType="GroupHeaderBand" Name="cap1" Level="4" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="370" FieldName="CAP_1" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="371" ControlType="XRTable" Name="table5" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="372" ControlType="XRTableRow" Name="tableRow7" Weight="0.7">
+              <Cells>
+                <Item1 Ref="373" ControlType="XRTableCell" Name="ten1" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="374" Expression="[TEN_1]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="375" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="376" ControlType="XRTableCell" Name="tableCell67" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="377" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="378" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="379" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="380" ControlType="XRTableCell" Name="tableCell68" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="381" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="382" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="383" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="384" ControlType="XRTableCell" Name="tableCell69" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="385" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="386" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="387" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="388" ControlType="XRTableCell" Name="tableCell70" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="389" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="390" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="391" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="392" ControlType="XRTableCell" Name="tableCell71" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="393" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="394" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="395" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="396" ControlType="XRTableCell" Name="tableCell72" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="397" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="398" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="399" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="400" ControlType="XRTableCell" Name="tableCell73" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="401" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="402" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="403" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="404" ControlType="XRTableCell" Name="tableCell74" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="405" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="406" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="407" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="408" ControlType="XRTableCell" Name="tableCell75" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="409" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="410" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="411" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="412" ControlType="XRTableCell" Name="tableCell76" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="413" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="414" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="415" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="416" ControlType="XRTableCell" Name="tableCell77" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="417" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="418" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="419" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="420" ControlType="XRTableCell" Name="tableCell78" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="421" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="422" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="423" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="424" ControlType="XRTableCell" Name="tableCell79" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="425" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="426" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="427" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="428" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item10>
+    <Item11 Ref="429" ControlType="GroupHeaderBand" Name="cap2" Level="3" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="430" FieldName="CAP_2" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="431" ControlType="XRTable" Name="table6" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="432" ControlType="XRTableRow" Name="tableRow8" Weight="0.7">
+              <Cells>
+                <Item1 Ref="433" ControlType="XRTableCell" Name="ten2" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="434" Expression="[TEN_2]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="435" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="436" ControlType="XRTableCell" Name="tableCell81" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="437" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="438" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="439" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="440" ControlType="XRTableCell" Name="tableCell82" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="441" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="442" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="443" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="444" ControlType="XRTableCell" Name="tableCell83" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="445" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="446" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="447" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="448" ControlType="XRTableCell" Name="tableCell84" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="449" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="450" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="451" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="452" ControlType="XRTableCell" Name="tableCell85" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="453" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="454" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="455" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="456" ControlType="XRTableCell" Name="tableCell86" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="457" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="458" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="459" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="460" ControlType="XRTableCell" Name="tableCell87" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="461" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="462" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="463" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="464" ControlType="XRTableCell" Name="tableCell88" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="465" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="466" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="467" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="468" ControlType="XRTableCell" Name="tableCell89" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="469" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="470" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="471" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="472" ControlType="XRTableCell" Name="tableCell90" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="473" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="474" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="475" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="476" ControlType="XRTableCell" Name="tableCell91" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="477" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="478" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="479" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="480" ControlType="XRTableCell" Name="tableCell92" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="481" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="482" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="483" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="484" ControlType="XRTableCell" Name="tableCell93" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="485" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="486" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="487" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="488" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item11>
+    <Item12 Ref="489" ControlType="GroupHeaderBand" Name="cap3" Level="2" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="490" FieldName="CAP_3" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="491" ControlType="XRTable" Name="table7" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="492" ControlType="XRTableRow" Name="tableRow9" Weight="0.7">
+              <Cells>
+                <Item1 Ref="493" ControlType="XRTableCell" Name="ten3" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="494" Expression="[TEN_3]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="495" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="496" ControlType="XRTableCell" Name="tableCell95" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="497" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="498" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="499" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="500" ControlType="XRTableCell" Name="tableCell96" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="501" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="502" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="503" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="504" ControlType="XRTableCell" Name="tableCell97" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="505" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="506" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="507" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="508" ControlType="XRTableCell" Name="tableCell98" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="509" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="510" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="511" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="512" ControlType="XRTableCell" Name="tableCell99" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="513" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="514" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="515" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="516" ControlType="XRTableCell" Name="tableCell100" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="517" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="518" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="519" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="520" ControlType="XRTableCell" Name="tableCell101" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="521" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="522" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="523" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="524" ControlType="XRTableCell" Name="tableCell102" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="525" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="526" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="527" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="528" ControlType="XRTableCell" Name="tableCell103" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="529" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="530" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="531" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="532" ControlType="XRTableCell" Name="tableCell104" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="533" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="534" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="535" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="536" ControlType="XRTableCell" Name="tableCell105" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="537" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="538" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="539" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="540" ControlType="XRTableCell" Name="tableCell106" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="541" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="542" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="543" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="544" ControlType="XRTableCell" Name="tableCell107" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="545" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="546" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="547" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="548" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item12>
+    <Item13 Ref="549" ControlType="GroupHeaderBand" Name="cap4" Level="1" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="550" FieldName="CAP_4" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="551" ControlType="XRTable" Name="table8" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="552" ControlType="XRTableRow" Name="tableRow10" Weight="0.7">
+              <Cells>
+                <Item1 Ref="553" ControlType="XRTableCell" Name="ten4" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="554" Expression="[TEN_4]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="555" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="556" ControlType="XRTableCell" Name="tableCell109" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="557" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="558" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="559" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="560" ControlType="XRTableCell" Name="tableCell110" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="561" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="562" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="563" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="564" ControlType="XRTableCell" Name="tableCell111" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="565" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="566" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="567" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="568" ControlType="XRTableCell" Name="tableCell112" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="569" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="570" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="571" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="572" ControlType="XRTableCell" Name="tableCell113" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="573" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="574" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="575" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="576" ControlType="XRTableCell" Name="tableCell114" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="577" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="578" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="579" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="580" ControlType="XRTableCell" Name="tableCell115" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="581" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="582" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="583" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="584" ControlType="XRTableCell" Name="tableCell116" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="585" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="586" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="587" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="588" ControlType="XRTableCell" Name="tableCell117" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="589" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="590" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="591" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="592" ControlType="XRTableCell" Name="tableCell118" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="593" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="594" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="595" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="596" ControlType="XRTableCell" Name="tableCell119" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="597" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="598" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="599" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="600" ControlType="XRTableCell" Name="tableCell120" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="601" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="602" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="603" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="604" ControlType="XRTableCell" Name="tableCell121" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="605" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="606" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="607" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="608" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item13>
+    <Item14 Ref="609" ControlType="GroupHeaderBand" Name="cap5" HeightF="35">
+      <GroupFields>
+        <Item1 Ref="610" FieldName="CAP_5" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="611" ControlType="XRTable" Name="table9" SizeF="1079,35" LocationFloat="0, 0" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="612" ControlType="XRTableRow" Name="tableRow11" Weight="0.7">
+              <Cells>
+                <Item1 Ref="613" ControlType="XRTableCell" Name="ten5" Weight="1.5000774959815222" Multiline="true" Text="tableCell3" TextAlignment="MiddleLeft" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="614" Expression="[TEN_5]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="615" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="616" ControlType="XRTableCell" Name="tableCell123" Weight="0.6621096649028505" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell4" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="617" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="618" Expression="sumSum([so_luong_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="619" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="620" ControlType="XRTableCell" Name="tableCell124" Weight="1.1757032237083853" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell5" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="621" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="622" Expression="sumSum([nguyen_gia_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="623" UseFont="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="624" ControlType="XRTableCell" Name="tableCell125" Weight="1.1757028277435162" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell6" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="625" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="626" Expression="sumSum([gia_tri_con_lai_dc])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="627" UseFont="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="628" ControlType="XRTableCell" Name="tableCell126" Weight="0.67562493579712479" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell7" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="629" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="630" Expression="sumSum([so_luong_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="631" UseFont="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="632" ControlType="XRTableCell" Name="tableCell127" Weight="1.1689460832173344" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="633" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="634" Expression="sumSum([nguyen_gia_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="635" UseFont="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="636" ControlType="XRTableCell" Name="tableCell128" Weight="1.1689448953227273" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="637" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="638" Expression="sumSum([gia_tri_con_lai_ban])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="639" UseFont="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="640" ControlType="XRTableCell" Name="tableCell129" Weight="0.62156266432542073" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="641" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="642" Expression="sumSum([so_luong_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="643" UseFont="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="644" ControlType="XRTableCell" Name="tableCell130" Weight="1.1689452912875964" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell11" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="645" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="646" Expression="sumSum([nguyen_gia_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="647" UseFont="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="648" ControlType="XRTableCell" Name="tableCell131" Weight="1.0391971068430874" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell12" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="649" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="650" Expression="sumSum([gia_tri_con_lai_tl])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="651" UseFont="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="652" ControlType="XRTableCell" Name="tableCell132" Weight="0.64318581087043492" TextFormatString="{0:#,#;(#,#);'';''}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="653" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="654" Expression="sumSum([so_luong_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="655" UseFont="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="656" ControlType="XRTableCell" Name="tableCell133" Weight="1.1486695636964928" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell17" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="657" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="658" Expression="sumSum([nguyen_gia_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="659" UseFont="false" UseTextAlignment="false" />
+                </Item12>
+                <Item13 Ref="660" ControlType="XRTableCell" Name="tableCell134" Weight="0.98108218443183781" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell18" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="661" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="662" Expression="sumSum([gia_tri_con_lai_khac])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="663" UseFont="false" UseTextAlignment="false" />
+                </Item13>
+                <Item14 Ref="664" ControlType="XRTableCell" Name="tableCell135" Weight="0.87024825187166943" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" Text="tableCell20" TextAlignment="MiddleRight" Font="Times New Roman, 9pt, style=Bold" Padding="2,2,0,0,100">
+                  <Summary Ref="665" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="666" Expression="sumSum([phi_thu])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="667" UseFont="false" UseTextAlignment="false" />
+                </Item14>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="668" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item14>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v18.2" Name="objectDataSource1" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2JqZWN0RGF0YVNvdXJjZTEiPjxEYXRhU291cmNlIFR5cGU9IkdTLkNvcmUuRG9tYWluLkJhb0Nhb3MuVFNfQkNEQS5UU19CQ0RBXzAyRV9LVF9UU0RBLCBHUy5Db3JlLCBWZXJzaW9uPTQuMS4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbCIgLz48L09iamVjdERhdGFTb3VyY2U+" />
+  </ComponentStorage>
+</XtraReportsLayoutSerializer>

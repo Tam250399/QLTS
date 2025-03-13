@@ -1,0 +1,254 @@
+﻿@model DonViSearchModel
+@{
+	//page title
+	ViewBag.Title = "Kiểm tra loại hình đơn vị";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CCKTLoaiHinhDonVi");
+}
+
+<nop-antiforgery-token />
+<input asp-for="pageIndex" type="hidden" />
+<input asp-for="donViId" type="hidden" />
+
+<div class="content-header clearfix">
+	<h5 class="pull-left">
+		@*@ViewBag.Title*@
+		<br />
+	</h5>
+	@*<div class="pull-right" style="margin-bottom:5px;">
+			<a asp-action="Create" class="btn btn-success">
+				<i class="fa fa-plus-square"></i>
+				Thêm mới
+			</a>
+		</div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+	@*<div class="form-group row">
+			<label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+			<div class="col-sm-10">
+				<nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+			</div>
+		</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-right">Loại hình đơn vị:</label>
+		<div class="col-sm-10">
+			<nop-select asp-items="Model.dllLoaiDonVi" asp-filter="true" asp-for="LoaiDonViSearch" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-right">Thuộc cấp:</label>
+		<div class="col-sm-10">
+			<nop-select asp-items="Model.dllCapDonVi" asp-for="CapDonViSearch" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-sm-5"></div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách đơn vị</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<button type="button" class="btn btn-outline-success" id="btnThucHien">Thực hiện</button>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="items-grid"></div>
+					<script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LoaiDonViSearch: $('#@Html.IdFor(model => model.LoaiDonViSearch)').val(),
+                                    CapDonViSearch: $('#@Html.IdFor(model => model.CapDonViSearch)').val(),
+                                    pageIndex: $('#@Html.IdFor(model => model.pageIndex)').val(),
+									donViId: $('#@Html.IdFor(model => model.donViId)').val(),
+
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+
+                            function setLinkCDDV(dataItem) {
+                                return "<a href='#' class='open-list-modal' data-toggle='modal' data-target='\#donvichuyendoi-list-modal' data-id=" + dataItem.ID + ">" + dataItem.MA + "</a>"
+                            };
+
+                            var grid = $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListKiemTraLoaiHinhDonVi", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    page:@(Model.Page),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+								dataBound: onDataBound,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "MA",
+                                        title: "Mã đơn vị",
+                                        width: 300,
+                                        template: setLinkCDDV
+                                        //template: '#=SO_DON_VI_CON>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+SO_DON_VI_CON+"</span>)":MA#'
+                                    },
+                                    {field: 'TEN',title: 'Tên đơn vị'},
+                                    { field: 'TEN_DON_VI_CHA',title: 'Tên đơn vị cha'},
+									{ field: 'TenLoaiDonVi', title: 'Loại đơn vị' },
+									{ field: 'TenCapDonVi', title: 'Thuộc khổi' },
+
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+										template: function (dataItem) {
+											return "<input type='checkbox' id='" + dataItem.ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.ID + "'></label>";
+										},
+
+                                    }
+                                ]
+                            });
+                            $(grid).data("kendoGrid").table.on("click", ".row-checkbox", function () {
+
+								selectRow(this, "#items-grid")
+							});
+                            
+                        });
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script>
+    var checkedIds = {};
+							//on click of the checkbox:
+    function selectRow(_this, grid_name) {
+		var checked = _this.checked,
+			row = $(_this).closest("tr"),
+			grid = $(grid_name).data("kendoGrid"),
+            dataItem = grid.dataItem(row);
+        checkedIds[dataItem.ID] = checked;
+        if (checked) {
+            //-select the row
+            row.addClass("k-state-selected");
+            var checkHeader = true;
+            var ListItem = [];
+            var ind = 0;
+            $.each(grid.items(), function (index, item) {
+                if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+                    ListItem.push(item);
+                }
+            });
+            for (var i = 0; i < ListItem.length; i++) {
+                if (!$(ListItem[i]).hasClass("k-state-selected")) {
+                    checkHeader = false;
+                    break;
+                }
+            }
+
+        }
+        else {
+            //-remove selection
+            row.removeClass("k-state-selected");
+        }
+    }
+	function onDataBound(e) {
+		//onDataBoundFixed(this);
+		var view = this.dataSource.view();
+		for (var i = 0; i < view.length; i++) {
+			if (checkedIds[view[i].ID]) {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+					.addClass("k-state-selected")
+					.find(".k-checkbox")
+					.attr("checked", "checked");
+			}
+		}
+    }
+	function getDonViChecked() {
+		var allSelected = $("#items-grid tr.k-state-selected");
+		var allSelectedModels = [];
+		var strDonViId = "";
+		$.each(allSelected, function (e) {
+			var row = $(this);
+			var grid = row.closest(".k-grid").data("kendoGrid");
+			var dataItem = grid.dataItem(row);
+			allSelectedModels.push(dataItem.ID);
+		});
+        strDonViId = allSelectedModels.join("-");
+        return strDonViId;
+	}
+	$(function () {
+        $('#btnThucHien').on('click', function () {
+			bootbox.confirm({
+				message: "Bạn có chắc chắn thay đổi dữ liệu đơn vị?",
+				className: 'bootbox-sm',
+				buttons: {
+					confirm: {
+						label: 'Đồng ý',
+					},
+					cancel: {
+						label: 'Hủy',
+					},
+				},
+				callback: function (result) {
+					if (result) {
+						location.href = '@Url.Action("UpdateKiemTraLoaiHinhDonVi", "DonVi")?DonViIds='+getDonViChecked();
+					}
+				},
+			});
+
+		})
+	})
+</script>

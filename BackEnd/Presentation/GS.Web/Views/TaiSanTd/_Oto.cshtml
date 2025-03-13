@@ -1,0 +1,270 @@
+﻿@model TaiSanTdModel
+
+    <div class="gs-form-group">
+        <h6>Tài sản ô tô</h6>
+        <input asp-for="GUID" type="hidden" />
+        <input asp-for="QUYET_DINH_TICH_THU_ID" type="hidden" />
+        <input asp-for="NGUON_GOC_TAI_SAN_ID" type="hidden" />
+        <input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+        <input asp-for="SO_LUONG" type="hidden" />
+        <input asp-for="DON_VI_TINH" type="hidden" />
+        <input asp-for="quyetdinh.is_vali" value="false" hidden />
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Tên xe:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Loại xe:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.DDLLoaiTaiSan" asp-filter="true" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="LOAI_TAI_SAN_ID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Giá trị tịch thu/ xác lập:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" asp-disabled="@Model.is_detail" asp-dvt="đồng"/>
+                <span asp-validation-for="GIA_TRI_XAC_LAP"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nhãn xe:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="NHAN_XE_ID" asp-items="Model.DDLNhanXe" asp-filter="true" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="NHAN_XE_ID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Biển kiểm soát:</label>
+
+            <div class="col-sm-4 row m-0">
+                <div class="col-sm-3 p-0">
+                    <nop-editor asp-for="Pre_BIEN_KIEM_SOAT" maxlength="4" asp-disabled="@Model.is_detail" />
+                </div>
+                <div class="col-sm-1 p-0 text-center">-</div>
+                <div class="col-sm-8 p-0">
+                    <nop-editor asp-for="Suff_BIEN_KIEM_SOAT" maxlength="5" asp-disabled="@Model.is_detail" />
+                    <span asp-validation-for="BIEN_KIEM_SOAT"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Tải trọng:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TAI_TRONG" asp-min-number="0" asp-dvt="tấn" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TAI_TRONG"></span>
+            </div>
+            <label class="col-form-label col-sm-2 ts-oto-scn-item">Số chỗ ngồi</label>
+            <div class="col-sm-2 ts-oto-scn-item">
+                <nop-editor asp-for="SO_CHO_NGOI" asp-min-number="0" asp-dvt="chỗ" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="SO_CHO_NGOI"></span>
+            </div>
+            <label class="col-form-label col-sm-1 ts_oto_so_cau_xe">Số cầu</label>
+            <div class="col-sm-1 ts_oto_so_cau_xe">
+                <nop-editor asp-for="SO_CAU_XE" asp-min-number="0" asp-max-number="2" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="SO_CAU_XE"></span>
+            </div>
+        </div>
+        @if (Model.is_detail == false)
+        {
+            <div class="form-group row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2 text-right">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnSave">
+                        <i class="fa fa-save"></i>
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+<script>
+    var _url = "/TaiSanTd/CreateTSTD";
+    @if (Model.ID > 0)
+    {
+        <text>
+        _url = "/TaiSanTd/EditTSTD";
+        </text>
+    }
+    $("#btnSave").click(function () {
+        var _data = {
+            GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            LOAI_HINH_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_HINH_TAI_SAN_ID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)").val(),
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+             DON_VI_TINH: $("#@Html.IdFor(c=>c.DON_VI_TINH)").val(),
+            LOAI_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_TAI_SAN_ID)").val(),
+            @*NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)").val(),*@
+            BIEN_KIEM_SOAT: $("#@Html.IdFor(c=>c.BIEN_KIEM_SOAT)").val(),
+            Suff_BIEN_KIEM_SOAT: $("#@Html.IdFor(c=>c.Suff_BIEN_KIEM_SOAT)").val(),
+            Pre_BIEN_KIEM_SOAT: $("#@Html.IdFor(c=>c.Pre_BIEN_KIEM_SOAT)").val(),
+            NHAN_XE_ID: $("#@Html.IdFor(c=>c.NHAN_XE_ID)").val(),
+            TAI_TRONG: $("#@Html.IdFor(c=>c.TAI_TRONG)").val(),
+            SO_CHO_NGOI: $("#@Html.IdFor(c=>c.SO_CHO_NGOI)").val(),
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)").val(),
+            SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+            SO_CAU_XE: $("#@Html.IdFor(c=>c.SO_CAU_XE)").val(),
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: _url,
+            success: function (result) {
+                if (CheckValidMessageReturn(result)) {
+                    ShowSuccessMessage(result.Message);
+                    HideModalManual();
+                    $("#btnSearchDetail").click();
+                    $("#btnSearch").click();
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+        })
+    })
+</script>
+<script>
+	function changeSCN() {
+		var value = this.value();
+		let soCauXe = $('#SO_CAU_XE').data('kendoNumericTextBox');
+		if (value > 0 && value < 9) {
+			if (soCauXe) {
+				soCauXe.enable(true);
+				$(".ts_oto_so_cau_xe").removeClass("d-none");
+			}
+			return
+		}
+		if (value >= 9) {
+			soCauXe.value(null);
+			soCauXe.enable(false);
+			$(".ts_oto_so_cau_xe").addClass("d-none");
+		}
+		if (soCauXe) {
+			soCauXe.value(null);
+			soCauXe.enable(false);
+		}
+
+    }
+    $(function () {
+
+		let scn = $('#SO_CHO_NGOI').data('kendoNumericTextBox');
+        let taiTrong_oto = $('#TAI_TRONG').data('kendoNumericTextBox');
+        let lts_oto = $("#LOAI_TAI_SAN_ID").data("kendoDropDownList");
+        scn.bind('change', () => {
+            let _data = {
+					LoaiTaiSanId: lts_oto.value()
+			};
+				let _url = '@Url.Action("CheckLoaiOtoId", "LoaiTaiSan")';
+                let ajaxGetLoaiOto = ajaxPost(_data, _url);
+            ajaxGetLoaiOto.done((LoaiOTO) => {
+                if (LoaiOTO == @((int)enumLoaiXe.Khac)) {
+                    if(scn.value() == null){
+                        taiTrong_oto.enable(true);
+                    }
+                    else if (scn.value() >= 0 ) {
+                        taiTrong_oto.enable(false);
+                    }
+                }
+            });
+            if ($('#SO_CHO_NGOI').val() > 9) {
+				$(".ts_oto_so_cau_xe").addClass('d-none');
+			} else {
+				$(".ts_oto_so_cau_xe").removeClass('d-none');
+			}
+        })
+        taiTrong_oto.bind('change', () => {
+                        let _data = {
+					LoaiTaiSanId: lts_oto.value()
+			};
+				let _url = '@Url.Action("CheckLoaiOtoId", "LoaiTaiSan")';
+                let ajaxGetLoaiOto = ajaxPost(_data, _url);
+            ajaxGetLoaiOto.done((LoaiOTO) => {
+                if (LoaiOTO == @((int)enumLoaiXe.Khac)) {
+
+			        if(taiTrong_oto.value()==null){
+                        scn.enable(true);
+                    }
+                    else
+                    if (taiTrong_oto.value() >= 0) {
+                        scn.enable(false);
+                    }
+                }
+            });
+
+        })
+    });
+	$(function () {
+		let lts_oto = $("#LOAI_TAI_SAN_ID").data("kendoDropDownList");
+		let scn = $('#SO_CHO_NGOI').data('kendoNumericTextBox');
+		let taiTrong_oto = $('#TAI_TRONG').data('kendoNumericTextBox');
+        if (lts_oto) {
+            lts_oto.bind('change', () => {
+				let _data = {
+					LoaiTaiSanId: lts_oto.value()
+				};
+				let _url = '@Url.Action("CheckLoaiOtoId", "LoaiTaiSan")';
+                let ajaxGetLoaiOto = ajaxPost(_data, _url);
+                ajaxGetLoaiOto.done((LoaiOTO) => {
+					if (LoaiOTO == @((int)enumLoaiXe.XeChucDanh)) {
+						
+						if (scn) {
+							scn.enable(true);
+							//scn.enable(false);
+							//scn.value(0);
+							//scn.trigger('change');
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(false);
+							taiTrong_oto.value(0);
+							taiTrong_oto.trigger('change');
+						}
+					}
+                    else if (LoaiOTO == @((int)enumLoaiXe.XeTai)) {
+						
+						if (scn) {
+							scn.enable(false);
+							scn.value(0);
+							scn.trigger('change');
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(true);
+						}
+                    }
+                    else if (LoaiOTO == @((int)enumLoaiXe.Khac)||LoaiOTO == @((int)enumLoaiXe.TatCa)) {
+						if (scn) {
+							scn.enable(true);
+							taiTrong_oto.enable(true);							
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(true);
+							scn.enable(true);							
+						}
+                    }
+					else {
+							
+							if (scn) {
+								scn.enable(true);
+							}
+							if (taiTrong_oto) {
+								taiTrong_oto.enable(false);
+								taiTrong_oto.value(0);
+								taiTrong_oto.trigger('change');
+							}
+						}
+				})
+			})
+			lts_oto.trigger('change');
+		}
+		$("#Suff_BIEN_KIEM_SOAT").change(function () {
+            var value = $(this).val();
+
+            $(this).val(value.toUpperCase());
+
+        })
+		$("#Pre_BIEN_KIEM_SOAT").change(function () {
+			var value = $(this).val();
+			$(this).val(value.toUpperCase());
+		})
+    })
+</script>

@@ -1,0 +1,176 @@
+﻿@model NhanHienThiSearchModel
+@{
+    //page title
+    ViewBag.Title = "Nhãn hiển thị";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CauHinhNhanHienThi");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        Nhãn hiển thị
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Tên:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="MA" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Giá trị:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="GIA_TRI" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary btn-block" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>  
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                
+                                var _data = {
+                                    MA:$('#@Html.IdFor(model => model.MA)').val(),
+                                    GIA_TRI:$('#@Html.IdFor(model => model.GIA_TRI)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.MA)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.GIA_TRI)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "NhanHienThi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        },
+                                        create: {                                           
+                                            url: "@Html.Raw(Url.Action("TaoMoi", "NhanHienThi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("CapNhat", "NhanHienThi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("Delete", "NhanHienThi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ID",
+                                            fields: {
+                                                MA: { editable: true, type: "string" },
+                                                GIA_TRI: { editable: true, type: "string" },
+                                                ID: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update" || e.type == "create" || e.type == "destroy") {
+											
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                toolbar: [{
+                                    name: "create", text: "Tạo mới",
+
+                                }],
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "MA",
+                                        title: "Mã"
+                                    }, {
+                                        field: "GIA_TRI",
+                                        title: "Giá trị"
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200,
+                                        headerAttributes: { style: "text-align:center" },
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

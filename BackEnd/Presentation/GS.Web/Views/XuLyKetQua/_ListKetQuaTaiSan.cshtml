@@ -1,0 +1,195 @@
+﻿@model KetQuaTaiSanSearchModel
+
+<nop-antiforgery-token />
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách cập nhập số tiền xử lý tài sản xác lập</span>
+        </div>
+    </div>
+
+    <div class="col-sm-2 text-right">
+        <a class="btn btn-sm btn-outline-primary" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='#globalModalIframe' data-title='Thêm mới kết quả xử lý' data-src="/KetQuaTaiSan/_CreateKetQuaTaiSan?XuLyKetQuaId=@Model.XuLyKetQuaId">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới kết quả xử lý
+        </a>
+    </div>
+</div>
+<input asp-for="XuLyKetQuaId" hidden />
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Tên tài sản:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        @*<div class="col-sm-1" style="text-align:center">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchDetail" style="width:100%">Tìm kiếm</button>
+        </div>*@
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearchDetail">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    XuLyKetQuaId: $('#@Html.IdFor(model => model.XuLyKetQuaId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchDetail").click(function () {
+                                    record = 0;
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchDetail").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "KetQuaTaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TaiSanTen', title: 'Tên tài sản',
+                                        template:'<a href="javascript:void(0)" data-width="1000" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Thông tin kết quả xử lý tài sản" data-src="/KetQuaTaiSan/_EditKetQuaXuLy?id=#=ID#">#=TaiSanTen#</a>'
+                                    },
+                                    {
+                                        field: 'LoaiTaiSanTen', title: 'Loại tài sản',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN', title: 'Số tiền thu',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'SO_LUONG', title: 'Số lượng',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },                                  
+                                    {
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" },
+                                        template: kendo.template($("#btn_template_childent").html())
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-kendo-template" id="btn_template_childent">
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='\\#globalModalIframe' data-title='Thêm mới kết quả xử lý' data-src="/KetQuaTaiSan/_EditKetQuaTaiSan?id=#:ID#">Sửa</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaKetQuaTaiSan('#:ID#')>Xóa</a>
+    </div>
+</script>
+<script>
+    function XoaKetQuaTaiSan(id) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa kết quả xử lý tài sản này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        ID: id
+                    }
+                    $.ajax({
+                        type: "Post",
+                        data: data,
+                        url: "/KetQuaTaiSan/Delete",
+						success: function (result) {
+							if (result) {
+                                if (result.Code == '00') {
+                                    ShowSuccessMessage(result.Message)
+									$("#btnSearchDetail").click()
+                                }
+                                else {
+								    ShowErrorMessage(result.Message)
+							    }
+                            }
+                        }
+                    })
+                }
+                return;
+
+            }
+        })
+    }
+</script>

@@ -1,0 +1,218 @@
+﻿@model YeuCauModel
+<!-- Thong tin chung begin --------->
+<!-- Thong tin chung end --------->
+<input asp-for="LOAI_HINH_TAI_SAN_ID" id="LOAI_HINH_TAI_SAN_ID_2" type="hidden" />
+<input asp-for="TAI_SAN_MA" id="TAI_SAN_MA_2" type="hidden" />
+<input asp-for="TaiSanGuid" id="TaiSanGuid_2" type="hidden" />
+<input asp-for="TAI_SAN_ID" id="TAI_SAN_ID_2" type="hidden" />
+<input asp-for="LOAI_BIEN_DONG_ID" id="LOAI_BIEN_DONG_ID_2" type="hidden" />
+<input asp-for="NGAY_SU_DUNG" id="NGAY_SU_DUNG_2" type="hidden" />
+<input asp-for="DON_VI_ID" id="DON_VI_ID_2" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<div class="gs-form-group  ">
+    <h6>Thông tin thay đổi</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2  text-required">Ngày thay đổi</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="NGAY_BIEN_DONG" /><br />
+            <span asp-validation-for="NGAY_BIEN_DONG"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Loại tài sản</label>
+        <div class="col-sm-4">
+            @if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.VO_HINH)
+            {
+                <app-select asp-for="LOAI_TAI_SAN_DON_VI_ID" id="LOAI_TAI_SAN_DON_VI_ID_2" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+                //<span asp-validation-for="LOAI_TAI_SAN_DON_VI_ID" class="LOAI_TAI_SAN_ID"></span>
+            }
+            else
+            {
+                <app-select asp-for="LOAI_TAI_SAN_ID" id="LOAI_TAI_SAN_ID_2" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+            }
+            <span asp-validation-for="LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+        </div>
+        <script>
+
+			$(document).ready(function () {
+			$('#LOAI_TAI_SAN_ID_2').kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            template: function (e) {
+                if (e.Disabled) {
+                    return '<span class="k-state-default" style="color: red;">'+e.Text+'</span>';
+                } else {
+                    return '<span class="k-state-default">'+e.Text+'</span>';
+                }
+            },
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+            dataSource: JSON.parse(String.raw`@Html.Raw(((Model.LoaiTaiSanAvailable).toStringJson()))`),
+        }).data("kendoDropDownList");
+           });
+        </script>
+        @if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.OTO)
+        {
+            <label class="col-form-label col-sm-2 text-required">Tên tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TAI_SAN_TEN" id="TAI_SAN_TEN_2" asp-disabled="true" />
+                <span asp-validation-for="TAI_SAN_TEN" class="TEN"></span>
+            </div>
+        }
+        else
+        {
+            <label class="col-form-label col-sm-2 text-required">Tên tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TAI_SAN_TEN" id="TAI_SAN_TEN_2" />
+                <span asp-validation-for="TAI_SAN_TEN" class="TEN"></span>
+            </div>
+        }
+    </div>
+    <div id="ChiTietTaiSan"></div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Lý do</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" />
+            <span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2  ">Diễn giải</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+@*<div class="gs-form-group  ">
+    <h6>Hiện trạng sử dụng</h6>
+    <div class="form-group row ">
+        @foreach (var obj in Model.YCCTModel.lstHienTrang)
+        {
+            @await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+        }
+    </div>
+</div>*@
+<script>
+	$(function () {
+		LoadPartialViewTaiSan(@Model.LOAI_HINH_TAI_SAN_ID);
+
+		$("#NGAY_BIEN_DONG").change(function () {
+            var ngaynhap = $(this).val();
+			var _loaihinhTSID = $("#LOAI_HINH_TAI_SAN_ID_2").val();
+                var _data = {
+                    NgayNhap: ngaynhap,
+                    loaiHinhTSId: _loaihinhTSID,
+            }
+            $.ajax({
+                url: "/TaiSan/GetLoaiTaiSans",
+                type: "POST",
+                data: _data,
+                success: function (result) {
+                    if (_loaihinhTSID == @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.VO_HINH)) {
+						var ddlLoaiTaiSan = $("#LOAI_TAI_SAN_DON_VI_ID_2").data("kendoDropDownList");
+						ddlLoaiTaiSan.setDataSource(new kendo.data.DataSource({ data: result }));
+						@if (Model.LOAI_TAI_SAN_DON_VI_ID==null)
+						{
+							<text>ddlLoaiTaiSan.value(0); </text>
+						}
+						else
+						{
+							<text>ddlLoaiTaiSan.value('@Model.LOAI_TAI_SAN_DON_VI_ID');</text>
+						}
+
+						//var text = $("#LOAI_TAI_SAN_DON_VI_ID_2 option:first-child ").text();
+						//$("#LOAI_TAI_SAN_DON_VI_ID_2").parent().find(".k-input").text(text);
+					}
+					else {
+						var ddlLoaiTaiSan = $("#LOAI_TAI_SAN_ID_2").data("kendoDropDownList");
+						ddlLoaiTaiSan.setDataSource(new kendo.data.DataSource({ data: result }));
+						@if (Model.LOAI_TAI_SAN_ID==null)
+						{
+							<text>ddlLoaiTaiSan.value(0); </text>
+						}
+						else
+						{
+							<text>ddlLoaiTaiSan.value('@Model.LOAI_TAI_SAN_ID');</text>
+						}
+						//var text = $("#LOAI_TAI_SAN_ID_2 option:first-child ").text();
+						//$("#LOAI_TAI_SAN_ID_2").parent().find(".k-input").text(text);
+					}
+                }
+            });
+		});
+
+		//Check giấy tờ vs số ngày
+		//nhà
+      
+	})
+    function checknull(id1, id2) {
+        var so = $("#"+id1).val();
+        var ngay = $("#" + id2).val();
+        console.log("1");
+        if (so != '' && ngay == '') {
+            $(".check-" + id2).html('<a class="field-validation-error text-danger">Chưa nhập Ngày</a>');
+            $(".check-" + id1).html("");
+        };
+        if (so != '' && ngay != '') {
+            $(".check-" + id2).html("");
+            $(".check-" + id1).html("");
+        };
+        if (so == '' && ngay != '') {
+            $(".check-" + id2).html("");
+            $(".check-" + id1).html('<a class="field-validation-error text-danger">Chưa nhập số quyết định</a>');
+        };
+        if (so == '' && ngay == '') {
+            $(".check-" + id2).html("");
+            $(".check-" + id1).html("");
+        };
+    };
+	function LoadPartialViewTaiSan(LoaiHinhTSId) {
+		var _url = "";
+		@{
+			decimal YeuCauID = 0;
+			if (Model.YCCTModel != null)
+			{
+				YeuCauID = Model.ID;
+			}
+		}
+        switch (LoaiHinhTSId) {
+            case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT):
+                _url = "/ThayDoiThongTin/_ThayDoiThongTinTaiSanDat?taiSanId=@Model.TAI_SAN_ID&YeuCauID=@YeuCauID&ngayBienDong=@Model.NGAY_BIEN_DONG";
+                break;
+            case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA):
+                _url = "/ThayDoiThongTin/_ThayDoiThongTinTaiSanNha?taiSanId=@Model.TAI_SAN_ID&YeuCauID=@YeuCauID&ngayBienDong=@Model.NGAY_BIEN_DONG";
+                break;
+             case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.OTO):
+                _url = "/ThayDoiThongTin/_ThayDoiThongTinTaiSanOto?taiSanId=@Model.TAI_SAN_ID&YeuCauID=@YeuCauID";
+                break;
+             case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV):
+				//không cần view con
+				return;
+                break;
+            case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI):
+
+				//không cần view con
+				return;
+            case @((int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC):
+				_url = "/ThayDoiThongTin/_ThayDoiThongTinTaiSanVatKienTruc?taiSanId=@Model.TAI_SAN_ID&YeuCauID=@YeuCauID&ngayBienDong=@Model.NGAY_BIEN_DONG&ngayBienDong=@Model.NGAY_BIEN_DONG";
+				break;
+			default:
+				return;
+
+        }
+        $.ajax({
+            url: _url,
+            type: "GET",
+			success: function (data) {
+                $("#ChiTietTaiSan").html(data);
+            },
+            error: function (xhr, textStatus, thrownError) {
+               console.log(textStatus + ': ' + thrownError);
+            }
+        });
+    }
+</script>

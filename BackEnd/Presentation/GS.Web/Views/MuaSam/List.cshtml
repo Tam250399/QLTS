@@ -1,0 +1,354 @@
+@model MuaSamSearchModel
+@{
+    //page title
+    ViewBag.Title = "Kế hoạch mua sắm";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KeHoachMuaSam");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>*@
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" >
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Mã đơn vị sử dụng:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="MaDonViSD" asp-disabled="true" />
+		</div>
+		<label class="col-form-label col-sm-2 ">Tên đơn vị sử dụng:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TenDonViSD" asp-disabled="true" />
+		</div>
+	</div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Từ khóa:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <label class="col-form-label col-sm-2 ">Loại tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="Model.ListLoaiTaiSan" asp-filter="true"/>
+        </div>
+    </div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 ">Ngày lập từ:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="Tu_ngay" />
+		</div>
+		<label class="col-form-label col-sm-2 ">Đến ngày:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="Den_ngay" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-5 "></label>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		@*<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list"></span>
+		</div>*@
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn btn-sm btn-outline-primary">
+			Thêm mới
+		</a>
+	</div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        var recordChildren = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    Den_ngay: $('#@Html.IdFor(model => model.Den_ngay)').val(),
+                                    Tu_ngay: $('#@Html.IdFor(model => model.Tu_ngay)').val(),
+                                    LOAI_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_TAI_SAN_ID)').val(),
+
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "MuaSam"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                 dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                      title: "STT",
+                                      template: "#= ++record #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    {
+										field: "NGAY_DANG_KY",
+										title: "Ngày đăng ký",
+										type: "Date",
+                                        width: 150,
+										format: "{0:dd/MM/yyyy}",
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+                                    {
+                                        field: 'NAM',
+                                        title: 'Kế hoạch năm',
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+                                    },
+									{ field: 'DVSDTS_Ten',title: 'Đơn vị sử dụng'},
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#">Sửa</a>&nbsp<a href="javascript:xoaMuaSam(#:ID#);" class="btn btn-sm btn-danger" title="Xóa"><span class="fas" style="color:white">Xóa</span></a>'
+                                    }
+                                ]
+                            });
+                             function detailInit(e) {
+                                recordChildren = 0
+                                $('tr[data-uid="' + e.masterRow[0].dataset.uid + '"]').addClass("row-class");
+                                 var data = {
+                                     MUA_SAM_ID: e.data.ID,
+                                };
+                                addAntiForgeryToken(data);
+                                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ListMuaSamChiTiet", "MuaSam"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: data
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    dataBinding: function () {
+                                        recordChildren = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                    },
+                                    editable: {
+                                        confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                        mode: "inline"
+                                    },
+
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            title: "STT",
+                                            template: "#=++recordChildren#",
+                                            width: 50,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: 'LoaiTaiSanTen', title: 'Loại tài sản',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:left" },
+                                        },
+                                        {
+                                            field: 'TEN_TAI_SAN', title: 'Tên tài sản',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:left" },
+                                        },
+                                        {
+                                            field: 'TenHinhThucMuaSam', title: 'Hình thức mua sắm',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:left" },
+                                        },
+                                        {
+                                            field: 'strVNDonGia',
+                                            title: 'Đơn giá',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right" },
+                                        },
+                                        {
+                                            field: 'strVNSoLuong',
+                                            title: 'Số lượng',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right" },
+                                        },
+                                        {
+                                            field: 'strVNDuToanDuocDuyet',
+                                            title: 'Dự toán được duyệt',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right" },
+                                        },
+                                        {
+                                            field: "THOI_GIAN_DU_KIEN",
+                                            title: "Thời gian dự kiến",
+                                            type: "Date",
+                                            format: "{0:dd/MM/yyyy}",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                        },
+                                        {
+                                            field: "ID",
+                                            title: "Thao tác",
+                                            width: 150,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: function (dataItem) {
+                                                return "<a href='javascript:xoaMuaSamChiTiet(" + dataItem.ID + ");' class='btn btn-sm btn-danger' title='Xóa'><span class='fas' style='color:white'>Xóa</span></a>";
+                                            }
+                                        }
+                                    ]
+                                });
+                            };
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function xoaMuaSam(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa mua sắm này?",
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: 'Đồng ý',
+                },
+                cancel: {
+                    label: 'Hủy',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    var url = "/MuaSam/DeleteMuaSam?muaSamId=" + ID;
+                    var mSDeleteRequest = ajaxDelete(url);
+                    mSDeleteRequest.done(function (result) {
+                        if (result.Code == '00') {
+                            ShowSuccessMessage(result.Message);
+                            $("#btnSearch").click();
+                        } else
+                            ShowErrorMessage(result.Message);
+                    }).fail(function (jqXHR, textStatus, errorThrow) {
+                        console.log(textStatus + ': ' + errorThrow);
+                    });
+                }
+            },
+        });
+    }
+    function xoaMuaSamChiTiet(muaSamChiTietId) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa tài sản này?",
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: 'Đồng ý',
+                },
+                cancel: {
+                    label: 'Hủy',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    var url = "/MuaSam/DeleteMuaSamChiTiet?muaSamChiTietId=" + muaSamChiTietId;
+                    var mSCTDeleteRequest = ajaxDelete(url);
+                    mSCTDeleteRequest.done(function (result) {
+                        if (result.Code == '00') {
+                            ShowSuccessMessage(result.Message);
+                            $("#btnSearch").click();
+                        } else
+                            ShowErrorMessage(result.Message);
+                    }).fail(function (jqXHR, textStatus, errorThrow) {
+                        console.log(textStatus + ': ' + errorThrow);
+                    });
+                }
+            },
+        });
+
+    }
+</script>
+

@@ -1,0 +1,155 @@
+﻿@model TaiSanKiemKeModel
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thành phần tham gia kiểm kê</h6>
+    <div id="view_ListHoiDong">
+        <script>
+            $(document).ready(function () {
+                LoadViewHoiDong();
+            })
+            function LoadViewHoiDong() {
+                ShowViewLoading("#view_ListHoiDong");
+                $.ajax({
+                    type: "GET",
+                    url: "/TaiSanKiemKeHoiDong/_List?KiemKeId=@Model.ID",
+                    success: function (data) {
+                        $("#view_ListHoiDong").html(data);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết tài sản kiểm kê</h6>
+    <div id="view-taiSanKiemKe"></div>
+    <script>
+        $(document).ready(function () {
+            LoadDanhSachKKTS();
+        });
+
+        function LoadDanhSachKKTS() {
+            var ID = $("#ID").val();
+            $.ajax({
+                type: "GET",
+                url: "/TaiSanKiemKeTaiSan/List?kiemKeId=" + ID,
+                success: function (data) {
+                    $("#view-taiSanKiemKe").html(data);
+                }
+            })
+        }
+    </script>
+</div>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết tài sản phát hiện thừa</h6>
+    <div style="text-align:right">
+        <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới tài sản phát hiện thừa" data-src="/TaiSanKiemKeTaiSan/Create?KiemKeId=@Model.ID" style="margin:10px;">
+            <i class="ion ion-md-add"></i>
+            Thêm tài sản phát hiện thừa
+        </button>
+    </div>
+    <div id="view-TaiSanPhatHienThua"></div>
+    <script>
+    $(document).ready(function () {
+        LoadTaiSanThuaKiemKe();
+    })
+        function LoadTaiSanThuaKiemKe() {
+         ShowViewLoading("#view-TaiSanPhatHienThua");
+        $.ajax({
+            type: "GET",
+            url: "/TaiSanKiemKeTaiSan/ListTaiSanThua?KiemKeId=@Model.ID",
+            success: function (data) {
+                $("#view-TaiSanPhatHienThua").html(data);
+            }
+        })
+    }
+    </script>
+</div>
+
+<script>
+    function DeleteHoiDongKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/TaiSanKiemKeHoiDong/DeleteForKiemKe?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadViewHoiDong();
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    @*function DeleteTaiSanKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/TaiSanKiemKeHoiDong/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadTaiSanKiemKe();
+                        }
+                    });
+                }
+            }
+        })
+    }*@
+
+    function DeleteTaiSanThua(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/TaiSanKiemKeTaiSan/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            $("#btnSearchTSThua").click();
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>

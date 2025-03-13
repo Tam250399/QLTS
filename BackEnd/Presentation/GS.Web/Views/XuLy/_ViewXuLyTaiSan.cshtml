@@ -1,0 +1,74 @@
+﻿@model XuLyModel
+    <div class="gs-form-group" id="div_@Model.GUID">
+        <h6>Thông tin xử lý tài sản</h6>
+        <input asp-for="GUID" hidden class="XuLy" id="GUID_@Model.GUID" />
+        <div class="form-group row">
+            <input asp-for="taisanxuly.GUID" id="TaiSanXuLyGuid_@Model.GUID" type="hidden" />
+            <label class="col-form-label col-sm-2  text-required tsxl-vali" data-id="TaiSanTDId_@Model.GUID">Chọn tài sản:</label>
+            <div class="col-sm-4">
+                <nop-select class="ListTaiSan" asp-for="taisanxuly.TAI_SAN_ID" asp-items="Model.DDLTaiSanTD" asp-filter="true" id="TaiSanTDId_@Model.GUID" />
+                <span asp-validation-for="taisanxuly.TAI_SAN_ID" id="Vali_TaiSanTDId_@Model.GUID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required tsxl-vali" data-id="SO_LUONG_@Model.GUID">Số lượng:</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="taisanxuly.SO_LUONG" id="SO_LUONG_@Model.GUID" />
+                <span asp-validation-for="taisanxuly.SO_LUONG" id="Vali_SO_LUONG_@Model.GUID"></span>
+                <script>
+                $("#SO_LUONG_@Model.GUID").change(function () {
+                    var guid = this.id.split('_')[2];
+                    CheckSL(guid);
+                });
+                </script>
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-xs btn-outline-danger" href="javascript:void(0)" onclick="XoaViewXuLyTaiSan('@Model.GUID')" style="float:right">Xóa</a>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2  text-required tsxl-vali" data-id="HinhThucId_@Model.GUID">Hình thức xử lý:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="taisanxuly.HINH_THUC_XU_LY_ID" asp-items="Model.DDLHinhThuc" asp-filter="true" id="HinhThucId_@Model.GUID" />
+                <span asp-validation-for="HinhThucId" id="Vali_HinhThucId_@Model.GUID"></span>
+            </div>
+            <script>
+
+            </script>
+            <label class="col-form-label col-sm-2  text-required tsxl-vali" data-id="HinhThucXuLyId_@Model.GUID">Phương án xử lý:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="taisanxuly.PHUONG_AN_XU_LY_ID" asp-items="Model.DDLPhuongAn" asp-filter="true" id="HinhThucXuLyId_@Model.GUID" />
+                <span asp-validation-for="HinhThucXuLyId" id="Vali_HinhThucXuLyId_@Model.GUID"></span>
+            </div>
+        </div>
+        <div id="ViewThuocTinhHinhThuc_@Model.GUID"></div>
+        <div class="form-group row">
+            @*<label class="col-form-label col-sm-2 ">Chi phí xử lý:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanxuly.CHI_PHI_XU_LY" id="CHI_PHI_@Model.GUID" asp-amount="true"/>
+                <span asp-validation-for="CHI_PHI" id="CHI_PHI_Vali_@Model.GUID"></span>
+            </div>*@
+            <label class="col-form-label col-sm-2 ">Diễn giải:</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="taisanxuly.GHI_CHU" id="GHI_CHU_@Model.GUID" />
+                <span asp-validation-for="GHI_CHU" id="GHI_CHU_Vali_@Model.GUID"></span>
+            </div>
+        </div>
+    </div>
+<script>
+    $(document).ready(function () {
+        $("#TaiSanTDId_@Model.GUID").data("kendoDropDownList").value(@Model.taisanxuly.TAI_SAN_ID);
+        $("#HinhThucId_@Model.GUID").data("kendoDropDownList").value(@Model.taisanxuly.HINH_THUC_XU_LY_ID);
+        $("#HinhThucXuLyId_@Model.GUID").data("kendoDropDownList").value(@Model.taisanxuly.PHUONG_AN_XU_LY_ID);
+        if ($("#HinhThucId_@Model.GUID").val() > 0) {
+            var guid = "@Model.GUID";
+           GetThuocTinhHinhThuc(guid);
+        };
+    })
+    $("#HinhThucId_@Model.GUID").change(function () {
+        GetDDLPhuongAnByHinhThuc('@Model.GUID');
+        GetThuocTinhHinhThuc('@Model.GUID');
+    });
+    $("#CHI_PHI_@Model.GUID").change(function () {
+        var guid = "@Model.GUID";
+        GetChiPhiTong();
+    });
+</script>

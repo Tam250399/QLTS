@@ -1,0 +1,83 @@
+﻿@model KhaiThacTaiSanModel
+
+<input asp-for="KHAI_THAC_ID" type="hidden" />
+<input asp-for="KHAI_THAC_CHI_TIET_ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<div class="gs-form-group mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-3 text-sm-left">Số tiền thu được của kỳ</label>
+        <div class="col-sm-9">
+            <nop-editor asp-for="SO_TIEN" asp-dvt="đồng"  />
+            <span asp-validation-for="SO_TIEN"></span>
+        </div>
+    </div>  
+    <div class="form-group row">
+        <label class="col-form-label col-sm-3  text-left text-required">Khai thác từ ngày</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="TU_NGAY" /><br />
+            <span asp-validation-for="TU_NGAY"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-left text-required ">Đến ngày</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="DEN_NGAY" /><br />
+            <span asp-validation-for="DEN_NGAY"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-3 text-sm-left">Nội dung/ Diễn giải</label>
+        <div class="col-sm-9">
+            <nop-textarea asp-for="GHI_CHU" />
+            <span asp-validation-for="GHI_CHU"></span>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSaveKhaiThacTaiSan" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px;">
+        <i class="fas fa-save"></i>
+        Lưu
+    </button>
+</div>
+<script>
+        $(function () {
+            var id = '@Model.ID';
+            $('#btnSaveKhaiThacTaiSan').on('click', () => {
+                let _data = {
+                    TU_NGAY: $('#TU_NGAY').val(),
+                    DEN_NGAY: $('#DEN_NGAY').val(),
+                    GHI_CHU: $('#GHI_CHU').val(),
+                    KHAI_THAC_ID: $('#KHAI_THAC_ID').val(),
+                    KHAI_THAC_CHI_TIET_ID: $('#@Html.IdFor(c => c.KHAI_THAC_CHI_TIET_ID)').val(),
+                    TAI_SAN_ID: $('#@Html.IdFor(c => c.TAI_SAN_ID)').val(),
+                    Id: id ,
+                    SO_TIEN: $('#SO_TIEN').val(),
+                }
+                $.ajax({
+                    type: "POST",
+                    data: _data,
+                    url: "/KhaiThacTaiSan/_CreateOrUpdate",
+                    success: function (msg) {
+                        if (msg.Code == "00") {
+                            ShowSuccessMessage(msg.Message);
+                            CapNhatSoTienKhaiThacLuyKe(msg.ObjectInfo);
+                            HideModalManual();
+                            record_khai_thac_chi_tiet = 0;
+                            $('#grid-ktct').data('kendoGrid').dataSource.page(1);
+                            $("#btnSearch").click();
+
+                        }
+                        else {
+                            ShowErrorMessage(msg.Message);
+                            console.log(msg);
+                            CheckValidMessageReturn(msg);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    }
+                });
+
+            })
+        })
+
+</script>

@@ -1,0 +1,80 @@
+﻿@model List<ResultDongBoModel>
+@{
+    //page title
+    ViewBag.Title = "Tài sản chưa đồng bộ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DongBo");
+}
+@if (ViewBag.LoaiTaiSan == 1)
+{
+    <h4>Danh sách Tài sản toàn dân import bị lỗi</h4>
+}
+@if (ViewBag.LoaiTaiSan == 2)
+{
+    <h4>Danh sách Tài sản Nhà nước import bị lỗi</h4>
+}
+<div id="items-grid" data-role="grid" class="k-grid k-widget">
+    <table role="grid" class="k-grid k-widget">
+        <colgroup>
+            <col style="width:50px">
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead class="k-grid-header" role="rowgroup">
+            @if (ViewBag.LoaiTaiSan == 1)
+            {
+                @foreach (var item in Model)// tài sản toàn dân
+                {
+            <tr role="row">
+                <th scope="col" role="columnheader" style="text-align:center" class="k-header">STT</th>
+                <th scope="col" role="columnheader" style="text-align:center" class="k-header">Số Quyết định</th>
+                <th scope="col" role="columnheader" style="text-align:center;" class="k-header">Ngày Quyết định</th>
+                <th scope="col" role="columnheader" style="text-align:center;" class="k-header">Lỗi</th>
+            </tr>
+                }
+            }
+            @if (ViewBag.LoaiTaiSan == 2)// nhà nước
+            {
+                @foreach (var item in Model)
+                {
+                    <tr role="row">
+                        <th scope="col" role="columnheader" style="text-align:center" class="k-header">STT</th>
+                        <th scope="col" role="columnheader" style="text-align:center" class="k-header">MÃ tài sản</th>
+                        <th scope="col" role="columnheader" style="text-align:center;" class="k-header">Tên tài sản</th>
+                        <th scope="col" role="columnheader" style="text-align:center;" class="k-header">Lỗi</th>
+                    </tr>
+                }
+            }
+
+
+        </thead>
+        <tbody role="rowgroup">
+            @if (ViewBag.LoaiTaiSan == 1)
+            {
+                @foreach (var item in Model)
+                {
+                    <tr role="row">
+                        <td style="text-align:center" role="gridcell">@(Model.IndexOf(item) + 1)</td>
+                        <td style="text-align:center" role="gridcell">@item.QuyetDinhTichThuApi.QUYET_DINH_SO</td>
+                        <td style="text-align:center" role="gridcell">@item.QuyetDinhTichThuApi.QUYET_DINH_NGAY</td>
+                        <td style="text-align:center" role="gridcell">@item.Message</td>
+                    </tr>
+                }
+            }
+            @if (ViewBag.LoaiTaiSan == 2)
+            {
+                @foreach (var item in Model)
+                {
+                    <tr role="row">
+                        <td style="text-align:center" role="gridcell">@(Model.IndexOf(item) + 1)</td>
+                        <td style="text-align:center" role="gridcell">@item.TaiSanDongBoApi.MA_TAI_SAN</td>
+                        <td style="text-align:center" role="gridcell">@item.TaiSanDongBoApi.TEN_TAI_SAN</td>
+                        <td style="text-align:center" role="gridcell">@item.Message</td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>

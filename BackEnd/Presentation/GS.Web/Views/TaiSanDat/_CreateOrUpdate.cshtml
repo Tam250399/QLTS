@@ -1,0 +1,405 @@
+﻿@model TaiSanDatModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="DIA_BAN_ID" type="hidden" />
+<div class="gs-form-group ">
+	<h6>Thông tin tài sản đất</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Đơn vị</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.DonViMa" asp-disabled="true" />
+		</div>
+		<div class="col-sm-6">
+			<nop-editor asp-for="TaiSanModel.DonViTen" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row d-none">
+		<label class="col-form-label col-sm-2   text-required">Mã tự sinh</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.MA" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2   text-required">Địa chỉ</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.TEN" placeholder="Tên trụ sở" maxlength="255" />
+			<span asp-validation-for="TaiSanModel.TEN" class="TEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Quốc gia</label>
+		<div class="col-sm-4">
+			<app-select asp-for="QuocGiaId" asp-items="Model.AvailableQuocGia" asp-filter="true" />
+		</div>
+		<label class="col-form-label col-sm-2">Tỉnh/Thành phố</label>
+		<div class="col-sm-4">
+			<app-select asp-for="TinhId" asp-items="Model.AvailableTinh" asp-filter="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Quận/Huyện</label>
+		<div class="col-sm-4">
+			<app-select asp-for="HuyenId" asp-items="Model.AvailableHuyen" asp-filter="true" />
+		</div>
+		<label class="col-form-label col-sm-2">Xã/Phường</label>
+		<div class="col-sm-4">
+			<app-select asp-for="XaId" asp-items="Model.AvailableXa" asp-filter="true" />
+			<span asp-validation-for="DIA_BAN_ID" data-valmsg-for="taisandatModel.DIA_BAN_ID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Số nhà, Đường(phố)</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="DIA_CHI" maxlength="255" />
+			<span asp-validation-for="DIA_CHI" class="check-diachi" data-valmsg-for="taisandatModel.DIA_CHI"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Lý do tăng đất</label>
+		<div class="col-sm-4">
+			<app-select asp-for="TaiSanModel.LY_DO_BIEN_DONG_ID" asp-items="Model.TaiSanModel.LyDoTangAvailable" asp-filter="true" />
+			<span asp-validation-for="TaiSanModel.LY_DO_BIEN_DONG_ID" class="LY_DO_BIEN_DONG_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required ">Mục đích sử dụng đất</label>
+		<div class="col-sm-4">
+			@*<select id="LOAI_TAI_SAN_ID" name="LOAI_TAI_SAN_ID" class="form-control"></select>*@
+			<app-select asp-for="TaiSanModel.LOAI_TAI_SAN_ID" asp-items="Model.TaiSanModel.LoaiTaiSanAvailable" asp-filter="true" />
+			<span asp-validation-for="TaiSanModel.LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+			<script>
+
+           $(document).ready(function () {
+               $("#LOAI_TAI_SAN_ID").kendoDropDownList({
+                    dataTextField: "Text",
+                   dataValueField: "Value",
+                   filter: "contains",
+                   template: function (e) {
+                        if (e.Disabled) {
+                            return '<span class="k-state-default" style="color: red;">'+e.Text+'</span>';
+                        } else {
+                            return '<span class="k-state-default">'+e.Text+'</span>';
+                        }
+                   },
+                    select: function (e) {
+                        if (e.dataItem.Disabled) {
+                            e.preventDefault();
+                        }
+                    },
+                   dataSource: JSON.parse(String.raw`@Html.Raw(((Model.TaiSanModel.LoaiTaiSanAvailable).toStringJson()))`),
+               }).data("kendoDropDownList");
+           });
+			</script>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Ngày tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.NGAY_NHAP" /><br />
+			<span asp-validation-for="TaiSanModel.NGAY_NHAP" class="valid-ngay-nhap-ts"></span>
+		</div>
+		<label class="col-form-label col-sm-2">Năm sử dụng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.NGAY_SU_DUNG" /><br />
+			<span asp-validation-for="TaiSanModel.NGAY_SU_DUNG"></span>
+		</div>
+	</div>
+</div>
+
+<div class="gs-form-group ">
+	<h6>
+		Diện tích khuôn viên, giá trị đất
+	</h6>
+	<div class=" ">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2   text-required">Diện tích khuôn viên</label>
+			<div class="col-sm-2">
+				<nop-editor asp-for="DAT_DIEN_TICH" asp-dvt="m2" asp-min-number="0" />
+				<span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red">Diện tích khuôn viên phải bằng tổng hiện trạng sử dụng</span>
+				<span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red">Diện tích khuôn viên phải bằng tổng hiện trạng sử dụng</span>
+				<span asp-validation-for="DIEN_TICH" data-valmsg-for="taisandatModel.DIEN_TICH"></span>
+			</div>
+			@*<label class="col-form-label col-sm-2   ">Diện tích xây nhà</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="DIEN_TICH_XAY_NHA" asp-dvt="m2" />
+				</div>*@
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2  font-weight-bold">Hiện trạng sử dụng:</label>
+		</div>
+		<div class="form-group row ">
+			@foreach (var obj in Model.YeuCauChiTietModel.lstHienTrang)
+			{
+				@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+			}
+		</div>
+	</div>
+</div>
+<div class="gs-form-group ">
+	<h6>
+		Giá trị quyền sử dụng đất
+	</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  font-weight-bold">Giá trị quyền sử dụng đất:</label>
+	</div>
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<label class="col-form-label col-sm-2  ">Giá trị quyền sử dụng đất</label>
+		<div class="col-sm-4 gs-mg-top-bot-10">
+			<nop-editor asp-for="YeuCauChiTietModel.NGUYEN_GIA" asp-dvt="c" id="GiaTriQSDDat">
+				<span asp-validation-for="YeuCauChiTietModel.NGUYEN_GIA" class="nguyen-gia-ts"></span>
+				<span id="check-gia-tri-than-1bill" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 1.000.000.000 vnđ, đề nghị kiểm tra lại!<br /> </span>
+				<span id="checkGiaTri1m2-vkt" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 30.000.000/(m<sup>2</sup>/m<sup>3</sup>/m), đề nghị kiểm tra lại! </span>
+		</div>
+	</div>
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<label class="col-form-label col-sm-2  ">Nguyên giá</label>
+		<div class="col-sm-4 gs-mg-top-bot-10">
+			<nop-editor asp-for="YeuCauChiTietModel.NGUYEN_GIA" asp-dvt="c" id="TongNguyenGia">
+				<span asp-validation-for="YeuCauChiTietModel.NGUYEN_GIA" class="nguyen-gia-ts"></span>
+				<span id="check-gia-tri-than-1bill" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 1.000.000.000 vnđ, đề nghị kiểm tra lại!<br /> </span>
+				<span id="checkGiaTri1m2-vkt" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 30.000.000/(m<sup>2</sup>/m<sup>3</sup>/m), đề nghị kiểm tra lại! </span>
+		</div>
+	</div>
+	<div id="ListNguonVon">
+		@foreach (var _nv in Model.TaiSanModel.lstNguonVonModel)
+		{
+			@await Html.PartialAsync("../TaiSan/_NguonVon", _nv);
+		}
+	</div>
+</div>
+<div class="gs-form-group ">
+	<h6>
+		Hồ sơ, giấy tờ
+	</h6>
+	<div class="form-group row">
+		<div class="col-md-9">
+		</div>
+		@{
+			if (Model.cohoso == true)
+			{
+				<script>
+					$(function () {
+						$("#hosogiayto").show();
+						$("#up").show();
+						$("#down").hide();
+					});
+				</script>
+			}
+			else
+			{
+				<script>
+					$(function () {
+						$("#hosogiayto").hide();
+						$("#up").hide();
+						$("#down").show();
+					});
+				</script>
+			}
+		}
+		<div class="col-md-3" style=" padding-left: 0px; padding-top: 5px;">
+			<a class="pull-right" data-toggle="collapse" href="#accordion-2" aria-expanded="false" id="updown">
+				<i class="fas fa-angle-double-up" id="up"> Không có hồ sơ giấy tờ</i>
+				<i class="fas fa-angle-double-down" id="down"> Thêm hồ sơ giấy tờ</i>
+			</a>
+			<script>
+				$(function () {
+					$("#down").click(function () {
+						$("#up").show();
+						$("#down").hide();
+						$("#hosogiayto").show();
+						x = 1;
+					});
+					$("#up").click(function () {
+						$("#up").hide();
+						$("#down").show()
+						$("#hosogiayto").hide();
+					});
+				})
+			</script>
+		</div>
+	</div>
+	<div class="">
+		<div id="hosogiayto" style="display: none">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2  ">Giấy CNQSD đất</label>
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Số</span>
+						</div>
+						<nop-editor asp-for="YeuCauChiTietModel.HS_CNQSD_SO" id="CNQSD_SO" maxlength="50" />
+						<span asp-validation-for="YeuCauChiTietModel.HS_CNQSD_SO"></span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<nop-editor asp-for="YeuCauChiTietModel.HS_CNQSD_NGAY" placeholder="Ngày" id="CNQSD_NGAY" /><br />
+					<span asp-validation-for="YeuCauChiTietModel.HS_CNQSD_NGAY"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2  ">Quyết định giao đất</label>
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Số</span>
+						</div>
+						<nop-editor asp-for="YeuCauChiTietModel.HS_QUYET_DINH_GIAO_SO" id="QUYET_DINH_GIAO_SO" maxlength="50" />
+					</div>
+					<span asp-validation-for="YeuCauChiTietModel.HS_QUYET_DINH_GIAO_SO" class="check-QUYET_DINH_GIAO_SO" data-valmsg-for="taisandatModel.HS_QUYET_DINH_GIAO_SO"></span>
+				</div>
+				<div class="col-md-4">
+					<nop-editor asp-for="YeuCauChiTietModel.HS_QUYET_DINH_GIAO_NGAY" placeholder="Ngày" id="QUYET_DINH_GIAO_NGAY" /><br />
+					<span asp-validation-for="YeuCauChiTietModel.HS_QUYET_DINH_GIAO_NGAY" class="check-QUYET_DINH_GIAO_NGAY" data-valmsg-for="taisandatModel.HS_QUYET_DINH_GIAO_NGAY"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2  ">Hợp đồng thuê đất</label>
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Số</span>
+						</div>
+						<nop-editor asp-for="YeuCauChiTietModel.HS_QUYET_DINH_CHO_THUE_SO" id="HS_QUYET_DINH_CHO_THUE_SO" maxlength="50" />
+					</div>
+					<span asp-validation-for="YeuCauChiTietModel.HS_QUYET_DINH_CHO_THUE_SO"></span>
+				</div>
+				<div class="col-md-4">
+					<nop-editor asp-for="YeuCauChiTietModel.HS_QUYET_DINH_CHO_THUE_NGAY" placeholder="Ngày" id="HS_QUYET_DINH_CHO_THUE_NGAY" /><br />
+					<span asp-validation-for="YeuCauChiTietModel.HS_QUYET_DINH_CHO_THUE_NGAY"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2  ">Hồ sơ pháp lý khác</label>
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Số</span>
+						</div>
+						<nop-editor asp-for="YeuCauChiTietModel.HS_PHAP_LY_KHAC" id="HS_PHAP_LY_KHAC" maxlength="50" />
+					</div>
+					<span asp-validation-for="YeuCauChiTietModel.HS_PHAP_LY_KHAC"></span>
+				</div>
+				<div class="col-md-4">
+					<nop-editor asp-for="YeuCauChiTietModel.HS_PHAP_LY_KHAC_NGAY" placeholder="Ngày" id="HS_PHAP_LY_KHAC_NGAY" /><br />
+					<span asp-validation-for="YeuCauChiTietModel.HS_PHAP_LY_KHAC_NGAY"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="gs-form-group ">
+	<h6>
+		Thông tin về nhà tăng
+	</h6>
+	<div class="ds-nha-tren-dat">
+		<div class="text-right" style="margin-bottom: 5px;">
+			<a type="button" class="btn btn-xs btn-outline-primary" href="javascript:ThemNhaTrenDat()">
+				<i class="ion ion-md-add" style="margin-right:5px;"></i>Thêm nhà
+			</a>
+		</div>
+		<div id="ListNha">
+
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$("#QuocGiaId").change(function () {
+			var quocgiaId = $("#QuocGiaId").val();
+			var _str = "-- Chọn tỉnh/thành phố --";
+			var _data = {
+				QuocGiaId: quocgiaId,
+				str: _str,
+				CapDiaBan: @((int)GS.Core.Domain.DanhMuc.enumLOAI_DIABAN.TINH),
+			}
+			$.ajax({
+				url: "/TaiSan/GetDataSource",
+				type: "POST",
+				data: _data,
+				success: function (result) {
+					var dropdownlistTinh = $("#TinhId").data("kendoDropDownList");
+					dropdownlistTinh.setDataSource(new kendo.data.DataSource({ data: result }));
+					$("#TinhId").val(0);
+					var text = $("#TinhId option:first-child").text();
+					$("#TinhId").parent().find(".k-input").text(text);
+					$("#HuyenId").val(0);
+					var text = $("#HuyenId option:first-child").text();
+					$("#HuyenId").parent().find(".k-input").text(text);
+					$("#XaId").val(0);
+					var text = $("#XaId option:first-child").text();
+					$("#XaId").parent().find(".k-input").text(text);
+				}
+			});
+		});
+		$("#TinhId").change(function () {
+			$("#HuyenId").val(0);
+			var quocgiaId = $("#QuocGiaId").val();
+			var _ParentId = $(this).val();
+			var _str = "-- Chọn quận/huyện --";
+			var _data = {
+				QuocGiaId: quocgiaId,
+				ParentId: _ParentId,
+				str: _str
+			}
+			$.ajax({
+				url: "/TaiSan/GetDataSource",
+				type: "POST",
+				data: _data,
+				success: function (result) {
+					var dropdownlistHuyen = $("#HuyenId").data("kendoDropDownList");
+					dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+					$("#HuyenId").val(0);
+					var text = $("#HuyenId option:first-child").text();
+					$("#HuyenId").parent().find(".k-input").text(text);
+					$("#XaId").val(0);
+					var text = $("#XaId option:first-child").text();
+					$("#XaId").parent().find(".k-input").text(text);
+				}
+			});
+		});
+		$("#HuyenId").change(function () {
+			$("#XaId").val(0);
+			var quocgiaId = $("#QuocGiaId").val();
+			var _ParentId = $(this).val();
+			var _str = "-- Chọn xã/phường --";
+			var _data = {
+				QuocGiaId: quocgiaId,
+				ParentId: _ParentId,
+				str: _str
+			}
+			$.ajax({
+				url: "/TaiSan/GetDataSource",
+				type: "POST",
+				data: _data,
+				success: function (result) {
+					//$("#XaId").kendoDropDownList({
+					//    autoBind: false,
+					//    dataTextField: "Text",
+					//    dataValueField: "Value",
+					//    dataSource: result
+					//}).data("kendoDropDownList");
+					var dropdownlistXa = $("#XaId").data("kendoDropDownList");
+					dropdownlistXa.setDataSource(new kendo.data.DataSource({ data: result }));
+					$("#XaId").val(0);
+					var text = $("#XaId option:first-child").text();
+					$("#XaId").parent().find(".k-input").text(text);
+				}
+			});
+		});
+		$("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").enable(false);
+		loadTaiSanNhaTrenDat();
+	})
+	function loadTaiSanNhaTrenDat() {
+		var datId = $("#TAI_SAN_ID").val();
+		var getListNhaTheoDatURL = "/TaiSan/_ListTaiSanNhaByDatId?taiSanDatId=" + datId;
+		var listNha = ajaxGet(getListNhaTheoDatURL);
+		listNha.done(function (result) {
+			$("#ListNha").append(result);
+		})
+			.fail(function (jqXHR, textStatus, errorThrown) {
+				// If fail
+				console.log(textStatus + ': ' + errorThrown);
+			});
+	}
+</script>
+

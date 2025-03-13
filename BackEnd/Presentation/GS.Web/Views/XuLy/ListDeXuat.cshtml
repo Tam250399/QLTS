@@ -1,0 +1,457 @@
+﻿@model XuLySearchModel
+@using GS.Core.Domain.SHTD;
+@{
+    //page title
+    ViewBag.Title = "Danh sách đề xuất xử lý";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhSachDeXuatXuLy");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    @*<div class="pull-right" style="margin-bottom:5px;">
+        <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+    </div>*@
+</div>
+<input asp-for="LOAI_XU_LY_ID" hidden />
+<input asp-for="KeySearch" hidden />
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-1 text-sm-left">Số quyết định:</label>
+        <div class="col-sm-3">
+            <nop-editor asp-for="SoQuyetDinh" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định từ:</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="NgayQuyetDinhTu" />
+            <span asp-validation-for="NgayQuyetDinhTu"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định đến:</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="NgayQuyetDinhDen" />
+            <span asp-validation-for="NgayQuyetDinhDen"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-1 text-sm-left">Loại tài sản:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="LoaiTaiSanId" asp-items="@Model.DDLLoaiTaiSan" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày xử lý từ:</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="NgayXuLyTu" />
+            <span asp-validation-for="NgayXuLyTu"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày xử lý đến:</label>
+        <div class="col-sm-2">
+            <nop-editor asp-for="NgayXuLyDen" />
+            <span asp-validation-for="NgayXuLyDen"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-1 text-sm-left">Phương án xử lý:</label>
+        <div class="col-sm-3">
+            <nop-select asp-for="PhuongAnXuLy" asp-items="@Model.DDLPhuongAnXuLy" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Hình thức xử lý:</label>
+        <div class="col-sm-2">
+            <nop-select asp-for="PhuongThucXuLy" asp-items="@Model.DDLHinhThucXuLy" asp-filter="true" />
+        </div>
+        <div class="col-sm-1" style="text-align:center;">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch" style="width:100%">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="form-group row">
+        @*<div class="col-sm-10">
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>*@
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <div class="pull-right" style="margin-bottom:5px;">
+                <a href="/QuyetDinhTichThu/ListVuViecForXuLy?LoaiXuLy=@((int)enumLoaiXuLy.DeXuat)" class="btn btn-sm btn-outline-primary">
+                    <i class="fa fa-plus-square"></i>
+                    Thêm mới
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+                        var recordChildren = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LOAI_XU_LY_ID: $('#@Html.IdFor(model => model.LOAI_XU_LY_ID)').val(),
+                                    NgayQuyetDinhDen: $('#@Html.IdFor(model => model.NgayQuyetDinhDen)').val(),
+                                    NgayQuyetDinhTu: $('#@Html.IdFor(model => model.NgayQuyetDinhTu)').val(),
+                                    PhuongAnXuLy: $('#@Html.IdFor(model => model.PhuongAnXuLy)').val(),
+                                    PhuongThucXuLy: $('#@Html.IdFor(model => model.PhuongThucXuLy)').val(),
+                                    NgayXuLyTu: $('#@Html.IdFor(model => model.NgayXuLyTu)').val(),
+                                    NgayXuLyDen: $('#@Html.IdFor(model => model.NgayXuLyDen)').val(),
+                                    SoQuyetDinh: $('#@Html.IdFor(model => model.SoQuyetDinh)').val(),
+                                    LoaiTaiSanId: $('#@Html.IdFor(model => model.LoaiTaiSanId)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var check = checkValiNgay();
+                                if (check) {
+                                    record = 0;
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "XuLy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'QUYET_DINH_SO', title: 'Số quyết định',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:'<a href="/XuLy/Edit?Guid=#:GUID#">#=QUYET_DINH_SO#</a>'
+                                    },
+                                    {
+                                        field: 'QUYET_DINH_NGAY', title: 'Ngày quyết định',
+                                        template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" }
+                                    },
+                                  {
+                                        field: 'CO_QUAN_BAN_HANH', title: 'Cơ quan ban hành',
+                                        headerAttributes: { style: "text-align:center" },                                        
+                                    },
+                                    {
+                                        field: 'ChiPhi', title: 'Tổng chi phí xử lý',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },                                    
+                                    {
+                                        field: 'GHI_CHU', title: 'Ghi chú',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#btn_template_parent").html())
+                                    }
+                                ]
+                            });
+                            function detailInit(e) {
+                                recordChildren = 0;
+                                var data = {
+                                    XuLyGuid: e.data.GUID,
+                                };
+
+                                addAntiForgeryToken(data);
+                            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanTdXuLy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: data
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: false,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      recordChildren = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                    mode: "inline"
+                                },
+
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++recordChildren #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TenTaiSan', title: 'Tên tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:'<a  href="javascript:void(0)" data-width="1000" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Thông tin tài sản" data-src="/TaiSanTdXuLy/_ViewXuLyTaiSan?Guid=#=GUID#">#=TenTaiSan#</a>'
+                                    },
+                                    {
+                                        field: 'SO_LUONG', title: 'Số lượng',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'NguyenGia', title: 'Nguyên giá',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        field: 'GiaTri', title: 'Giá trị',
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'TenHinhThuc', title: 'Hình thức xử lý',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'TenPhuongAn', title: 'Phương án xử lý',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'NGAY_XU_LY', title: 'Ngày xử lý',
+                                        template: "#if(NGAY_XU_LY!=null){##=kendo.toString(kendo.parseDate(NGAY_XU_LY, 'yyyy-MM-dd'),'dd/MM/yyyy')##}else{##}#",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: "GUID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#btn_template_childent").html())
+                                    }
+                                ]
+                            });
+                            };
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-kendo-template" id="btn_template_parent">
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href="/XuLy/Edit?Guid=#:GUID#">Sửa</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaXuLy('#:GUID#')>Xóa</a>
+    </div>
+</script>
+<script type="text/x-kendo-template" id="btn_template_childent">
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href='javascript:void(0)' data-width="1000" data-toggle='modal' data-target='\\#globalModalIframe' data-title='Thông tin tài sản' data-src="/TaiSanTdXuLy/_ViewXuLyTaiSan?Guid=#=GUID#">Sửa</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaTaiSanXuLy('#:GUID#')>Xóa</a>
+    </div>
+</script>
+<script>
+    $(document).ready(function () {
+        $("#LoaiTaiSanId").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            template: function (e) {
+                if (e.Disabled) {
+                    return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+                } else {
+                    return '<span class="k-state-default">' + e.Text + '</span>';
+                }
+            },
+            select: function (e) {
+                if (e.dataItem.Disabled) {
+                    e.preventDefault();
+                }
+            },
+            dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLLoaiTaiSan).toStringJson()))`),
+        }).data("kendoDropDownList");
+    });
+    function XoaXuLy(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa đề xuất này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/XuLy/Delete",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) { ShowSuccessMessage(data.Message); $("#btnSearch").click(); }
+                            else {
+                                ShowErrorMessage(data.Message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+    function XoaTaiSanXuLy(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa đề xuất này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "/TaiSanTdXuLy/Delete",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) { ShowSuccessMessage(data.Message); $("#btnSearch").click(); }
+                            else {
+                                ShowErrorMessage(data.Message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        })
+    }
+    $("#PhuongAnXuLy").change(function () {GetDDLPhuongAnByHinhThuc() });
+    function GetDDLPhuongAnByHinhThuc() {
+        var _data = {
+            HinhThucId: $("#PhuongAnXuLy").val()
+        }
+        $.ajax({
+            type: "GET",
+            data: _data,
+            url: "/HinhThucXuLy/GetDDLPhuongAnByHinhThuc",
+            success: function (data) {
+                var ddl = $("#PhuongThucXuLy").data("kendoDropDownList");
+                ddl.setDataSource(data);
+                ddl.value(0);
+            }
+        })
+    }
+    function checkValiNgay() {        
+        var check = true;
+        if (!checkValidateDateFormat("#NgayXuLyTu", "NgayXuLyTu", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+         if (!checkValidateDateFormat("#NgayXuLyDen", "NgayXuLyDen", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+         if (!checkValidateFromDateToDate("#NgayXuLyTu","#NgayXuLyDen", "NgayXuLyTu", "Ngày xử lý từ phải nhỏ hơn ngày xử lý đến")) {
+            check = false;
+        }
+        if (!checkValidateDateFormat("#NgayQuyetDinhTu", "NgayQuyetDinhTu", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+        if (!checkValidateDateFormat("#NgayQuyetDinhDen", "NgayQuyetDinhDen", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+        if (!checkValidateFromDateToDate("#NgayQuyetDinhTu", "#NgayQuyetDinhDen", "NgayQuyetDinhTu", "Ngày quyết định từ phải nhỏ hơn ngày quyết định đến")) {
+            check = false;
+        }
+        return check;
+    }
+
+    
+</script>
+
+
+

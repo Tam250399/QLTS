@@ -1,0 +1,224 @@
+﻿@model QuyetDinhTichThuModel
+@if(Model.is_detail){
+    //page title
+    ViewBag.Title = "Chi tiết quyết định tịch thu";
+    //active menu item (system name)
+    
+}
+<input asp-for="ID" type="hidden" id="ID_@Model.GUID" />
+<input asp-for="GUID" type="hidden" id="GUID_@Model.GUID" />
+<input asp-for="DON_VI_ID" type="hidden" id="DON_VI_ID_@Model.GUID" />
+<input asp-for="TRANG_THAI_ID" type="hidden" id="TRANG_THAI_ID_@Model.GUID" />
+<input asp-for="NGAY_TAO" type="hidden" id="NGAY_TAO_@Model.GUID" />
+<input asp-for="NGUOI_TAO_ID" type="hidden" id="NGUOI_TAO_ID_@Model.GUID" />
+<div class="gs-form-group">
+    <h6>Quyết định tịch thu/xác lập</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Loại quyết định:</label>
+        <div class="col-sm-4">
+            <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                    @Html.RadioButtonFor(c => c.is_tichthu, true, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>QĐ tịch thu</small></span>
+                </label>
+                <label class="custom-control custom-radio col-sm-5">
+                    @Html.RadioButtonFor(c => c.is_tichthu, false, new { @class = "custom-control-input" })
+                    <span class="custom-control-label"><small>QĐ xác lập</small></span>
+                </label>
+            </div>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Nguồn gốc tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="NGUON_GOC_ID" id="NGUON_GOC_ID_@Model.GUID" asp-items="Model.DDLNguonGoc" asp-filter="true" asp-disabled="@Model.is_detail" />
+            <span data-valmsg-for="NGUON_GOC_ID_@Model.GUID"></span>
+            <script>
+                    $(document).ready(function () {
+                    $("#NGUON_GOC_ID_@Model.GUID").kendoDropDownList({
+                        dataTextField: "Text",
+                        dataValueField: "Value",
+                        filter: "contains",
+                        template: function (e) {
+                            if (e.Disabled) {
+                                return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+                            } else {
+                                return '<span class="k-state-default">' + e.Text + '</span>';
+                            }
+                        },
+                        select: function (e) {
+                            if (e.dataItem.Disabled) {
+                                e.preventDefault();
+                            }
+                        },
+                        popup: {
+                            appendTo: $("#div_temp"),
+                        },
+                        dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLNguonGoc).toStringJson()))`),
+                    }).data("kendoDropDownList");
+                });
+            </script>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Số QĐ tịch thu/xác lập:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_SO" id="QUYET_DINH_SO_@Model.GUID" asp-disabled="@Model.is_detail" />          
+            <span data-valmsg-for="QUYET_DINH_SO_@Model.GUID"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày quyết định:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_NGAY" id="QUYET_DINH_NGAY_@Model.GUID" asp-disabled="@Model.is_detail" />
+            <br>
+            <span data-valmsg-for="QUYET_DINH_NGAY_@Model.GUID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Chức danh người QĐ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGUOI_QUYET_DINH" id="NGUOI_QUYET_DINH_@Model.GUID" asp-disabled="@Model.is_detail" />
+            <span data-valmsg-for="NGUOI_QUYET_DINH_@Model.GUID"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Thuộc Bộ/Tỉnh:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="CO_QUAN_BAN_HANH_ID" id="CO_QUAN_BAN_HANH_ID_@Model.GUID" asp-items="Model.DDLBoNganh" asp-filter="true" asp-disabled="@Model.is_detail" />
+            <span data-valmsg-for="CO_QUAN_BAN_HANH_ID_@Model.GUID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Tên QĐ/ vụ việc:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TEN" id="TEN_@Model.GUID" asp-disabled="@Model.is_detail" />
+            <span data-valmsg-for="TEN_@Model.GUID"></span>
+        </div>
+    </div>
+   <div class="form-group row">
+       <label class="col-form-label col-sm-2 text-sm-left ">Tổng giá trị tịch thu/ xác lập:</label>
+       <div class="col-sm-10">
+           <nop-editor asp-for="TONG_GIA_TRI" id="TONG_GIA_TRI_@Model.GUID" asp-amount="true" asp-dvt="đồng" />
+           <span id="span_TongGiaTriXacLap" class="field-validation-error text-danger" style="color:red"> </span>
+       </div>
+    </div>
+ 
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Ghi chú:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="GHI_CHU" id="GHI_CHU_@Model.GUID" asp-disabled="@Model.is_detail" />
+                
+            </div>
+        </div>
+</div>
+<div id="view_taisan"></div>
+<script>
+    $(document).ready(function () {
+        LoadTaiSan();
+        LoadNguonGoc(@(Model.NGUON_GOC_ID!=null?Model.NGUON_GOC_ID:0));
+        if (@Model.is_detail.ToString().ToLower() === true) {
+            $("input[name='@(Html.IdFor(c=>c.is_tichthu))']").each(function (i) {
+                $(this).attr('disabled', 'disabled');
+            });
+        };
+        var datepicker = $("#QUYET_DINH_NGAY_@Model.GUID").data("kendoDatePicker");
+        datepicker.bind("change", function () {
+            PrePareTen();
+        });
+    });
+    $("#QUYET_DINH_SO_@Model.GUID").change(function () {
+        PrePareTen();
+    });
+    $("#NGUOI_QUYET_DINH_@Model.GUID").change(function () {
+        PrePareTen();
+    });
+    function PrePareTen() {
+        //var ten = $("#TEN_@Model.GUID").val)();
+        var ten = '';
+        if ($("#QUYET_DINH_SO_@Model.GUID").val() != null && $("#QUYET_DINH_SO_@Model.GUID").val()!='') {
+            ten = ten + "số " + $("#QUYET_DINH_SO_@Model.GUID").val();
+        }
+        if ($("#QUYET_DINH_NGAY_@Model.GUID").val() != null && $("#QUYET_DINH_NGAY_@Model.GUID").val() != '') {
+            ten = ten + " ngày " + $("#QUYET_DINH_NGAY_@Model.GUID").val();
+        }
+        if ($("#NGUOI_QUYET_DINH_@Model.GUID").val() != null && $("#NGUOI_QUYET_DINH_@Model.GUID").val() != '') {
+            ten = ten + " của " + $("#NGUOI_QUYET_DINH_@Model.GUID").val();
+        }
+        if ($('input[name="@(Html.IdFor(c=>c.is_tichthu))"]:checked').val() == "True") {
+            ten = "Quyết định tịch thu " + ten;
+        }
+        else {
+            ten = "Quyết định xác lập " + ten;
+        }
+        $("#TEN_@Model.GUID").val(ten);
+    }
+    function LoadTaiSan() {
+         $.ajax({
+            type: "GET",
+            url: "/TaiSanTd/_List?QuyetDinhId=" +@Model.ID+"&is_detail=@Model.is_detail",
+            success: function (data) {
+                $("#view_taisan").html(data);
+            }
+        });
+    }
+    function LoadNguonGoc(ID) {
+        var _data = {
+            NguonGocID: $("#@(Html.IdFor(c=>c.NGUON_GOC_ID))_@Model.GUID").val(),
+            isTichThu: $('input[name="@(Html.IdFor(c=>c.is_tichthu))"]:checked').val(),
+            isDisable: true,
+
+        }
+        $.ajax({
+            type: "GET",
+            data:_data,
+            url: "/QuyetDinhTichThu/GetNguonGoc",
+            success: function (data) {
+                var ddl = $("#NGUON_GOC_ID_@Model.GUID").data("kendoDropDownList");
+                ddl.setDataSource(data);
+                ddl.value(ID);
+                if (ID == 0) {
+                    ddl.select(ID);
+                };
+
+            }
+        });
+    }
+    $('input[type=radio][name=@(Html.IdFor(c=>c.is_tichthu))]').on('change', function () {
+        LoadNguonGoc(0);
+        PrePareTen();
+    });
+   function CheckTongGiaTriTichThu() {
+        var isValid = true;
+        let tongGiaTri = $("#@(Html.IdFor(c=>c.TONG_GIA_TRI))_@Model.GUID").val();
+        // không cho nhập tổng giá trị tịch thu = 0
+        if (tongGiaTri == '0') {
+            $('#span_TongGiaTriXacLap').show();
+            $('#span_TongGiaTriXacLap').text("Tổng giá trị tịch thu/ xác lập phải > 0");
+            return false;
+        } else {
+            $('#span_TongGiaTriXacLap').hide();
+        }
+        // checkt tổng giá trị tịch thu so với giá trị của các tài sản trong quyết định
+         
+        var _data = {
+            Guid: $("#@(Html.IdFor(c=>c.GUID))_@Model.GUID").val() ,
+            TongGiaTriTichThu: $("#@(Html.IdFor(c=>c.TONG_GIA_TRI))_@Model.GUID").val()
+           }
+        var TongGiaTriTichThu = $("#@(Html.IdFor(c=>c.TONG_GIA_TRI))_@Model.GUID").val();
+
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/QuyetDinhTichThu/CheckTongGiaTriTichThu",
+            async: false,
+            success: function (result) {
+                console.log(result);
+                if (result.ObjectInfo == true) {
+                    $('#span_TongGiaTriXacLap').hide();
+
+                } else {
+                    $('#span_TongGiaTriXacLap').show();
+                    $('#span_TongGiaTriXacLap').text(result.Message);
+                    isValid = false;
+                }
+                isValid = result.ObjectInfo;
+            }
+        })
+        return isValid;
+    }
+</script>

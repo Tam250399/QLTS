@@ -1,0 +1,115 @@
+﻿@model BienDongSearchModel
+
+<nop-antiforgery-token />
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    TaiSanGuid: '@(Model.TaiSanGuid.ToString())'
+
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_ListBienDongSaiHienTrang", "BienDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: 'TenLyDoBienDong',
+                                        title: 'Lý do biến động'
+                                    },
+                                {
+                                    field: "NGAY_BIEN_DONG",
+                                    title: "Ngày biến động", type: "Date",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    format: "{0:dd/MM/yyyy}",
+                                },
+								{
+                                    field: "Ma",
+                                    title: "Thao tác",
+                                    width: 100,
+                                    attributes: { style: "text-align:center" },
+                                    template: function (item) {
+                                        return `<a href="javascript:void(0)" class="btn icon-btn btn-sm btn-outline-secondary" style= "width: 50px !important;" onclick="capNhatHienTrang(${item.ID})">Cập nhật</a>`
+
+                                    }
+
+								}
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function capNhatHienTrang(bienDongId) {
+        var modal = $('#globalModalIframe');
+        ShowViewLoading("#globalModalIframeContent");
+        var src = `/Biendong/_CapNhatBienDongSaiHienTrang?BienDongID=${bienDongId} `
+        $.ajax({
+            type: "GET",
+            url: src,
+            success: function (data) {
+                $("#globalModalIframeContent").html(data);
+            },
+        });
+       
+    }
+</script>

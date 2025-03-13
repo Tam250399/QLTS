@@ -1,0 +1,194 @@
+﻿@model CongCuModel
+
+<input asp-for="XuatNhapId" type="hidden" />
+<div class="gs-form-group mb-4">
+    <h6>Thông tin chung</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="CurrentDonViMa" asp-disabled="true" />
+        </div>
+        <div class="col-sm-6">
+            <nop-editor asp-for="CurrentDonViTen" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Tên lô CCDC</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="TenXuatNhap" />
+            <span asp-validation-for="TenXuatNhap"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày tăng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayXuatNhap" />
+            <span asp-validation-for="NgayXuatNhap"></span>
+        </div>
+       
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Trạng thái phân bổ</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="TRANG_THAI_PHAN_BO" asp-items="Model.TrangThaiPhanBoAvailable" asp-filter="true"  asp-disabled="@(Model.DON_VI_BO_PHAN_ID > 0 ? true : false)" />
+        </div>
+
+    <div class="col-sm-6 form-group row" id="div_PhongBan" >
+        <label class="col-form-label col-sm-4 text-sm-left" style="margin-right: 5px">Bộ phận / phòng ban</label>
+        <div class="col-sm-6">
+            <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" asp-disabled="@(Model.DON_VI_BO_PHAN_ID > 0 ? true : false)" />
+            <span asp-validation-for="DON_VI_BO_PHAN_ID"></span>
+        </div>
+        <div class="col-md-1" style="text-align:center">
+            <button type="button" id="btn_ThemPhongBan" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin-bottom:10px;">
+                <i class="ion ion-md-add"></i>&nbsp;
+            </button>
+        </div>
+    </div>
+        
+
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Lý do tăng</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="MucDichXuatNhapId" asp-items="Model.DDLLyDoTang" asp-filter="true" />
+            <span asp-validation-for="MucDichXuatNhapId"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Tình trạng sử dụng</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="TRANG_THAI_ID" asp-items="Model.DDLTrangThai" asp-filter="true" />
+            <span asp-validation-for="TRANG_THAI_ID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="ChungTuSoXuatNhap" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày chứng từ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="ChungTuNgayXuatNhap" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ghi chú</label>
+        <div class="col-sm-10">
+            <app-textarea asp-for="GhiChuXuatNhap" />
+        </div>
+    </div>
+</div>
+
+
+
+<div id="view-loCongCu" style="margin-top:10px;"></div>
+
+<div id="view-loCongCuValue" style="margin-top:10px;"></div>
+
+@if (Model.XuatNhapId > 0)
+{
+    foreach (var cc in Model.ListLoCongCu)
+    {
+        <script>
+            $.ajax({
+                type: "GET",
+                url: "/CongCu/_AddNewLoCongCu?MapId=@cc.MapId",
+                success: function (data) {
+                    $("#view-loCongCuValue").append(data);
+                }
+            })
+        </script>
+    }
+}
+else
+{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/CongCu/_AddNewLoCongCu",
+                success: function (data) {
+                    $("#view-loCongCu").html(data);
+                }
+            });
+        })
+    </script>
+}
+<div style="text-align:right">
+    <button type="button" class="btn btn-xs btn-outline-primary" id="btnAddLoCongCu">
+        <i class="ion ion-md-add"></i>
+        Thêm CCDC
+    </button>
+</div>
+<script>
+    $(document).ready(function () {
+        let donViId = @Model.DON_VI_BO_PHAN_ID.GetValueOrDefault();
+        if ( donViId > 0) {
+            $('#div_PhongBan').show();
+            $('#btn_ThemPhongBan').attr('disabled', 'disabled');
+            
+        } else {
+            $('#div_PhongBan').hide();
+        }
+        var mucDichXuatNhapId = $("#MucDichXuatNhapId").data("kendoDropDownList");
+        mucDichXuatNhapId.value(@Model.MucDichXuatNhapId);
+        $("#DON_VI_BO_PHAN_ID").data("kendoDropDownList").bind("change", function () {
+            checkValidPhongBan();
+            LoadDDLTrangThai();
+        });
+    })
+    $("#btnAddLoCongCu").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/CongCu/_AddNewLoCongCu",
+            success: function (data) {
+                $("#view-loCongCu").append(data);
+            }
+        })
+    });
+    $('#@Html.IdFor(m => m.TRANG_THAI_PHAN_BO)').change(function () {
+        let isPhanBo = $(this).val();
+        // cứ sửa trạng thái phân bổ là load lại đơn vị!
+        var donvibophanid = $("#DON_VI_BO_PHAN_ID").data("kendoDropDownList");
+        donvibophanid.value("");
+        // nếu chưa phân bổ thì không show phòng ban
+        if (isPhanBo == "0") {
+
+            $('#div_PhongBan').hide();
+
+        } else {
+            $('#div_PhongBan').show();
+
+        }
+        LoadDDLTrangThai();
+    });
+    function checkValidPhongBan() {
+        let DonViBoPhanId = $("#DON_VI_BO_PHAN_ID").val();
+        let TrangThaiPhanBo = $('#@Html.IdFor(m => m.TRANG_THAI_PHAN_BO)').val();
+        if (TrangThaiPhanBo == '1' && DonViBoPhanId == "") {
+            showInvalidMessage('DON_VI_BO_PHAN_ID', 'Bạn phải chọn đơn vị bộ phận');
+        }
+        else {
+            hideValmsg('DON_VI_BO_PHAN_ID');
+        }
+    };
+    function LoadDDLTrangThai() {
+        if (true) {
+
+        }
+        var BoPhanId = $("#DON_VI_BO_PHAN_ID").val();
+        var TrangThaiPhanBo = $('#TRANG_THAI_PHAN_BO').val();
+        if (TrangThaiPhanBo == "0") {
+            BoPhanId = "";
+        }
+        $.ajax({
+            type: "GET",
+            url: "/CongCu/GetDDLTrangThai?BoPhanId=" + BoPhanId,
+            success: function (data) {
+                var DDL = $("#TRANG_THAI_ID").data("kendoDropDownList");
+                DDL.setDataSource(data);
+                     DDL.select(0);
+            }
+        });
+
+    }
+</script>

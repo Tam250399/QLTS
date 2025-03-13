@@ -1,0 +1,380 @@
+@model TaiSanNhatKySearchModel
+@{
+    //page title
+    ViewBag.Title = "Nhật ký đồng bộ tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GuiTaiSan");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 0px;margin-bottom: 0px !important;">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Mã tài sản:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Mã đồng bộ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaTaiSanDB" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Nhóm tài sản:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="LoaiHinhTaiSan" asp-items="@Model.ddlLoaiHinhTaiSan" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Trạng thái:</label>
+        <div class="col-sm-4">
+            <nop-select asp-for="TrangThai" asp-items="@Model.ddlTrangThai" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Ngày đồng bộ:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NgayDB" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right"></label>
+        <div class="col-sm-4">
+            <div class="custom-content-checkbox">
+                <div class="custom-controls-stacked" style="margin-right: 5px;">
+                    <label class="custom-control custom-radio">
+                        @Html.RadioButtonFor(Model => Model.IS_TaiSanToanDan, 0, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"> Tài sản nhà nước</span>
+                    </label>
+                </div>
+                <div class="custom-controls-stacked" style="margin-right: 5px;">
+                    <label class="custom-control custom-radio">
+                        @Html.RadioButtonFor(Model => Model.IS_TaiSanToanDan, 1, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"> Tài sản toàn dân</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-right: -33px;">
+        <div class="col-sm-10">
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-primary pull-right" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row" style="height:40px">
+    <div class="col-sm-3 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài sản đồng bộ</span>
+        </div>
+    </div>
+    <div class="col-sm-9 text-right">
+        <button type="button" class="btn btn-outline-success pull-right btn-sm" id="btnSyncAll" onclick="DongBoTaiSanTheoDonVi(@((int)enumLOAI_LY_DO_TANG_GIAM.TANG_TOAN_BO))">Đồng bộ Biến động tăng mới</button>
+        &nbsp;
+        <button type="button" class="btn btn-outline-success pull-right btn-sm" id="btnSync" onclick="DongBoTaiSan()">Đồng bộ các biến động khác</button>
+        &nbsp;
+        <button type="button" class="btn btn-outline-success pull-right btn-sm" id="btnSyncAll" onclick="CapNhatMaTaiSan()">Cập nhật mã tài sản kho</button>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="ThaoTacTemplate" type="text/x-kendo-template">
+    <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" style="margin-left:30px;" data-toggle="modal" data-target="\#globalModalIframe" data-title="Thông tin nhật ký đồng bộ" data-src="_Detail?Id=#=ID#"><i class="fas fa-eye d-block"></i>Xem</a>
+</script>
+<script>
+    var ListTaiSanId = [];
+    $(document).ready(function () {
+        function SearchData() {
+            var _data = {
+                KeySearch:$('#@Html.IdFor(model => model.KeySearch)').val(),
+                MaTaiSan:$('#@Html.IdFor(model => model.MaTaiSan)').val(),
+                MaTaiSanDB:$('#@Html.IdFor(model => model.MaTaiSanDB)').val(),
+                NgayDB:$('#@Html.IdFor(model => model.NgayDB)').val(),
+                LoaiHinhTaiSan:$('#@Html.IdFor(model => model.LoaiHinhTaiSan)').val(),
+                TrangThai: $('#@Html.IdFor(model => model.TrangThai)').val(),
+                IS_TaiSanToanDan: $("input[name='IS_TaiSanToanDan']:checked").val()
+            };
+            addAntiForgeryToken(_data);
+            //console.log(_data);
+            return _data;
+        }
+        $("#btnSearch").click(function () {
+            var grid = $('#items-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            return false;
+        });
+        $("#TrangThai").change(function () {
+            var trangThai = $('#TrangThai').val();
+            if (trangThai ==@((int)enumTrangThaiTaiSanNhatKy.CHO_GET_MA)) {
+                $('#btnUpdate').show();
+                $('#btnSync').hide();
+            }
+            else {
+                $('#btnUpdate').hide();
+                $('#btnSync').show();
+            }
+            grid.dataSource.page(1); //new search. Set page size to 1
+            return false;
+        });
+            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+            if (event.keyCode === 13) {
+                $("#btnSearch").click();
+                return false;
+            }
+        });
+        $("#items-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "TaiSanNhatKy"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: SearchData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(Model.PageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(Model.AvailablePageSizes)],
+                @await Html.PartialAsync("_GridPagerMessages")
+            },
+            editable: {
+                confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                mode: "inline"
+            },
+            scrollable: false,
+         //   dataBound: onDataBound,
+            columns: [
+            {
+                field: 'MA_TAI_SAN',
+                title: 'Mã tài sản'
+            },
+            {
+                field: 'MA_TAI_SAN_DB',
+                title: 'Mã tài sản đồng bộ'
+            },
+            {
+                field: 'LOAI_HINH_TAI_SAN_TEN',
+                title: 'Nhóm tài sản'
+            },
+            {
+                field: 'TRANG_THAI_TEN',
+                title: 'Trạng thái'
+            },
+            {
+                field: 'NGAY_DONG_BO',
+                title: 'Ngày đồng bộ',
+                type: "Date",
+                format: "{0:dd/MM/yyyy}"
+            },
+            {
+                field: 'NGAY_CAP_NHAT',
+                title: 'Ngày cập nhật',
+                type: "Date",
+                format: "{0:dd/MM/yyyy}"
+            },
+            {
+                field: "ID",
+                title: "Thao tác",
+                width: 150,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" style="margin-left:30px;" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Thông tin nhật ký đồng bộ" data-src="_Detail?Id=#=ID#"><i class="fas fa-eye d-block"></i>Xem</a>'
+                },
+                {
+                    title: 'Select All',
+                    headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-chb'></label>",
+                    template: function (dataItem) {
+                        if (dataItem.TRANG_THAI_ID !=@((int)enumTrangThaiTaiSanNhatKy.DA_DONG_BO)) {
+                            return "<input type='checkbox' id='" + dataItem.TAI_SAN_ID + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.TAI_SAN_ID + "'></label>";
+                        }
+                        else {
+                            return "";
+                        }
+                    },
+                    width: 50,
+                    attributes: {
+                        style: "text-align: center;"
+                    },
+                }
+            ]
+        });
+        var grid = $("#items-grid").data("kendoGrid");
+        grid.table.on("click", ".row-checkbox", selectRow);
+        $('#header-chb').change(function (ev) {
+            var checked = ev.target.checked;
+            $('.row-checkbox').each(function (idx, item) {
+                if (checked) {
+                    if (!($(item).closest('tr').is('.k-state-selected'))) {
+                        $(item).click();
+                    }
+                } else {
+                    if ($(item).closest('tr').is('.k-state-selected')) {
+                        $(item).click();
+                    }
+                }
+            });
+        });
+    });
+    var checkedIds = {};
+    var NgayDongBo;
+    function selectRow() {
+
+        var checked = this.checked;
+        var row = $(this).closest("tr");
+        var grid = $("#items-grid").data("kendoGrid");
+        var _ListTaiSanId = [],
+            dataItem = grid.dataItem(row);
+       checkedIds[dataItem.ID] = checked;
+        var ListItem = [];
+        if (checked) {
+            //-select the row
+            row.addClass("k-state-selected");
+            var checkHeader = true;
+            $.each(grid.items(), function (index, item) {
+                if ($(item.cells[7].firstChild).hasClass("k-checkbox")) {
+                    ListItem.push(item);
+                }
+            });
+            for (var i = 0; i < ListItem.length; i++) {
+                if (!$(ListItem[i]).hasClass("k-state-selected")) {
+                    checkHeader = false;
+                    break;
+                }
+            }
+            $("#header-chb")[0].checked = checkHeader;
+        }
+        else {
+            //-remove selection
+            row.removeClass("k-state-selected");
+            $("#header-chb")[0].checked = false;
+        }
+        for (var i = 0; i < ListItem.length; i++) {
+            if ($(ListItem[i]).hasClass("k-state-selected")) {
+                _ListTaiSanId.push($(ListItem[i].cells[7].firstChild).attr('id'));
+            }
+        }
+        ListTaiSanId = _ListTaiSanId;
+        if (_ListTaiSanId.length > 0) {
+            $("#btnSync").show();
+        }
+        else {
+            $("#btnSync").hide();
+        }
+    }
+    function DongBoTaiSan() {
+        showThrobber("Đang xử lý, vui lòng chờ");
+        if (ListTaiSanId.length == 0) {
+            ShowErrorMessage("Bạn phải chọn tài sản !!!");
+        }
+        var data = {
+            ListTaiSanId: ListTaiSanId,
+            LoaiBienDongId:0
+        };
+        showThrobber("Đang xử lý, vui lòng chờ...");
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "/DongBo/DongBoThuCong",
+            //async: false
+        }).done(function (result) {
+            hideThrobber();
+            ShowSuccessMessage("Đã đồng bộ. Xem kết quả trên giao diện");
+            var grid = $('#items-grid').data('kendoGrid');
+            grid.dataSource.read();
+            $("#header-chb")[0].checked = false;
+            ListTaiSanId = [];
+            $("#btnSync").hide();
+            NgayDongBo = result.Response.Date;
+            console.log(result);
+        });
+    };
+    function CapNhatMaDB() {
+        //showThrobber("Đang xử lý, vui lòng chờ");
+        if (ListTaiSanId.length == 0) {
+            ShowErrorMessage("Bạn phải chọn tài sản !!!");
+        }
+        var data = {
+            ListTaiSanId: ListTaiSanId,
+            NgayDongBo: NgayDongBo
+        };
+        showThrobber("Đang xử lý, vui lòng chờ...");
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "/DongBo/CapNhatMaDb",
+            //async: false
+        }).done(function (result) {
+            hideThrobber();
+            ShowSuccessMessage("Đã Cập nhật mã tài sản. Xem kết quả trên giao diện");
+            var grid = $('#items-grid').data('kendoGrid');
+            grid.dataSource.read();
+            $("#header-chb")[0].checked = false;
+            ListTaiSanId = [];
+            $("#btnUpdate").hide();
+            console.log(result);
+        });
+    };
+    function DongBoTaiSanTheoDonVi(LoaiBienDong) {
+        showThrobber("Đang xử lý, vui lòng chờ");
+        //if (ListTaiSanId.length == 0) {
+        //    ShowErrorMessage("Bạn phải chọn tài sản !!!");
+        //}
+        var data = {
+            LoaiBienDongId: LoaiBienDong
+        };
+        showThrobber("Đang xử lý, vui lòng chờ...");
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "/DongBo/DongBoTheoDonVi",
+            //async: false
+        }).done(function (result) {
+            hideThrobber();
+            ShowSuccessMessage("Đã đồng bộ. Xem kết quả trên giao diện");
+            NgayDongBo = result.Response.Date;
+            console.log(result);
+        });
+    };
+    function CapNhatMaTaiSan() {
+        showThrobber("Đang xử lý, vui lòng chờ");
+        //if (ListTaiSanId.length == 0) {
+        //    ShowErrorMessage("Bạn phải chọn tài sản !!!");
+        //}
+        showThrobber("Đang xử lý, vui lòng chờ...");
+        $.ajax({
+            type: "GET",
+            url: "/DongBo/CapNhatMaDb",
+            //async: false
+        }).done(function (result) {
+            hideThrobber();
+            ShowSuccessMessage("Đã Cập nhật. Xem kết quả trên giao diện");
+        });
+    }
+</script>

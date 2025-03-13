@@ -1,0 +1,229 @@
+﻿@model HoatDongSearchModel
+@{
+	//page title
+	ViewBag.Title = "Tra cứu nhật ký sử dụng";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("TraCuuNhatKySuDung");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+	<h3 class="pull-left">
+		Tra cứu nhật ký sử dụng
+	</h3>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+
+	<div class=" row">
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Từ khóa:</label>
+				<div class="col-sm-8">
+					<nop-editor asp-for="DIA_CHI_MAY" placeholder="Từ khóa tìm kiếm" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Kiểu hoạt động:</label>
+				<div class="col-sm-8">
+					<nop-select asp-for="KIEU_HOAT_DONG" asp-items="Model.KIEU_HOAT_DONG_List" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class=" row">
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Tên đăng nhập:</label>
+				<div class="col-sm-8">
+					<nop-editor asp-for="TEN_DANG_NHAP" placeholder="Tên đăng nhập" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Tên đối tượng:</label>
+				<div class="col-sm-8">
+					<nop-editor asp-for="TEN_DOI_TUONG" placeholder="Tên đối tượng" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class=" row">
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Từ ngày:</label>
+				<div class="col-sm-9">
+					<nop-editor asp-for="FromDate" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-3 text-sm-right">Đến Ngày:</label>
+				<div class="col-sm-9">
+					<nop-editor asp-for="ToDate" />
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+	<div class="row">
+		<div class="col-sm-10"></div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+		</div>
+	</div>
+</div>
+<div class="content">
+	<div class="form-horizontal">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div id="NhatKyHoatDong-grid"></div>
+					<script>
+                        $(document).ready(function () {
+
+                            function SearchData() {
+                                var _data = {
+                                    FromDate: $('#@Html.IdFor(model => model.FromDate)').val(),
+                                    ToDate: $('#@Html.IdFor(model=>model.ToDate)').val(),
+                                    KIEU_HOAT_DONG: $('#@Html.IdFor(model => model.KIEU_HOAT_DONG)').val(),
+                                    DIA_CHI_MAY: $('#@Html.IdFor(model => model.DIA_CHI_MAY)').val(),
+                                    TEN_DANG_NHAP:$('#@Html.IdFor(model => model.TEN_DANG_NHAP)').val(),
+                                    TEN_DOI_TUONG:$('#@Html.IdFor(model => model.TEN_DOI_TUONG)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#NhatKyHoatDong-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.DIA_CHI_MAY)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.TEN_DANG_NHAP)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.TEN_DOI_TUONG)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.FromDate)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.ToDate)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#@Html.IdFor(model => model.KIEU_HOAT_DONG)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#NhatKyHoatDong-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "HoatDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "TEN_KIEU_HOAT_DONG",
+                                        title: "Tên kiểu hoạt động"
+                                    }, {
+                                        field: "TEN_DANG_NHAP",
+                                        title: "Người dùng",
+                                    },{
+                                        field: "TEN_DAY_DU",
+                                        title: "Tên đầy đủ",
+                                    },{
+                                        field: "TEN_DOI_TUONG",
+                                        title: "Đối tượng",
+                                    },{
+                                        field: "MO_TA",
+                                        title: "Mô tả chi tiết",
+                                    }, {
+                                        field: "NGAY_TAO",
+                                        title: "Ngày thực hiện",
+                                        type: "date",
+                                        format: "{0:dd/MM/yyyy hh:mm tt}"
+                                    },{
+                                        field: "IP_TRUY_CAP",
+                                        title: "Địa chỉ máy",
+                                    },
+                                    {
+                                    field: "GUID",
+                                    title: "Chi tiết",
+                                    width: 50,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-sm btn-outline-secondary" href="javascript:OpenActivityDetailModal(#=ID#)"><i class="fas fa-align-justify d-block"></i>Xem</a>'
+                                    }
+                                ]
+                            });
+
+
+
+                        });
+                         function OpenActivityDetailModal(id)
+                            {
+                              var _url = "@(Url.Action("_Detail", "HoatDong"))?ID=" + id ;
+                              OpenModalManual("Chi tiết hoạt động", _url, 1028, 600);
+                            }
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

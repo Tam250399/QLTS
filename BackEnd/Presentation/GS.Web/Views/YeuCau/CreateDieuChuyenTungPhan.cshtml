@@ -1,0 +1,162 @@
+﻿@{
+	ViewData["Title"] = "Thêm mới điều chuyển từng phần";
+	Html.SetActiveMenuItemSystemName("GiamTaiSan");
+
+}
+@model YeuCauModel
+<!-- Thong tin chung begin --------->
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Điều chuyển một phần
+			@*<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a href="/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID">Quay lại danh sách</a>
+			</small>*@
+			<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID';" style="float:right; margin-right: 5px;">
+				<i class="ion ion-ios-close-circle-outline"></i>
+				Đóng
+			</button>
+			<button type="button" class="btn btn-sm btn-outline-primary btnAdd" id="btnAddTangNguyenGia" style="float:right;margin-right:5px;">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+		</h6>
+		<div class="card-body">
+			@await Html.PartialAsync("../TaiSan/_BDThongTinTaiSan", Model)
+			<form asp-controller="ThayDoiThongTin" asp-action="CreateThayDoiThongTin" method="post">
+				<input type="submit" id="btnSubmit" style="display:none;" />
+				@await Html.PartialAsync("_CreateOrUpdateDieuChuyenTungPhan", Model)
+			</form>
+		</div>
+		<div class="card-footer">
+			<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID';" style="float:right; margin-right: 5px;">
+				<i class="ion ion-ios-close-circle-outline"></i>
+				Đóng
+			</button>
+			<button type="button" class="btn btn-sm btn-outline-primary btnAdd"  style="float:right;margin-right:5px;">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+		</div>
+	</div>
+<script>
+
+	//$(function () {
+	//	//$('#btnAddTangNguyenGia').click(function () {
+	//	//	$("#btnSubmit").click();
+	//	//})
+	//} )
+		$(document).ready(function () {
+			$(".btnAdd").click(function () {
+
+				var _dataBienDong = addDataBDTangNG();
+				createYeuCauBDNguyenGia(_dataBienDong);
+			})
+			$(document).on("change", "#ListNguonVon input", TinhNguyenGia);
+			let lydobd = $('#LY_DO_BIEN_DONG_ID').data('kendoDropDownList');
+			if (lydobd) {
+				//chọn index 1
+				lydobd.select(1);
+				lydobd.trigger('change');
+			}
+		});
+
+		 /**
+		 * Description: Lay du lieu bien dong tao yeu cau
+		 * */
+		function addDataBDTangNG() {
+			var _lstNguonVon = [];
+			   $(".NguonVon").each(function () {
+				   var nguonvonId = $(this).data("idnguonvon");
+				   var _tennguonvon = $(this).data("tennguonvon");
+				   var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+				   _lstNguonVon.push({
+					   ID: nguonvonId,
+					   GiaTri: parseFloat(_ValueNguonVon),
+					   TEN: _tennguonvon,
+				   });
+			   });
+			  var _lstHienTrang = [];
+				$(".HienTrang").each(function () {
+					var _hientrangId = $(this).data("idhientrang");
+					var _tenhientrang = $(this).data("tenhientrang");
+					var _kieudulieuid = $(this).data("kieudulieuid");
+					switch (_kieudulieuid) {
+						case 1:
+							var _Value = $("#HienTrang_" + _hientrangId).val();
+							_lstHienTrang.push({
+								HienTrangId: _hientrangId,
+								GiaTriNumber: _Value,
+								TenHienTrang: _tenhientrang,
+								KieuDuLieuId: _kieudulieuid,
+							});
+							break;
+						case 2:
+							var _Value = $("#HienTrang_" + _hientrangId).prop("checked") ? true : false;
+							_lstHienTrang.push({
+								HienTrangId: _hientrangId,
+								GiaTriCheckbox: _Value,
+								TenHienTrang: _tenhientrang,
+								KieuDuLieuId: _kieudulieuid,
+							});
+							break;
+					}
+				});
+			var _data = {
+				ID : '@Model.ID',
+				TaiSanGuid: $("#@Html.IdFor(c=>c.TaiSanGuid)").val(),
+				TAI_SAN_ID: $("#TAI_SAN_ID_2").val(),
+				CHUNG_TU_SO : $("#@Html.IdFor(c=>c.CHUNG_TU_SO)").val(),
+				CHUNG_TU_NGAY : $("#@Html.IdFor(c=>c.CHUNG_TU_NGAY)").val(),
+				LOAI_BIEN_DONG_ID : $("#LOAI_BIEN_DONG_ID_2").val(),
+				LY_DO_BIEN_DONG_ID : $("#@Html.IdFor(c=>c.LY_DO_BIEN_DONG_ID)").val(),
+				NGAY_BIEN_DONG : $("#@Html.IdFor(c=>c.NGAY_BIEN_DONG)").val(),
+				GHI_CHU : $("#@Html.IdFor(c=>c.GHI_CHU)").val(),
+				LOAI_TAI_SAN_ID:  $("#LOAI_TAI_SAN_ID_2").val(),
+				TAI_SAN_TEN: $("#TAI_SAN_TEN_2").val(),
+				DON_VI_BO_PHAN_ID: $("#DON_VI_BO_PHAN_ID").val(),
+				LOAI_HINH_TAI_SAN_ID: $("#LOAI_HINH_TAI_SAN_ID_2").val(),
+				TAI_SAN_MA: $("#TAI_SAN_MA_2").val(),
+				NGAY_SU_DUNG: $("#NGAY_SU_DUNG_2").val(),
+				DON_VI_ID: $("#DON_VI_ID_2").val(),
+				NGUYEN_GIA: $("#TongNguyenGia").val(),
+				lstNguonVonModel : _lstNguonVon,
+				YCCTModel: {
+					lstHienTrang: _lstHienTrang,
+					DIA_CHI: $("#@Html.IdFor(c=>c.YCCTModel.DIA_CHI)").val(),
+					HINH_THUC_MUA_SAM_ID: '@Model.YCCTModel.HINH_THUC_MUA_SAM_ID',
+					MUC_DICH_SU_DUNG_ID: '@Model.YCCTModel.MUC_DICH_SU_DUNG_ID',
+					DIA_BAN_ID: $("#@Html.IdFor(c=>c.XaId)").val(),
+					OTO_BIEN_KIEM_SOAT: $("#@Html.IdFor(c=>c.BIEN_KIEM_SOAT)").val(),
+					OTO_CONG_XUAT: $("#@Html.IdFor(c=>c.CONG_XUAT)").val(),
+					OTO_NHAN_XE_ID: $("#@Html.IdFor(c=>c.NHAN_XE_ID)").val(),
+					OTO_SO_CHO_NGOI: $("#@Html.IdFor(c=>c.SO_CHO_NGOI)").val(),
+					OTO_TAI_TRONG: $("#@Html.IdFor(c=>c.TAI_TRONG)").val(),
+					HM_GIA_TRI_CON_LAI: $("#@Html.IdFor(c=>c.YCCTModel.HM_GIA_TRI_CON_LAI)").val(),
+					DON_VI_NHAN_DIEU_CHUYEN_ID: $("#DonViNhanDieuChuyenId").val(),
+					DAT_TONG_DIEN_TICH: $("#@Html.IdFor(c=>c.YCCTModel.DAT_TONG_DIEN_TICH)").val(),
+					NHA_TONG_DIEN_TICH_XD: $("#@Html.IdFor(c=>c.YCCTModel.NHA_TONG_DIEN_TICH_XD)").val(),
+					NHA_DIEN_TICH_XD: $("#@Html.IdFor(c=>c.YCCTModel.NHA_DIEN_TICH_XD)").val(),
+					VKT_CHIEU_DAI: $("#@Html.IdFor(c=>c.YCCTModel.VKT_CHIEU_DAI)").val(),
+					VKT_DIEN_TICH: $("#@Html.IdFor(c=>c.YCCTModel.VKT_DIEN_TICH)").val(),
+					VKT_THE_TICH: $("#@Html.IdFor(c=>c.YCCTModel.VKT_THE_TICH)").val(),
+
+					HS_QUYET_DINH_BAN_GIAO: $("#QUYET_DINH_BAN_GIAO").val(),
+					HS_QUYET_DINH_BAN_GIAO_NGAY: $("#QUYET_DINH_BAN_GIAO_NGAY").val(),
+					HS_BIEN_BAN_NGHIEM_THU: $("#BIEN_BAN_NGHIEM_THU").val(),
+					HS_BIEN_BAN_NGHIEM_THU_NGAY: $("#BIEN_BAN_NGHIEM_THU_NGAY").val(),
+					HS_PHAP_LY_KHAC: $("#PHAP_LY_KHAC").val(),
+					HS_PHAP_LY_KHAC_NGAY: $("#PHAP_LY_KHAC_NGAY").val(),
+					HS_CNQSD_SO: $("#CNQSD_SO").val(),
+					HS_CNQSD_NGAY: $("#CNQSD_NGAY").val(),
+					HS_QUYET_DINH_GIAO_SO: $("#QUYET_DINH_GIAO_SO").val(),
+					HS_QUYET_DINH_GIAO_NGAY: $("#QUYET_DINH_GIAO_NGAY").val(),
+					HS_CHUYEN_NHUONG_SD_SO: $("#CHUYEN_NHUONG_SD_SO").val(),
+					HS_CHUYEN_NHUONG_SD_NGAY: $("#CHUYEN_NHUONG_SD_NGAY").val(),
+					HS_QUYET_DINH_CHO_THUE_SO: $("#QUYET_DINH_CHO_THUE_SO").val(),
+					HS_QUYET_DINH_CHO_THUE_NGAY: $("#QUYET_DINH_CHO_THUE_NGAY").val(),
+				}
+			};
+			return _data;
+		}
+</script>

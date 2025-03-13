@@ -1,0 +1,41 @@
+@model NguonGocTaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right text-required">Mã nguồn gốc tài sản:</label>
+    </div>
+    <div class="col-sm-10" id="demo">
+        @if (Model.ID == 0)
+        {
+            <nop-editor asp-for="MA" />
+            <span asp-validation-for="MA"></span>
+        }
+        else
+        {
+            <nop-editor asp-for="MA" asp-readonly="true" />
+            <span asp-validation-for="MA"></span>
+        }
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right text-required">Tên nguồn gốc tài sản:</label>
+    </div>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-2">
+        <label class="col-form-label text-sm-right">Thuộc loại:</label>
+    </div>
+    <div class="col-md-10">
+        <app-select asp-for="PARENT_ID" asp-items="Model.NguonGocTaiSanAvailable" />
+        <span asp-validation-for="PARENT_ID"></span>
+    </div>
+
+</div>
+
+

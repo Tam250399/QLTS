@@ -1,0 +1,74 @@
+﻿<div style="margin-top: 25px;"></div>
+<div id="WidgetSoLuongLoaiTaiSanDuoi500" class="gs-form-group mb-4">
+    <h6>Số lượng tài sản dưới 500 triệu theo từng loại tài sản</h6>
+    <div id="SoLuongLoaiTaiSanDuoi500Widget" style="width: 100%; height: 500px;">
+    </div>
+</div>
+<script>
+    function am4themes_myTheme(target) {
+        if (target instanceof am4core.ColorSet) {
+            target.list = [
+                am4core.color("@enumColorCodeLoaiHinhTS.DAT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.NHA"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VKT"),
+                am4core.color("@enumColorCodeLoaiHinhTS.OTO"),
+                am4core.color("@enumColorCodeLoaiHinhTS.PHUONGTIENKHAC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.CAYLAUNAM"),
+                am4core.color("@enumColorCodeLoaiHinhTS.HUUHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.VOHINH"),
+                am4core.color("@enumColorCodeLoaiHinhTS.DACTHU"),
+                am4core.color("@enumColorCodeLoaiHinhTS.MAYMOC"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC2"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC3"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC4"),
+                am4core.color("@enumColorCodeLoaiHinhTS.KHAC5")
+
+            ];
+        }
+    }
+</script>
+
+<script>
+    am4core.ready(function () {
+        // Themes begin
+        am4core.useTheme(am4themes_myTheme);
+        // Themes end
+        var chart = am4core.create("SoLuongLoaiTaiSanDuoi500Widget", am4charts.PieChart);
+        chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+        //get data
+        $.ajax({
+            type: "GET",
+            url: "/Widget/SoLuongLoaiTaiSanDuoi500",
+            success: function (data) {
+                if (data == "no") {
+                    $("#WidgetSoLuongLoaiTaiSanDuoi500").remove();
+                } else {
+                    chart.data = data
+
+                    var pieSeries = chart.series.push(new am4charts.PieSeries());
+                    chart.innerRadius = am4core.percent(40);
+                    pieSeries.dataFields.value = "soluong";
+                    pieSeries.dataFields.category = "loaitaisan";
+                    pieSeries.labels.template.text = "{category}: {value.value}";
+                    chart.logo.disabled = true;
+
+                    pieSeries.slices.template.strokeOpacity = 0;
+                    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+                    //series.columns.template.adapter.add("fill", function (fill, target) {
+                    //    return chart.colors.getIndex(target.dataItem.index);
+                    //});
+                    pieSeries.labels.template.disabled = true;
+                    pieSeries.ticks.template.disabled = true;
+
+                    // Disable tooltips
+                    pieSeries.slices.template.tooltipText = "";
+
+                    // Add a legend
+                    chart.legend = new am4charts.Legend();
+                }
+                am4core.unuseTheme(am4themes_myTheme);
+            }
+        });
+
+    }); // end am4core.ready()
+</script>

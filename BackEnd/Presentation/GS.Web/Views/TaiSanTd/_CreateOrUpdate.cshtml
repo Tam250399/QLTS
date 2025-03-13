@@ -1,0 +1,289 @@
+﻿@model TaiSanTdModel
+
+<div class="form-group row" style="display:none">
+	<label class="col-form-label col-sm-2 text-sm-left">GUID:</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="GUID" asp-class="LoadTaiSan" />
+		<span asp-validation-for="GUID"></span>
+	</div>
+</div>
+@* quyết định *@
+<div id="viewquyetdinh" class="gs-form-group">
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required" data-id="quyetdinh_TEN">Tên vụ việc:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="quyetdinh.TEN" />
+			<span asp-validation-for="quyetdinh.TEN" id="VALI_quyetdinh_TEN"></span>
+		</div>
+	</div>
+	<h6>Quyết định tịch thu</h6>
+	<div class="form-group row" style="display:none">
+		<label class="col-form-label col-sm-2 text-sm-left">GUID:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="quyetdinh.GUID" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required" data-id="quyetdinh_QUYET_DINH_SO">Số quyết định:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="quyetdinh.QUYET_DINH_SO" />
+			<span asp-validation-for="quyetdinh.QUYET_DINH_SO" id="VALI_quyetdinh_QUYET_DINH_SO"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left text-required" data-id="quyetdinh_QUYET_DINH_NGAY">Ngày quyết định:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="quyetdinh.QUYET_DINH_NGAY" />
+			<span asp-validation-for="quyetdinh.QUYET_DINH_NGAY" id="VALI_quyetdinh_QUYET_DINH_NGAY"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left">Cơ quan ban hành:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="quyetdinh.CO_QUAN_BAN_HANH_TEN" />
+			<span asp-validation-for="quyetdinh.CO_QUAN_BAN_HANH_TEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left">Ghi chú:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="quyetdinh.GHI_CHU" />
+			<span asp-validation-for="quyetdinh.GHI_CHU"></span>
+		</div>
+	</div>
+</div>
+<div class="gs-form-group">
+	<h6>Tài sản 1</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required " data-id="TEN_@Model.GUID" data-guid="@Model.GUID">Tên:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TEN" id="TEN_@Model.GUID" />
+			<span asp-validation-for="TEN" id="VALI_TEN_@Model.GUID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left text-required" data-id="LOAI_TAI_SAN_ID_@Model.GUID" data-guid="@Model.GUID">Loại tài sản:</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="LOAI_TAI_SAN_ID" asp-filter="true" id="LOAI_TAI_SAN_ID_@Model.GUID" />
+			<span asp-validation-for="LOAI_TAI_SAN_ID" id="VALI_LOAI_TAI_SAN_ID_@Model.GUID"></span>
+		</div>
+		<script>
+            var DDL = JSON.parse(String.raw`@Html.Raw(((Model.DDLLoaiTaiSan).toStringJson()))`);
+           $(document).ready(function () {
+               $("#LOAI_TAI_SAN_ID_@Model.GUID").kendoDropDownList({
+                   dataTextField: "Text",
+                   dataValueField: "Value",
+                   filter: "contains",
+                   template: function (e) {
+                        if (e.Disabled) {
+                            return '<span class="k-state-default" style="color:red;">'+e.Text+'</span>';
+                        } else {
+                            return '<span class="k-state-default">'+e.Text+'</span>';
+                        }
+                   },
+                    select: function (e) {
+                        if (e.dataItem.Disabled) {
+                            e.preventDefault();
+                        }
+                    },
+                   dataSource: DDL,
+               }).data("kendoDropDownList");
+           });
+		</script>
+	</div>
+	@*<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required" data-id="NGUON_GOC_TAI_SAN_ID_@Model.GUID" data-guid="@Model.GUID">Nguồn gốc tài sản:</label>
+		<div class="col-sm-4">
+			<nop-select asp-for="NGUON_GOC_TAI_SAN_ID" asp-items="Model.DDLNguonGocTaiSan" asp-filter="true" id="NGUON_GOC_TAI_SAN_ID_@Model.GUID" />
+			<span asp-validation-for="NGUON_GOC_TAI_SAN_ID" id="VALI_NGUON_GOC_TAI_SAN_ID_@Model.GUID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left" data-guid="@Model.GUID">Diện tích:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="DIEN_TICH" id="DIEN_TICH_@Model.GUID" />
+			<span asp-validation-for="LOAI_TAI_SAN_ID" id="VALI_DIEN_TICH_@Model.GUID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required " data-id="NGUYEN_GIA_@Model.GUID" data-guid="@Model.GUID">Nguyên giá:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NGUYEN_GIA" id="NGUYEN_GIA_@Model.GUID"/>
+			<span asp-validation-for="NGUYEN_GIA" id="VALI_NGUYEN_GIA_@Model.GUID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left text-required " data-id="GIA_TRI_@Model.GUID" data-guid="@Model.GUID">Giá trị:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="GIA_TRI" id="GIA_TRI_@Model.GUID" />
+			<span asp-validation-for="GIA_TRI" id="VALI_GIA_TRI_@Model.GUID"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left text-required " data-id="SO_LUONG_@Model.GUID" data-guid="@Model.GUID">Số lượng:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="SO_LUONG" id="SO_LUONG_@Model.GUID" />
+			<span asp-validation-for="SO_LUONG" id="VALI_SO_LUONG_@Model.GUID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-sm-left" data-guid="@Model.GUID">Khối lượng:</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="KHOI_LUONG" id="KHOI_LUONG_@Model.GUID" />
+			<span asp-validation-for="KHOI_LUONG" id="VALI_KHOI_LUONG_@Model.GUID"></span>
+		</div>
+	</div>*@
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-sm-left" data-guid="@Model.GUID">Ghi chú:</label>
+		<div class="col-sm-10">
+			<nop-editor asp-for="GHI_CHU" id="GHI_CHU_@Model.GUID" />
+			<span asp-validation-for="GHI_CHU" id="VALI_GHI_CHU_@Model.GUID"></span>
+		</div>
+	</div>
+</div>
+@if (Model.listModel != null && Model.listModel.Count() > 0)
+{
+	foreach (var model in Model.listModel)
+	{
+		@await Html.PartialAsync("_ViewThemTaiSan", model)
+	}
+}
+<div id="TaiSan">
+</div>
+@if (Model.quyetdinh.is_delete == true) {
+<div class="form-group row">
+	<div class="col-sm-9">
+	</div>
+	<div class="col-sm-3">
+		<a class="btn btn-sm btn-outline-success" href="javascript:void(0)" onclick="AddViewTaiSanTD()" style="float:right">Thêm tài sản</a>
+		<a class="btn btn-sm btn-outline-primary" href="javascript:void(0)" onclick="SaveTSTD('/taisantd/_viewthemtaisan', '/QuyetDinhTichThu/List')" style="float:right;margin-right:5px">Lưu</a>
+	</div>
+</div>
+            }
+<script>
+    $(document).ready(function () {
+        $("#NGUON_GOC_TAI_SAN_ID_@Model.GUID").kendoDropDownList({
+                dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            template: function (e) {
+                        if (e.Disabled) {
+                            return '<span class="k-state-default" style="color: red;">' + e.Text + '</span>';
+                        } else {
+                            return '<span class="k-state-default">' + e.Text + '</span>';
+                        }
+                    },
+            select: function (e) {
+                        if (e.dataItem.Disabled) {
+                            e.preventDefault();
+                        }
+                    },
+            dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLNguonGocTaiSan).toStringJson()))`),
+        }).data("kendoDropDownList");
+        $("#NGUON_GOC_TAI_SAN_ID_@Model.GUID").data("kendoDropDownList").value(@Model.NGUON_GOC_TAI_SAN_ID);
+        $("#LOAI_TAI_SAN_ID_@Model.GUID").data("kendoDropDownList").value(@Model.LOAI_TAI_SAN_ID);
+            });
+            function AddViewTaiSanTD() {
+                var IS_DDL = true;
+                if (DDL != undefined) {
+                IS_DDL : false
+                }
+        $.ajax({
+                type: "GET",
+            data:IS_DDL,
+            url: "/TaiSanTd/_ViewThemTaiSan",
+            success: function (data) {
+                $(data).insertBefore("#TaiSan");
+                    }
+                })
+    }
+        function DanhSttTS() {
+            var stt = 2;
+        $(".stt_ts").each(function () {
+            $(this).text('Tài sản ' + stt);
+                stt += 1;
+            })
+    }
+        function XoaViewTaiSan(guid) {
+        $("#div_" + guid).remove();
+            DanhSttTS();
+        }
+        function CheckVali() {
+            var check = true;
+        $(".text-required").each(function () {
+                var guid = $(this).attr("data-guid");
+                var id = $(this).attr("data-id");
+                var val = $("#" + id).val();
+                if (val == null || val == 0 || val == "") {
+                    check = false;
+                $("#VALI_" + id).show();
+                $("#VALI_" + id).css({ "color": "#dc3545" });
+                $("#VALI_" + id).text("Trường không được để trống");
+                }
+                else if (Number($("#NGUYEN_GIA_" + guid).val()) < Number($("#GIA_TRI_" + guid).val())) {
+                    check = false;
+                $("#VALI_NGUYEN_GIA_" + guid).show();
+                $("#VALI_NGUYEN_GIA_" + guid).css({ "color": "#dc3545" });
+                $("#VALI_NGUYEN_GIA_" + guid).text("Nguyên giá phải lớn hơn hặc bằng giá trị còn lại");
+                }
+                else if (!checkValidateDateFormat("#quyetdinh_QUYET_DINH_NGAY", "quyetdinh.QUYET_DINH_NGAY", "Sai định dạng ngày")) {
+                $("#VALI_" + id).show();
+                    check = false;
+                }
+                else if (!checkValidateDateWithDateNow("#quyetdinh_QUYET_DINH_NGAY", "quyetdinh.QUYET_DINH_NGAY", "Không được lớn hơn ngày hiện tại")) {
+                $("#VALI_" + id).show();
+                    check = false;
+                }
+                else {
+                $("#VALI_" + id).hide();
+                }
+            })
+        return check;
+        }
+        function addData() {
+            //quyết định
+            @*var quyetdinh = {
+            GUID: $("#@Html.IdFor(c=>c.quyetdinh.GUID)").val(),
+            QUYET_DINH_SO: $("#@Html.IdFor(c=>c.quyetdinh.QUYET_DINH_SO)").val(),
+            QUYET_DINH_NGAY: $("#@Html.IdFor(c=>c.quyetdinh.QUYET_DINH_NGAY)").val(),
+			CO_QUAN_BAN_HANH: $("#@Html.IdFor(c=>c.quyetdinh.CO_QUAN_BAN_HANH)").val(),
+            TEN: $("#@Html.IdFor(c=>c.quyetdinh.TEN)").val(),
+            GHI_CHU: $("#@Html.IdFor(c=>c.quyetdinh.GHI_CHU)").val(),
+        }*@
+        // tài sản
+        var data = [];
+        $(".LoadTaiSan").each(function () {
+            var guid = $(this).val();
+            var model = {
+                @*TEN: $("#@Html.IdFor(c=>c.TEN)" + "_" + guid).val(),
+                GUID: guid,
+                NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)" + "_" + guid).val(),
+                LOAI_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_TAI_SAN_ID)" + "_" + guid).val(),
+                NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)" + "_" + guid).val(),
+                GIA_TRI: $("#@Html.IdFor(c=>c.GIA_TRI)" + "_" + guid).val(),
+                SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)" + "_" + guid).val(),
+                KHOI_LUONG: $("#@Html.IdFor(c=>c.KHOI_LUONG)" + "_" + guid).val(),
+                GHI_CHU: $("#@Html.IdFor(c=>c.GHI_CHU)" + "_" + guid).val(),
+                DIEN_TICH:$("#@Html.IdFor(c=>c.DIEN_TICH)" + "_" + guid).val(),
+                quyetdinh: quyetdinh*@
+            }
+        data.push(model);
+        })
+        var _data = {
+            //listmodel: data
+        }
+        return _data;
+	}
+	$("#btnSaveTSTD").click(function () { SaveTSTD("/taisantd/_viewthemtaisan", "/QuyetDinhTichThu/List") })
+    function SaveTSTD(_url, _urlRedirect) {
+    //var a = CheckVali();
+    if (CheckVali()) {
+        var _data = addData();
+        var tstd = ajaxPost(_data, _url, false);
+        tstd.done(function (result) {
+            if (result) {
+                if (CheckValidMessageReturn(result)) {
+                    ShowSuccessMessage(result.Message);
+                    location.href = _urlRedirect;
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            console.log(textStatus + ': ' + errorThrown);
+        });
+    }
+}
+</script>

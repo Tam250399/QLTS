@@ -1,0 +1,145 @@
+﻿@model TaiSanSearchModel;
+<input type="hidden" asp-for="donviId" id="donViSearch" />
+<div class="popupChonTaiSan">
+    <div class="ui-bordered px-4 pt-4 mb-4" >
+        <div class="form-group row">
+            <label class="col-form-label col-md-2 text-sm-right">Từ khóa</label>
+            <div class="col-md-6">
+                <nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." id="chon-tai-san-keysearch" />
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-sm btn-primary" id="chon-tai-san-btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body" style="height:400px;">
+                        <div id="items-grid-chon-tai-san"></div>
+                        <script>
+							var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#chon-tai-san-keysearch').val(),
+                                    donviId: $('#donViSearch').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#chon-tai-san-btnSearch").click(function () {
+                                var grid = $('#items-grid-chon-tai-san').data('kendoGrid');
+								record = 0;
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#chon-tai-san-btnSearch").click();
+                                    return false;
+                                }
+                             });
+
+                            var grid =  $("#items-grid-chon-tai-san").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_ChonTaiSanDat", "TaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: true,
+                                height: 400,
+                                columns: [
+                                    //{
+                                    //    field: "MA",
+                                    //    title: "Mã tài sản",
+                                    //    template: function (dataItem) {
+                                    //       return "<a href='javascript:chonTaiSanDat("+dataItem.ID+")'>" + dataItem.MA + "</a>";
+                                    //    }
+                                    //},
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 50,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+                                    {
+                                        field: "TEN",
+                                        title: "Địa chỉ đất",
+                                        template: function (dataItem) {
+                                            return "<a  href='javascript:chonTaiSanDat("+dataItem.ID+")'>" + dataItem.TEN + "</a>";
+                                        }
+                                    },
+                                    //{field: "DAT_DIA_CHI",title: "Địa chỉ"},
+                                    {field: "TenLoaiTaiSan",title: "Loại tài sản"},
+                                    {field: "tentrangthai",title: "Trạng thái"},
+                                ]
+                            }).data("kendoGrid");
+                            //bind click event to the checkbox
+                         });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function chonTaiSanDat(id) {
+        var url = "/TaiSan/GetTaiSanDatById?id=" + id;
+        var taiSanDat = ajaxGet(url, true);
+        taiSanDat.done(function (result) {
+            if (result.Code == "00") {
+                var tsDat = result.ObjectInfo;
+                if (tsDat != null) {
+                    //$("#nha-ma-TSdat").val(tsDat.TaiSanMa);
+                    //$("#nha-ten-TSdat").val(tsDat.TenDat);
+                    $("#taisannhaModel_NHA_DIA_CHI").val(tsDat.DIA_CHI);
+                    //$("#taisannhaModel_NHA_DIA_CHI").val(tsDat.TEN);
+					$("#taisannhaModel_TAI_SAN_DAT_ID").val(tsDat.TAI_SAN_ID);
+                    //disable dia-chi-nha
+					$("#btnGoDat").removeClass('disabled');
+					$("#btnGoDat").show();
+                    $("#taisannhaModel_NHA_DIA_CHI").prop("disabled", true);
+					$("#taisannhaModel_NHA_DIA_CHI").trigger("change");
+                }
+            } else {
+                console.log(result.Message);
+            }
+            HideModalManual();
+        })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + errorThrown);
+            })
+    }
+</script>

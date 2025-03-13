@@ -1,0 +1,189 @@
+﻿@model DeNghiXuLyTaiSanSearchModel
+<script>
+    function deleteDeNghiXuLyTaiSan(id) {
+        kendo.ui.progress($(".progress-bar"), true);
+        $.ajax({
+            type: "POST",
+            url: "/DeNghiXuLyTaiSan/_delete?id=" + id,
+            success: function (data) {
+                if (data.Code == '00') {
+                    ShowSuccessMessage(data.Message);
+                    var grid = $('#items-grid-DeNghiXuLyTaiSan').data('kendoGrid');
+                    grid.dataSource.page(1);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+                
+            }
+        });
+    }
+</script>
+
+
+
+<nop-antiforgery-token />
+<div class="clearfix">
+    <div style="text-align:right;">
+        <input asp-for="DE_NGHI_XU_LY_ID" hidden />
+        <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#themTaiSan" data-title="Thêm mới tài sản" style="margin:10px;">
+            <i class="ion ion-md-add"></i>
+            Thêm tài sản
+        </button>
+    </div>
+    <div class="modal fade" id="themTaiSan" tabindex="-1" role="dialog" aria-labelledby="themTaiSanModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg" style="width:50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="themTaiSanModalLabel">Thêm mới tài sản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="themTaiSanBody" style="padding:0.5625rem !important;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="searchTaiSanForXyLy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg" style="width:70%;max-width: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tìm kiếm tài sản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding:0.5625rem !important;" id="searchTaiSanForXyLyBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#themTaiSan').on('show.bs.modal', function (event) {
+                ShowViewLoading("#themTaiSanBody");
+                $.ajax({
+                    type: "GET",
+                    url: "/DeNghiXuLyTaiSan/_CreateOrUpdateForXuLy?DE_NGHI_XU_LY_ID=" + $("#DE_NGHI_XU_LY_ID").val(),
+                    success: function (data) {
+                        $("#themTaiSanBody").html(data);
+                    },
+                });
+            });
+        });
+    </script>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid-DeNghiXuLyTaiSan"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    DE_NGHI_XU_LY_ID:$('#@Html.IdFor(model => model.DE_NGHI_XU_LY_ID)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            let record = 1;
+                            $("#items-grid-DeNghiXuLyTaiSan").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_List", "DeNghiXuLyTaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    change: function (e) {
+                                        record = 1;
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        //model: {
+                                        //    id: "ID",
+                                        //    fields: {
+                                        //        MA_TAI_SAN: { editable: false},
+                                        //        TEN_TAI_SAN: { editable: false },
+                                        //        PHUONG_AN_XU_LY: { editable: true},
+                                        //    }
+                                        //}
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                //editable: true,
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                    title: 'STT',
+                                    width: 50,
+                                    template: function (e) {
+                                        let pageSize = $("#items-grid-DeNghiXuLyTaiSan").data("kendoGrid").dataSource.pageSize();
+                                        pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                                        let page = $("#items-grid-DeNghiXuLyTaiSan").data("kendoGrid").dataSource.page();
+                                        page = typeof page == 'undefined' ? 0 : page;
+                                        let i = record++;
+                                        return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                                    }
+                                },
+                                    {field: 'MA_TAI_SAN',title: 'Mã tài sản'},
+                                    {field: 'TEN_TAI_SAN',title: 'Tên tài sản'},
+                                    {
+                                        field: 'TAI_SAN_NGAY_SU_DUNG', title: 'Ngày sử dụng',
+                                        type: "Date",
+                                        format: "{0:dd/MM/yyyy}"},
+                                    { field: 'TAI_SAN_NGUYEN_GIA',title: 'Nguyên giá'},
+                                    { field: 'TAI_SAN_GTCL',title: 'Giá trị còn lại'},
+                                    { field: 'PHUONG_THUC_XU_LY',title: 'Phương án xử lý'},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: kendo.template($("#edit-gird-DeNghiXuLyTaiSan-Tem").html()),
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="edit-gird-DeNghiXuLyTaiSan-Tem" type="text/x-kendo-tmpl">
+    <a class="btn icon-btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Sửa thông tin tài sản đề nghị xử lý" data-src="/DeNghiXuLyTaiSan/_CreateOrUpdateForXuLy?ID=#=ID#">Sửa</a>&nbsp;
+    <button class="btn icon-btn btn-sm btn-outline-danger" type="button" onclick="GS_Delete('',deleteDeNghiXuLyTaiSan,#=ID#)" title="Xóa">Xóa</button>
+</script>
+

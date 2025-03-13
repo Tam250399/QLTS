@@ -1,0 +1,145 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model NhatKyModel
+@{
+    //page title
+    ViewBag.Title = "Nhật ký";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("HeThongNhatKy");
+}
+<form asp-controller="NhatKy" asp-action="Detail">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            <b>Xem chi tiết thông tin</b>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+
+        </h6>
+        <div class="card-body">
+            <input asp-for="ID" type="hidden" />
+            <div class="content">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên đăng nhập:</label>
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.TEN_DANG_NHAP)
+                    </label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.TEN_DANG_NHAP)
+                </div>*@
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Tên đầy đủ:</label>
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.TEN_DANG_NHAP)
+                    </label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.TEN_DANG_NHAP)
+                </div>*@
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Mô tả:</label>
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.MO_TA)
+                    </label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.MO_TA)
+                </div>*@
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Ngày tạo:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.NGAY_TAO)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.NGAY_TAO)
+                    </label>
+                </div>
+
+
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Phân loại:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.PHAN_LOAI)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.PHAN_LOAI)
+                    </label>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Địa chỉ IP:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.IP_ADDRESS)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.IP_ADDRESS)
+                    </label>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Ứng dụng:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.UNG_DUNG)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.UNG_DUNG)
+                    </label>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Page URL:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.PAGE_URL)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.PAGE_URL)
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Nội dung:</label>
+                    @*<div class="form-group col-sm-10">
+                    @Html.DisplayFor(model => model.NOI_DUNG)
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.NOI_DUNG)
+                    </label>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-right">Cấp độ:</label>
+                    @*<div class="form-group col-sm-10">
+                    <label>@Model.tenCapDo</label>
+                </div>*@
+                    <label class="col-form-label col-sm-10 text-sm-left">
+                        @Html.DisplayFor(model => model.tenCapDo)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Dữ liệu:</label>
+                @*<div class="form-group col-sm-10">
+                @Html.DisplayFor(model => model.DU_LIEU)
+            </div>*@
+                @*<label class="col-form-label col-sm-10 text-sm-left">
+                @Html.DisplayFor(model => model.DU_LIEU)
+            </label>*@
+                <div class="form-group col-sm-12">
+                    <nop-editor asp-for="@Model.DU_LIEU" />
+                </div>
+            </div>
+            <style>
+                .form-group {
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+                    text-align: left;
+                }
+            </style>
+
+        </div>
+    </div>
+</form>

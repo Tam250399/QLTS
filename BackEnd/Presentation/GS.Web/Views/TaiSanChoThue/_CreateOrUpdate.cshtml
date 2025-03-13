@@ -1,0 +1,221 @@
+﻿@model TaiSanChoThueModel
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="ngaykekhaits" type="hidden"/>
+<input asp-for="ID" type="hidden" />
+
+<div class="gs-form-group  ">
+    <h6>Thông tin tài sản</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Đơn vị sử dụng</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DonViSuDungTaiSan" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Mã tài sản</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaTaiSan" asp-disabled="true" />
+        </div>
+        <label class="col-form-label col-sm-2">Tên tài sản</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="TenTaiSan" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Loại tài sản</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="LoaiHinhTaiSan" asp-disabled="true" />
+        </div>
+        <label class="col-form-label col-sm-2">Bộ phận sử dụng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="BoPhanSuDung" asp-disabled="true" />
+        </div>
+    </div>
+</div>
+<div class="gs-form-group  ">
+    <h6>Thông tin sử dụng chung</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Văn bản thỏa thuận số</label>
+        <div class="col-sm-6">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Số</span>
+                </div>
+                <nop-editor asp-for="HOP_DONG_SO" />
+            </div>
+            <span asp-validation-for="HOP_DONG_SO"></span>
+        </div>
+        <div class="col-sm-4">
+            <nop-editor asp-for="HOP_DONG_NGAY" />
+            <br>
+            <span asp-validation-for="HOP_DONG_NGAY"></span>
+        </div>
+    </div>
+    @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Chứng từ/hóa đơn</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Số</span>
+                    </div>
+                    <nop-editor asp-for="HOA_DON_SO" />
+                </div>
+                <span asp-validation-for="HOA_DON_SO"></span>
+            </div>
+            <div class="col-sm-4">
+                <nop-editor asp-for="HOA_DON_NGAY" />
+            </div>
+        </div>*@
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required">Sử dụng chung từ ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_CHO_THUE_FROM" />
+            <br>
+            <span asp-validation-for="NGAY_CHO_THUE_FROM"></span>
+        </div>
+        <label class="col-form-label col-sm-2">đến ngày</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_CHO_THUE_TO" />
+            <br>
+            <span asp-validation-for="NGAY_CHO_THUE_TO"></span>
+        </div>
+
+    </div>
+    @*<div class="form-group row">
+            <label class="col-form-label col-sm-2">Đơn vị sử dụng chung</label>
+            <div class="col-sm-6">
+                <input id="DoiTacInput" class="form-control" style="width: 100%" value="@Model.TenDoiTac" />
+                @Html.HiddenFor(c => c.DOI_TAC_ID)
+            </div>
+            <div class="col-sm-4 d-flex">
+                <div class="">
+                    <button type="button" class="btn icon-btn btn-sm btn-outline-primary"
+                            data-toggle="modal" data-target="#globalModalIframe" data-width="600"
+                            data-title="Thêm mới đơn vị sử dụng chung" data-src="/DoiTac/_Create" style="margin:3px 0px 0px 2px;">
+                        <span class="ion ion-md-add"></span>
+                    </button>
+                </div>
+            </div>
+        </div>*@
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Đối tác sử dụng chung</label>
+        <div class="col-sm-6">
+            <nop-editor asp-for="DOI_TAC_TEN" asp-disabled="false" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Loại hình đơn vị</label>
+        <div class="col-sm-6">
+            <nop-select asp-for="LOAI_DOI_TAC_ID" asp-items="Model.LoaiDoiTacAvaiable" asp-disabled="false" />
+            <span id="span_LoaiDoiTac" class="field-validation-error text-danger" style="color:red"> </span>
+        </div>
+    </div>
+    <div class="form-group row ">
+        @*<label class="col-form-label col-sm-2 text-required">Đơn giá cho thuê/tháng</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="DON_GIA_CHO_THUE" asp-dvt="c" />
+                <span asp-validation-for="DON_GIA_CHO_THUE"></span>
+            </div>*@
+        <label class="col-form-label col-sm-2 text-required">Chi phí sử dụng chung</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="THU_TU_CHO_THUE" asp-dvt="c" />
+            <span asp-validation-for="THU_TU_CHO_THUE"></span>
+        </div>
+
+    </div>
+    @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Nộp ngân sách</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NOP_NGAN_SACH" asp-dvt="c" />
+                <span asp-validation-for="NOP_NGAN_SACH"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required">Giữ lại đơn vị</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIU_LAI_DON_VI" asp-dvt="c"/>
+                <span asp-validation-for="GIU_LAI_DON_VI"></span>
+            </div>
+        </div>*@
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2">Diễn giải</label>
+        <div class="col-sm-10">
+            <nop-textarea asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+<script>
+     function SearchDoiTacData() {
+        var _data = { TenDoiTac: $("#DoiTacInput").data("kendoComboBox").text() };
+        return _data;
+        }
+    function onDoiTacEditChange() {
+        var value = this.value();
+        $("#DOI_TAC_ID").val(value);
+        //alert(value);
+    }
+    $(document).ready(function () {
+
+        CheckLoaiDoiTac();
+        $("#DoiTacInput").kendoComboBox({
+            placeholder: "Nhập đối tác...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/TaiSanChoThue/SearchDoiTac",
+                        data: SearchDoiTacData
+                    },
+                },
+            },
+            change: onDoiTacEditChange
+        });
+        $("#NOP_NGAN_SACH").change(function () {
+            var _tiennopngansach = $(this).val();
+            var _TienThu = ConvertToNumber("#THU_TU_CHO_THUE");
+            if (_tiennopngansach > 0 && _TienThu > 0) {
+                $("#GIU_LAI_DON_VI").data("kendoNumericTextBox").value(_TienThu - _tiennopngansach);
+            }
+        });
+        $("#GIU_LAI_DON_VI").change(function () {
+            var _tiengiulai = $(this).val();
+            var _TienThu = ConvertToNumber("#THU_TU_CHO_THUE");
+            if (_tiengiulai > 0 && _TienThu > 0) {
+                $("#NOP_NGAN_SACH").data("kendoNumericTextBox").value(_TienThu - _tiengiulai);
+            }
+        });
+        $('#LOAI_DOI_TAC_ID').on('change', function () {
+            CheckLoaiDoiTac();
+        });
+
+    });
+     function CheckLoaiDoiTac() {
+
+             var LoaiDoiTacId = $('#LOAI_DOI_TAC_ID').val();
+            let _data = { id: LoaiDoiTacId };
+            $.ajax({
+                data: _data,
+                method: "POST",
+                url: '@Url.Action("CheckLoaiDonViToChuc","TaiSanChoThue",Context.Request.Scheme)',
+                success: function (res) {
+                    console.log(res);
+                    if (res.ObjectInfo == true) {
+                        $('#span_LoaiDoiTac').html(res.Message);
+                        $('#span_LoaiDoiTac').show();
+                    } else {
+                        $('#span_LoaiDoiTac').hide();
+                    }
+
+                }
+
+            });
+
+        }
+</script>
+
+
+

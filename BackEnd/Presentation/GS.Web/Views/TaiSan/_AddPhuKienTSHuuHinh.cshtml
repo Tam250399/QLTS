@@ -1,0 +1,96 @@
+﻿@model TaiSanPhuKienHuuHinh
+<div class="gs-form-group mb-4">
+    <h6>Phụ kiện</h6>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4">Mã phụ kiện</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="PHU_KIEN_MA" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4 text-required">Tên phụ kiện</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="PHU_KIEN_TEN" asp-disabled="false" />
+            <span id="check-PHU_KIEN_TEN" class="field-validation-error text-danger d-none" style="color:red">Tên không hợp lệ, mời kiểm tra lại.</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4 text-required">Số lượng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="PHU_KIEN_SO_LUONG" asp-disabled="false" />
+            <span id="check-PHU_KIEN_SO_LUONG" class="field-validation-error text-danger d-none" style="color:red">Giá trị không hợp lệ, mời kiểm tra lại.</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4 text-required">Đơn giá</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="PHU_KIEN_DON_GIA" asp-disabled="false" />
+            <span id="check-PHU_KIEN_DON_GIA" class="field-validation-error text-danger d-none" style="color:red">Đơn giá không hợp lệ, mời kiểm tra lại</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4">Mô tả</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="PHU_KIEN_MO_TA" asp-disabled="false" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4">Ghi chú</label>
+        <div class="col-sm-8">
+            <textarea asp-for="PHU_KIEN_GHI_CHU" asp-disabled="false" style="width:100%;" />
+        </div>
+    </div>
+</div>
+<div class="">
+    <button type="button" id="btnAddPhuKien" class="btn btn-success btnAddPhuKien" style="float:right;margin-right:5px;">
+        <i class="fas fa-save" style="margin-right:5px;"></i>
+        Lưu
+    </button>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnAddPhuKien").click(function () {
+            var _data = addDataPhuKien();
+            if (_data.PHU_KIEN_TEN == null || _data.PHU_KIEN_TEN == "") {
+                $("#check-PHU_KIEN_TEN").removeClass("d-none");
+                return null;
+            }
+            if (_data.PHU_KIEN_SO_LUONG == null || _data.PHU_KIEN_SO_LUONG <= 0) {
+                 $("#check-PHU_KIEN_SO_LUONG").removeClass("d-none");
+                return null;
+            }
+            if (_data.PHU_KIEN_DON_GIA == null || _data.PHU_KIEN_DON_GIA <= 0) {
+                 $("#check-PHU_KIEN_DON_GIA").removeClass("d-none");
+                return null;
+            }
+            $(".field-validation-error").addClass("d-none");
+            var rowHtml = "<tr name='" + _data.PHU_KIEN_MA + "' id='phu-kien-" + _data.PHU_KIEN_MA + "'>"
+                + "<td>" + _data.PHU_KIEN_MA + "</td>"
+                + "<td>" + _data.PHU_KIEN_TEN + "</td>"
+                + "<td class='text-right'>" + _data.PHU_KIEN_DON_GIA + "</td>"
+                + "<td class='text-right'>" + _data.PHU_KIEN_SO_LUONG + "</td>"
+                + "<td class='text-right'>" + _data.PHU_KIEN_MO_TA + "</td>"
+                + "<td class='text-right'>" + _data.PHU_KIEN_GHI_CHU + "</td>"
+                //+ "<td class='text-center'><a class='btn icon-btn btn-xs btn-outline-secondary' href='' title='Sửa'><span class='fas fa-pencil-alt'></span></a>"
+                + "<td class='text-center'><button class='btn icon-btn btn-xs btn-outline-danger' id='btn-delete-item-ts' onclick='javascript:void(0)' title='Xóa'><i class='far fa-trash-alt' style=''></i></button></td>"
+                + "</tr>";
+            $("tbody.danh-sach-phu-kien").append(rowHtml);
+            $("tbody.danh-sach-phu-kien").find("#phu-kien-" + _data.PHU_KIEN_MA + "").data("phu-kien", _data);
+            HideModalManual();
+        });
+    });
+    function addDataPhuKien() {
+        _data = {
+            PHU_KIEN_MA: $("#@Html.IdFor(c=>c.PHU_KIEN_MA)").val(),
+            PHU_KIEN_TEN: $("#@Html.IdFor(c=>c.PHU_KIEN_TEN)").val(),
+            PHU_KIEN_SO_LUONG: $("#@Html.IdFor(c=>c.PHU_KIEN_SO_LUONG)").val(),
+            PHU_KIEN_DON_GIA: $("#@Html.IdFor(c=>c.PHU_KIEN_DON_GIA)").val(),
+            PHU_KIEN_MO_TA: $("#@Html.IdFor(c=>c.PHU_KIEN_MO_TA)").val(),
+            PHU_KIEN_GHI_CHU: $("#@Html.IdFor(c=>c.PHU_KIEN_GHI_CHU)").val(),
+        };
+        return _data;
+    }
+</script>
+

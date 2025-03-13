@@ -1,0 +1,454 @@
+﻿@model TaiSanTdXuLySearchModel
+
+
+<nop-antiforgery-token />
+<div class="gs-form-group">
+    <h6>Nhập phương án xử lý tài sản xác lập</h6>
+    <div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;display:none">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+            <div class="col-sm-8">
+                <nop-editor asp-for="KeySearch" />
+                <input asp-for="XuLyGuid" hidden />
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="items-grid"></div>
+                        <script>
+                            kendo.culture("vi-VN");
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    XuLyGuid: $('#@Html.IdFor(model => model.XuLyGuid)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                record = 0;
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListPhuongAn", "TaiSanTdXuLy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                dataBinding: function () {
+                                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                    },
+                                      {
+                                        field: 'TenTaiSan', title: 'Tên tài sản',
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:"#=TenTaiSan + ' (' + kendo.toString(SoLuongBanDau,'n2') + ' ' + DonViTinh +')'#"
+                                    },
+                                    {
+                                        field: 'SoQuyetDinh', title: 'Số QĐ tịch thu/ xác lập',
+                                        headerAttributes: { style: "text-align:center" }
+                                        
+                                    },
+                                    {
+                                        field: 'SLCoTheXuLy', title: 'SL/ KL/ DT',
+                                        headerAttributes: { style: "text-align:center" },
+                                         width: 100,
+                                        template:"#=kendo.toString(SLCoTheXuLy,'n2') + ' ' + DonViTinh#"
+                                    },
+                                    {
+                                        field: 'PHUONG_AN_XU_LY_ID', title: 'Phương án xử lý',
+                                        width: 300,
+                                        headerAttributes: { style: "text-align:center" },
+                                        template: columnPAXL
+                                    },
+                                    //{
+                                    //    field: 'HINH_THUC_XU_LY_ID', title: 'Hình thức xử lý',
+                                    //    width: 220,
+                                    //    headerAttributes: { style: "text-align:center" },
+                                    //    template: columnHTXL
+                                    //},
+                                    {
+                                        field: 'SO_LUONG', title: 'SL/ KL/ DT xử lý',
+                                        width: 80,
+                                        headerAttributes: { style: "text-align:center" },
+                                        template: columnSL                                     
+                                    }
+                                    ,{
+                                        field: "GUID",
+                                        title: "Thao tác",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: kendo.template($("#btn_template_delete").html())
+                                    }
+                                ],
+                                dataBound: function (e) {
+                                    var grid = e.sender;
+                                    var items = e.sender.items();
+                                    items.each(function (e) {
+                                        var dataItem = grid.dataItem(this);
+                                        
+                                        var ddlPAXL = $(this).find('.dropDownPAXL');
+                                        //var ddlHTXL = $(this).find('.dropDownHTXL');
+                                        var nbSL = $(this).find('.numberSL');
+                                        $(ddlPAXL).kendoDropDownList({
+                                            value: dataItem.PHUONG_AN_XU_LY_ID,
+                                            dataSource:JSON.parse(dataItem.JsonDDLPhuongAnXuLy),
+                                            dataTextField: "Text",
+                                            dataValueField: "Value",
+                                            change: onPAXLChange
+                                        });
+                                        //$(ddlHTXL).kendoDropDownList({
+                                        //    value: dataItem.HINH_THUC_XU_LY_ID,
+                                        //    dataSource:JSON.parse(dataItem.JsonDDLHinhThucXuLy),
+                                        //    dataTextField: "Text",
+                                        //    dataValueField: "Value",
+                                        //    change: onHTXLChange
+                                        //});
+                                        $(nbSL).kendoNumericTextBox({
+                                            value: dataItem.SO_LUONG,
+                                            format: '###.###,##' + ' ' + dataItem.DonViTinh,
+                                            culture: "vi-VN",
+                                            decimals: 2,
+                                            placeholder: dataItem.DonViTinh,
+                                            round: false,
+                                            spinners: false,
+                                            min: 0,
+                                            //max: dataItem.SLCoTheXuLy,
+                                            change: onSLChange
+                                        });
+                                    });
+                                    CheckVali();
+                                }
+                            });
+                        });
+                        function columnPAXL(dataItem) {
+                            var strinput = '<input id="PAXL_' + dataItem.ID + '" class="dropDownPAXL" style="width:100%"/><span data-valmsg-for="PAXL_' + dataItem.ID + '"></span>';
+                            var input = strinput
+                            return input
+                        };
+                        //function columnHTXL(dataItem) {
+                        //    var strinput = '<input id="HTXL_' + dataItem.ID + '" class="dropDownHTXL" style="width:100%"/><span data-valmsg-for="HTXL_' + dataItem.ID + '"></span>';
+                        //    var input = strinput
+                        //    return input
+                        //};
+                            function columnSL(dataItem) {
+                                var strinput = '<input id="SL_' + dataItem.ID + '" class="numberSL SL_' + dataItem.TAI_SAN_ID + '" style="width:100%"/><span data-valmsg-for="SL_' + dataItem.ID + '"></span>';
+                            var input = strinput
+                            return input
+                        };
+                            function onPAXLChange(e) {
+                                var element = e.sender.element;
+                                var row = element.closest("tr");
+                                var grid = $("#items-grid").data("kendoGrid");
+                                var dataItem = grid.dataItem(row);
+                                dataItem.set("PHUONG_AN_XU_LY_ID", e.sender.value());
+                                if (CheckValiForRowPAXL($(element).attr("id"), e.sender.value())) {
+                                    var data = {
+                                        ID: dataItem.ID,
+                                        PHUONG_AN_XU_LY_ID: e.sender.value(),
+                                    };
+                                    SaveRow(data, dataItem, true,false);
+                                }
+                            };
+                            //function onHTXLChange(e) {
+                            //    var element = e.sender.element;
+                            //    var row = element.closest("tr");
+                            //    var grid = $("#items-grid").data("kendoGrid");
+                            //    var dataItem = grid.dataItem(row);
+                            //    dataItem.set("HINH_THUC_XU_LY_ID", e.sender.value());
+                            //    if (CheckValiForRowHTXL($(element).attr("id"), e.sender.value())) {
+                            //        var data = {
+                            //            ID: dataItem.ID,
+                            //            HINH_THUC_XU_LY_ID: e.sender.value(),
+                            //        };
+                            //        SaveRow(data, dataItem, false,false);
+                            //    }
+                            //};
+                            function onSLChange(e) {
+                                
+                                var element = e.sender.element;
+                                var row = element.closest("tr");
+                                var grid = $("#items-grid").data("kendoGrid");
+                                var dataItem = grid.dataItem(row);
+                                var index = row.index();                                
+                                if (e.sender.value() == null) {
+                                    dataItem.set("SO_LUONG", 0);
+                                    $("#SL_" + dataItem.ID).data("kendoNumericTextBox").value(dataItem.SO_LUONG);
+                                }
+                                else {
+                                    dataItem.set("SO_LUONG", e.sender.value());
+                                };
+                                var data = {
+                                    ID: dataItem.ID,
+                                    SoLuongText: e.sender.value(),
+                                };
+                                if (e.sender.value()!=null && e.sender.value() != 0) {
+                                    if (CheckValiForRowSL($(element).attr("id"), e.sender.value()) == true) {
+                                        if (CheckTongSL(dataItem.TAI_SAN_ID, $(element).attr("id"), dataItem.SLCoTheXuLy)) {
+                                            SaveRow(data, dataItem, false, true,index+1);
+                                        }
+                                    };
+                                }
+                                else {
+
+                                    SaveRow(data, dataItem, false, false);
+                                }
+                            };
+                        function GetDDLHinhThucByPhuongAn(PhuongAnId, id,dataItem) {
+                            $.ajax({
+                                type: "GET",
+                                url: "/PhuongAnXuLy/GetDDLHinhThucByPhuongAn?PhuongAnId=" + PhuongAnId,
+                                success: function (data) {
+                                    
+                                    var ddl = $("#HTXL_" + id).data("kendoDropDownList");
+                                    ddl.setDataSource(data);
+                                    if (data != null && data.length == 2) {
+                                        ddl.select(1);
+                                    }
+                                    else {
+                                        ddl.select(0);
+                                    }
+                                    dataItem.set("JsonDDLHinhThucXuLy", JSON.stringify(data));
+                                    dataItem.set("HINH_THUC_XU_LY_ID", ddl.value());
+                                    CheckValiForRowHTXL("HTXL_" + id, ddl.value());
+                                    if (CheckValiForRowHTXL("HTXL_" + id, ddl.value())) {
+                                        var _data = {
+                                            ID: id,
+                                            HINH_THUC_XU_LY_ID: ddl.value(),
+                                        };
+                                        SaveRow(_data, dataItem,false);
+                                    }
+                                }
+                            })
+                        }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-kendo-template" id="btn_template_edit">
+
+    #if((SoLuongCon - SO_LUONG)>0){#
+    <div class="btn-group">
+        <a id='ADD_#:ID#' class="btn btn-sm btn-outline-primary add_btn_#:TAI_SAN_ID#" style="float:right" href="javascript:void(0)" onclick=ThemXuLyTaiSan('#:GUID#')>Thêm</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaXuLyTaiSanTd('#:GUID#')>Xóa</a>
+    </div>
+    #}else
+    {#
+    <div class="btn-group">
+        <a id='ADD_#:ID#' class="btn btn-sm btn-outline-primary add_btn_#:TAI_SAN_ID#" style="float:right;display:none" href="javascript:void(0)" onclick=ThemXuLyTaiSan('#:GUID#')>Thêm</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaXuLyTaiSanTd('#:GUID#')>Xóa</a>
+    </div>
+    #}#
+
+</script>
+<script type="text/x-kendo-template" id="btn_template_delete">  
+    <div class="btn-group">        
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaXuLyTaiSanTd('#:GUID#')>Xóa</a>
+    </div>
+</script>
+<script>
+    var checkPAXL = false;
+    var checkTSTDXL = true;
+    function ThemXuLyTaiSan(Guid) {
+        
+        $.ajax({
+            type: "GET",
+            url: "/TaiSanTdXuLy/ThemTaiSanTdXuLy?Guid=" + Guid,
+            success: function (data) {
+                if (data.Code == "00") {
+                    ShowSuccessMessage(data.Message);
+                    $("#btnSearch").click();
+                }
+                else {
+                    ShowErrorMessage(data.Message);
+                }
+            }
+        })
+    }
+    function XoaXuLyTaiSanTd(Guid) {
+        $.ajax({
+            type: "GET",
+            url: "/TaiSanTdXuLy/XoaXuLyTaiSan?Guid=" + Guid,
+            success: function (data) {
+                if (data.Code == "00") {
+                    ShowSuccessMessage(data.Message);
+                    $("#btnSearch").click();
+                }
+                else {
+                    ShowErrorMessage(data.Message);
+                }
+            }
+        })
+    }
+    function CheckVali() {
+        //hideAllValmsg();
+        $(".dropDownPAXL input").each(function () {
+            CheckValiForRowPAXL($(this).attr("id"), $(this).val());
+        });
+        //$(".dropDownHTXL input").each(function () {
+        //    CheckValiForRowHTXL($(this).attr("id"), $(this).val());
+        //});
+        $(".numberSL input").each(function () {
+             CheckValiForRowSL($(this).attr("id"), $(this).val());
+        });
+    }
+    function CheckValiForRowPAXL(ID, Value) {
+        var checkRow = true;
+        if (Value == undefined || Value == null || Value < 1) {
+            checkTSTDXL = false;
+            checkRow = false;
+            showInvalidMessage(ID, "Chọn phương án xử lý");
+        }
+        else {
+            hideValmsg(ID);
+        }
+        return checkRow;
+    }
+    //function CheckValiForRowHTXL(ID, Value) {
+    //    var checkRow = true;
+    //    if (Value == undefined || Value == null || Value < 1) {
+    //        checkTSTDXL = false;
+    //        checkRow = false;
+    //        showInvalidMessage(ID, "Chọn hình thức xử lý");
+    //    }
+    //    else {
+    //        hideValmsg(ID);
+    //    }
+    //    return checkRow;
+    //}
+    function CheckValiForRowSL(ID, Value) {  
+        var checkRow = true;
+        if (ID != undefined && ID != null && ID.trim() != "") {
+            if (Value == undefined || Value == null || Value < 0) {
+                checkTSTDXL = false;
+                checkRow = false
+                showInvalidMessage(ID, "SL/KL/DT không được dể trống");
+            }
+            else {
+                hideValmsg(ID);
+            }
+            return checkRow;
+        }
+    }
+    function CheckTongSL(TaiSanId, ID, SLCoTheXuLy) {
+        var checkTongSL = true;
+        $(".SL_" + TaiSanId + " input").each(function () {
+            var SL_ID = $(this).attr("id");
+            if (SL_ID != undefined && SL_ID != null && SL_ID.trim() != "") {
+                SLCoTheXuLy -= $("#" + SL_ID).data("kendoNumericTextBox").value();
+            }
+        });
+        if (SLCoTheXuLy < 0) {
+            checkTongSL = false;
+             showInvalidMessage(ID, "SL/KL/DT vượt quá cho phép");
+        }
+        else {
+                hideValmsg(ID);
+            }
+        return checkTongSL;
+    }
+    function SaveRow(_data, dataItem, isSaveHTXL, isSaveSL, index) {
+        
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/TaiSanTdXuLy/SaveRow",
+            success: function (data) {
+                if (data.Code == "00") {
+                    $(".add_btn_" + dataItem.TAI_SAN_ID).each(function () {
+                        if (data.ObjectInfo < 1) {
+                            $(this).hide();
+                        }
+                        else {
+                            $(this).show();
+                        }
+                    });
+                    // chạy đồng bộ lần lượt lưu paxl => htxl
+                    if (isSaveHTXL) {
+                        //GetDDLHinhThucByPhuongAn(_data.PHUONG_AN_XU_LY_ID, _data.ID, dataItem);
+                    }
+                    if (isSaveSL) {
+                        $.ajax({
+                            type: "GET",
+                            url: "/TaiSanTdXuLy/ThemRow?Guid=" + dataItem.GUID,
+                            success: function (data) {
+                                $("#items-grid").data("kendoGrid").dataSource.insert(index, data);
+                            }
+                        })
+                    }
+                    //ShowBtnRow(id, SoLuongCon, Value);
+                    //$("#SL_" + id).data("kendoNumericTextBox").max(Value);                               
+                }
+                else {
+                    ShowErrorMessage(data.Message);
+                }
+            }
+        });
+    }
+    function ShowBtnRow(id, SoLuongCon, Value) {
+        if (SoLuongCon == Value) {
+            $("#ADD_" + id).hide();
+        }
+        else {
+            $("#ADD_" + id).show();
+        }
+    }
+</script>

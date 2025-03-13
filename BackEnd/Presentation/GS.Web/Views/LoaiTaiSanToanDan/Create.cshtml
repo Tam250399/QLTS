@@ -1,0 +1,70 @@
+@model LoaiTaiSanModel
+@{
+    //page title
+    ViewBag.Title = "Thêm mới loại tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucLoaiTaiSanToanDan");
+}
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a href="~/LoaiTaiSanToanDan/List" class="btn btn-primary" role="button" style=" float:right;margin-right:1px;height:35px;width:68px;">Đóng</a>
+            <button name="save" class="btn btn-success" style="float:right;margin-right:5px; " id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+	<script>
+        $(document).ready(function () {
+			$("#btnSave").click(function () {
+                var _data = {
+                    MA: $('#@Html.IdFor(c => c.MA)').val(),
+                    TEN: $('#@Html.IdFor(c => c.TEN)').val(),
+                    PARENT_ID: $('#@Html.IdFor(c => c.PARENT_ID)').val(),
+                    MO_TA: $('#@Html.IdFor(c => c.MO_TA)').val(),
+                    LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_HINH_TAI_SAN_ID)').val(),
+                    CHE_DO_HAO_MON_ID: $('#@Html.IdFor(c => c.CHE_DO_HAO_MON_ID)').val(),
+                    HM_THOI_HAN_SU_DUNG: $('#@Html.IdFor(c => c.HM_THOI_HAN_SU_DUNG)').val(),
+                    HM_TY_LE: $('#@Html.IdFor(c => c.HM_TY_LE)').val(),
+                    KH_THOI_HAN_SU_DUNG: $('#@Html.IdFor(c => c.KH_THOI_HAN_SU_DUNG)').val(),
+                    @*KH_TY_LE: $('#@Html.IdFor(c => c.KH_TY_LE)').val(),*@
+                    DON_VI_TINH: $('#@Html.IdFor(c => c.DON_VI_TINH)').val(),
+                    OTO_CHO_NGOI_TU: $('#@Html.IdFor(c => c.OTO_CHO_NGOI_TU)').val(),
+                    OTO_CHO_NGOI_DEN: $('#@Html.IdFor(c => c.OTO_CHO_NGOI_DEN)').val(),
+					OTO_LOAI_XE_ID: $('#@Html.IdFor(c => c.OTO_LOAI_XE_ID)').val()
+				};
+				let _url = "/LoaiTaiSanToanDan/Create";
+				ajaxPost(_data, _url,true).done((data) => {
+					if (CheckValidMessageReturn(data)) {
+						ShowSuccessMessage(data.Message);
+						location.href = '/LoaiTaiSanToanDan/List';
+					}
+				})
+                //$.ajax({
+                //cache: false,
+                //type: "POST",
+                //url: "/LoaiTaiSan/Create",
+                //data: _data,
+                //success: function (data) {
+                //    if (CheckValidMessageReturn(data)) {
+                //        ShowSuccessMessage(data.Message);
+                //        location.href = '/LoaiTaiSan/List';
+                //    }
+                //},
+                //error: function (xhr, ajaxOptions, thrownError) {
+                //   ShowErrorMessage(data.Message);
+                //     alert('error');
+                //}
+            //});
+            });
+        });
+	</script>
+

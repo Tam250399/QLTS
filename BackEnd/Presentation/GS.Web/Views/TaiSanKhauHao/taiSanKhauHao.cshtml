@@ -1,0 +1,136 @@
+﻿@{ 
+    ViewData["Title"] = "Thay đổi thông tin tài sản khấu hao";
+    Html.SetActiveMenuItemSystemName("ThayDoiThongTinKhauHao");
+}
+   
+<input asp-for="ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+@*<input asp-for="LOAI_HINH_KHAI_THAC_ID" type="hidden" />*@
+@model YeuCauModel
+<!-- Thong tin chung begin --------->
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thay đổi thông tin tài sản khấu hao
+        @*<small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID">Quay lại danh sách</a>
+            </small>*@
+        <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSanKhauHao/List'" style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+        @*<button type="button" class="btn btn-sm btn-outline-primary btnAdd" id="btnAddTangNguyenGia" style="float:right;margin-right:5px;">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>*@
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("../TaiSan/_BDThongTinTaiSan", Model)
+        @*<form asp-controller="TaiSanKhauHao" asp-action="CreateThayDoiThongTin" method="post">
+            <input type="submit" id="btnSubmit" style="display:none;" />
+            @await Html.PartialAsync("_CreateOrUpdateTaiSanKhauHao", Model)
+            </form>*@
+        <div class="gs-form-group mb-4">
+            <h6>
+                Danh sách khấu hao tài sản
+            </h6>
+            <div class="grid-tskh" id="grid-tskh">
+
+            </div>
+        </div>
+        <!--#endregion -->
+
+        <script>
+
+		$(document).ready(function () {
+			createOrUpdateKhauHaoJs = new CreateOrUpdateKhauHaoJs();
+		})
+		class CreateOrUpdateKhauHaoJs {
+
+				constructor() {
+					this.initEvents();
+					this.initForms();
+					this.loadTaiSanKhauHaoGrid();
+				}
+
+				/**
+				 * Function chưa các sự kiện trên form nhập kế hoạch mua sắm
+				 * */
+				initEvents() {
+					$(document).on('click', '.btnCreateKhauHao', this.updateKhauHao.bind(this));
+					$(document).on('click', '.btnUpdateKhauHao', this.updateKhauHao.bind(this));
+					$(document).on('click', '#btnUpdateKhauHao', this.updateKhauHao.bind(this));
+					$(document).on('click', '#chonKhauHao', this.openChonTaiSanModal.bind(this));
+                  
+				}
+
+				initForms() {
+
+				}
+
+            loadTaiSanKhauHaoGrid() {
+					var TaiSanId = $('#TAI_SAN_ID').val();
+					var listTaiSanKhauHaosURL = "/TaiSanKhauHao/_ListTaiSanKhauHao?TaiSanId=" + TaiSanId ;
+					var listTSKTRequest = ajaxGet(listTaiSanKhauHaosURL);
+					listTSKTRequest.done(function (result) {
+						$("#grid-tskh").append(result);
+					})
+					.fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+			}
+            openChonTaiSanModal() {
+				var idTaiSanKhauHao =0;
+				var taisanid = $("#TAI_SAN_ID").val();
+				//var taisanid = getDateFormatForGetMethod($("#TAI_SAN_ID").val());
+				var _url = "@(Url.Action("_CreateOrUpdateTaiSanKhauHao", "TaiSanKhauHao"))?idTaiSanKhauHao=" + idTaiSanKhauHao + "&taisanid=" + taisanid ;
+				OpenModalManual("Tài sản khấu hao", _url, 80);
+			}
+            updateKhauHao() {
+					var createOrUpdateKhauHaoJs = this;
+					var dataRequest = createOrUpdateKhauHaoJs.addDataKhauHao();
+					var updateKhauHaoRequest = ajaxPost(dataRequest, '/TaiSanKhauHao/_CreateOrUpdateTaiSanKhauHao', false);
+					updateKhauHaoRequest.done(function (res) {
+						if (CheckValidMessageReturn(res)) {
+							if (res.Code == '00') {
+								ShowSuccessMessage(res.Message);
+								HideModalManual();
+								// refresh
+                                var grid = $('#danh-sach-tai-san-khau-hao').data('kendoGrid');
+                                recordItemKTTS = 0;
+                                grid.dataSource.page(1); //new search. Set page size to 1
+							}
+							if (res.Code == '01') {
+								ShowErrorMessage(res.Message);
+							}
+						}
+					}).fail(function (xhr, ajaxOptions, thrownError) {
+						console.log(ajaxOptions + ": " + thrownError);
+					});
+
+				}
+				addDataKhauHao() {
+					var _data = {
+						ID: $("#taisankhauhaoID").val(),
+						TAI_SAN_ID: $("#TAI_SAN_ID").val(),
+						NGAY_BAT_DAU: $("#NGAY_BAT_DAU").val(),
+						NGAY_KET_THUC: $("#NGAY_KET_THUC").val(),
+						TY_LE_KHAU_HAO: $("#TY_LE_KHAU_HAO").val(),
+						SO_THANG_KHAU_HAO: $("#SO_THANG_KHAU_HAO").val(),
+						TY_LE_NGUYEN_GIA_KHAU_HAO: $("#TY_LE_NGUYEN_GIA_KHAU_HAO").val(),
+                    }
+					return _data;
+				}
+			}
+        </script>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/TaiSanKhauHao/List'" style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+    </div>
+</div>

@@ -1,0 +1,221 @@
+﻿@model YeuCauModel
+@if (Model.IsTaiSanDuAn == true)
+{
+	Html.SetActiveMenuItemSystemName("TangNguyenGiaTaiSanDuAn");
+}
+else
+{
+	Html.SetActiveMenuItemSystemName("TangNguyenGiaTaiSan");
+}
+<input asp-for="pageIndex" type="hidden" />
+<div class="card mb-4">
+	<h6 class="card-header">
+		Tăng nguyên giá tài sản
+		@*<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a href="/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID">Quay lại danh sách</a>
+			</small>*@
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID&isDanhSachTaiSanDuAn=@Model.IsTaiSanDuAn';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		@if (Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+		{
+			if (Model.ID > 0)
+			{
+				<span id="item-delete" onclick="deleteYeuCauBienDong()" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+					<i class="fas fa-trash"></i>
+					Xóa
+				</span>
+			}
+			<button type="button" class="btn btn-sm btn-primary btnAdd" id="btnAddTangNguyenGia" style="float:right;margin-right:5px;">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+		}
+	</h6>
+	<div class="card-body">
+		@await Html.PartialAsync("_BDTangNguyenGiaCRUD", Model)
+	</div>
+	<div class="card-footer">
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID&isDanhSachTaiSanDuAn=@Model.IsTaiSanDuAn';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		@if (Model.TRANG_THAI_ID != (int)GS.Core.Domain.NghiepVu.enumTRANG_THAI_YEU_CAU.DA_DUYET)
+		{
+			if (Model.ID > 0)
+			{
+				<span id="item-delete" onclick="deleteYeuCauBienDong()" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+					<i class="fas fa-trash"></i>
+					Xóa
+				</span>
+			}
+			<button type="button" class="btn btn-sm btn-primary btnAdd" style="float:right;margin-right:5px;">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+		}
+	</div>
+</div>
+<script>
+
+
+	$(document).ready(function () {
+		$(".btnAdd").click(function () {
+			if (checkvali()) {
+				var _dataBienDong = addDataBDTangNG();
+				createYeuCauBDNguyenGia(_dataBienDong);
+			}
+		})
+		//sự kiệu tính giá trị sau biến động
+		$(document).on("change", "#ListNguonVon input", TinhNguyenGia);
+	});
+	 /**
+	 * Description: Lay du lieu bien dong tao yeu cau
+	 * */
+	function addDataBDTangNG() {
+		var _lstNguonVon = [];
+		   $(".NguonVon").each(function () {
+			   var nguonvonId = $(this).data("idnguonvon");
+			   var _tennguonvon = $(this).data("tennguonvon");
+			   var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+			   _lstNguonVon.push({
+				   ID: nguonvonId,
+				   GiaTri: parseFloat(_ValueNguonVon),
+				   TEN: _tennguonvon,
+			   });
+		   });
+		  var _lstHienTrang = [];
+			$(".HienTrang").each(function () {
+				var _hientrangId = $(this).data("idhientrang");
+				var _tenhientrang = $(this).data("tenhientrang");
+				var _kieudulieuid = $(this).data("kieudulieuid");
+				switch (_kieudulieuid) {
+					case 1:
+						var _Value = $("#HienTrang_" + _hientrangId).val();
+						_lstHienTrang.push({
+							HienTrangId: _hientrangId,
+							GiaTriNumber: _Value,
+							TenHienTrang: _tenhientrang,
+							KieuDuLieuId: _kieudulieuid,
+						});
+						break;
+					case 2:
+						var _Value = $("#HienTrang_" + _hientrangId).prop("checked") ? true : false;
+						_lstHienTrang.push({
+							HienTrangId: _hientrangId,
+							GiaTriCheckbox: _Value,
+							TenHienTrang: _tenhientrang,
+							KieuDuLieuId: _kieudulieuid,
+						});
+						break;
+				}
+			});
+		var _data = {
+			ID : $("#@Html.IdFor(c=>c.ID)").val(),
+			TaiSanGuid: $("#@Html.IdFor(c=>c.TaiSanGuid)").val(),
+			TAI_SAN_ID: $("#@Html.IdFor(c=>c.TAI_SAN_ID)").val(),
+			CHUNG_TU_SO : $("#@Html.IdFor(c=>c.CHUNG_TU_SO)").val(),
+			CHUNG_TU_NGAY: $("#@Html.IdFor(c=>c.CHUNG_TU_NGAY)").val(),
+			QUYET_DINH_SO: $("#@Html.IdFor(c=>c.QUYET_DINH_SO)").val(),
+			QUYET_DINH_NGAY: $("#@Html.IdFor(c=>c.QUYET_DINH_NGAY)").val(),
+			LOAI_BIEN_DONG_ID : $("#@Html.IdFor(c=>c.LOAI_BIEN_DONG_ID)").val(),
+			LY_DO_BIEN_DONG_ID : $("#@Html.IdFor(c=>c.LY_DO_BIEN_DONG_ID)").val(),
+			NGAY_BIEN_DONG : $("#@Html.IdFor(c=>c.NGAY_BIEN_DONG)").val(),
+			GHI_CHU : $("#@Html.IdFor(c=>c.GHI_CHU)").val(),
+			NGUYEN_GIA: $("#TongNguyenGia").val(),
+			DON_VI_BO_PHAN_ID: '@Model.DON_VI_BO_PHAN_ID',
+			lstNguonVonModel: _lstNguonVon,
+			NGAY_SU_DUNG: $("#NGAY_SU_DUNG_2").val(),
+			LOAI_HINH_TAI_SAN_ID: @Model.LOAI_HINH_TAI_SAN_ID,
+				pageIndex: $("#@Html.IdFor(c=>c.pageIndex)").val(),
+			YCCTModel: {
+				lstHienTrang: _lstHienTrang,
+				NGUYEN_GIA: $("#TongNguyenGia").val(),
+				HINH_THUC_MUA_SAM_ID: '@Model.YCCTModel.HINH_THUC_MUA_SAM_ID',
+				MUC_DICH_SU_DUNG_ID: '@Model.YCCTModel.MUC_DICH_SU_DUNG_ID',
+				HM_GIA_TRI_CON_LAI : $("#@Html.IdFor(c=>c.YCCTModel.HM_GIA_TRI_CON_LAI)").val(),
+				HM_SO_NAM_CON_LAI : $("#@Html.IdFor(c=>c.YCCTModel.HM_SO_NAM_CON_LAI)").val(),
+				KH_THANG_CON_LAI: $("#@Html.IdFor(c=>c.YCCTModel.KH_THANG_CON_LAI)").val(),
+				DAT_TONG_DIEN_TICH: $("#@Html.IdFor(c=>c.YCCTModel.DAT_TONG_DIEN_TICH)").val(),
+				NHA_TONG_DIEN_TICH_XD: $("#@Html.IdFor(c=>c.YCCTModel.NHA_TONG_DIEN_TICH_XD)").val(),
+				NHA_DIEN_TICH_XD: $("#@Html.IdFor(c=>c.YCCTModel.NHA_DIEN_TICH_XD)").val(),
+				NGUYEN_GIA_SAU_BD: $("#@Html.IdFor(c=>c.YCCTModel.NGUYEN_GIA_SAU_BD)").val(),
+			}
+		};
+		return _data;
+	}
+	 function checkvali() {
+		var check = true;
+		hideValmsg('SelectedNguonVonIds');
+		hideValmsg('YCCTModel.NHA_DIEN_TICH_XD');
+		hideValmsg('YCCTModel.DAT_TONG_DIEN_TICH');
+		hideValmsg('YCCTModel.NHA_TONG_DIEN_TICH_XD');
+		hideValmsg('CHUNG_TU_NGAY');
+		hideValmsg('NGAY_BIEN_DONG');
+		 $(".NguonVon").each(function () {
+			 var _tennguonvon = $(this).data("tennguonvon");
+			 if (_tennguonvon == "Nguồn ngân sách") {
+				 var nguonvonId = $(this).data("idnguonvon");
+				 hideValmsg("NguonVon_" + nguonvonId);
+			 }
+		 });
+		if (($('#SelectedNguonVonIds').val()) <= 0) {
+			showInvalidMessage('SelectedNguonVonIds', 'Nguồn vốn không được để trống');
+			check = false;
+		 }
+		 if (!checkValidateDateFormat('#CHUNG_TU_NGAY', 'CHUNG_TU_NGAY', 'Sai định dạng ngày')) {
+			  check = false;
+		 }
+		 if (!checkValidateDateFormat('#NGAY_BIEN_DONG', 'NGAY_BIEN_DONG', 'Sai định dạng ngày')) {
+			  check = false;
+		 }
+		 if (($("#LY_DO_BIEN_DONG_ID").val() == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.TANG_DIEN_TICH_DAT) ||$("#LY_DO_BIEN_DONG_ID").val() == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.GIAM_DIEN_TICH_DAT) || $("#LY_DO_BIEN_DONG_ID").val() == @((int)enumLY_DO_TANG_GIAM_NGUYEN_GIA.GIAM_GIA_DAT))  && $('#SelectedNguonVonIds').val() == @((int)enumNGUON_VON_DEFAULT.NGAN_SACH)) {
+			 $(".NguonVon").each(function () {
+				 var _tennguonvon = $(this).data("tennguonvon");
+				 if (_tennguonvon == "Nguồn ngân sách") {
+					 var nguonvonId = $(this).data("idnguonvon");
+					 var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+					 if (_ValueNguonVon != undefined && _ValueNguonVon <= 0) {
+						 check = false;
+						 showInvalidMessage("NguonVon_" + nguonvonId, 'Nguồn ngân sách không được để trống');
+					 }
+				 }
+			 });
+		 }
+		return check;
+	}
+	function deleteYeuCauBienDong() {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa biến động này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var _url = "@(Url.Action("DeleteYeuCauBienDong", "YeuCau"))?yeuCauId=" + @Model.ID + "&loaiBienDongId=" +@Model.LOAI_BIEN_DONG_ID;
+					var deleteYeuCau = ajaxDelete(_url, false);
+					deleteYeuCau.done(function (result) {
+						if (result.Code == '00') {
+							ShowSuccessMessage(result.Message);
+							location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_BIEN_DONG_ID;
+						} else if (result.Code == '01') {
+							ShowErrorMessage(result.Message);
+							//location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_BIEN_DONG_ID;
+						}
+					}).fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+				}
+			}
+		});
+	}
+</script>

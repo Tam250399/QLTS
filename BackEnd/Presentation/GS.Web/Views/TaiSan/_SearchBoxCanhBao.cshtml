@@ -1,0 +1,113 @@
+﻿@model TaiSanSearchModel;
+@{ 
+    var listLoaiHinhTaiSan = Model.LoaiHinhTaiSanAvailable.ToList();
+    if (Model.ddlLoaiHinhTaiSanDatNha.Count() > 0)
+    {
+        listLoaiHinhTaiSan = Model.ddlLoaiHinhTaiSanDatNha;
+    }
+
+    //else if (Model.ddlLoaiHinhTaiSanOto.Count() > 0)
+    //{
+    //    listLoaiHinhTaiSan = Model.ddlLoaiHinhTaiSanOto;
+    //}
+
+}
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3" style=" padding-left: 0px; padding-top: 5px;">
+
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-2">Từ khóa</label>
+        <div class="col-md-10">
+            <nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." id="chon-tai-san-keysearch" />
+        </div>
+
+    </div>
+
+    <div class=" form-group row">
+        <label class="col-form-label col-md-2">Loại tài sản</label>
+        <div class="col-md-4">
+            <app-select asp-for="LOAI_HINH_TAI_SAN_ID" asp-items="listLoaiHinhTaiSan" asp-filter="true" id="chon-tai-san-loai-hinh" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị</label>
+        <div class="col-sm-10">
+            <input id="@Html.IdFor(c => c.StrDonViId)" type="hidden" />
+            <input id="@Html.IdFor(c => c.SelectedDonViIds)_Input" class="form-control" style="width: 100%" />
+        </div>
+    </div>
+</div>
+
+@*List đơn vị multilselect *@
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(m => m.SelectedDonViIds)_Input").kendoMultiSelect({
+            placeholder: "Nhập tên đơn vị...",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            filter: "contains",
+            autoBind: true,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/DonVi/SearchDonViForMultilSelectInput",
+                        data: searchData
+                    },
+                },
+            },
+            change: inputChange
+        })
+
+        function inputChange() {
+            value = this.value();
+            value = value.filter(c => c != "");
+            console.log(value);
+            var strId = value.join(',');
+            $("#@Html.IdFor(c => c.StrDonViId)").val(strId);
+            debugger;
+        };
+        function searchData() {
+            var inputKendo = $("#@Html.IdFor(m => m.SelectedDonViIds)_Input").data("kendoMultiSelect");
+            var _keySearch = '';
+            // Lưu vết người dùng ban đầu
+            var listSelectId = $('#@Html.IdFor(c => c.StrDonViId)').val();
+            if (inputKendo) {
+                // phải dùng isFirst vì lần đầu tiên inputKendo.input.val() bị set = placeholder
+                if (isFirst) {
+                    _keySearch = "";
+                    isFirst = false;
+                } else {
+                    _keySearch = inputKendo.input.val();
+                }
+
+            }
+            var _data = {
+                keySearch: _keySearch,
+                ListSelectedId: listSelectId
+            };
+            return _data;
+
+        }
+    })
+
+    $(document).ready(function () {
+        var listSelectIdStr = $('#@Html.IdFor(c => c.StrDonViId)').val();
+        var inputKendo = $("#@Html.IdFor(m => m.SelectedDonViIds)_Input").data("kendoMultiSelect");
+        if (listSelectIdStr && listSelectIdStr != undefined && listSelectIdStr != "" && inputKendo) {
+            listId = listSelectIdStr.split(',').filter(c => c != "");
+            inputKendo.value(listId);
+        }
+    });
+</script>
+
+@*Biến toàn cục*@
+<script>
+	let isFirst = true;
+</script>

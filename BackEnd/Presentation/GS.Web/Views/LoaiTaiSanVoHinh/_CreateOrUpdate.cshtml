@@ -1,0 +1,154 @@
+﻿@model LoaiTaiSanVoHinhModel
+@inject IWorkContext _workContext;
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Mã loại tài sản đơn vị</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="MA" />
+		<span asp-validation-for="MA"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Tên loại tài sản đơn vị</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="TEN" />
+		<span asp-validation-for="TEN"></span>
+	</div>
+</div>
+
+@*Thời gian sử dụng(hao mòn)*@
+@*Tỷ lệ hao mòn*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Thời hạn sử dụng (Hao mòn)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="HM_THOI_HAN_SU_DUNG" asp-min-number="0" asp-dvt="năm" />
+		<span asp-validation-for="HM_THOI_HAN_SU_DUNG"></span>
+	</div>
+	<label class="col-form-label col-sm-2">Tỷ lệ hao mòn (%)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="HM_TY_LE" asp-min-number="0" />
+		<span asp-validation-for="HM_TY_LE"></span>
+	</div>
+</div>
+
+@*Thời gian sử dụng(Khấu hao)*@
+@*Tỷ lệ khấu hao*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Thời hạn sử dụng (khấu hao)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="KH_THOI_HAN_SU_DUNG" asp-min-number="0" asp-dvt="tháng" />
+		<span asp-validation-for="KH_THOI_HAN_SU_DUNG"></span>
+	</div>
+	<label class="col-form-label col-sm-2">Tỷ lệ khấu hao (%)</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="KH_TY_LE" asp-min-number="0" />
+		<span asp-validation-for="KH_TY_LE"></span>
+	</div>
+</div>
+@*Mô tả*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Mô tả</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="MO_TA" />
+		<span asp-validation-for="MO_TA"></span>
+	</div>
+</div>
+@*Loại tài sản vô hình*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Loại tài sản cha</label>
+	<div class="col-sm-10">
+		<input id="LoaiTaiSanChaSelect" value="@Model.TenLoaiTaiSanVoHinhCha" class="form-control" style="width: 100%" />
+		<input id="pID" asp-for="PARENT_ID" type="hidden" />
+		<span asp-validation-for="PARENT_ID"></span>
+	</div>
+</div>
+@*Đơn vị tính*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Đơn vị tính</label>
+	<div class="col-sm-10">
+		<nop-editor asp-for="DON_VI_TINH" />
+		<span asp-validation-for="DON_VI_TINH"></span>
+	</div>
+</div>
+
+
+@*Đơn vị*@
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Đơn vị áp dụng</label>
+	<div class="col-sm-10">
+		<input id="DonViApDungInput" value="@Model.TenDonViApDung" class="form-control" style="width: 100%" />
+		<span asp-validation-for="DON_VI_ID"></span>
+		@Html.HiddenFor(c => c.DON_VI_ID)
+	</div>
+</div>
+
+<script>
+
+    $('document').ready(() => {
+		function SearchLoaiTaiSanVoHinhCha() {
+			var _data = {
+				KeySearch: $("#LoaiTaiSanChaSelect").data("kendoComboBox").text(),
+			};
+			return _data;
+		}
+
+		function onLoaiTaiSanVoHinhChaEditChange() {
+			var value = this.value();
+			$("#pID").val(value);
+		}
+        $("#LoaiTaiSanChaSelect").kendoComboBox({
+            placeholder: "Tên hoặc mã...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/LoaiTaiSanVoHinh/SearchLoaiTaiSanVoHinh",
+                        data: SearchLoaiTaiSanVoHinhCha
+                    },
+                },
+            },
+            change: onLoaiTaiSanVoHinhChaEditChange
+        });
+		function SearchDonViConData() {
+			var _data = { TenDonVi: $("#DonViApDungInput").data("kendoComboBox").text() };
+			return _data;
+		}
+		function onDonViConEditChange() {
+			var value = this.value();
+			$("#DON_VI_ID").val(value);
+		}
+        $("#DonViApDungInput").kendoComboBox({
+            placeholder: "Nhập đơn vị áp dụng...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+						url: "/LoaiTaiSanVoHinh/SearchDanhSachDonVi",
+                        data: SearchDonViConData,
+                        async: false
+                    },
+                },
+            },
+            change: onDonViConEditChange
+        });
+        @*if(@Model.DON_VI_ID > 0) {
+            $("#DonViApDungInput").data("kendoComboBox").select(0);
+        }*@
+    });
+
+
+
+
+</script>

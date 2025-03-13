@@ -1,0 +1,201 @@
+@model DeNghiXuLySearchModel
+@{
+    //page title
+    ViewBag.Title = "Đề nghị xử lý tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DeNghiXuLy");
+}
+<script>
+    function deleteDeNghiXuLy(id) {
+        kendo.ui.progress($(".progress-bar"), true);
+        $.ajax({
+            type: "POST",
+            url: "/DeNghiXuLy/_delete?id=" + id,
+            success: function (data) {
+                if (data.Code == '00') {
+                    ShowSuccessMessage(data.Message);
+                    var grid = $('#items-grid').data('kendoGrid');
+                    grid.dataSource.page(1);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+
+            }
+        });
+    }
+</script>
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Số phiếu:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_PHIEU" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-right">Ngày đề nghị:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_DE_NGHI" />
+        </div>
+        @*<label class="col-form-label col-sm-2 text-sm-right">Ngày xử lý:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_XU_LY" />
+            </div>*@
+    </div>
+    <div class="form-group row">
+        @*<label class="col-form-label col-sm-2 text-sm-right">Số phiếu:</label>
+            <div class="col-sm-8">
+                <nop-editor asp-for="SO_PHIEU" />
+            </div>*@
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span>Danh sách đề nghị xử lý tài sản</span>
+        </div>
+    </div>
+    <div class="col-sm-2 text-right">
+        <a asp-action="Create" class="btn btn-sm btn-outline-primary" style="margin-right:7px;">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    SO_PHIEU:$('#@Html.IdFor(model => model.SO_PHIEU)').val(),
+                                    NGAY_DE_NGHI:$('#@Html.IdFor(model => model.NGAY_DE_NGHI)').val(),
+                                    //NGAY_XU_LY:$('#@Html.IdFor(model => model.NGAY_XU_LY)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                             });
+                            let record = 1;
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "DeNghiXuLy"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    change: function (e) {
+                                        record = 1;
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: 'STT',
+                                        width: 50,
+                                        template: function (e) {
+                                            let pageSize = $("#items-grid").data("kendoGrid").dataSource.pageSize();
+                                            pageSize = typeof pageSize == 'undefined' ? 0 : pageSize;
+                                            let page = $("#items-grid").data("kendoGrid").dataSource.page();
+                                            page = typeof page == 'undefined' ? 0 : page;
+                                            let i = record++;
+                                            return (parseInt(i) + (parseInt(page) - 1) * parseInt(pageSize));
+                                        }
+                                    },
+								{
+									field: 'SO_PHIEU',
+                                    title: 'Số phiếu',
+                                    width: 150,
+                                    attributes: { style: "text-align:center" }
+								},
+								{
+									field: 'NGAY_DE_NGHI',
+                                    title: 'Ngày đề nghị',
+                                    type: "Date",
+                                    format: "{0:dd/MM/yyyy}",
+                                    attributes: { style: "text-align:center" }
+								},
+								//{
+								//	field: 'NGAY_XU_LY',
+        //                            title: 'Ngày sử lý',
+        //                            type: "Date",
+        //                            format: "{0:dd/MM/yyyy}",
+        //                            attributes: { style: "text-align:center" }
+								//},
+								{
+									field: 'NOI_DUNG',
+                                    title: 'Nội dung',
+                                    attributes: { style: "text-align:center" }
+								},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: kendo.template($("#edit-gird-DeNghiXuLy-Tem").html()),
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="edit-gird-DeNghiXuLy-Tem" type="text/x-kendo-tmpl">
+    <a class="btn icon-btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#">Sửa</a>
+    <button class="btn icon-btn btn-sm btn-outline-danger" type="button" onclick="GS_Delete('',deleteDeNghiXuLy,#=ID#)" title="Xóa">Xóa</button>
+</script>
+
+

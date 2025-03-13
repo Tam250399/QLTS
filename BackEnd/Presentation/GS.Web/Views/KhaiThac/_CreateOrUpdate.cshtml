@@ -1,0 +1,527 @@
+﻿@model KhaiThacModel
+@{
+    //page title
+
+    //active menu item (system name)
+    //Html.SetActiveMenuItemSystemName("KhaiThac");
+}
+@switch (Model.LOAI_HINH_KHAI_THAC_ID)
+{
+    case (int)enumHinhThucKhaiThac.CHO_THUE_TS:
+        ViewBag.Title = "Khai thác tài sản";
+        Html.SetActiveMenuItemSystemName("KhaiThacChoThueTS");
+        break;
+    case (int)enumHinhThucKhaiThac.LDLK:
+        ViewBag.Title = "Khai thác liên doanh, liên kết";
+        Html.SetActiveMenuItemSystemName("KhaiThacLDLK");
+        break;
+    case (int)enumHinhThucKhaiThac.SXKD:
+        ViewBag.Title = "Khai thác sản xuất kinh doanh";
+        Html.SetActiveMenuItemSystemName("KhaiThacSXKD");
+        break;
+    case (int)enumHinhThucKhaiThac.KHAI_THAC_KHAC:
+        ViewBag.Title = "Khai thác khác";
+        Html.SetActiveMenuItemSystemName("KhaiThacKhac");
+        break;
+    default:
+        ViewBag.Title = "Khai thác tài sản";
+        Html.SetActiveMenuItemSystemName("KhaiThac");
+        break;
+}
+<input asp-for="ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="LOAI_HINH_KHAI_THAC_ID" type="hidden" />
+
+<div class="gs-form-group mb-4">
+    <h6> Thông tin chi tiết </h6>
+    @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.CHO_THUE_TS)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Tên đơn vị cho thuê</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="DON_VI_MA" asp-disabled="true" />
+            </div>
+            <div class="col-sm-8">
+                <nop-editor asp-for="TEN_DON_VI" asp-disabled="true" />
+                <span asp-validation-for="TEN_DON_VI"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Đơn vị</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="DON_VI_MA" asp-disabled="true" />
+            </div>
+            <div class="col-sm-8">
+                <nop-editor asp-for="TEN_DON_VI" asp-disabled="true" />
+                <span asp-validation-for="TEN_DON_VI"></span>
+            </div>
+        </div>
+    }
+    @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.KHAI_THAC_KHAC)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">QĐ phê duyệt đề án số</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="QUYET_DINH_SO" />
+                <span asp-validation-for="QUYET_DINH_SO"></span>
+            </div>
+
+            <label class="col-form-label col-sm-1">ngày</label>
+            <div class="col-sm-3">
+                <nop-editor asp-for="QUYET_DINH_NGAY" /><br />
+                <span asp-validation-for="QUYET_DINH_NGAY"></span>
+            </div>
+            <label class="col-form-label col-sm-1">của </label>
+            <div class="col-sm-3">
+                <nop-editor asp-for="NGUOI_DUYET" />
+                <span asp-validation-for="NGUOI_DUYET"></span>
+            </div>
+        </div>
+    }
+
+    else
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required ">QĐ phê duyệt đề án số</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="QUYET_DINH_SO" />
+                <span asp-validation-for="QUYET_DINH_SO"></span>
+            </div>
+
+            <label class="col-form-label col-sm-1">ngày</label>
+            <div class="col-sm-3">
+                <nop-editor asp-for="QUYET_DINH_NGAY" /><br />
+                <span asp-validation-for="QUYET_DINH_NGAY"></span>
+            </div>
+            <label class="col-form-label col-sm-1">của </label>
+            <div class="col-sm-3">
+                <nop-editor asp-for="NGUOI_DUYET" />
+                <span asp-validation-for="NGUOI_DUYET"></span>
+            </div>
+        </div>
+    }
+    @if (Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.SXKD)
+    {
+        @*@if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.CHO_THUE_TS)
+            {
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-required">Phương thức cho thuê</label>
+                    <div class="col-sm-4">
+                        <nop-select asp-for="CHO_THUE_PHUONG_THUC_ID" asp-items="Model.PhuongThucChoThueAvaliable" />
+                        <span asp-validation-for="CHO_THUE_PHUONG_THUC_ID"></span>
+                    </div>
+                </div>
+            }*@
+        @*@if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.LDLK)
+            {
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 ">Phương thức LDLK</label>
+                    <div class="col-sm-4">
+                        <nop-select asp-for="LDLK_HINH_THUC_ID" asp-items="Model.HinhThucLDLKAvaliable" />
+                    </div>
+                </div>
+            }*@
+    }
+    @if (Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.CHO_THUE_TS && Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.LDLK)
+    {
+        <div class="form-group row">
+            @*@if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.LDLK)
+                {
+                    <label class="col-form-label col-sm-2  text-required">LDLK từ ngày</label>
+                }
+                else*@
+            @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.SXKD)
+            {
+                <label class="col-form-label col-sm-2  text-required">Thời hạn kinh doanh từ ngày</label>
+            }
+            else
+            {
+                <label class="col-form-label col-sm-2  text-required">Khai thác từ ngày</label>
+            }
+            <div class="col-sm-4">
+                <nop-editor asp-for="KHAI_THAC_NGAY_TU" /><br />
+                <span asp-validation-for="KHAI_THAC_NGAY_TU"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-required ">Đến ngày</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="KHAI_THAC_NGAY_DEN" /><br />
+                <span asp-validation-for="KHAI_THAC_NGAY_DEN"></span>
+            </div>
+        </div>
+
+    }
+    @if (Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.SXKD)
+    {
+        //<div class="form-group row">
+        @if (Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.CHO_THUE_TS && Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.LDLK)
+        {
+            <div class="form-group row">
+                @*//<label class="col-form-label col-sm-2 text-required">Số hợp đồng cho thuê</label>*@
+                <label class="col-form-label col-sm-2 ">Số hợp đồng</label>
+
+                <div class="col-sm-4">
+                    <nop-editor asp-for="HOP_DONG_SO" />
+                    <span asp-validation-for="HOP_DONG_SO"></span>
+                </div>
+                @*<label class="col-form-label col-sm-2 ">Ngày hợp đồng</label>*@
+                <div class="col-sm-4">
+                    <nop-editor asp-for="HOP_DONG_NGAY" /><br />
+                    <span asp-validation-for="HOP_DONG_NGAY"></span>
+                </div>
+            </div>
+        }
+        //</div>
+        @if (Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.CHO_THUE_TS && Model.LOAI_HINH_KHAI_THAC_ID != (int)enumHinhThucKhaiThac.LDLK)
+        {
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2">Đối tác</label>
+                <div class="col-sm-4">
+                    <nop-select asp-for="DOI_TAC_ID" asp-items="Model.DoiTacAvaliable" />
+                    <span asp-validation-for="DOI_TAC_ID"></span>
+                </div>
+                <div class="col-sm-1" style="padding-left: -5px;">
+                    <button type="button" title="Thêm trực tiếp" class="btn icon-btn btn-sm btn-outline-primary" id="btnThemBoPhan" style="margin:3px 0px 0px 2px;">
+                        <span class="ion ion-md-add"></span>
+                    </button>
+                    <button type="button" title="Lưu" class="btn icon-btn btn-sm btn-outline-success" id="btnLuuBoPhan" style="margin:3px 0px 0px 2px;">
+                        Lưu
+                    </button>
+                    <button type="button" title="Hủy" class="btn icon-btn btn-sm btn-outline-danger" id="btnHuyBoPhan" style="margin:3px 0px 0px 2px;">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="row form-group" style="padding-top: 6px;">
+                    <div class="col-md-12" id="frmThemDonViBoPhan" style="display:none">
+                        <div class="gs-form-group" style=" border-width:1px">
+                            <h6>Thêm mới đối tác</h6>
+                            <div class="">
+                                <input asp-for="DoiTacId" type="hidden" id="phongBanId" />
+                                <input asp-for="DON_VI_ID" type="hidden" />
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2  text-required">Mã đối tác</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" id="DoiTacMa" />
+                                        <span data-valmsg-for="MADoiTac" class="field-validation-valid"></span>
+                                    </div>
+                                    <label class="col-form-label col-sm-2  text-required">Tên đối tác</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" id="DoiTacTen" />
+                                        <span data-valmsg-for="TENDoiTac" class="field-validation-valid"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#frmThemDonViBoPhan').hide();
+                    $('#btnLuuBoPhan').hide();
+                    $('#btnHuyBoPhan').hide();
+                    $("#btnThemBoPhan").click(function () {
+                        //$('#_FrmThemMoiBoPhan').modal('show');
+                        $('#frmThemDonViBoPhan').show('fast');
+                        $('#btnLuuBoPhan').show();
+                        $('#btnHuyBoPhan').show();
+                        $('#btnThemBoPhan').hide();
+                    });
+                    $("#btnLuuBoPhan").click(function () {
+                        var url = "/DoiTac/_Create";
+                        var _data = {
+                            MA: $("#DoiTacMa").val(),
+                            TEN: $("#DoiTacTen").val(),
+                        };
+
+                        var phongBan = ajaxPost(_data, url, false);
+                        phongBan.done(function (result) {
+                            if (CheckValidMessageReturnWithParam(result, 'DoiTac')) {
+                                if (result.Code == "00") {
+                                    // ShowSuccessMessage(result.Message);
+                                    var phongBanModel = result.ObjectInfo;
+                                    $("#BoPhanSuDungId").kendoDropDownList({
+                                        dataSource: phongBanModel.dllDonViBoPhan,
+                                        dataTextField: "Text",
+                                        dataValueField: "Value",
+                                        text: phongBanModel.TEN,
+                                        value: phongBanModel.ID
+                                    });
+                                    $('#frmThemDonViBoPhan').hide('fast');
+                                    $('#btnLuuBoPhan').hide();
+                                    $('#btnHuyBoPhan').show();
+                                    $('#btnThemBoPhan').show();
+                                    $("#phongBanTen").val('');
+                                    $("#phongBanDiaChi").val('');
+                                    $("#phongBanDienThoai").val('');
+                                    $("#DoiTacId").val(result.ObjectInfo.ID);
+                                    // get lại list đơn vị để chọn
+                                    var urlList = "/DoiTac/GetDoiTacsForInput";
+                                    var ajaxGetListPhongBan = ajaxGet(urlList, false);
+                                    ajaxGetListPhongBan.done(function (res) {
+                                        var ddldoitac = $('#DOI_TAC_ID').data('kendoDropDownList');
+                                        if (ddldoitac) {
+                                            ddldoitac.setDataSource(res);
+                                        }
+                                    });
+
+                                }
+                            } else {
+                                //alert(result.ObjectInfo)
+                                $(".TEN").hide();
+                            }
+
+                        })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                // If fail
+                                console.log(textStatus + ': ' + errorThrown);
+                            });
+                    });
+                    $("#btnHuyBoPhan").click(function () {
+                        //$('#_FrmThemMoiBoPhan').modal('show');
+                        $('#frmThemDonViBoPhan').hide('fast');
+                        $('#btnLuuBoPhan').hide();
+                        $('#btnHuyBoPhan').hide();
+                        $('#btnThemBoPhan').show();
+                    });
+                })
+            </script>
+        }
+
+        @*if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.LDLK)
+            {
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 ">Tên pháp nhân mới</label>
+                    <div class="col-sm-4">
+                        <nop-editor asp-for="TEN_PHAP_NHAN_MOI" />
+                        <span asp-validation-for="TEN_PHAP_NHAN_MOI"></span>
+                    </div>
+                </div>
+            }*@
+        @*<div class="form-group row">
+                @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.KHAI_THAC_KHAC)
+                {
+                    <label class="col-form-label col-sm-2 ">Giá trị khai thác</label>
+                }
+                else
+                {
+                     <label class="col-form-label col-sm-2 ">Đơn giá cho thuê</label>
+                }
+                <div class="col-sm-4">
+                    <nop-editor asp-for="CHO_THUE_GIA" asp-min-number="0" placeholder="₫" asp-dvt="c" asp-amount="true"/>
+                    <span asp-validation-for="CHO_THUE_GIA"></span>
+                </div>
+            </div>*@
+
+    }
+
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Nội dung</label>
+        <div class="col-sm-10">
+            @*<nop-editor asp-for="NOI_DUNG" />*@
+            <nop-textarea asp-for="NOI_DUNG" style="width: 100%;height:40px;"></nop-textarea>
+            <span asp-validation-for="NOI_DUNG"></span>
+        </div>
+    </div>
+    @if (Model.LOAI_HINH_KHAI_THAC_ID == (int)enumHinhThucKhaiThac.KHAI_THAC_KHAC)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Số thu dự kiến</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_TAM_TINH" asp-min-number="0" asp-dvt="c" asp-amount="true" />
+                <span asp-validation-for="SO_TIEN_TAM_TINH"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2  text-required">Số thu dự kiến theo đề án được duyệt</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="SO_TIEN_TAM_TINH" asp-min-number="0" asp-dvt="c" asp-amount="true" />
+                <span asp-validation-for="SO_TIEN_TAM_TINH"></span>
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Ghi chú</label>
+        <div class="col-sm-10">
+            @*<nop-editor asp-for="GHI_CHU" />*@
+            <nop-textarea asp-for="GHI_CHU" style="width: 100%; height:40px;"></nop-textarea>
+            <span asp-validation-for="GHI_CHU"></span>
+        </div>
+    </div>
+
+</div>
+<div class="gs-form-group ">
+    <h6>
+        Danh sách tài sản
+    </h6>
+    <div class="text-right row" style="margin-bottom: 5px;">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2 text-right">
+            @*<button type="button" idVaiTro="@Model.ID" class="btn btn-sm btn-primary"
+                        data-toggle="modal" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;"
+                        data-target="#globalModalIframe"
+                        data-title="Danh sách tài sản">
+                    Chọn tài sản
+                </button>*@
+            <button type="button" id="chonkhaithac" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px;"
+                    class="btn btn-sm btn-primary">
+                Chọn tài sản
+            </button>
+
+            <button type="button" id="XoaNhieu" style="float:right;margin-right: 5px;margin-top: 7px;border-bottom-width: 01px;margin-bottom: 5px; display:none;"
+                    class="btn btn-sm btn-danger">
+                Xóa
+            </button>
+
+        </div>
+        @*data-src="/KhaiThac/_ListTaiSan?idKhaiThac=@Model.ID&ngaytu=@Model.KHAI_THAC_NGAY_TU&ngayden=@Model.KHAI_THAC_NGAY_DEN"*@
+    </div>
+
+    <div class="grid-tskt" id="grid-tskt">
+    </div>
+    <!--#endregion -->
+
+    <script>
+
+		$(document).ready(function () {
+			createOrUpdateKhaiThacJs = new CreateOrUpdateKhaiThacJs();
+		})
+		class CreateOrUpdateKhaiThacJs {
+
+			constructor() {
+				this.initEvents();
+				this.initForms();
+				this.loadTaiSanKhaiThacGrid();
+			}
+
+			/**
+			 * Function chưa các sự kiện trên form nhập kế hoạch mua sắm
+			 * */
+			initEvents() {
+				$(document).on('click', '.btnCreateKhaiThac', this.updateKhaiThac.bind(this));
+				$(document).on('click', '.btnUpdateKhaiThac', this.updateKhaiThac.bind(this));
+				$(document).on('click', '#chonkhaithac', this.openChonTaiSanModal.bind(this));
+			}
+
+			initForms() {
+
+			}
+
+			loadTaiSanKhaiThacGrid() {
+				var khaiThacId = @Model.ID;
+				var loaiHinhKhaiThacId = parseInt( $('#LOAI_HINH_KHAI_THAC_ID').val());
+				var listTaiSanKhaiThacsURL = "/KhaiThac/_DanhSachTaiSanKhaiThac?khaiThacId=" + khaiThacId + '&LOAI_HINH_KHAI_THAC_ID='+loaiHinhKhaiThacId;
+				var listTSKTRequest = ajaxGet(listTaiSanKhaiThacsURL);
+				listTSKTRequest.done(function (result) {
+					$("#grid-tskt").append(result);
+				})
+					.fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+			}
+			openChonTaiSanModal() {
+				var thisClass = this;
+				if (thisClass.checkvaliDate()) {
+                    var idKhaiThac = @Model.ID;
+
+					var ngaytu = getDateFormatForGetMethod($("#QUYET_DINH_NGAY").val());
+					//var ngaytu = getDateFormatForGetMethod($("#KHAI_THAC_NGAY_TU").val());
+					//var ngayden = getDateFormatForGetMethod($("#KHAI_THAC_NGAY_DEN").val());
+					var _url = "@(Url.Action("_ListTaiSan", "KhaiThac"))?idKhaiThac=" + idKhaiThac + "&ngaytu=" + ngaytu  ;
+					OpenModalManual("Chọn tài sản", _url, 80);
+				}
+            }
+			updateKhaiThac() {
+				var createOrUpdateKhaiThacJs = this;
+
+				var dataRequest = createOrUpdateKhaiThacJs.addDataKhaiThac();
+				var updateKhaiThacRequest = ajaxPost(dataRequest, '/KhaiThac/Edit', false);
+                updateKhaiThacRequest.done(function (res) {
+                    console.log(res);
+						if (res.Code == '00') {
+							ShowSuccessMessage(res.Message);
+							location.href = '/KhaiThac/List?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID';
+						}
+                    if (res.Code == '01') {
+                        CheckValidMessageReturn(res);
+							ShowErrorMessage(res.Message);
+						}
+
+				}).fail(function (xhr, ajaxOptions, thrownError) {
+					console.log(ajaxOptions + ": " + thrownError);
+				});
+
+			}
+			checkvaliDate() {
+				debugger
+				var check = true;
+				var nbt = $("#KHAI_THAC_NGAY_TU").val();
+                var hinhthuckhaithac = parseInt($("#LOAI_HINH_KHAI_THAC_ID").val());
+                if (hinhthuckhaithac != @((int)enumHinhThucKhaiThac.CHO_THUE_TS) && hinhthuckhaithac != @((int)enumHinhThucKhaiThac.LDLK)) {
+					if (!nbt) {
+						check = false;
+						showInvalidMessage('KHAI_THAC_NGAY_TU', 'Ngày không được để trống')
+					}
+					else {
+						hideValmsg("KHAI_THAC_NGAY_TU");
+					};
+					var nkt = $("#KHAI_THAC_NGAY_DEN").val();
+					if (!nkt) {
+						check = false;
+						showInvalidMessage('KHAI_THAC_NGAY_DEN', 'Ngày không được để trống')
+					}
+					else {
+						hideValmsg("KHAI_THAC_NGAY_DEN");
+					};
+					if (!checkValidateDateFormat('#KHAI_THAC_NGAY_TU', 'KHAI_THAC_NGAY_TU', 'Sai định dạng ngày')) {
+						check = false;
+					};
+					if (!checkValidateDateFormat('#KHAI_THAC_NGAY_DEN', 'KHAI_THAC_NGAY_DEN', 'Sai định dạng ngày')) {
+						check = false;
+					};
+					if (!checkValidateFromDateToDate('#KHAI_THAC_NGAY_TU', '#KHAI_THAC_NGAY_DEN', 'KHAI_THAC_NGAY_TU', 'Phải nhỏ hơn ngày kết thúc')) {
+						check = false;
+					};
+				}
+				console.log(hinhthuckhaithac);
+				console.log(check + "check ngaykhaithactu");
+				return check;
+			}
+			addDataKhaiThac() {
+
+				var _data = {
+					ID: $("#ID").val(),
+					DON_VI_ID: $("#DON_VI_ID").val(),
+					LOAI_HINH_KHAI_THAC_ID: $("#LOAI_HINH_KHAI_THAC_ID").val(),
+					NGAY_KHAI_THAC: $("#NGAY_KHAI_THAC").val(),
+					QUYET_DINH_SO: $("#QUYET_DINH_SO").val(),
+					QUYET_DINH_NGAY: $("#QUYET_DINH_NGAY").val(),
+					NGUOI_DUYET: $("#NGUOI_DUYET").val(),
+					CHO_THUE_PHUONG_THUC_ID: $("#CHO_THUE_PHUONG_THUC_ID").val(),
+					LDLK_HINH_THUC_ID: $("#LDLK_HINH_THUC_ID").val(),
+					HOP_DONG_SO: $("#HOP_DONG_SO").val(),
+					HOP_DONG_NGAY: $("#HOP_DONG_NGAY").val(),
+					DOI_TAC_ID: $("#DOI_TAC_ID").val(),
+					TEN_PHAP_NHAN_MOI: $("#TEN_PHAP_NHAN_MOI").val(),
+					CHO_THUE_GIA: $("#CHO_THUE_GIA").val(),
+					KHAI_THAC_NGAY_TU: $("#KHAI_THAC_NGAY_TU").val(),
+					KHAI_THAC_NGAY_DEN: $("#KHAI_THAC_NGAY_DEN").val(),
+					NOI_DUNG: $("#NOI_DUNG").val(),
+					SO_TIEN_TAM_TINH: $("#SO_TIEN_TAM_TINH").val(),
+					GHI_CHU: $("#GHI_CHU").val(),
+				}
+                return _data;
+			}
+
+		}
+    </script>
+</div>

@@ -1,0 +1,49 @@
+﻿@model TaiSanTdXuLyModel
+
+@foreach (var model in Model.ListModel) {
+    <tr id="row_@(model.GUID)" style="text-align:center">
+        <th scope="row" id="Index_@(model.GUID)" style="text-align:center"></th>
+        <td>@(model.TenTaiSan)</td>
+        <td>@(model.TenHinhThuc)</td>
+        <td>@(model.TenPhuongAn)</td>
+        <td>@(model.SO_LUONG)</td>
+        @*<td>@(model.NGAY_XU_LY.toDateVNString())</td>
+        <td>@(model.CHI_PHI_XU_LY)</td>*@
+        <td>
+            <div>
+                <div class="btn-group">
+                    <a style="color:black" class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" data-toggle="modal" data-target="#ModalIframe" data-width="900" data-title="Thông tin xử lý tài sản toàn dân" data-guid="@(model.GUID)" data-src="/TaiSanTdXuLy/ViewEditRowXuLyTaiSan">Sửa</a>&nbsp;
+                    <a style="color:black" class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaRowTaiSan('@(model.GUID)')>Xóa</a>
+                </div>
+                @*<input id="CHI_PHI_XU_LY_@(model.GUID)" value="@(model.CHI_PHI_XU_LY)" hidden />
+                <input id="DIEN_TICH_@(model.GUID)" value="@(model.DIEN_TICH)" hidden />
+                <input id="DON_VI_CHUYEN_ID_@(model.GUID)" value="@(model.DON_VI_CHUYEN_ID)" hidden />
+                <input id="TEN_DON_VI_NHAN_DIEU_CHUYEN_@(model.GUID)" value="@(model.TEN_DON_VI_NHAN_DIEU_CHUYEN)" hidden />
+                <input id="GIA_TRI_TAI_SAN_XU_LY_@(model.GUID)" value="@(model.GIA_TRI_TAI_SAN_XU_LY)" hidden />
+                <input id="NGAY_XU_LY@(model.GUID)" value="@(model.NGAY_XU_LY)" hidden />
+                <input id="HO_SO_GIAY_TO_KHAC_@(model.GUID)" value="@(model.HO_SO_GIAY_TO_KHAC)" hidden />
+                <input id="GIA_TRI_@(model.GUID)" value="@(model.GIA_TRI)" hidden />
+                <input id="GIA_TRI_GHI_TANG_@(model.GUID)" value="@(model.GIA_TRI_GHI_TANG)" hidden />
+                <input id="SO_TIEN_THU_@(model.GUID)" value="@(model.SO_TIEN_THU)" hidden />
+                <input id="GIA_TRI_NSNN_@(model.GUID)" value="@(model.GIA_TRI_NSNN)" hidden />
+                <input id="GIA_TRI_TKTG_@(model.GUID)" value="@(model.GIA_TRI_TKTG)" hidden />
+                <input id="HOP_DONG_NGAY_@(model.GUID)" value="@(model.HOP_DONG_NGAY)" hidden />
+                <input id="HOP_DONG_SO_@(model.GUID)" value="@(model.HOP_DONG_SO)" hidden />
+                <input id="NGUYEN_GIA_@(model.GUID)" value="@(model.NGUYEN_GIA)" hidden />*@
+                <input id="GUID_@(model.GUID)" value="@(model.GUID)" hidden class="row-guid" />
+                <input id="HINH_THUC_XU_LY_ID_@(model.GUID)" value="@(model.HINH_THUC_XU_LY_ID)" hidden />
+                <input id="PHUONG_AN_XU_LY_ID_@(model.GUID)" value="@(model.PHUONG_AN_XU_LY_ID)" hidden />
+                <input id="SO_LUONG_@(model.GUID)" value="@(model.SO_LUONG)" hidden />
+                <input id="TAI_SAN_ID_@(model.GUID)" value="@(model.TAI_SAN_ID)" hidden />
+                <input id="XU_LY_ID_@(model.GUID)" value="@(model.XU_LY_ID)" hidden />
+                <input id="ThuocTinh_@(model.GUID)" value="@(model.ThuocTinh)" hidden />
+                <input id="GHI_CHU_@(model.GUID)" value="@(model.GHI_CHU)" hidden />
+            </div>
+        </td>
+    </tr>
+}
+<script>
+    $(document).ready(function () {
+        Index_Row();
+    });
+</script>

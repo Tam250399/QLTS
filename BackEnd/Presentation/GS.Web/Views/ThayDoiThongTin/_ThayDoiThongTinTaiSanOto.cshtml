@@ -1,0 +1,178 @@
+﻿@model TaiSanOtoModel
+
+<div class="form-group row">
+	<label class="col-form-label col-sm-2 text-required">Biển kiểm soát</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="BIEN_KIEM_SOAT" />
+		<span asp-validation-for="BIEN_KIEM_SOAT"></span>
+	</div>
+	<label class="col-form-label col-sm-2">Nhãn hiệu</label>
+	<div class="col-sm-4">
+		<nop-select asp-for="NHAN_XE_ID" asp-items="Model.dllNhanXe" asp-filter="true" />
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2  text-required">Số chỗ ngồi</label>
+	<div class="col-sm-2">
+		<nop-editor asp-for="SO_CHO_NGOI" asp-min-number="0" />
+		<span asp-validation-for="SO_CHO_NGOI"></span>
+	</div>
+	<div class="col-sm-1">
+		<label class="col-form-label ts_oto_so_cau_xe text-required ">Số cầu</label>
+	</div>
+	<div class="col-sm-1 ">
+		<div class="ts_oto_so_cau_xe">
+			<nop-editor asp-for="SO_CAU_XE" asp-min-number="0" asp-max-number="2" />
+			<span asp-validation-for="SO_CAU_XE"></span>
+		</div>
+		
+	</div>
+	<label class="col-form-label col-sm-2  ">Tải trọng</label>
+	<div class="col-sm-4">
+		<nop-editor asp-for="TAI_TRONG" asp-min-number="0" asp-dvt="(tấn)" />
+		<span asp-validation-for="TAI_TRONG"></span>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-form-label col-sm-2">Chức danh sử dụng</label>
+	<div class="col-sm-10">
+		<nop-select asp-for="CHUC_DANH_ID" asp-filter="true" asp-items="Model.dllChucDanh" />
+	</div>
+
+</div>
+<script>
+	$(function () {
+
+		let scn = $('#SO_CHO_NGOI').data('kendoNumericTextBox');
+		let taiTrong_oto = $('#TAI_TRONG').data('kendoNumericTextBox');
+		let lts_oto = $("#LOAI_TAI_SAN_ID_2").data("kendoDropDownList");
+		let chucDanh = $('#CHUC_DANH_ID').data("kendoDropDownList");
+
+		if (chucDanh) {
+			chucDanh.bind('change', () => {
+				let _chucDanhId = {
+					chucDanhId: chucDanh.value()
+				};
+				ajaxPost(_chucDanhId, '/TaiSan/CheckChucDanhOto', false).done(function (res) {
+					if (res.Code == "01") {
+						ShowErrorMessage(res.Message);
+					}
+
+				});
+			})
+
+		}
+
+		DisabledSCN_TAITRONG();
+		scn.bind('change', changeSCN)
+		scn.trigger('change')
+		if (lts_oto) {
+			lts_oto.bind('change', () => {
+				let _data = {
+					LoaiTaiSanId: lts_oto.value()
+				};
+				let _url = '@Url.Action("CheckLoaiOtoId", "LoaiTaiSan")';
+				let ajaxGetLoaiOto = ajaxPost(_data, _url);
+				ajaxGetLoaiOto.done((LoaiOTO) => {
+					debugger
+					if (LoaiOTO == @((int)enumLoaiXe.XeChucDanh)) {
+						if (chucDanh) {
+							chucDanh.enable(true);
+						}
+						if (scn) {
+							scn.enable(true);
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(false);
+							taiTrong_oto.value(0);
+							taiTrong_oto.trigger('change');
+						}
+					}
+					else if (LoaiOTO == @((int)enumLoaiXe.XeTai)) {
+						if (chucDanh) {
+							chucDanh.enable(false);
+							chucDanh.select(0);
+							chucDanh.trigger('change');
+						}
+						if (scn) {
+							scn.enable(false);
+							scn.value(0);
+							scn.trigger('change');
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(true);
+						}
+					}
+					else if (LoaiOTO == @((int)enumLoaiXe.Khac)||LoaiOTO == @((int)enumLoaiXe.TatCa)) {
+						if (scn) {
+							scn.enable(true);
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(true);
+						}
+						if (chucDanh) {
+							chucDanh.enable(false);
+							chucDanh.select(0);
+							chucDanh.trigger('change');
+						}
+					}
+
+					else {
+
+						if (scn) {
+							scn.enable(true);
+						}
+						if (chucDanh) {
+							chucDanh.enable(false);
+							chucDanh.select(0);
+							chucDanh.trigger('change');
+						}
+						if (taiTrong_oto) {
+							taiTrong_oto.enable(false);
+							taiTrong_oto.value(0);
+							taiTrong_oto.trigger('change');
+						}
+					}
+				})
+			})
+			lts_oto.trigger('change');
+		}
+	})
+	function DisabledSCN_TAITRONG() {
+		let scn = $('#SO_CHO_NGOI').val();
+		let taiTrong = $('#TAI_TRONG').val();
+		if (scn && scn > 0) {
+			let kendoTT = $('#TAI_TRONG').data('kendoNumericTextBox');
+			if (kendoTT) {
+				kendoTT.enable(false);
+			}
+		}
+		else if (taiTrong && taiTrong > 0) {
+			let kendoSCN = $('#SO_CHO_NGOI').data('kendoNumericTextBox');
+			if (kendoSCN) {
+				kendoSCN.enable(false);
+			}
+		}
+	}
+	function changeSCN() {
+		var value = this.value();
+		let soCauXe = $('#SO_CAU_XE').data('kendoNumericTextBox');
+		if (value > 0 && value < 9) {
+			if (soCauXe) {
+				soCauXe.enable(true);
+				$(".ts_oto_so_cau_xe").removeClass("d-none");
+			}
+			return
+		}
+		if (value >= 9) {
+			soCauXe.value(null);
+			soCauXe.enable(false);
+			$(".ts_oto_so_cau_xe").addClass("d-none");
+		}
+		if (soCauXe) {
+			soCauXe.value(null);
+			soCauXe.enable(false);
+		}
+
+	}
+</script>

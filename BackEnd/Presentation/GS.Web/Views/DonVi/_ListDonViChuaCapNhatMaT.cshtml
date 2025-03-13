@@ -1,0 +1,177 @@
+﻿@model DonViSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh mục đơn vị";
+}
+
+
+<input asp-for="pageIndex" type="hidden" />
+<input asp-for="donViId" type="hidden" />
+<div class="modal fade" id="ListTaiSanModal" tabindex="-1" role="dialog" aria-labelledby="ListTaiSanModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 class="modal-title" id="ListTaiSanModalIframeLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:0.5625rem !important;">
+                <div id="ListTaiSanModalIframeContent" class="content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchDonVi">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách đơn vị chưa chuyển về mã tài sản công</span>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid-don-vi"></div>
+                    <script>
+                        $(document).ready(function () {
+
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+
+                            $("#btnSearchDonVi").click(function () {
+                                var grid = $('#items-grid-don-vi').data('kendoGrid');
+                                grid.dataSource.page(1);
+                                return false;
+                            });
+
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchDonVi").click();
+                                    return false;
+                                }
+                            });
+
+
+                            $("#items-grid-don-vi").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListDonViChuaCapNhatMaT", "DonVi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                            page: @(Model.Page),
+                            serverPaging: true,
+                                serverFiltering: true,
+                                    serverSorting: true
+                        },
+                            pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.AvailablePageSizes)],
+                        @await Html.PartialAsync("_GridPagerMessages")
+                                                    },
+                        editable: {
+                            confirmation: "@T("Bạn có chắc chắn xóa không ? ")",
+                                mode: "inline"
+                        },
+                        scrollable: false,
+                            columns: [
+                                {
+                                    field: "MA_DVQHNS",
+                                    title: "Mã QHNS",
+                                    width: 300,
+                                },
+                                { field: 'TEN', title: 'Tên đơn vị' },
+                                { field: 'TEN_DON_VI_CHA', title: 'Tên đơn vị cha' },
+                                { field: 'DIA_CHI', title: 'Địa Chỉ' },
+
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: function (item) {
+                                        var btnChuyenMa = `<button class="btn btn-sm btn-outline-secondary" title="Chuyển mã" onclick="appendChuyenMaTaiSan(${item.MA_DVQHNS})" >Chuyển mã</button>`;
+                                        return btnChuyenMa;
+                                    }
+
+
+                                }
+                            ]
+                                                });
+                                            });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function appendChuyenMaTaiSan(MA_DVQHNS) {
+        openModal();
+        var modal = $('#ListTaiSanModal');
+        ShowViewLoading("#ListTaiSanModalIframeLabel");
+        modal.find('.modal-title').text("Chuyển về mã tài sản công");
+        modal.find('.modal-dialog').css({
+            maxWidth: 70 + '%', //probably not needed
+        });
+        var src = `/DonVi/CreateDonViByDVDC?MA_DVQHNS=${MA_DVQHNS}`;
+        $.ajax({
+            type: "GET",
+            url: src,
+            success: function (data) {
+                appendModal(data);
+            },
+        });
+    }
+    function appendModal(view) {
+        $("#ListTaiSanModalIframeContent").html(view);
+    }
+
+    function openModal() {
+        var modal = $('#ListTaiSanModal');
+        modal?.modal('show');
+    }
+    function closeModal() {
+        var modal = $('#ListTaiSanModal');
+        modal?.modal('hide');
+    }
+ </script>

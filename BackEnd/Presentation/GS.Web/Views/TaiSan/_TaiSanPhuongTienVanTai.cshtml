@@ -1,0 +1,221 @@
+﻿@model TaiSanModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="CHE_DO_HACH_TOAN_ID" type="hidden" />
+<input asp-for="taisanOtoModel.IsPhuongTienVanTai" value="false" type="hidden" />
+<input asp-for="strTaiSanNguonVonIds" type="hidden" />
+<input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+<input asp-for="DON_VI_ID" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<div class="card-body">
+
+    <div class="gs-form-group ">
+        <h6>Thông tin chung</h6>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Đơn vị</label>
+            <div class="col-sm-4 d-none">
+                <nop-editor asp-for="DonViMa" asp-disabled="true" />
+            </div>
+            <div class="col-sm-10">
+                <nop-editor asp-for="DonViTen" asp-disabled="true" />
+            </div>
+        </div>
+        @if (Model.isCreateTSDA != null && Model.isCreateTSDA.Value == true)
+        {
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-required">Dự án</label>
+                <div class="col-sm-10">
+                    <div class="d-flex w-100">
+                        <div class="flex-grow-1 w-100">
+                            <app-select asp-for="DU_AN_ID" asp-items="Model.DuAnAvailable" asp-filter="true" />
+                            <span asp-validation-for="DU_AN_ID"></span>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="600" data-title="Thêm mới dự án" data-src="/DuAn/_Create" style="margin:3px 0px 0px 2px;">
+                                <span class="ion ion-md-add"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Tên tài sản</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="TEN" />
+                <span asp-validation-for="TEN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Lý do tăng</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="LY_DO_BIEN_DONG_ID" asp-items="Model.LyDoTangAvailable" asp-filter="true" />
+                <span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+            </div>
+
+            @if (Model.isTangMoi == true)
+            {
+                <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày tăng</label>
+            }
+            else
+            {
+                <label class="col-form-label col-sm-2 text-required lblNgayTang">Ngày kê khai</label>
+            }
+
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_NHAP" />
+                <span asp-validation-for="NGAY_NHAP"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="div_PhuongThucMuaSam">
+            <label class="col-form-label col-sm-2 text-required">Phương thức mua sắm</label>
+            <div class="col-sm-4">
+                <app-select asp-for="PHUONG_THUC_MUA_SAM_ID" asp-items="@Model.DDLPhuongThucMuaSam" />
+                <span asp-validation-for="PHUONG_THUC_MUA_SAM_ID"></span>
+            </div>
+
+            <label class="col-form-label col-sm-2 text-required DonViMuaSam">Đơn vị mua sắm tập trung</label>
+            <div class="col-sm-4 DonViMuaSam">
+                <input id="DonViMuaSamInput" class="form-control" style="width: 100%" value="@Model.TenDonViMuaSamTapTrung" />
+                @Html.HiddenFor(c => c.DON_VI_MUA_SAM_TAP_TRUNG_ID)
+                <span asp-validation-for="DON_VI_MUA_SAM_TAP_TRUNG_ID"></span>
+            </div>
+        </div>
+        <div class="form-group row d-none hinh-thuc-mua-sam-row">
+            <label class="col-form-label col-sm-2" style="margin-top:3px;">Hình thức mua sắm</label>
+            <div class="col-sm-4">
+                <app-select asp-for="HinhThucMuaSamId" asp-items="Model.HinhThucMuaSamAvailable" asp-filter="true" />
+                <span asp-validation-for="HinhThucMuaSamId" class="HinhThucMuaSamId"></span>
+            </div>
+            <label class="col-form-label col-sm-2">Giá mua trên hóa đơn</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_MUA_TIEP_NHAN" id="giaMuaTiepNhan" asp-dvt="c" asp-min-number="0" />
+                <span asp-validation-for="GIA_MUA_TIEP_NHAN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required">Loại phương tiện</label>
+            <div class="col-sm-4">
+                <app-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.LoaiTaiSanAvailable" asp-filter="true" />
+                <span asp-validation-for="LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+            </div>
+            @*<label class="col-form-label col-sm-2">Chức danh sử dụng</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="taisanOtoModel.CHUC_DANH_ID" asp-items="Model.taisanOtoModel.dllChucDanh" />
+            </div>*@
+
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Nước sản xuất</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="NUOC_SAN_XUAT_ID" asp-items="Model.QuocGiaAvailable" asp-filter="true" />
+            </div>
+            <label class="col-form-label col-sm-2">Năm sản xuất</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NAM_SAN_XUAT" />
+                <span asp-validation-for="NAM_SAN_XUAT"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-required lblNgaySuDung">Ngày đưa vào sử dụng</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NGAY_SU_DUNG" /><br />
+                <span asp-validation-for="NGAY_SU_DUNG"></span>
+            </div>
+            <label class="col-form-label col-sm-2">Bộ phận sử dụng</label>
+            <div class="col-sm-4 d-flex ">
+                <div class="flex-sm-grow-1">
+                    <app-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.BoPhanSuDungAvailable" asp-filter="true" />
+                    <span asp-validation-for="DON_VI_BO_PHAN_ID"></span>
+                </div>
+                <div class="">
+                    <button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="400" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin:3px 0px 0px 2px;">
+                        <span class="ion ion-md-add"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        @*<div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Nhãn xe</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="taisanOtoModel.NHAN_XE_ID" asp-items="Model.taisanOtoModel.dllNhanXe" asp-filter="true" />
+            </div>
+            <label class="col-form-label col-sm-2">Dòng xe</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="taisanOtoModel.DONG_XE_ID" asp-items="Model.taisanOtoModel.ddlDongXe" asp-filter="true" />
+            </div>
+        </div>*@
+        <div class="form-group row">
+            @if (Model.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.OTO)
+            {
+                <label class="col-form-label col-sm-2 text-required">Biển kiểm soát</label>
+            }
+            else
+            {
+                <label class="col-form-label col-sm-2">Biển kiểm soát</label>
+            }
+            <div class="col-sm-4 row m-0">
+                <div class="col-sm-3 p-0">
+                    <nop-editor asp-for="taisanOtoModel.Pre_BIEN_KIEM_SOAT" maxlength="4" />
+                </div>
+                <div class="col-sm-1 p-0 text-center">-</div>
+                <div class="col-sm-8 p-0">
+                    <nop-editor asp-for="taisanOtoModel.Suff_BIEN_KIEM_SOAT" maxlength="5" />
+                    <span asp-validation-for="taisanOtoModel.BIEN_KIEM_SOAT"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 ">Tải trọng</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.TAI_TRONG" asp-min-number="0" asp-dvt="tấn" />
+                <span asp-validation-for="taisanOtoModel.TAI_TRONG"></span>
+            </div>
+            <label class="col-form-label col-sm-2 ">Số chỗ ngồi</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.SO_CHO_NGOI" asp-min-number="0" />
+                <span asp-validation-for="taisanOtoModel.SO_CHO_NGOI"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Công suất</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.CONG_XUAT" asp-min-number="0" asp-dvt="mã lực" />
+            </div>
+            <label class="col-form-label col-sm-2">Dung tích xi-lanh</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.DUNG_TICH" asp-min-number="0" asp-dvt="cc" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Số khung</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.SO_KHUNG" />
+                <span asp-validation-for="taisanOtoModel.SO_KHUNG" data-valmsg-for="taisanOtoModel.SO_KHUNG"></span>
+            </div>
+            <label class="col-form-label col-sm-2">Số máy</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="taisanOtoModel.SO_MAY" />
+                <span asp-validation-for="taisanOtoModel.SO_MAY" data-valmsg-for="taisanOtoModel.SO_MAY"></span>
+            </div>
+        </div>
+
+        <div class="form-group row" style="display:none">
+            <label class="col-form-label col-sm-2">Hình thức mua sắm</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="HinhThucMuaSamId" asp-items="Model.HinhThucMuaSamAvailable" asp-filter="true" />
+            </div>
+        </div>
+    </div>
+	@await Html.PartialAsync("_GiaTriTaiSan", Model)
+<div class="gs-form-group ">
+    <h6>Hiện trạng sử dụng</h6>
+    <div class="form-group row ">
+        @foreach (var obj in Model.taisanOtoModel.lstHienTrang)
+        {
+            @await Html.PartialAsync("_HienTrangSuDung", obj)
+        }
+    </div>
+    <span class="field-validation-valid" data-valmsg-for="HIEN_TRANG_SU_DUNG_ALL" data-valmsg-replace="true"></span>
+</div>
+</div>

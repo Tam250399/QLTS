@@ -1,0 +1,173 @@
+﻿@model TaiSanTdSearchModel
+
+<nop-antiforgery-token />
+<div class="form-group row">
+    <div class="col-sm-10 d-flex align-items-center">
+        <div class="tle1">
+            <i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách tài sản nhà đã thêm</span>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="itemsNha-grid"></div>
+                    <script>
+                        kendo.culture("vi-VN");
+                        var record = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = { 
+                                    ListNhaNhapId:listNhaNhapId,
+                                    @*TaiSanDatId: @Model.TaiSanDatId,*@
+                                    TrangThaiId: @Model.TrangThaiId,
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }                            
+                            $("#itemsNha-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "TaiSanTd"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TEN', title: 'Tên tài sản'
+                                    },
+                                    {
+                                        field: 'TEN_LOAI_TAI_SAN', title: 'Loại tài sản',
+                                        headerAttributes: { style: "text-align:center" }
+                                    },
+                                    {
+                                        field: 'GIA_TRI_TINH', title: 'Diện tích',
+                                         format: "{0:n2}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        template:"#=GIA_TRI_TINH + ' (' + DON_VI_TINH#)"
+                                    },
+                                    {
+                                        field: 'GiaTri', title: 'Giá trị',
+                                         format: "{0:n2}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right" }
+                                    },
+                                    {
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" },
+                                        template: kendo.template($("#btn_template_nhatrendat").html())
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-kendo-template" id="btn_template_nhatrendat">
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href='javascript:void(0)' onclick=SuaNhaTrenDat('#:GUID#')>Sửa</a>&nbsp;
+        <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaNhaTrenDat('#:GUID#')>Xóa</a>
+    </div>
+</script>
+<script>
+    function LoadListNhaTrenDat() {
+        record = 0;
+        var grid = $('#itemsNha-grid').data('kendoGrid');
+        grid.dataSource.page(1); //new search. Set page size to 1                               
+    };
+    function SuaNhaTrenDat(GUID) {
+        $.ajax({
+            type: "GET",
+            url: "/TaiSanTd/_NhaTrenDat?Guid="+GUID,
+            success: function (data) {
+                $("#View_addNha").html(data);
+                $("#View_addNha").show();
+            }         
+        })
+    }
+    function XoaNhaTrenDat(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa tài sản này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+                    var data = {
+                        Guid: Guid
+                    }
+                    $.ajax({
+                        type: "Post",
+                        data: data,
+                        url: "/TaiSanTd/Delete",
+						success: function (result) {
+							if (result) {
+                                if (result.Code == '00') {
+                                    ShowSuccessMessage(result.Message)
+                                    LoadListNhaTrenDat();
+                                }
+                                else {
+								    ShowErrorMessage(result.Message)
+							    }
+                            }
+                        }
+                    })
+                }
+                return;
+
+            }
+        })
+    }
+</script>

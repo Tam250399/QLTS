@@ -1,0 +1,76 @@
+﻿@model TaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Xóa tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DeleteTaiSanByDonVi");
+}
+<style>
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        vertical-align: middle;
+    }
+</style>
+<nop-antiforgery-token />
+@*<input asp-for="pageIndex" type="hidden" />*@
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <div class="col-md-10">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Xóa TS của đơn vị</label>
+        <input asp-for="donviId" type="hidden" />
+        <div class="col-sm-8">
+            <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+        </div>
+        <div class="col-sm-2" style="text-align:right">
+            <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?isStayInPage=true">
+                <i class="fab fa-sistrix"></i>
+                Chọn đơn vị
+            </button>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 ">Xóa đơn vị con</label>
+        <div class="col-sm-10 col-form-label">
+            <div class="custom-controls-stacked row" style="margin-left: 0px;">
+                <label class="custom-control custom-checkbox col-sm-2" style="margin-left:7px;">
+                    <input type="checkbox" class="custom-control-input" id="isDeleteChild" />
+                    <span class="custom-control-label"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-2"> <button type="button" class="btn btn-outline-danger" style="width:100%" id="btnDeleteAll">Xóa tài sản</button></div>   
+</div>
+<script>
+    $("#btnDeleteAll").click(function () {
+        $("#btnDeleteAll").prop('disabled', true);
+        var _data = {
+            DON_VI_ID: $('#@Html.IdFor(model => model.donviId)').val(),
+            IS_XOA_CON: $('#isDeleteChild').is(':checked')
+        };
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/TaiSan/Tool_XoaTaiSan",
+            success: function (reuslt) {
+                $("#btnDeleteAll").prop('disabled', false);
+                ShowSuccessMessage(reuslt.Message);
+                //location.href = "/AppWork/Index";
+            }
+        });
+    });
+</script>
+

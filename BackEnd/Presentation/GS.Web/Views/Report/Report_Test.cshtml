@@ -1,0 +1,14 @@
+﻿
+
+    
+    <div class="form-group" style="text-align:center">
+        <button class="btn btn-success" id="btnBaoCao">Báo cáo</button>
+    </div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+	
+	$("#btnBaoCao").click(function () {
+        var data = "";
+		submit_post_via_hidden_form("/Report/Report_Test_", data,'GET');
+	})
+</script>

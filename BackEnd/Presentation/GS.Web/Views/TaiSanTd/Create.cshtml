@@ -1,0 +1,28 @@
+@model TaiSanTdModel
+@{
+    //page title
+    ViewBag.Title = "Tăng mới tài sản được xác lập quyền sở hữu toàn dân";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("TangMoiTSTD");
+}
+
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thêm mới
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/QuyetDinhTichThu/List">Quay lại danh sách</a>
+        </small>
+        <button id="btnSaveTSTD" class="btn btn-outline-primary" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+
+<script>
+	//$("#btnSaveTSTD").click(function () { SaveTSTD("/taisantd/EditByTaiSan", "/taisantd/List") });
+</script>

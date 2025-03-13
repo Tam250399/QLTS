@@ -1,0 +1,182 @@
+﻿@model ThuocTinhModel
+@using GS.Core.Domain.ThuocTinhs
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Mã:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tên:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Loại tài sản:</label>
+    <div class="col-sm-10">
+        <app-select asp-for="ListLoaiTaiSanId" asp-items="Model.ddlLoaiTaiSanId"  asp-multiple="true"/>
+        <span asp-validation-for="ListLoaiTaiSanId"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Loại dữ liệu:</label>
+    <div class="col-sm-9">
+        <nop-select asp-for="LoaiDuLieuId" asp-items="Model.ddlLoaiDuLieu" />
+        <span asp-validation-for="LoaiDuLieuId"></span>
+    </div>
+    <div class="col-sm-1" style="display:none" id="btnAddObj">
+        <a href="javascript:void(0)" onclick="AddViewByObj()">Thêm</a>
+    </div>
+</div>
+<div class="form-group row" style="display:none" id="div_obj">
+    <label class="col-form-label col-sm-2 text-sm-right">Tên nhóm:</label>
+    <div class="col-sm-5">
+        <nop-editor asp-for="TEN" id="TEN_NHOM" />
+        <span asp-validation-for="TEN" id="VAL_TEN_NHOM"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-right">Thứ tự:</label>
+    <div class="col-sm-1">
+        <nop-editor asp-for="SapXep" />
+        <span asp-validation-for="SapXep"></span>
+    </div>
+    <label class="col-form-label col-sm-1 text-sm-right">Bắt buộc:</label>
+    <div class="col-sm-1 col-form-label">
+        <input type="checkbox" value="true" id="Vali_NHOM" />
+        <script>
+            $("#Vali_NHOM").click(function () {
+                if ($("#Vali_NHOM").is(':checked')) {
+                    $(".vali-check").each(function () {
+                        $(this).prop('checked', true)
+                    });
+                }
+                else {
+                    $(".vali-check").each(function () {
+                        $(this).prop('checked', false)
+                    });
+                };
+            })
+        </script>
+    </div>
+</div>
+<div>
+    <div id="DuLieuInfo"></div>
+</div>
+@*<div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Ngày tạo:</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="NGAY_TAO" />
+            <span asp-validation-for="NGAY_TAO"></span>
+        </div>
+    </div>*@
+<script>
+    $(document).ready(function () {
+        $("#LoaiDuLieuId").change(function () {
+            //reset tên
+            $("#TEN_NHOM").val("");
+            var loai = $("#@Html.IdFor(c=>c.LoaiDuLieuId)").val();
+            if (loai == @((int)enumLoaiDuLieuCauHinh.OBJ)|| loai == @((int)enumLoaiDuLieuCauHinh.MS)|| loai == @((int)enumLoaiDuLieuCauHinh.DDL)|| loai == @((int)enumLoaiDuLieuCauHinh.RD)|| loai == @((int)enumLoaiDuLieuCauHinh.CB)) {
+                //hiện tên nhóm dữ liệu theo loại obj
+                $("#div_obj").show();
+            }
+            else {
+                //hiện tên nhóm dữ liệu theo loại obj
+                $("#div_obj").hide();
+            }
+            //xóa hết view
+            $("#DuLieuInfo").empty();
+            $(".viewDuLieu").each(function () {
+                $(this).empty();
+            });
+            LoadViewByLoaiDuLieu();
+        })
+    });
+    function LoadViewByLoaiDuLieu() {
+        var loai = $("#@Html.IdFor(c=>c.LoaiDuLieuId)").val();
+        var IS_viewtong = false;
+        //Nếu là kiểu obj thì load thêm nút
+        if (loai == @((int)enumLoaiDuLieuCauHinh.OBJ)) {
+            $("#btnAddObj").show();
+            IS_viewtong = true;
+        }
+        else {
+            $("#btnAddObj").hide();
+        }
+        if (loai != @((int)enumLoaiDuLieuCauHinh.ALL)) {
+            var _data = {
+                LoaiDuLieuIdParrent: loai,
+                is_viewtong:IS_viewtong
+            }
+            $.ajax({
+                type: "GET",
+                data: _data,
+                url: "/ThuocTinh/_LoaiDuLieu",
+                success: function (data) {
+                    //$("#DuLieuInfo").html(data);
+                    $(data).insertBefore("#DuLieuInfo");
+                }
+            })
+        }
+    };
+    //nếu là dạng obj ta có thể thêm các loại dữ liệu khác
+    function AddViewByObj() {
+        var loai = $("#@Html.IdFor(c=>c.LoaiDuLieuId)").val();
+        var _data = {
+            LoaiDuLieuIdParrent: loai,
+            is_viewtong:true
+        }
+        $.ajax({
+            type: "GET",
+            data:_data,
+            url: "/ThuocTinh/_LoaiDuLieu",
+            success: function (data) {
+                $(data).insertBefore("#DuLieuInfo");
+            }
+        })
+    };
+    //chọn loại dữ liệu nếu trong view con là obj
+    function AddViewDuLieuByObj(ID) {
+        var loai = $("#LoaiDuLieuId_" + ID).val();
+        if (loai == @((int)enumLoaiDuLieuCauHinh.ALL)) {
+            $("#viewDuLieuCon_" + ID).empty();
+        }
+        else {
+            var _data = {
+                LoaiDuLieuIdParrent: loai,
+                guid: ID,
+            }
+            $.ajax({
+                type: "GET",
+                data: _data,
+                url: "/ThuocTinh/_LoaiDuLieu",
+                success: function (data) {
+                    $("#viewDuLieuCon_" + ID).html(data);
+                }
+            })
+        }
+    };
+    //add view dữ liệu con cho lại obj
+    function AddViewDuLieu(ID) {
+        //lấy số thứ tự theo từng nhóm
+        var listSTT = $(".stt_" + ID);
+        //lấy số thứ tự cuối cùng
+        var STT = listSTT[listSTT.length - 1].value;
+        var data = {
+            guid: ID,
+            stt: STT,
+            LoaiDuLieuIdParrent :$("#LoaiDuLieuCon_"+ID).val()
+        };
+        $.ajax({
+            type: "GET",
+            data: data,
+            url: "/ThuocTinh/_LoaiDuLieu",
+            success: function (data) {
+                $(data).insertBefore($("#viewDuLieuCon_" + ID));
+            }
+        });
+    };
+</script>

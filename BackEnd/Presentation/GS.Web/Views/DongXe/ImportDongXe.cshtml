@@ -1,0 +1,62 @@
+﻿@model IMP_DoiTacModel
+@{
+    //page title
+    ViewBag.Title = "Nhập file đối tác";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ImportDoiTac");
+}
+@using GS.Core.Data
+<div class="card">
+    <div class="card-header">
+        Import đối tác
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="ImportDanhMucDongXe" asp-controller="DongXe" enctype="multipart/form-data" id="data">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label w-100">Chọn file Dòng xe <i style="color:red;"> (*.xls, xlxs)</i></label>
+                        <div class="custom-file">
+                            <input name="file" class="custom-file-input" id="file" type="file">
+                            <label class="custom-file-label" for="file">Nhập file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnImport" class="btn btn-success">Import</button>
+            <br />
+        </form>
+    </div>
+</div>
+
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $("#btnImport").click(function (evt) {      
+        evt.preventDefault();
+        var fileupload = $("#file").get(0);
+        var file = fileupload.files;
+        var data = new FormData();
+        data.append("file", file[0]);
+        showThrobber("Đang xử lý dữ liệu, xin vui lòng chờ...");
+        //call ajax
+		$.ajax({
+			type: "post",
+            url: "/DongXe/ImportDongXe",
+			contentType: false,
+			processData: false,
+			data: data,
+		}).done((result) => {
+            console.log(result);
+            hideThrobber();
+        }).fail((jqXHR, textStatus, errorThrow) => {
+			console.log(textStatus + ': ' + errorThrow);
+			alert("there was error uploading files!");
+            hideThrobber();
+        });
+    });
+</script>
+

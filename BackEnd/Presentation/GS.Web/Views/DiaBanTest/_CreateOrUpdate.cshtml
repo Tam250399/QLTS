@@ -1,0 +1,80 @@
+﻿@model DiaBanTestModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Mã: <span style="color: red;">*</span></label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Tên: <span style="color: red;">*</span></label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Mô tả:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MO_TA" />
+        <span asp-validation-for="MO_TA"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Địa bàn cha:</label>
+    <div class="col-sm-10">
+        <input id="searchDiaBanTest" class="form-control" value="" />
+        <input id="pID" asp-for="PARENT_ID" type="hidden" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Quốc gia:</label>
+    <div class="col-sm-10">
+        <nop-select asp-for="QUOC_GIA_ID" asp-items="Model.QuocGiaList" />
+    </div>
+</div>
+
+<script>
+    function getSearchString(s) {
+        let data = $("#searchDiaBanTest").data("kendoComboBox").text();
+        console.log(data);
+        return data;
+    }
+
+    function onDiaBanChaInputChange() {
+        var value = this.value();
+        console.log(value);
+        $("#pID").val(value);
+    }
+
+    $('document').ready(() => {
+        $("#searchDiaBanTest").kendoComboBox({
+            placeholder: "Nhập địa bàn test cha...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/DiaBanTest/SearchDiaBanTestParent",
+                        data: {
+                            parentName: getSearchString
+                        }
+                    },
+                },
+            },
+            change: onDiaBanChaInputChange
+        });
+    })
+
+
+
+</script>
+

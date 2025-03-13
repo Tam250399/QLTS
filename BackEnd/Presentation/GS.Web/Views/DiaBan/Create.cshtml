@@ -1,0 +1,55 @@
+@model DiaBanModel
+@{
+    //page title
+    ViewBag.Title = "Thêm mới địa bàn";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDiaBan");
+}
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <button class="btn btn-outline-primary" style="float:right;margin-right:5px; " id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+<script>
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                var _data = {
+                    MA: $('#@Html.IdFor(c => c.MA)').val(),
+                    TEN: $('#@Html.IdFor(c => c.TEN)').val(),
+                    MO_TA: $('#@Html.IdFor(c => c.MO_TA)').val(),
+                    TRANG_THAI_ID: $('#@Html.IdFor(c => c.TRANG_THAI_ID)').val(),
+                    PARENT_ID: $('#@Html.IdFor(c => c.PARENT_ID)').val(),
+                    LOAI_DIA_BAN_ID: $('#@Html.IdFor(c => c.LOAI_DIA_BAN_ID)').val(),
+                    QUOC_GIA_ID: $('#@Html.IdFor(c => c.QUOC_GIA_ID)').val()
+                };
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/DiaBan/Create",
+                data: _data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        location.href = "/DiaBan/List";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                   ShowErrorMessage(data.Message);
+                     alert('error');
+                }
+            });
+            });
+        });
+</script>
+

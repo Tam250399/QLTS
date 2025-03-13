@@ -1,0 +1,303 @@
+@model ThongTinKetXuatDuLieuModel
+@{
+    //page title
+    ViewBag.Title = "Lịch kết xuất dữ liệu";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("LichKetXuatDuLieu");
+}
+
+<form asp-controller="CauHinh" asp-action="LichKetXuatDuLieu" method="post">
+    <input asp-for="LoaiKetXuat" hidden />
+    <input asp-for="ValueNgay" hidden />
+    <input asp-for="ValueGio" hidden />
+    <input asp-for="ValuePhut" hidden />
+    <div class="card mb-4">
+        <h5 class="card-header">
+            Cập nhật thông tin lịch kết xuất dữ liệu
+            <button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h5>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <div class="custom-controls-stacked">
+                        <div class="row" style="margin: 5px 0px 5px 0px;">
+                            <div class="col-md-3">
+                                <label class="custom-control custom-radio">
+                                    <input name="radio-LichKXDL" type="radio" class="custom-control-input" id="KetXuatThang" value="1">
+                                    <span class="custom-control-label">Hàng tháng</span>
+                                </label>
+                            </div>
+                            <div class="col-md-9 row" id="SelectThang">
+                                <div class="col-md-2">
+                                    <label>vào ngày</label>
+                                </div>
+                                <div class="col-md-1" style="height:30px;">
+                                    <select class="form-control form-control-sm" id="NgayTrongThang" style="min-width:100px; height:30px;">
+                                        @for (int i = 1; i < 32; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin: 5px 0px 5px 0px;">
+                            <div class="col-md-3">
+                                <label class="custom-control custom-radio">
+                                    <input name="radio-LichKXDL" type="radio" id="KetXuatTuan" class="custom-control-input" value="2">
+                                    <span class="custom-control-label">Hàng tuần</span>
+                                </label>
+                            </div>
+                            <div class="col-md-9 row" id="SelectThu">
+                                <div class="col-md-2">
+                                    <label>vào ngày</label>
+                                </div>
+                                <div class="col-md-1" style="height:30px;">
+                                    <select class="form-control form-control-sm" id="ThuTrongTuan" style="min-width:100px; height:30px;">
+                                        @for (int i = 1; i <= 7; i++)
+                                        {
+                                            @if (i == 1)
+                                            {
+                                                <option value="@i">Chủ nhật</option>
+                                            }
+                                            @if (i == 2)
+                                            {
+                                                <option value="@i">Thứ hai</option>
+                                            }
+                                            @if (i == 3)
+                                            {
+                                                <option value="@i">Thứ ba</option>
+                                            }
+                                            @if (i == 4)
+                                            {
+                                                <option value="@i">thứ tư</option>
+                                            }
+                                            @if (i == 5)
+                                            {
+                                                <option value="@i">Thứ năm</option>
+                                            }
+                                            @if (i == 6)
+                                            {
+                                                <option value="@i">Thứ sáu</option>
+                                            }
+                                            @if (i == 7)
+                                            {
+                                                <option value="@i">Thứ bảy</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin: 5px 0px 5px 0px;">
+                            <div class="col-md-3">
+                                <label class="custom-control custom-radio">
+                                    <input name="radio-LichKXDL" type="radio" class="custom-control-input" id="KetXuatNgay"value="3">
+                                    <span class="custom-control-label">Hàng ngày</span>
+                                </label>
+                            </div>
+                            <div class="col-md-9 row" id="SelectGioPhut">
+                                <div class="col-md-2">
+                                    <label>vào lúc</label>
+                                </div>
+                                <div class="col-md-1" style="height:30px;">
+                                    <select class="form-control form-control-sm" id="GioTrongNgay" style="min-width:50px; height:30px;">
+                                        @for (int i = 0; i <= 23; i++)
+                                        {
+                                            @if (i == 0)
+                                            {
+                                                <option value="@i">00</option>
+                                            }
+                                            @if (i == 1)
+                                            {
+                                                <option value="@i">01</option>
+                                            }
+                                            @if (i == 2)
+                                            {
+                                                <option value="@i">02</option>
+                                            }
+                                            @if (i == 3)
+                                            {
+                                                <option value="@i">03</option>
+                                            }
+                                            @if (i == 4)
+                                            {
+                                                <option value="@i">04</option>
+                                            }
+                                            @if (i == 5)
+                                            {
+                                                <option value="@i">05</option>
+                                            }
+                                            @if (i == 6)
+                                            {
+                                                <option value="@i">06</option>
+                                            }
+                                            @if (i == 7)
+                                            {
+                                                <option value="@i">07</option>
+                                            }
+                                            @if (i == 8)
+                                            {
+                                                <option value="@i">08</option>
+                                            }
+                                            @if (i == 9)
+                                            {
+                                                <option value="@i">09</option>
+                                            }
+                                            @if (i >= 10)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-1" style="margin-left:10px;"><label>(giờ)</label></div>
+                                <div class="col-md-1" style="height:30px;">
+                                    <select class="form-control form-control-sm" id="Phut" style="min-width:50px; height:30px;">
+                                        @for (int i = 0; i <= 59; i++)
+                                        {
+                                            @if (i == 0)
+                                            {
+                                                <option value="@i">00</option>
+                                            }
+                                            @if (i == 1)
+                                            {
+                                                <option value="@i">01</option>
+                                            }
+                                            @if (i == 2)
+                                            {
+                                                <option value="@i">02</option>
+                                            }
+                                            @if (i == 3)
+                                            {
+                                                <option value="@i">03</option>
+                                            }
+                                            @if (i == 4)
+                                            {
+                                                <option value="@i">04</option>
+                                            }
+                                            @if (i == 5)
+                                            {
+                                                <option value="@i">05</option>
+                                            }
+                                            @if (i == 6)
+                                            {
+                                                <option value="@i">06</option>
+                                            }
+                                            @if (i == 7)
+                                            {
+                                                <option value="@i">07</option>
+                                            }
+                                            @if (i == 8)
+                                            {
+                                                <option value="@i">08</option>
+                                            }
+                                            @if (i == 9)
+                                            {
+                                                <option value="@i">09</option>
+                                            }
+                                            @if (i >= 10)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2" style="margin-left:10px;"><label>(phút)</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var _val = $("#LoaiKetXuat").val();
+            if (_val > 0) {
+                switch (parseInt(_val)) {
+                    case @(1):
+                        $("#KetXuatThang").prop('checked', true);
+                        $("#SelectThang").show();
+                        $("#NgayTrongThang").val(@Model.ValueNgay);
+                        $("#SelectThu").hide();
+                        $("#SelectGioPhut").hide();
+                        break;
+                    case @(2):
+                        $("#KetXuatTuan").prop('checked', true);
+                        $("#SelectThu").show();
+                        $("#ThuTrongTuan").val(@Model.ValueNgay);
+                        $("#SelectThang").hide();
+                        $("#SelectGioPhut").hide();
+                        break;
+                    case @(3):
+                        $("#KetXuatNgay").prop('checked', true);
+                        $("#SelectGioPhut").show();
+                        $("#GioTrongNgay").val(@Model.ValueGio);
+                        $("#Phut").val(@Model.ValuePhut);
+                        $("#SelectThang").hide();
+                        $("#SelectThu").hide();
+                        break;
+                }
+            } else {
+                $("#SelectThang").hide();
+                $("#SelectThu").hide();
+                $("#SelectGioPhut").hide();
+            }
+            $('input[type="radio"]').on("click", function () {
+                    if ($(this).val() == 1) {
+                    $("#SelectThang").show();
+                        var _ngay = $("#NgayTrongThang").val();
+                    $("#LoaiKetXuat").val($(this).val());
+                    $("#ValueNgay").val(_ngay);
+                    }
+                else {
+                    $("#SelectThang").hide();
+                    }
+                    if ($(this).val() == 2) {
+                    $("#SelectThu").show();
+                        var _ngay = $("#ThuTrongTuan").val();
+                    $("#LoaiKetXuat").val($(this).val());
+                    $("#ValueNgay").val(_ngay);
+                    } else {
+                    $("#SelectThu").hide();
+                    }
+
+                    if ($(this).val() == 3) {
+                    $("#SelectGioPhut").show();
+                        var _gio = $("#GioTrongNgay").val();
+                        var _phut = $("#Phut").val();
+                    $("#LoaiKetXuat").val($(this).val());
+                    $("#ValueGio").val(_gio);
+                    $("#ValuePhut").val(_phut);
+                        console.log(_gio + ", " + _phut);
+                    } else {
+                    $("#SelectGioPhut").hide();
+                    }
+                });
+            })
+        $("#NgayTrongThang").change(function () {
+                var _ngay = $("#NgayTrongThang").val();
+            $("#ValueNgay").val(_ngay);
+            });
+        $("#ThuTrongTuan").change(function () {
+                var _ngay = $("#ThuTrongTuan").val();
+            $("#ValueNgay").val(_ngay);
+            });
+        $("#GioTrongNgay").change(function () {
+                var _gio = $("#GioTrongNgay").val();
+            $("#ValueGio").val(_gio);
+
+            });
+        $("#Phut").change(function () {
+                var _phut = $("#Phut").val();
+            $("#ValuePhut").val(_phut);
+            });
+    </script>
+</form>
+
+

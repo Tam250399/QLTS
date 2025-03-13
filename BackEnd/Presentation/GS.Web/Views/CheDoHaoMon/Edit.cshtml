@@ -1,0 +1,38 @@
+@model CheDoHaoMonModel
+@{
+    //page title
+    ViewBag.Title = "Chế độ hao mòn";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucCheDoHaoMon");
+}
+<form asp-controller="CheDoHaoMon" asp-action="Edit" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Sửa thông tin chế độ hao mòn
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <span id="item-delete" class="btn btn-danger" style="float:right;margin-right: 5px;">
+                <i class="fas fa-trash"></i>
+                Xóa
+            </span>
+            @*<button type="submit" name="save-continue" class="btn btn-primary" style="float:right;margin-right: 5px;">
+                <i class="far fa-save"></i>
+                Lưu và tiếp tục sửa
+            </button>*@
+            <button type="submit" name="save" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+        </div>
+    </div>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />
+
+

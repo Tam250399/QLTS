@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="/css/app/throbber.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container">
+		<header class="page-header">
+			<h1>Processing callback...</h1>
+		</header>
+	</div>
+
+	<div class="throbber">
+		<div class="curtain">
+		</div>
+		<div class="curtain-content">
+			<div>
+				<h1 class="throbber-header">@T("Common.Wait...")</h1>
+				<p>
+					<img src="~/css/admin/images/throbber-synchronizing.gif" alt="" />
+				</p>
+			</div>
+		</div>
+	</div>
+	<script src="/lib/jquery/jquery-3.3.1.min.js"></script>
+	<script src="/js/oidc-client.js"></script>
+	<script src="/lib/signalr/dist/browser/signalr.min.js"></script>
+	<script src="/js/singleSignOnApp.js"></script>
+	<script src="/js/admin.common.js"></script>
+	<script>
+		debugger;
+		var mgr = new Oidc.UserManager({ loadUserInfo: true, filterProtocolClaims: true, response_mode: "query" });
+		mgr.signinRedirectCallback().then(function (user) {
+			debugger;
+			// Tại thời điểm này, user đã đăng nhập thành công trên SSO.
+			// Thông tin đăng nhập đã được lưu vào trong cookie và sessionStorage của trình duyệt.
+			// Ta có thể thực hiện đăng nhập tại Web Client.
+			// Đối với MVC hoặc MVP Web Client, có thể thực hiện login tự động tại đây để hệ thống xử lý tiếp tại backend
+			// Riêng đối với Ja
+			//javascript Web Client thuần tùy tại VD này, chỉ cần redirect trở lại trang index.html
+			window.history.replaceState({},
+				window.document.title,
+				window.location.origin + window.location.pathname);
+			//tạo session trên server
+			showThrobber("Đang xử lý dữ liệu");
+			$.ajax({
+				type: "POST",
+				beforeSend: function (request) {
+					request.setRequestHeader("Authorization", "Bearer " + user.access_token);
+				},
+				data: addAntiForgeryToken(JSON.parse(JSON.stringify(user))),
+				url: '/Home/CallBackSSO',
+				success: function (res) {
+					if (res.Code == "01") {
+						logout();
+					}
+					else {
+						window.location = window.location.origin + "/AppWork/Index";
+					}
+					
+				}
+
+			});
+		});
+
+	</script>
+</body>
+</html>

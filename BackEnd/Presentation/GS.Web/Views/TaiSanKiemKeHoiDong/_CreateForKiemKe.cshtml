@@ -1,0 +1,69 @@
+﻿@model TaiSanKiemKeHoiDongModel
+<div class="gs-form-group mb-4">
+    <input asp-for="KIEM_KE_ID" type="hidden" id="KIEM_KE_ID_HD" />
+    <input asp-for="ID" type="hidden" id="ID_HD" />
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Họ và tên</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="HO_TEN" />
+            <span asp-validation-for="HO_TEN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Chức vụ</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="CHUC_VU" />
+            <span asp-validation-for="CHUC_VU"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đại diện</label>
+        <div class="col-sm-10">
+            <nop-editor asp-for="DAI_DIEN" />
+            <span asp-validation-for="DAI_DIEN"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Vị trí</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="VI_TRI_ID" asp-items="Model.DDLViTriHoiDong" />
+            <span asp-validation-for="VI_TRI_ID"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+            <a class="btn btn-success pull-right" id="btnSaveHDKK" href="javascript:void(0)">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </a>
+        </div>
+    </div>
+    <script>
+                $("#btnSaveHDKK").click(function () {
+                    var _data = {
+                        HO_TEN: $("#HO_TEN").val(),
+                        CHUC_VU: $("#CHUC_VU").val(),
+                        DAI_DIEN: $("#DAI_DIEN").val(),
+                        VI_TRI_ID: $("#VI_TRI_ID").val(),
+                        KIEM_KE_ID: $("#KIEM_KE_ID_HD").val(),
+                        ID: $("#ID_HD").val(),
+                    }
+                    $.ajax({
+                        type: "POST",
+                        data: _data,
+                        url: "/TaiSanKiemKeHoiDong/_CreateForKiemKe",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                HideModalManual();
+                                ShowSuccessMessage(data.Message);
+                                $("#btnSearchKK").click();
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        }
+                    })
+                })
+    </script>
+</div>

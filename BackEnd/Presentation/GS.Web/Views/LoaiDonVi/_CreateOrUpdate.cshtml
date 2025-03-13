@@ -1,0 +1,58 @@
+﻿@model LoaiDonViModel
+
+<input asp-for="ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Mã:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right text-required">Tên:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Chế độ hoạch toán:</label>
+    <div class="col-sm-10">
+        <nop-select asp-items="Model.dllCheDoHachToan" asp-for="CHE_DO_HOACH_TOAN_ID" />
+        <span asp-validation-for="CHE_DO_HOACH_TOAN_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Loại hình đơn vị cha:</label>
+    <div class="col-sm-10" name="type">
+        <nop-select asp-items="Model.dllTreeLaiHinhDonVi" asp-for="PARENT_ID" />
+        <span asp-validation-for="PARENT_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-right">Sắp xếp:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="SAP_XEP" />
+        <span asp-validation-for="SAP_XEP"></span>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#PARENT_ID").change(function () {
+            var _parentID = $('#PARENT_ID').val();
+            $.ajax({
+                url: '/LoaiDonVi/GetMaByParentID',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    parentID: _parentID,
+                },
+                success: function (getma) {
+                    $("#MA").val(getma.MA);
+                }
+
+            })
+        })
+    });
+</script>

@@ -1,0 +1,31 @@
+﻿@model VaiTroModel
+
+@{
+    //page title
+    ViewBag.Title = "Vai trò";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NguoiDungVaiTro");
+}
+
+<form asp-controller="VaiTro" asp-action="Create" method="post" id="VaiTroForm">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm nhóm người dùng
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu và tiếp tục sửa
+            </button>*@
+            <button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px; " id="btnAddVaiTro">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>

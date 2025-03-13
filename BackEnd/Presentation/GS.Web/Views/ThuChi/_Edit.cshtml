@@ -1,0 +1,92 @@
+﻿@model ThuChiModel
+@{
+    //page title
+    ViewBag.Title = "Sửa thu chi";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ThuChiTSTD");
+}
+@*<form asp-controller="ThuChi" asp-action="Edit" method="post">
+    </form>*@
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa thông tin Quản lý thu, chi
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        <span onclick="XoaThuChi(@Model.ID)" class="btn btn-sm btn-outline-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>
+        <button id="btnSave" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+<nop-delete-confirmation asp-model-id="@Model.ID" asp-button-id="item-delete" />
+<script>
+    $("#btnSave").click(function () {
+        var _data = {
+            ID: $("#@Html.IdFor(c=>c.ID)").val(),
+            XU_LY_ID: $("#@Html.IdFor(c=>c.XU_LY_ID)").val(),
+            SO_TIEN_PHAI_THU: $("#@Html.IdFor(c=>c.SO_TIEN_PHAI_THU)").val(),
+            SO_TIEN_CON_PHAI_THU: $("#@Html.IdFor(c=>c.SO_TIEN_CON_PHAI_THU)").val(),
+            SO_TIEN_THU: $("#@Html.IdFor(c=>c.SO_TIEN_THU)").val(),
+            NGAY_THU: $("#@Html.IdFor(c=>c.NGAY_THU)").val(),
+            CHI_PHI: $("#@Html.IdFor(c=>c.CHI_PHI)").val(),
+            TG_NGAY_NOP: $("#@Html.IdFor(c=>c.TG_NGAY_NOP)").val(),
+            TG_SO_TIEN: $("#@Html.IdFor(c=>c.TG_SO_TIEN)").val(),
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/ThuChi/_Edit",
+            success: function (data) {
+                if (CheckValidMessageReturn(data)) {
+                    ShowSuccessMessage(data.Message);
+                    location.href = "/ThuChi/List";
+                }
+                else {
+                    ShowErrorMessage(data.Message);
+                }
+            }
+        })
+    })
+    function XoaThuChi(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa thu chi?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ThuChi/Delete?id=" + ID,
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                location.href = "/ThuChi/List";
+                            }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        });
+    }
+</script>
+
+
+

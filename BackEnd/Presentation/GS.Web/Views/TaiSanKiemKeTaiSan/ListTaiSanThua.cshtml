@@ -1,0 +1,116 @@
+﻿@model TaiSanKiemKeTaiSanSearchModel
+
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearchTSThua" />
+            <input asp-for="KiemKeId" type="hidden" />
+            <input asp-for="isTaiSanThua" type="hidden" id="isTaiSanThua_tsThua"/>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchTSThua">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="listTaiSanThua-grid"></div>
+                    <script>
+                        var recordTSPHT = 0;
+                        $(document).ready(function () {
+                            
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearchTSThua)').val(),
+                                    KiemKeId: $("#KiemKeId").val(),
+                                    isTaiSanThua: $("#isTaiSanThua_tsThua").val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchTSThua").click(function () {
+                                recordTSPHT = 0;
+                                var grid = $('#listTaiSanThua-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchTSThua").click();
+                                    return false;
+                                }
+                            });
+                            $("#listTaiSanThua-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListTaiSanThua", "TaiSanKiemKeTaiSan"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                 dataBinding: function() {
+                                      recordTSPHT = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                      title: "STT",
+                                      template: "#= ++recordTSPHT #",
+                                      width: 50,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                    },
+                                    { field: 'TEN_TAI_SAN_THUA', title: 'Tên tài sản'},
+                                    { field: 'SoLuongText',attributes: { style: "text-align:right" }, title: 'Số lượng'},
+                                    { field: 'NguyenGiaText',attributes: { style: "text-align:right" }, title: 'Nguyên giá'},
+                                    { field: 'GiaTriConLaiText',attributes: { style: "text-align:right" }, title: 'Giá trị còn lại'},
+                                    { field: 'TinhTrangText', title: 'Tình trạng'},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class= "btn icon-btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="\\#globalModalIframe" data-title="Sửa tài sản phát hiện thừa" data-src="/TaiSanKiemKeTaiSan/Edit?Id=#=ID#&isTaiSanThua=true">Sửa</a>&nbsp<a class="btn icon-btn btn-sm btn-outline-danger" onclick="DeleteTaiSanThua(#=ID#)">Xóa</a>'}
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

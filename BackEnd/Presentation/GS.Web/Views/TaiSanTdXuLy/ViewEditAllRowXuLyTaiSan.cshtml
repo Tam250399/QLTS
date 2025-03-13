@@ -1,0 +1,329 @@
+﻿@model TaiSanTdXuLyModel
+@using GS.Core.Domain.ThuocTinhs
+<input asp-for="GUID" type="hidden" />
+<input asp-for="ThuocTinh" type="hidden" />
+<input asp-for="XuLyGuid" type="hidden" />
+<input asp-for="SoLuongCon" type="hidden" />
+<input asp-for="is_vali" type="hidden" />
+<input asp-for="ChiPhiCu" type="hidden" />
+<input asp-for="NgayTichThu" type="hidden"/>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Tài sản:</label>
+    <div class="col-sm-8">
+        <nop-select asp-for="ListTaiSanId" asp-items="Model.DDLTaiSanTD" asp-filter="true" asp-multiple="true" />
+        <span asp-validation-for="@Model.ListTaiSanId"></span>     
+    </div>
+    <div class="col-sm-1">
+        <a class="btn btn-sm btn-primary" id="selectAll" href="javascript:void(0)">           
+            Chọn tất cả
+        </a>
+        <script>
+            $("#selectAll").click(function () {
+                var list = @Html.Raw(Model.DDLTaiSanTD.Select(c => c.Value).toStringJson());
+                var required = $("#ListTaiSanId").data("kendoMultiSelect").value(list);              
+            });
+        </script>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Phương án xử lý:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="HINH_THUC_XU_LY_ID" asp-items="Model.DDLPhuongAnXuLy" asp-filter="true" />
+        <span asp-validation-for="@Model.HINH_THUC_XU_LY_ID"></span>
+    </div>
+    <label class="col-form-label col-sm-2 text-sm-left text-required">Hình thức xử lý:</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="PHUONG_AN_XU_LY_ID" asp-items="Model.DDLPhuongThucXuLy" asp-filter="true" />
+        <span asp-validation-for="@Model.PHUONG_AN_XU_LY_ID"></span>
+    </div>
+</div>
+<div id="ViewThuocTinh"></div>
+<div class="form-group row">
+    @*<label class="col-form-label col-sm-2 text-sm-left text-required">Chi phí xử lý:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="CHI_PHI_XU_LY" asp-amount="true" asp-min-number="0" />
+        <span asp-validation-for="CHI_PHI_XU_LY"></span>
+    </div>*@
+</div>
+<div class="form-group row">
+    @*<label class="col-form-label col-sm-2 text-sm-left">Hồ sơ giấy tờ:</label>
+    <div class="col-sm-10">
+        <nop-textarea asp-for="HO_SO_GIAY_TO_KHAC" />
+        <span asp-validation-for="HO_SO_GIAY_TO_KHAC"></span>
+    </div>*@
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 text-sm-left">Ghi chú:</label>
+    <div class="col-sm-10">
+        <nop-editor asp-for="GHI_CHU" id="GHI_CHU_XU_LY" />
+        <span asp-validation-for="GHI_CHU"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-10"></div>
+    <div class="col-sm-2">
+        <a id="btnSaveViewXuLy" onclick="SaveThuocTinhAllTaiSanXuLy()" href="javascript:void(0)" class="btn btn-success" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </a>
+    </div>
+</div>
+<script>
+     var is_slc = false;
+    $("#HINH_THUC_XU_LY_ID").change(function () {
+                GetDDLPhuongAnByHinhThuc();
+                GetThuocTinhHinhThuc(true);
+    });
+    function GetDDLPhuongAnByHinhThuc() {
+        var _data = {
+            HinhThucId: $("#HINH_THUC_XU_LY_ID").val()
+        }
+        $.ajax({
+            type: "GET",
+            data: _data,
+            url: "/HinhThucXuLy/GetDDLPhuongAnByHinhThuc",
+            success: function (data) {
+                var ddl = $("#PHUONG_AN_XU_LY_ID").data("kendoDropDownList");
+                ddl.setDataSource(data);
+                if (data != null && data.length == 2) {
+                    ddl.select(1);
+                }
+                else {
+                    ddl.select(0);
+                }
+
+            }
+        })
+    }
+    function GetThuocTinhHinhThuc(ischange) {
+        ShowViewLoading("#ViewThuocTinh");
+        var _data = {
+            PhuongAnXuLyId: $("#HINH_THUC_XU_LY_ID").val(),
+            TaiSanTdId: $("#TAI_SAN_ID").val(),
+            TaiSanXuLyGuid: $("#GUID").val(),
+            ThuocTinh: $("#ThuocTinh").val(),
+            is_change:true
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/TaiSanTdXuLy/ViewThuocTinhByTaiSanTDXuLy",
+            success: function (data) {
+                $("#ViewThuocTinh").html(data);
+            }
+        })
+        }
+    function CheckVali() {
+        var check = true;
+        $(".tsxl-vali").each(function () {
+            var id = $(this).attr("data-id");
+            var val = $("#" + id).val();
+            if (val == null || val == 0 || val == "") {
+                check = false;
+                $("#Vali_" + id).show();
+                $("#Vali_" + id).css({ "color": "#dc3545" });
+                $("#Vali_" + id).text("Trường không được để trống");
+            }
+            else {
+                $("#Vali_" + id).hide();
+            }
+
+        })
+        $(".vali-tt").each(function () {
+            var guid = $(this).attr("data-id");
+            var loai = $("#Loai_" + guid).val();
+            var id = "VL_" + guid;
+            if (loai == @((int)enumLoaiDuLieuCauHinh.CB) || loai ==@((int)enumLoaiDuLieuCauHinh.RD)) {
+                if ($('input[name=' + id + ']:checked').length == 0) {
+                    check = false;
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+            else if (loai == @((int)enumLoaiDuLieuCauHinh.ST)) {
+                var value = $("#VL_" + guid).val();
+                if (value.trim() == "" || value == null) {
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                    check = false;
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+            else if (loai == @((int)enumLoaiDuLieuCauHinh.DT)) {
+                var value = $("#VL_" + guid).val();
+                if (value.trim() == "" || value == null) {
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                    check = false;
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+            else {
+                var value = $("#VL_" + guid).val();
+                if (value == 0 || value == null || value.length == 0) {
+                    $("#Vali_" + guid).text("Trường không được để trống");
+                    $("#Vali_" + guid).show();
+                    check = false;
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+        });
+        $(".vali-date").each(function () {
+            var guid = $(this).attr("data-id");
+            var loai = $("#Loai_" + guid).val();
+            var field = $("#Ngay_" + guid).attr("data-field");
+            if (loai == @((int)enumLoaiDuLieuCauHinh.DT)) {
+                var value = $("#VL_" + guid).val();
+                if (value != null) {
+                    if (!checkValidateDateFormat("#VL_" + guid, "", "")) {
+                        $("#Vali_" + guid).text("Nhập sai định dạng ngày");
+                        $("#Vali_" + guid).show();
+                        check = false;
+                    }
+                    else if (!checkValidateFromDateToDate("#quyetdinh_QUYET_DINH_NGAY", "#VL_" + guid, "", "")) {
+                        $("#Vali_" + guid).text("Ngày phải lớn hơn ngày tịch thu");
+                        $("#Vali_" + guid).show();
+                        check = false;
+                    }
+                    else if (!checkValidateDateWithDateNow("#VL_" + guid, "", "")) {
+                        $("#Vali_" + guid).text("Không được lớn hơn ngày hiện tại");
+                        $("#Vali_" + guid).show();
+                        check = false;
+                    }
+                    else if (!checkValidateFromDateToDate("#QUYET_DINH_NGAY", "#VL_" + guid, "", "")) {
+                        $("#Vali_" + guid).text("Ngày phải lớn hơn ngày quyết định xử lý");
+                        $("#Vali_" + guid).show();
+                        check = false;
+                    }
+                    else {
+                        $("#Vali_" + guid).hide();
+                    }
+                }
+                else {
+                    $("#Vali_" + guid).hide();
+                }
+            }
+        });
+        return check;
+    };
+    function SaveThuocTinhAllTaiSanXuLy() {
+        var check = CheckVali();
+        if (check) {
+            var data = [];
+            $(".LoadObject").each(function () {
+                var guid = this.id;
+                var id = "VL_" + guid;
+                var loai = $("#Loai_" + guid).val();
+                var value = "";
+                if (loai ==@((int)enumLoaiDuLieuCauHinh.CB)) {
+                    $('input[name=' + id + ']:checked').each(function () {
+                        value = value + $(this).val() + ",";
+                    });
+                }
+                else if (loai == @((int)enumLoaiDuLieuCauHinh.RD)) {
+                    $('input[name=' + id + ']:checked').each(function () {
+                        value = $(this).val();
+                    });
+                }
+                else {
+                    value = $("#" + id).val() + "";
+                }
+                var model = {
+                    GUID: guid,
+                    GuidParrent: $(this).val(),
+                    FIELD: $("#Field_" + guid).attr("data-field"),
+                    VALUE: value,
+                    LoaiDuLieuId: loai,
+                    IS_VALIDATE: $("#Vali_" + guid).attr("data-value"),
+                    NAME: $("#NAME_" + guid).text()
+                };
+                data.push(model);
+            });
+            //lấy số lượng của các tài sản đã chọn
+             var listSL = [];
+            $(".row-guid").each(function () {
+                var ID = $(this).val();
+                var SL = {
+                    TAI_SAN_ID: $("#TAI_SAN_ID_" + ID).val(),
+                    SO_LUONG: $("#SO_LUONG_" + ID).val()
+                };
+                listSL.push(SL);
+            })
+            var _data = {
+                @*CHI_PHI_XU_LY: $("#@Html.IdFor(c=>c.CHI_PHI_XU_LY)").val(),
+                ListTaiSanId: $("#@Html.IdFor(c=>c.ListTaiSanId)").val(),
+                HINH_THUC_XU_LY_ID: $("#@Html.IdFor(c=>c.HINH_THUC_XU_LY_ID)").val(),
+                PHUONG_AN_XU_LY_ID: $("#@Html.IdFor(c=>c.PHUONG_AN_XU_LY_ID)").val(),
+                SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+                NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)").val(),
+                GIA_TRI: $("#@Html.IdFor(c=>c.GIA_TRI)").val(),
+                GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+                HO_SO_GIAY_TO_KHAC: $("#@Html.IdFor(c=>c.HO_SO_GIAY_TO_KHAC)").val(),*@
+                GHI_CHU: $("#GHI_CHU_XU_LY").val(),
+                GIA_TRI_GHI_TANG: $("input[data-field='GIA_TRI_GHI_TANG']").val(),
+                GIA_TRI_NSNN: $("input[data-field='GIA_TRI_NSNN']").val(),
+                GIA_TRI_TKTG: $("input[data-field='GIA_TRI_TKTG']").val(),
+                HOP_DONG_SO: $("input[data-field='HOP_DONG_SO']").val(),
+                HOP_DONG_NGAY: $("input[data-field='HOP_DONG_NGAY']").val(),
+                NGAY_XU_LY: $("input[data-field='NGAY_XU_LY']").val(),
+                DON_VI_CHUYEN_ID: $("input[data-field='DON_VI_CHUYEN_ID']").val(),
+                SO_TIEN_THU: $("input[data-field='SO_TIEN_THU']").val(),
+                XuLyGuid: $("#@Html.IdFor(c=>c.XuLyGuid)").val(),
+                ChiPhiTong: $("#CHI_PHI").val(),
+                is_vali: true,
+                isThemNhieuTaiSan: true,
+                SoLuongCon: $("#@Html.IdFor(c=>c.SoLuongCon)").val(),
+                ChiPhiCu: $("#@Html.IdFor(c=>c.ChiPhiCu)").val(),
+                LoaiXuLy: $("#@Html.IdFor(c=>c.LoaiXuLy)").val(),
+                ListSL: listSL,
+                listTT: data
+            }
+            $.ajax({
+                type: "POST",
+                data: _data,
+                url: "/XuLy/_XuLyRowTaiSan",
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        AddAllRowTaiSanTDXuLy(data.ObjectInfo);
+                        $("#CHI_PHI").data("kendoNumericTextBox").value(data.ObjectInfo.ChiPhiTong);
+                        HideModal();
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(ajaxOptions + ": " + thrownError);
+                }
+            })
+        }
+    }
+    function AddAllRowTaiSanTDXuLy(data) {
+        var _data = {
+            model: data
+        }
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "/XuLy/_RowTaiSanXuLy",
+            success: function (data) {
+                $(data).insertAfter("#row_taiSan");                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(ajaxOptions + ": " + thrownError);
+            }
+        })
+    }
+</script>
+
+

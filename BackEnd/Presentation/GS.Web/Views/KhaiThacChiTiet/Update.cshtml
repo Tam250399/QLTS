@@ -1,0 +1,51 @@
+﻿@{
+	Layout = null;
+}
+@model KhaiThacChiTietModel
+
+<div class=" card-header row" style="border-bottom:none; padding:5px">
+	<div class="col-8"> </div>
+	<div class="col-4">
+		<button name="cancel" data-dismiss="modal" class="btn btn-sm btn-secondary" style="float:right; margin-right: 5px;">
+			Đóng
+		</button>
+		<button type="button" class="btn btn-sm btn-outline-primary btnEdit" style="float:right;margin-right:5px;">
+			<i class="fas fa-save"></i>
+			Lưu
+		</button>
+	</div>
+</div>
+<div class="card-body">
+	@await Html.PartialAsync("_CreateOrUpdate", Model)
+</div>
+<button name="cancel" data-dismiss="modal" class="btn btn-sm btn-secondary" style="float:right; margin-right: 5px;">
+	Đóng
+</button>
+<button type="button" class="btn btn-sm btn-outline-primary btnEdit" style="float:right;margin-right:5px;">
+	<i class="fas fa-save"></i>
+	Lưu
+</button>
+<script>
+	$(function () {
+		$('.btnEdit').on('click', () => {
+			let _data = {
+				ID: $('#KHAI_THAC_CHI_TIET_ID').val(),
+				NGAY_KHAI_THAC: $('#NGAY_KHAI_THAC').val(),
+				SO_TIEN_THU_DUOC: $('#SO_TIEN_THU_DUOC').val(),
+				GHI_CHU: $('#GHI_CHU').val(),
+				KHAI_THAC_ID: $('#KHAI_THAC_ID').val(),
+			}
+			ajaxPost(_data, '@Url.Action("Update","KhaiThacChiTiet")', false).done((result) => {
+				if (CheckValidMessageReturn(result)) {
+					if (result.Code == '00') {
+						ShowSuccessMessage(result.Message);
+						var grid = $('#grid-ktct').data('kendoGrid');
+						record_khai_thac_chi_tiet = 0;
+						grid.dataSource.page(1); //new search. Set page size to 1
+						HideModalManual();
+					}
+				}
+			})
+		})
+	})
+</script>

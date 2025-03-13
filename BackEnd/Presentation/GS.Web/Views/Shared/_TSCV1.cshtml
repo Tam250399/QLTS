@@ -1,0 +1,464 @@
+﻿@using GS.Services.DanhMuc;
+@using GS.Core
+@using GS.Web.Framework.Menu
+@using Nop.Web.Framework.Menu
+
+@inject IWorkContext workContext
+@inject IDonViService DonViService
+@inject IQueueProcessService queueProcessService
+@inject GS.Services.TaiSans.ITaiSanService taiSanService
+@inject IXmlSiteMap siteMap
+@{
+
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    adminPageTitle += "Quản lý đăng ký tài sản";
+
+
+    var _customer = workContext.CurrentCustomer;
+    var _donvi = workContext.CurrentDonVi;
+    if (_donvi == null || (_donvi != null && _donvi.ID == 0))
+    {
+        _donvi = DonViService.GetProfileUser(guidNguoiDung: _customer.GUID);
+    }
+
+    //load sitemap
+    await siteMap.LoadFromAsync("~/sitemap.config");
+    var rootNode = siteMap.RootNode;
+    //load sitemap theo menu chinh
+    SiteMapNode mainNode = rootNode.GetNodeRootMenu(Html.GetActiveMenuItemSystemName());
+    var _queueProcess = queueProcessService.GetQueueTheoNguoiDung(_customer.GUID);
+    var isHasCanhBao = await taiSanService.IsHasCanhBao(_donvi.ID);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@adminPageTitle</title>
+    <link rel="stylesheet" href="/lib/kendo/css/kendo.default-v2.min.css"><!-- asp-append-version="true">-->
+    <!-- Bootstrap anpx-->
+    <link href="/Themes/TSCV1/Content/css/bootstrap-4.0.0.css" rel="stylesheet"><!-- asp-append-version="true">-->
+    <link href="/Themes/TSCV1/Content/css/style.css" rel="stylesheet" type="text/css"><!-- asp-append-version="true">-->
+
+    @*<link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&subset=latin,vietnamese" rel="stylesheet" type="text/css">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="" crossorigin="anonymous">*@
+    <link href="~/lib/robotofont/fonts.googleapis.css?v=2" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/fontawesome.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/ionicons.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/linearicons.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/open-iconic.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/fonts/pe-icon-7-stroke.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/appwork.css?v=1" class="theme-settings-appwork-css"><!-- asp-append-version="true">-->
+    @*<link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/theme-corporate.css" class="theme-settings-theme-css">*@
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/colors.css" class="theme-settings-colors-css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/css/rtl/uikit.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/spinkit/spinkit.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.css"><!-- asp-append-version="true">-->
+    <link rel="stylesheet" href="/Themes/AppWork/Content/assets/vendor/libs/smartwizard/smartwizard.css"><!-- asp-append-version="true">-->
+
+    <link rel="stylesheet" href="/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css"><!-- asp-append-version="true">-->
+
+    <link rel="stylesheet" href="/lib/kendo/custom/kendo.custom.css"><!-- asp-append-version="true">-->
+
+
+    <!-- Core scripts -->
+    @*<script src="/Themes/AppWork/Content/assets/vendor/js/pace.js"></script>*@
+    <script src="/lib/jquery/jquery-3.3.1.min.js" ></script><!--asp-append-version="true"></script>-->
+    @*SSO lib*@
+    @*<script src="~/js/oidc-client.js" ></script>*@<!--asp-append-version="true"></script>-->
+    <script src="/lib/signalr/dist/browser/signalr.min.js" ></script><!--asp-append-version="true"></script>-->
+    @*<script src="/js/singleSignOnApp.js" ></script>*@<!--asp-append-version="true"></script>-->
+
+    <script src="/js/admin.common.js" ></script><!--asp-append-version="true"></script>-->
+    @*<script src="/lib/kendo/2019.1.115/kendo.web.min.js"></script>*@
+    <script src="/lib/kendo/2019.1.115/kendo.all.min.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/lib/kendo/2019.1.115/cultures/kendo.culture.vi-VN.min.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js" ></script><!--asp-append-version="true"></script>-->
+    <!--Them cac phan cua notification-->
+    @*<script src="/lib/signalr/dist/browser/signalr.js"></script>
+        <script src="/Themes/AppWork/Content/assets/chathub/app.js?v9"></script>*@
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/vanilla-text-mask/vanilla-text-mask.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/vanilla-text-mask/text-mask-addons.js" ></script><!--asp-append-version="true"></script>-->
+    <link href="/css/app/styles.css?v=2" rel="stylesheet" class="gs-settings-custom-css"><!-- asp-append-version="true">-->
+
+    <!-- amchart4 -->
+    <script src="~/lib/amcharts4/core.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/charts.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/animated.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/spiritedaway.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/dataviz.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/dark.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/material.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="~/lib/amcharts4/themes/kelly.js" ></script><!--asp-append-version="true"></script>-->
+
+    <!--Google Analytics-->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+ @*   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MB2X6V6H97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-MB2X6V6H97');
+    </script>*@
+    <!--Google Analytics-->
+
+</head>
+
+<body class="bg-xam">
+    <!-- body code goes here -->
+    <header class="container-fluid d-none d-md-block" style="background-color: #f8f9fa !important;">
+
+        <div class="row pa-TB10">
+            <div class="col-md-6">
+                <a class="logo" href="/AppWork/Index"><img src="/Themes/TSCV1/Content/images/logo.png" height="60" alt=""></a>
+                <div class="slogan">
+                    <h5>BỘ TÀI CHÍNH</h5>
+                    <h4>PHẦN MỀM QUẢN LÝ TÀI SẢN CÔNG</h4>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+
+                <ul class="nav justify-content-end mt-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ion ion-md-notifications-outline navbar-icon align-middle">
+                                @{
+                                    var cauHinhCanhBaoTaiSans = await taiSanService.CountTaiSanCanhBao(_donvi.ID);
+                                }
+                                @if ((_queueProcess != null && _queueProcess.TRANG_THAI_ID == (int)GS.Core.Domain.BaoCaos.enumTRANG_THAI_QUEUE_BAO_CAO.DA_EXPORT_FILE) || isHasCanhBao)
+                                {
+                                    <span class="badge badge-dot badge-danger indicator"></span>
+                                }
+                            </i>
+                        </a>
+                        <div class="dropdown-menu" style="width:500px;" aria-labelledby="navbarDropdown1">
+                            @if (_queueProcess != null && _queueProcess.TRANG_THAI_ID == (int)GS.Core.Domain.BaoCaos.enumTRANG_THAI_QUEUE_BAO_CAO.DA_EXPORT_FILE)
+                            {
+                                <a class="dropdown-item" target="_blank" href="/QueueProcess/Download?guid=@_queueProcess.GUID">Xuất file thành công</a>
+                            }
+                            @{
+
+                                if (cauHinhCanhBaoTaiSans != null && cauHinhCanhBaoTaiSans.Count > 0)
+                                {
+                                    foreach (var item in cauHinhCanhBaoTaiSans)
+                                    {
+                                        if (item.CountAlert == 0)
+                                        {
+                                            continue;
+                                        }
+                                        <a class="dropdown-item" href="@item.ActionUrl">@T(item.DisplayName) @(item.IsHideCount?"": $"({@item.CountAlert})")</a>
+                                    }
+                                }
+                            }
+
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-user mr-2"></i>@_customer.TEN_DAY_DU </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                            <a class="dropdown-item" href="/NguoiDung/Detail?guid=@_customer.GUID">Thông tin</a>
+                            <button onclick='OpenModalManual("Đặt lại mật khẩu","/NguoiDung/_ChangeMatKhauByKhoCSDL?IDNguoiDung=@workContext.CurrentCustomer.ID",50)' class="dropdown-item">Đổi mật khẩu</button>
+                            <a class="dropdown-item" href="/QueueProcess/List">Lấy dữ liệu báo cáo</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị chủ trì xử lý tài sản (Chọn đơn vị làm việc)" data-src="/DonVi/_ChonDonVi2?NguoiDungId=@_customer.ID" class="dropdown-item">
+                                Chọn đơn vị
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-book mr-2"></i>Tài liệu HD</a>
+                        <div class="dropdown-menu dropdown-menu-right"  style="width:400px">
+                            @*<a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=df8f0ecf-a996-4cfc-8758-6119edad709e">1. Phần mềm TSC - TL hướng dẫn cho QTHT</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=760f6f5e-b3d0-4735-a2da-6e45c99bfc04">2. Phần mềm TSC - TL hướng dẫn cho NSD</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=0107d5f5-d217-4e33-a4a5-0945e1d6b2d7">3. Kho CSDLQGTSC - TL hướng dẫn cho QTHT</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=c9a65834-042e-412b-8966-e951d759b82b">4. Kho CSDLQGTSC - TL hướng dẫn cho NSD</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=907fab73-6280-4adb-859b-f0c879432091">5. Hướng dẫn truy cập vào phòng họp Zoom</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=dd3c9133-8e87-449c-90d0-8d27057cc7f8">6. Nội dung đào tạo</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=dab497f6-24fc-4912-8b6f-4a6f543f94a3">7. Hướng dẫn đối chiếu, xác nhận dữ liệu chuyển đổi</a>
+                            <a class="dropdown-item" href="/FileCongViec/DownloadFile?downloadGuid=a1f50ac8-f232-4d6b-a4e2-1531f570c726">8. Mẫu phiếu xác nhận dữ liệu chuyển đổi</a>*@
+                            <div id="divTLHD"></div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/Home/VideoHuongDan">- Video hướng dẫn</a>
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/Home/GetTLHD",
+                                    success: function (data) {
+                                        $.each(JSON.parse(data), function (index, value) {
+                                            $('#divTLHD').append('<a class="dropdown-item" href="/FileCongViec/DownloadFileInDb?downloadGuid=' + value.GUID + '">' + value.SAP_XEP+'. '+value.TEN+'</a>');
+                                        });
+                                    },
+                                    error: function (result) {
+                                        //alert("error!");
+                                    }
+                                });
+                            });
+                        </script>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" onclick="LogOutNguoiDung()" href="javascript:void(0)"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </header><!--end header-->
+    <div class="bg-primary">
+        <div class="">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand d-lg-none" href="#"><img src="/Themes/TSCV1/Content/images/logo_mobile.png" height="40" alt=""></a><span class="text-mobli d-lg-none">PHẦN MỀM QUẢN LÝ TÀI SẢN CÔNG</span>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                    <ul class="navbar-nav mr-auto">
+                        @await Html.PartialAsync("MenuHorizonal", rootNode)
+                        @await Html.PartialAsync("_Notifications")
+                        <!--nav mobile-->
+                        <div class="dropdown-divider bo-t"></div>
+
+
+                        <li class="nav-item dropdown d-lg-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-user mr-2"></i>@_customer.TEN_DAY_DU </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                                <a class="dropdown-item" href="/NguoiDung/Detail?guid=@_customer.GUID">Thông tin</a>
+                                @*<a class="dropdown-item" href="/NguoiDung/DoiMatKhau">Đổi mật khẩu</a>*@
+                                <div class="dropdown-divider"></div>
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị chủ trì xử lý tài sản (Chọn đơn vị làm việc)" data-src="/DonVi/_ChonDonVi2?NguoiDungId=@_customer.ID" class="dropdown-item">
+                                    Chọn đơn vị
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item d-lg-none"> <a class="nav-link" href="#"><i class="far fa-question-circle mr-2"></i>Hỏi đáp</a></li>
+                        <li class="nav-item d-lg-none"> <a class="nav-link" href="/NguoiDung/Logout"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a></li>
+
+                        <!--nav mobile-->
+                    </ul>
+                    <!--<form class="form-inline my-2 my-lg-0">
+                      <input class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>-->
+                </div>
+
+            </nav><!--end nav-->
+        </div>
+    </div>
+
+
+
+
+    <nav class="navbar navbar-expand navbar-dark">
+        <a href="#menu-toggle" id="menu-toggle" class="navbar-brand">
+            <i class="fas fa-bars col-sibar"></i>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExample02">
+            <nav aria-label="breadcrumb mb-0">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><strong style="color:#004689;font-weight:700">@_donvi.TEN_DON_VI_CHA</strong></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a id="lnkDonViChon" href="javascript:void(0)" style="color: #2673b4" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị chủ trì xử lý tài sản (Chọn đơn vị làm việc)" data-src="/DonVi/_ChonDonVi2?NguoiDungId=@_customer.ID">
+                            @_donvi.TEN_DON_VI
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </nav>
+    <div id="wrapper" style="min-height:50px;position:relative" class="@(mainNode!=null ? Html.Raw("toggled") : null)">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" class="overflow-hidden">
+            @await Html.PartialAsync("MenuVertical", mainNode)
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="box mb-3" style="min-height:410px">
+                @RenderBody()
+            </div>
+            <footer class="box">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-U">Bộ Tài Chính</h5>
+                            <p class="mb-0">
+                                <i class="fas fa-map-marker-alt mr-2"></i>Số 28 Trần Hưng Đạo - Quận Hoàn Kiếm - Hà Nội<br>
+                                <i class="fas fa-phone-volume mr-2"></i>2220.2828<br>
+                                <i class="far fa-envelope mr-2"></i>support@mof.gov.vn<br>
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-right1">
+                            Đường dây nóng <strong>2220.2828</strong>
+                        </div>
+                        <div id="call-support" onclick="toggleCallSupport()" class="call-show" style=" position: fixed; bottom: 5px; right: 0; height: 50px; z-index: 9999; padding-right: 5px; background-color: #dd4b39">
+                            <label style="position: relative; display: block; color:#fff">
+                                <a title="">
+                                    <span style="margin: 0 5px 0 -25px; display: inline-block; vertical-align: middle; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; background-position: center; background-color: #dd4b39; font-size: 24px; color: white; border: 3px solid #dd4b39;">
+                                        <i style="transform: rotate( 95deg ); margin-left: 2px; margin-top: 2px; border-radius: 50%; border: 2px solid #fff; padding: 8px; height: 40px; width: 40px; font-size: 18px;" class="fa fa-phone" aria-hidden="true"></i>
+                                    </span>
+                                    <p style="display: inline-block; vertical-align: middle; color: #fff; font-size: 12px; margin:0px">
+                                        Hỗ trợ PM Kho CSDLQG: <strong>(024)-7301 9666 nhánh 1</strong>
+                                        <br />
+                                        Hỗ trợ PM QLTSC: <strong>1900.636.618 nhánh 4</strong>
+                                    </p>
+                                </a>
+                                <i></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div> <!-- /#page-content-wrapper -->
+    </div> <!-- /#wrapper -->
+    <script type="text/javascript">
+        function toggleCallSupport() {
+            if ($('#call-support').hasClass('call-show')) {
+                $("#call-support").stop(true, false).animate({ right: "-250" }, "medium", 'swing', function () {
+                    $("#call-support").removeClass('call-show');
+                });
+            }
+            else {
+                $("#call-support").stop(true, false).animate({ right: "0" }, "medium");
+                $("#call-support").addClass('call-show');
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#ipHoSoSearch").keyup(function (e) {
+                if (e.keyCode == 13) {
+                    var keysearch = $(this).val();
+                    window.location.href = '/HoSo/List?keySearch=' + keysearch;
+                }
+            });
+        })
+    </script>
+    <div class="throbber">
+        <div class="curtain">
+        </div>
+        <div class="curtain-content">
+            <div>
+                <h1 class="throbber-header">@T("Common.Wait...")</h1>
+                <p>
+                    <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="ajaxBusy">
+        <span></span>
+    </div>
+    <div id="busy-holder">
+        <div id="busy">&nbsp;</div>
+    </div>
+    <div id="partialViewLoading" style="display:none">
+        <div class="sk-double-bounce sk-primary">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="globalModalIframe" tabindex="-1" role="dialog" aria-labelledby="globalModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                    <h4 class="modal-title" id="globalModalIframeLabel"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="globalModalIframeClose">&times;</button>
+                </div>
+                <div class="modal-body" style="padding:0.5625rem !important;">
+                    <div id="globalModalIframeContent" class="content">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+            $('#globalModalIframe').on('show.bs.modal', function (event) {
+                var modal = $(this);
+                //lay thong tin tu button de hien thi popup
+                var button = $(event.relatedTarget);
+                if (!button)
+                    return;
+                ShowViewLoading("#globalModalIframeContent");
+                var src = button.data('src');
+                if (!src)
+                    return;
+                var width = button.data('width') || 800;
+                var height = button.data('height') || 500;
+
+                modal.find('.modal-title').text(button.data('title'));
+                modal.find('.modal-dialog').css({
+                    width: width + 25, //probably not needed
+                    height: 'auto',
+                    maxWidth: '100%',
+                    //probably not needed
+                });
+                //load iframe
+                $.ajax({
+                    type: "GET",
+                    url: src,
+                    success: function (data) {
+                        $("#globalModalIframeContent").html(data);
+                    },
+                    error: function (result) {
+                        //alert("error!");
+                    }
+                });
+
+
+            });
+        })
+    </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script>
+        $(function () {
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+
+            $(window).resize(function (e) {
+                if ($(window).width() <= 768) {
+                    $("#wrapper").removeClass("toggled");
+                } else {
+                    $("#wrapper").addClass("toggled");
+                }
+            });
+        });
+        //var interValNum = 0;
+        //setInterval(function () {
+        //    if (interValNum < 6)
+        //        $.ajax({
+        //            type: "GET",
+        //            url: "/Home/GetTrue",
+        //            success: function (data) {
+        //                interValNum++;
+        //            },
+        //        });
+        //}, 120000);
+
+    </script>
+
+
+
+    <!-- Core scripts -->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/popper/popper.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/js/bootstrap.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/js/sidenav.js" ></script><!--asp-append-version="true"></script>-->
+    <!-- Libs -->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/chartjs/chartjs.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/bootbox/bootbox.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/dropzone/dropzone.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/smartwizard/smartwizard.js" ></script><!--asp-append-version="true"></script>-->
+    <script src="/Themes/AppWork/Content/assets/vendor/libs/bootstrap-sweetalert/bootstrap-sweetalert.js" ></script><!--asp-append-version="true"></script>-->
+
+
+</body>
+</html>

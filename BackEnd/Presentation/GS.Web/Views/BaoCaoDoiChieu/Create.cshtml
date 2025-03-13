@@ -1,0 +1,62 @@
+﻿@model BaoCaoDoiChieuModel
+@{
+    //page title
+    ViewBag.Title = "BaoCaoDoiChieu";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoDoiChieu");
+}
+<form asp-controller="BaoCaoDoiChieu" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu và tiếp tục sửa
+            </button>
+            <button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px;" id="btnSave">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+
+@*<script>
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                var _data = {
+                    DON_VI_ID: $('#@Html.IdFor(c => c.DON_VI_ID)').val(),
+                    BAO_CAO_ID: $('#@Html.IdFor(c => c.BAO_CAO_ID)').val(),
+                    NAM_BAO_CAO: $('#@Html.IdFor(c => c.NAM_BAO_CAO)').val(),
+                    HE_THONG_ID: $('#@Html.IdFor(c => c.HE_THONG_ID)').val(),
+                    NGAY_TAO: $('#@Html.IdFor(c => c.NGAY_TAO)').val(),
+                    NGAY_CAP_NHAT: $('#@Html.IdFor(c => c.NGAY_CAP_NHAT)').val(),
+                    FILE_NAME: $('#@Html.IdFor(c => c.FILE_NAME)').val(),
+                    FILE_CONTENT: $('#@Html.IdFor(c => c.FILE_CONTENT)').val()
+                };
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/BaoCaoDoiChieu/Create",
+                data: _data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        location.href = "/BaoCaoDoiChieu/List";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                   ShowErrorMessage(data.Message);
+                     alert('error');
+                }
+            });
+            });
+        });
+</script>*@

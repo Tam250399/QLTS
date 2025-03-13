@@ -1,0 +1,74 @@
+﻿@model ThuChiModel
+
+
+<tr id="row_@(Model.Guid)"  data-isFirst ="@Model.Is_First" style="text-align:center">
+    <th scope="row" id="Index_@(Model.Guid)" style="text-align:center" class="row-guid" data-isFirst ="@Model.Is_First" data-guid="@Model.Guid" data-id="@Model.ID"></th>
+    <td>
+        <nop-editor asp-for="SO_TIEN_PHAI_THU" asp-amount="true" id="SO_TIEN_PHAI_THU_@(Model.Guid)"  asp-dvt="đồng"  asp-disabled="@Model.Is_Disable" asp-min-number="0" asp-class="row-so-tien-thu" />
+        <span data-valmsg-for="SO_TIEN_PHAI_THU_@Model.Guid"></span>
+    </td>
+    <td>
+        <nop-editor asp-for="SO_TIEN_THU" asp-amount="true" id="SO_TIEN_THU_@(Model.Guid)" asp-dvt="đồng" asp-min-number="0" asp-class="row-so-tien-da-thu" />
+        <span data-valmsg-for="SO_TIEN_THU_@Model.Guid"></span>
+    </td>
+    <td>
+        <nop-editor asp-for="SO_TIEN_CON_PHAI_THU" asp-amount="true" id="SO_TIEN_CON_PHAI_THU_@(Model.Guid)" asp-dvt="đồng" asp-disabled="true"  asp-min-number="0" asp-class="row-so-tien_con-thu" />
+        <span data-valmsg-for="SO_TIEN_CON_PHAI_THU_@Model.Guid"></span>
+    </td>
+    <td  data-ngayThu-isFirst ="@Model.Is_First">
+        <nop-editor asp-for="NGAY_THU" id="NGAY_THU_@(Model.Guid)"  />
+        <span data-valmsg-for="NGAY_THU_@Model.Guid"></span>
+    </td>
+    <td>
+        <nop-editor asp-for="CHI_PHI" asp-amount="true" id="CHI_PHI_@(Model.Guid)" asp-dvt="đồng" asp-min-number="0" />
+        <span data-valmsg-for="CHI_PHI_@Model.Guid"></span>
+    </td>
+    <td>
+        <nop-editor asp-for="TG_SO_TIEN" asp-amount="true" id="TG_SO_TIEN_@(Model.Guid)" asp-dvt="đồng" asp-min-number="0" />
+        <span data-valmsg-for="TG_SO_TIEN_@Model.Guid"></span>
+    </td>
+    <td >
+        <nop-editor asp-for="TG_NGAY_NOP" id="TG_NGAY_NOP_@(Model.Guid)" /> 
+        <span data-valmsg-for="TG_NGAY_NOP_@Model.Guid"></span>
+    </td>
+    <td>
+        <div class="btn-group">
+            @if (Model.Is_First) // dòng đầu tiên không xóa được
+            {
+                
+            }
+            else
+            {
+                <a style="color:black" class="btn btn-sm btn-outline-danger btn-xoa-row" href="javascript:void(0)" onclick=XoaRowThuChi('@(Model.Guid)')>Xóa</a>
+            }
+
+        </div>
+    </td>
+</tr>
+<script>
+    $(document).ready(function () {
+        Index_Row();
+        CheckBtn();
+        $('span.k-widget.k-maskedtextbox').css('width', 120);
+           $('#ThuChiTable tr').each(function () {
+            // guild của thu chi khác
+            let guid = $(this).find('th').attr('data-guid');
+            if (guid) {
+                // tìm input tiền phải thu
+                $(this).find("#@(Html.IdFor(c=>c.SO_TIEN_PHAI_THU))_" + guid).on('change', function () {
+                        TinhTienPhaiThu();
+
+                });
+                $(this).find("#@(Html.IdFor(c=>c.SO_TIEN_THU))_" + guid).on('change', function () {
+                        TinhTienPhaiThu();
+                });
+            }
+           });
+        TinhTienPhaiThu();
+        var chiPhi = '@Model.CHI_PHI';
+        if (chiPhi == '0') {
+            $('#CHI_PHI_@(Model.Guid)').val(0);
+            $('#CHI_PHI_@(Model.Guid)').prev().val("0");
+        }
+    });
+</script>

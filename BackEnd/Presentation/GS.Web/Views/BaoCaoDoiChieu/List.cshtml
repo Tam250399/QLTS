@@ -1,0 +1,177 @@
+﻿@model BaoCaoDoiChieuSearchModel
+@{
+    //page title
+    ViewBag.Title = "Báo cáo đối chiếu";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("BaoCaoDoiChieu");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    @*<div class="form-group row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2" style=" padding-left: 0px; padding-top: 5px;">
+
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left">Từ khóa</label>
+        <div class="col-md-10">
+            <nop-editor asp-for="KeySearch" placeholder="Nhập tên file...." />
+        </div>
+    </div>*@
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Đơn vị</label>
+        <div class="col-md-4">
+            <app-select asp-for="DonVi" asp-items="Model.ddlDonVi" asp-filter="true" />
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left">Năm báo cáo</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="NamBaoCao" asp-amount="true" asp-min-number="0" asp-max-number="9999">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right" >Từ khóa:</label>
+        <div class="col-sm-8" >
+            <nop-editor asp-for="KeySearch" placeholder="Tên file"/>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>*@
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    NamBaoCao: $('#@Html.IdFor(model => model.NamBaoCao)').val(),
+                                    DonVi: $('#@Html.IdFor(model => model.DonVi)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "BaoCaoDoiChieu"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: 'TenFile',
+                                    title: 'Tên file'
+                                },
+								
+								{
+                                    field: 'PhanBaoCao',
+									title: 'Phần báo cáo'
+                                },
+                                {
+                                    field: 'PhanMem',
+                                    title: 'Phần mềm'
+                                },
+                                {
+                                    field: 'TenDonVi',
+                                    title: 'Đơn vị'
+                                },
+								{
+                                    field: 'NAM_BAO_CAO',
+                                    title: 'Năm báo cáo',
+                                    attributes: { style: "text-align:center" }
+								},
+                                {
+                                    field: "ID",
+                                    title: "Thao tác",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-sm btn-outline-secondary" href="Edit?Id=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>'
+                                }
+                                    //,
+         //                       {
+         //                           field: "FILE_ID",
+         //                           title: "Download",
+         //                           width: 100,
+         //                           headerAttributes: { style: "text-align:center" },
+         //                           attributes: { style: "text-align:center" },
+									//template: '<a class="btn btn-sm btn-outline-secondary btn-download" target="_blank" href="/FileCongViec/DownloadFile?downloadGuid=#=GUID#">Download</a>'}
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

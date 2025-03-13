@@ -1,0 +1,115 @@
+@model XuatNhapModel
+@{
+    //page title
+    ViewBag.Title = "Phân bổ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("PhanBoCongCuDungCu");
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thêm mới
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        <a class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/XuatNhap/ListGhiTangCongCu';" style="float:right;margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </a>
+        <button type="button" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px;" id="btnSave">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+
+<script>
+    $("#btnSave").click(function () {
+        var checkValidation = true;
+        var ListMapModel = [];
+        $(".listCongCuModel").each(function () {
+            var IDF = $(this).data("guid");
+            var GUID_VAL = IDF;
+            var SoLuongPhanBo_VAL = $("#SO_LUONG_" + IDF).val();
+            var SoLuongCoThePhanBo_VAL = $("#SoLuongCoThePhanBo_" + IDF).text();
+            var map = {
+                ID: GUID_VAL,
+                SO_LUONG: SoLuongPhanBo_VAL,
+                SoLuongCoThePhanBo: SoLuongCoThePhanBo_VAL
+            };
+            ClearPhanBoValidated(IDF);
+            if (!CheckSoLuongValidation(IDF)) {
+                checkValidation = false;
+            }            
+            ListMapModel.push(map);
+        });
+        if (!CheckPhanBoValidation()) {
+            checkValidation = false;
+        }
+        var data = {
+            ListMap: ListMapModel,
+            NGAY_XUAT_NHAP: $("#NGAY_XUAT_NHAP").val(),
+            DON_VI_BO_PHAN_ID: $("#DON_VI_BO_PHAN_ID").val(),
+            TRANG_THAI_ID: "1" , // $("#TRANG_THAI_ID").val(), -- do Yêu cầu bỏ trạng thái nên set mặc định là 1 để tránh ảnh hưởng đến nghiệp vụ đã phát sinh
+            GHI_CHU: $("#GHI_CHU").val(),
+            ID: $("#ID").val(),
+            StringMapId: $("#StringMapId").val()
+        };
+        if (checkValidation) {
+            $.ajax({
+                url: "/XuatNhap/Create",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/XuatNhap/List';
+                    }
+                    else {
+                          ShowErrorMessage(data.Message);
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function CheckSoLuongValidation(e) {
+        let checkSL = true;
+        var SoLuongPhanBo = ConvertToNumber("#SO_LUONG_" + e);
+        var SoLuongCoThePhanBo = ConvertToNumber("#SoLuongCoThePhanBo_" + e);
+        if (SoLuongPhanBo != undefined && (SoLuongPhanBo == 0 || (SoLuongPhanBo > SoLuongCoThePhanBo))) {
+            $("#err_SO_LUONG_" + e).show();
+            checkSL = false;
+        }
+        return checkSL;
+    }
+    function CheckPhanBoValidation() {
+        let check = true;
+        let BoPhanTo = $("#DON_VI_BO_PHAN_ID").val();
+        if (BoPhanTo == 0) {
+            $("#err_DON_VI_BO_PHAN_ID").show();
+            check = false;
+        }
+        if ($("#NGAY_XUAT_NHAP").val() == null || $("#NGAY_XUAT_NHAP").val() == "") {
+            showInvalidMessage("NGAY_XUAT_NHAP", "Ngày không được để trống");
+            check = false;
+        }
+
+        if (!checkValidateDateFormat("#NGAY_XUAT_NHAP", "NGAY_XUAT_NHAP", "Nhập sai định dạng ngày")) {
+            check = false;
+        }
+        if (!checkValidateFromDateToDate("#NgayNhapKhoMin", "#NGAY_XUAT_NHAP", "NGAY_XUAT_NHAP", "Ngày phân bổ phải lớn hơn ngày nhập kho")) {
+            check = false;
+        }
+        return check;
+    };
+    function ClearPhanBoValidated(e) {
+        hideValmsg("NGAY_XUAT_NHAP");
+        $("#err_SO_LUONG_" + e).hide();
+    }
+</script>

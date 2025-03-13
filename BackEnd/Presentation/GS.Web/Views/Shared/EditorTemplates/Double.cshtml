@@ -1,0 +1,37 @@
+@model Double
+
+@{
+    var _idClient = Html.IdForModel();
+    var htmlAttributes = new Dictionary<string, object>();
+    if (ViewData.ContainsKey("htmlAttributes") && ViewData["htmlAttributes"] != null)
+    {
+        htmlAttributes = (Dictionary<string, object>)ViewData["htmlAttributes"];
+        object _idclientOut;
+        if (htmlAttributes.TryGetValue("id", out _idclientOut))
+        {
+            _idClient = _idclientOut.ToString();
+        }
+    }
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<input id="@_idClient" name="@_idClient" />
+<script>
+    $(document).ready(function() {
+        $("#@_idClient").TouchSpin({
+            min: @Html.Raw(double.MinValue),
+            max: @Html.Raw(double.MaxValue),
+            decimals: 4, //always display 4 digits
+            forcestepdivisibility: "none",
+            verticalbuttons: true,
+            verticalupclass: "ion ion-ios-arrow-up",
+            verticaldownclass: "ion ion-ios-arrow-down",
+            buttondown_class: "btn",
+            buttonup_class: "btn",
+            postfix: "@postfix"
+        });
+    });
+</script>

@@ -1,0 +1,485 @@
+﻿@model XacNhanDuLieuModel
+@{//page title
+    ViewBag.Title = "Xác nhận dữ liệu";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("XacNhanDuLieu");
+}
+@if (Model.TREE_LEVEL > 1)
+{
+    <div class="alert alert-dark-primary" style="text-align:center"><h4><strong>Đơn vị không có quyền xác nhận dữ liệu, vui lòng chọn đơn vị cấp bộ, tỉnh!</strong></h4></div>
+}
+else
+{
+    @if (Model.IS_XAC_NHAN_DU_LIEU)
+    {
+        <div class="alert alert-dark-primary" style="text-align:center"><h4><strong>Đơn vị đã xác nhận dữ liệu!</strong></h4></div>
+    }
+    else
+    {
+        <div style="height: 780px;">
+            <div role="alert">
+                <h4 class="alert-heading" style="text-align:center"><span id="name-list">Xác nhận hoàn tất đối chiếu dữ liệu</span></h4>
+                <p>Sau khi kiểm tra và rà soát số liệu trên các báo cáo, Tôi đồng ý xác nhận dữ liệu tài sản của đơn vị <strong>@Model.DonVi.TEN</strong> trên phần mềm Quản lý đăng ký tài sản 4.0 và phần mềm Quản lý tài sản nhà nước (nếu có) với phần mềm Quản lý tài sản công thuộc hệ thống Cơ sở dữ liệu quốc gia về tài sản công hoàn toàn trùng khớp.</p>
+                <hr>
+                <h4 class="mb-0" style="text-align:center">Đính kèm tệp báo cáo</h4>
+                <p style="text-align:center">(Đơn vị đính kèm tệp báo cáo bản pdf xuất ra từ 2 phần mềm Quản lý đăng ký tài sản 4.0 và phần mềm Quản lý tài sản công đến 31/12/2020)</p>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 1: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile1" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_1" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 2: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile2" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 3: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile3" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_3" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 4: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile4" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_4" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 5: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile5" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_5" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 6: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile6" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_6" />
+                    </div>
+                </div>
+                <br />
+                <h4 class="mb-0" style="text-align:center">Đính kèm tệp báo cáo</h4>
+                <p style="text-align:center">(Đơn vị đính kèm tệp báo cáo bản pdf xuất ra từ 2 phần mềm Quản lý đăng ký tài sản nhà nước và phần mềm Quản lý tài sản công đến 31/12/2020)</p>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 1: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile7" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_7" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 2: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile8" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_8" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 3: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile9" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_9" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 4: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile10" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_10" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 5: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile11" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_11" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2 text-sm-left">Tệp đính kèm 6: </label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="UploadedFile12" />
+                        <input type="hidden" asp-for="FILE_DOI_CHIEU_12" />
+                    </div>
+                </div>
+                <a href="/AppWork/EntryCongCu" class="btn btn-danger" type="button" title="Hủy bỏ" style="float:right;margin-right: 5px;"><i class="fas fa-trash"></i> Hủy bỏ</a>
+
+                <button name="save" id="btnXacNhan" class="btn btn-outline-primary" style="float:right; margin-right: 5px;">
+                    <i class="fas fa-save"></i>
+                    Xác nhận
+                </button>
+            </div>
+        </div>
+        <script>
+        $(document).ready(function () {
+            $("#btnXacNhan").click(function () {
+                var _data = {
+                    DON_VI_ID: $('#@Html.IdFor(c => c.DON_VI_ID)').val(),
+                    FILE_DOI_CHIEU_1: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_1)').val(),
+                    FILE_DOI_CHIEU_2: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_2)').val(),
+                    FILE_DOI_CHIEU_3: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_3)').val(),
+                    FILE_DOI_CHIEU_4: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_4)').val(),
+                    FILE_DOI_CHIEU_5: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_5)').val(),
+                    FILE_DOI_CHIEU_6: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_6)').val(),
+                    FILE_DOI_CHIEU_7: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_7)').val(),
+                    FILE_DOI_CHIEU_8: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_8)').val(),
+                    FILE_DOI_CHIEU_9: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_9)').val(),
+                    FILE_DOI_CHIEU_10: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_10)').val(),
+                    FILE_DOI_CHIEU_11: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_11)').val(),
+                    FILE_DOI_CHIEU_12: $('#@Html.IdFor(c => c.FILE_DOI_CHIEU_12)').val()
+                };
+                $.ajax({
+                type: "POST",
+                url: "/XacNhanDuLieu/XacNhan",
+                data: _data,
+                success: function (data) {
+                    if (data.Code == '00') {
+                        ShowSuccessMessage("Xác nhận thành công!");
+                        location.href = "/AppWork/EntryHeThong";
+                    }
+                    else {
+                        ShowErrorMessage("Chưa có file, vui lòng kiểm tra lại!");
+                    }
+                }
+            });
+            });
+        });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile1").on('change', function () {
+                    var input = $('#UploadedFile1').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_1').val(result[0].ID)
+
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile2").on('change', function () {
+                    var input = $('#UploadedFile2').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_2').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile3").on('change', function () {
+                    var input = $('#UploadedFile3').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_3').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile4").on('change', function () {
+                    var input = $('#UploadedFile4').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_4').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile5").on('change', function () {
+                    var input = $('#UploadedFile5').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_5').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile6").on('change', function () {
+                    var input = $('#UploadedFile6').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_6').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile7").on('change', function () {
+                    var input = $('#UploadedFile7').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_7').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile8").on('change', function () {
+                    var input = $('#UploadedFile8').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_8').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile9").on('change', function () {
+                    var input = $('#UploadedFile9').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_9').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile10").on('change', function () {
+                    var input = $('#UploadedFile10').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_10').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile11").on('change', function () {
+                    var input = $('#UploadedFile11').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_11').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#UploadedFile12").on('change', function () {
+                    var input = $('#UploadedFile12').get(0);
+                    var files = $(input).prop("files")
+                    if (files && files.length > 0) {
+                        var formData = new FormData();
+                        formData.append("httpPostedFile", files[0]);
+                        $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: "/XacNhanDuLieu/SaveDropzoneJsUploadedFiles",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                console.log(result[0].ID);
+                                $('#FILE_DOI_CHIEU_12').val(result[0].ID)
+                            },
+
+                        })
+
+                    }
+                })
+
+            })
+        </script>
+    }
+
+}
+
+

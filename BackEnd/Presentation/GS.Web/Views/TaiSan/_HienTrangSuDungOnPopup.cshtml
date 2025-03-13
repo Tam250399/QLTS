@@ -1,0 +1,53 @@
+﻿@model ObjHienTrang
+@{
+	var hientrangId = Decimal.ToInt32(Model.HienTrangId ?? 0);
+	var kieudulieuId = Decimal.ToInt32(Model.KieuDuLieuId ?? 0);
+	var nhomHienTrangId = Decimal.ToInt32(Model.NhomHienTrangId ?? 0);
+}
+
+@switch (kieudulieuId)
+{
+
+	//kieudulieuId: 1 - du lieu kieu numbericTextbox, 2 - checkbox
+	case 1:
+		<div class="col-sm-2">
+			<label class="col-form-label">@Model.TenHienTrang</label>
+			<div class="HienTrangOnPopup" data-idhientrang="@hientrangId" data-tenhientrang="@Model.TenHienTrang" data-kieudulieuid="@kieudulieuId" data-nhomhientrangid="@nhomHienTrangId">
+				<nop-editor asp-for="GiaTriNumber" asp-min-number="0" asp-dvt="m2" id="HienTrang_@hientrangId">
+			</div>
+		</div>
+		break;
+	case 2:
+		<div class="col-md-3">
+			<div class="HienTrangOnPopup" data-idhientrang="@hientrangId" data-tenhientrang="@Model.TenHienTrang" data-kieudulieuid="@kieudulieuId" data-nhomhientrangid="@nhomHienTrangId">
+				<label class="custom-control custom-checkbox">
+					@Html.CheckBoxFor(c => c.GiaTriCheckbox.Value, new { @class = "custom-control-input ", @id = "HienTrang_" + @hientrangId })
+					<span class="custom-control-label">@Model.TenHienTrang</span>
+				</label>
+			</div>
+		</div>
+		break;
+}
+<script>
+    $(document).ready(function () {
+        var hienTrangId = '@hientrangId';
+        var _data = {
+            HienTrangId: hienTrangId
+        };
+        // disable hiện trạng theo đơn vị
+        var ajaxRequest = ajaxPost(_data, "/HienTrang/CheckHienThiHienTrang", false);
+        ajaxRequest.done(function (result) {
+            if (result.ObjectInfo) {
+                var id = "#HienTrang_@hientrangId";
+                $(id).parent().children('.k-formatted-value').attr("disabled", "disabled");
+                $(id).attr("disabled", "disabled");
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            console.log(textStatus + ': ' + errorThrown);
+            ShowErrorMessage('Có lỗi xảy ra');
+            $(this).removeClass('disabled');
+        });
+    });
+
+</script>

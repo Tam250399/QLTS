@@ -1,0 +1,75 @@
+@model KhaiThacModel
+@*@{
+        //page title
+        ViewBag.Title = "KhaiThac";
+        //active menu item (system name)
+        Html.SetActiveMenuItemSystemName("KhaiThac");
+    }*@
+<div class="card mb-4">
+    <h6 class="card-header">
+        Thêm mới
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/KhaiThac/List?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID">Quay lại danh sách</a>
+        </small>
+        @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            Lưu và tiếp tục sửa
+            </button>*@
+        <button type="button" class="btn btn-sm btn-default btnClose"  style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+        <button id="" class="btn  btn-sm btn-outline-primary btnCreateKhaiThac" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+    <h6 class="card-header">
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/KhaiThac/List?LOAI_HINH_KHAI_THAC_ID=@Model.LOAI_HINH_KHAI_THAC_ID">Quay lại danh sách</a>
+        </small>
+        @*<button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+            <i class="far fa-save" style="margin-right:5px;"></i>
+            Lưu và tiếp tục sửa
+            </button>*@
+        <button type="button" class="btn btn-sm btn-default btnClose"  style="float:right; margin-right: 5px;">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </button>
+        <button id="" class="btn  btn-sm btn-outline-primary btnCreateKhaiThac" style="float:right;margin-right:5px; ">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.btnClose').on('click', function () {
+            backToList();
+        })
+
+    })
+    function backToList() {
+	    bootbox.confirm({
+			 message: "Dữ liệu chưa được lưu, bạn có chắc chắn thoát không?",
+			 className: 'bootbox-sm',
+			 buttons: {
+				 confirm: {
+					 label: 'Đồng ý',
+				 },
+				 cancel: {
+					 label: 'Hủy',
+				 },
+			 },
+			 callback: function (msg) {
+				 window.location.href = '/KhaiThac/List?hinhthuckhaithac=@Model.LOAI_HINH_KHAI_THAC_ID';
+                },
+                });
+                };
+</script>

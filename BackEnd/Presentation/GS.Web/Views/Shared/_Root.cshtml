@@ -1,0 +1,281 @@
+﻿@using GS.Core
+@using GS.Services.Common;
+@using GS.Services.DanhMuc;
+@inject IWorkContext workContext
+@inject IDonViService DonViService
+@{
+    Layout = "_Root.Head";
+    var currentCustomer = workContext.CurrentCustomer;
+    var DonVi = DonViService.GetProfileUser(guidNguoiDung: currentCustomer.GUID);
+}
+@*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })*@
+
+<style>
+
+
+    /* For Firefox */
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
+
+    /* Webkit browsers like Safari and Chrome */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+<div class="page-loader">
+    <div class="bg-primary"></div>
+</div>
+
+<div class="layout-wrapper layout-1">               
+    <div class="layout-inner">
+        <!-- Layout navbar -->
+        <nav class="layout-navbar navbar trongdong navbar-expand-lg align-items-lg-center bg-white container-p-x" id="layout-navbar" style="border-bottom: solid 2px #ffe384;">
+            <!-- Sidenav toggle (see assets/css/demo/demo.css) -->
+            <div class="layout-sidenav-toggle navbar-nav d-lg-none align-items-lg-center mr-auto">
+                <a class="nav-item nav-link px-0 mr-lg-3" href="javascript:void(0)" style="color:#fff">
+                    <i class="ion ion-md-menu text-large align-middle"></i>
+                </a>
+            </div>
+            <span class="app-brand-logo demo bg-primary">
+                <img src="/Themes/AppWork/Content/assets/img/bg/logo-BTC-removebg.png" alt="img" style=" width:100%;" />
+            </span>
+            <a href="/AppWork/Index" class="app-brand-text demo sidenav-text font-weight-normal ml-2">
+                <h5 style="margin-top: 10px;">
+                    <span style="color: #ffeb02;text-transform: uppercase;text-shadow: 2px 2px 4px #000000;text-align:center;font-weight:">Bộ Tài chính</span><br /><span style="color: #fff;text-shadow: black 0.3em 0.2em 0.3em">Phần mềm quản lý tài sản công</span><br />
+                </h5>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#layout-navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="layout-navbar-collapse" style="position: relative;">
+               
+                
+                <!-- Divider -->
+                <hr class="d-lg-none w-100 my-2">
+                <div class="navbar-nav align-items-lg-center">
+
+                </div>
+                <div class="navbar-nav align-items-lg-center ml-auto">
+                    
+                    <div class="demo-navbar-notifications nav-item dropdown mr-lg-3">
+                        <a class="nav-link dropdown-toggle scrollable-menu hide-arrow" href="#" data-toggle="dropdown">
+                            <i class="ion ion-md-notifications-outline navbar-icon align-middle" style="color:white !important;"></i>
+                            <span class="badge badge-danger indicator notifyTotalNew" style="font-size:0.7em">5</span>
+                            <span class="d-lg-none align-middle">&nbsp; @T("common.notification")</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="bg-secondary text-center text-blue font-weight-bold p-1">
+                                <span class="notifyTotalNew"></span> Thông báo 1
+                            </div>
+                            <div class="list-group list-group-flush" id="notifyContent">
+                            </div>
+                            <a href="/AppWork/Notification" class="d-block text-center text-secondary small p-2 my-1">Thông báo 2</a>
+                        </div>
+                    </div>
+                    <!-- Divider -->
+                    <div class="nav-item d-none d-lg-block text-big font-weight-light line-height-1 opacity-25 mr-3 ml-1 text-white">|</div>
+                    <div class="demo-navbar-user nav-item dropdown">
+                        <a class="nav-link dropdown-toggle " href="#" data-toggle="dropdown">
+                            <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
+                                <img src="/Themes/AppWork/Content/assets/img/bg/user.jpg" alt="img" class="d-block ui-w-30 rounded-circle">
+                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 text-white">@currentCustomer.TEN_DAY_DU</span>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="/NguoiDung/Detail?guid=@currentCustomer.GUID" class="dropdown-item">
+                                <i class="ion ion-ios-person text-primary" style="font-size:16px;"></i> &nbsp; Thông tin cá nhân
+                            </a>
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?NguoiDungId=@currentCustomer.ID" class="dropdown-item">
+                                <i class="ion ion-md-add-circle-outline text-primary" style="font-size:16px;"></i> &nbsp; Chọn đơn vị
+                            </a>
+                            <a href="/NguoiDung/DoiMatKhau" class="dropdown-item">
+                                <i class="ion ion-md-key text-primary" style="font-size:16px;"></i> &nbsp; Đổi mật khẩu
+                            </a>
+                            <a href="javascript:void(0)" class="dropdown-item">
+                                <i class="ion ion-ios-mail text-primary" style="font-size:16px;"></i> &nbsp; Tin nhắn
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/NguoiDung/Logout" class="dropdown-item">
+                                <i class="ion ion-ios-log-out text-danger" style="font-size:16px;"></i> &nbsp; Đăng xuất
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- / Layout navbar -->
+        <!-- Layout container -->
+        <div class="layout-container">
+            <!-- Layout sidenav -->
+            <div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-info-dark sidenav-dark background-sidenav">
+                <!-- Brand demo (see assets/css/demo/demo.css) -->
+                <div class="app-brand demo">
+
+                    <a href="/AppWork/Index " class="layout-sidenav-toggle sidenav-link text-large ml-auto">
+                        <i class="ion ion-md-menu align-middle"></i>
+                    </a>
+                </div>
+                <div class="sidenav-divider mt-0"></div>
+                <!-- Links -->
+                @*<ul class="sidenav-inner py-1">*@
+                @await Html.PartialAsync("Menu")
+                @*</ul>*@
+            </div>
+            <!-- / Layout sidenav -->
+            <!-- Layout content -->
+            <div class="layout-content">
+                @await Html.PartialAsync("_Notifications")
+                @await Html.PartialAsync("_JavaScriptDisabledWarning")
+                @await Html.PartialAsync("_OldInternetExplorerWarning")
+                <!-- Content -->
+                @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })*@
+                <div class="container-fluid flex-grow-1 container-p-y">
+                    @RenderBody()
+                </div>
+                @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })*@
+
+                <!-- / Content -->
+                <!-- Layout footer -->
+                <nav class="layout-footer footer bg-secondary" style="background-color:#2c78b8  !important;">
+                    <div class="container-fluid d-flex flex-wrap justify-content-between text-center container-p-x pb-3">
+                        <div class="pt-3">
+                            <span class="footer-text font-weight-bolder">
+                                Đăng ký tài sản
+                            </span> © - ngày cập nhật: 12/05/2020
+                        </div>
+                        <div>
+                            <a href="javascript:void(0)" class="footer-link pt-3"></a>
+                            <a href="javascript:void(0)" class="footer-link pt-3 ml-4"></a>
+                            <a href="javascript:void(0)" class="footer-link pt-3 ml-4"></a>
+                            <a href="javascript:void(0)" class="footer-link pt-3 ml-4"></a>
+                        </div>
+                    </div>
+                </nav>
+                <!-- / Layout footer -->
+            </div>
+            <!-- Layout content -->
+        </div>
+        <!-- / Layout container -->
+    </div>
+    <!-- Overlay -->
+    <div class="layout-overlay layout-sidenav-toggle"></div>
+</div>
+<div id="tabDonViChon" style="position:fixed;right:220px; width:100%;text-align:right;top:62px;z-index:1081;">
+    <a id="lnkDonViChon" class="badge badge-pill badge-outline-warning tendonvi badg" href="javascript:void(0)" data-toggle="modal" data-target="#globalModalIframe" data-title="Chọn đơn vị" data-src="/DonVi/_ChonDonVi?NguoiDungId=@currentCustomer.ID">
+        Đơn vị: @DonVi.TEN_DON_VI
+    </a>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#ipHoSoSearch").keyup(function (e) {
+            if (e.keyCode == 13) {
+                var keysearch = $(this).val();
+                window.location.href = '/HoSo/List?keySearch=' + keysearch;
+            }
+        });
+    })
+</script>
+<div class="throbber">
+    <div class="curtain">
+    </div>
+    <div class="curtain-content">
+        <div>
+            <h1 class="throbber-header">@T("Common.Wait...")</h1>
+            <p>
+                <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+            </p>
+        </div>
+    </div>
+</div>
+<div id="partialViewLoading" style="display:none">
+    <div class="sk-double-bounce sk-primary">
+        <div class="sk-child sk-double-bounce1"></div>
+        <div class="sk-child sk-double-bounce2"></div>
+    </div>
+</div>
+<div class="modal fade" id="globalModalIframe" tabindex="-1" role="dialog" aria-labelledby="globalModalIframeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="globalModalIframeClose">&times;</button>
+                <h4 class="modal-title" id="globalModalIframeLabel"></h4>
+            </div>
+            <div class="modal-body" style="padding:0.5625rem !important;">
+                <div id="globalModalIframeContent" class="content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#globalModalIframe').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            //lay thong tin tu button de hien thi popup
+            var button = $(event.relatedTarget);
+            if (!button)
+                return;
+            ShowViewLoading("#globalModalIframeContent");
+            var src = button.data('src');
+            if (!src)
+                return;
+            var width = button.data('width') || 800;
+            var height = button.data('height') || 500;
+
+            modal.find('.modal-title').text(button.data('title'));
+            modal.find('.modal-dialog').css({
+                width: width + 25, //probably not needed
+                height: 'auto',
+                maxWidth: '100%',
+                //probably not needed
+            });
+            //load iframe
+            $.ajax({
+                type: "GET",
+                url: src,
+                success: function (data) {
+                    $("#globalModalIframeContent").html(data);
+                },
+            });
+
+
+        });
+    })
+</script>
+<style>
+    body {
+        /*background: #3ea4d0 url("https://b24-m8n3md.bitrix24.com/bitrix/templates/bitrix24/themes/light/pattern-blue/pattern-blue.svg") 0 0 repeat;*/
+    }
+
+    /*.bg-info-dark {
+        background: url("https://b24-m8n3md.bitrix24.com/bitrix/templates/bitrix24/themes/light/pattern-blue/pattern-blue.svg") 0 0 repeat;
+        background-image: linear-gradient(to top, #2674B6, #90b9d9);
+    }*/
+
+    .bg-primary {
+        background-color: #8FB7DA !important;
+    }
+    .scrollable-menu {
+        height: auto;
+        max-height: 200px;
+        overflow-x: hidden;
+    }
+    
+    .tendonvi {
+    background-color: #298be1;
+    color:#fff;
+    font-size:13px;
+}
+
+.tendonvi:hover,
+.tendonvi:active {
+  background-color: rgb(62, 152, 232);
+}
+
+
+
+</style>

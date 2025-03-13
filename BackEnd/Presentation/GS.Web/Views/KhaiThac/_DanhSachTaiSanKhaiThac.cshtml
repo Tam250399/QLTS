@@ -1,0 +1,391 @@
+﻿@model KhaiThacChiTietSearchModel
+<style>
+    .link_href {
+        color: #007bff !important;
+    }
+
+        .link_href:hover {
+            cursor: pointer !important;
+            text-decoration: underline !important;
+        }
+</style>
+<input asp-for="KHAI_THAC_ID" type="hidden" />
+<input asp-for="LOAI_HINH_KHAI_THAC_ID" type="hidden" />
+<div id="danh-sach-tai-san-khai-thac"></div>
+
+
+<script>
+	var recordItemKTTS = 0;
+    
+	$(document).ready(function () {
+		danhSachKhaiThacTaiSanJS = new DanhSachKhaiThacTaiSanJS();
+		var doiTac = "";
+		var dienTich = "Diện tích khai thác";
+		var NgayKhaiThac = "";
+		if ('@Model.LOAI_HINH_KHAI_THAC_ID' == @((int)enumHinhThucKhaiThac.LDLK)) {
+			doiTac = "Đối tác LDLK";
+			dienTich = "Diện tích LDLK";
+			NgayKhaiThac = "Thời hạn LDLK";
+        } else if ('@Model.LOAI_HINH_KHAI_THAC_ID' == @((int)enumHinhThucKhaiThac.CHO_THUE_TS))
+        {
+			doiTac = "Đơn vị thuê";
+			dienTich = "Diện tích cho thuê";
+            NgayKhaiThac = "Thời hạn cho thuê";
+        } else if ('@Model.LOAI_HINH_KHAI_THAC_ID' == @((int)enumHinhThucKhaiThac.SXKD)) {
+			dienTich = "Diện tích SXKD";
+        }
+		var grid_ts_kt = $("#danh-sach-tai-san-khai-thac").kendoGrid({
+			dataSource: {
+				type: "json",
+				transport: {
+					read: {
+						url: "@Html.Raw(Url.Action("DanhSachTaiSansKhaiThac", "KhaiThac"))",
+						type: "POST",
+						dataType: "json",
+						data: danhSachKhaiThacTaiSanJS.addDataSearchTaiSanKhaiThacs,
+					}
+				},
+				schema: {
+					data: "Data",
+					total: "Total",
+					errors: "Errors"
+				},
+				error: function (e) {
+					display_kendoui_grid_error(e);
+					// Cancel the changes
+					this.cancelChanges();
+				},
+				pageSize: @(Model.PageSize),
+				serverPaging: true,
+				serverFiltering: true,
+				serverSorting: true
+			},
+			pageable: {
+				refresh: true,
+				pageSizes: [@(Model.AvailablePageSizes)],
+				@await Html.PartialAsync("_GridPagerMessages")
+			},
+			dataBinding: function () {
+				recordItemKTTS = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+			},
+			editable: {
+				confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+				mode: "inline"
+			},
+			scrollable: false,
+			columns: [
+				{
+					title: "STT",
+					width: 50,
+					template: "#=++recordItemKTTS#",
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+				},
+				{
+                    field: 'TAI_SAN_TEN', title: 'Tên tài sản',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:left" },
+				},
+                {
+                    field: 'LoaiTaiSanTen', title: 'Loại tài sản',
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:left" },
+                },
+                {
+                    field: 'HOP_DONG_SO',
+					title: 'Hợp đồng số',
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:left" },
+                },
+                {
+                    field: 'NgayKhaiThacString',
+                    title: NgayKhaiThac,
+                    headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+
+                },
+                {
+                    field: 'phuongthucchothueten',
+					title: 'Phương thức cho thuê',
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:left" },
+				},
+                {
+                    field: 'HinhThucLDLKTen',
+                    title: 'Phương thức LDLK',
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:left" },
+                },
+                //{
+                //    field: 'DoiTacTen',
+                //    title: doiTac,
+                //    width: 150,
+                //    headerAttributes: { style: "text-align:center" },
+                //    attributes: { style: "text-align:left" },
+                //},
+				{
+			        field: 'StrVNDienTich',
+                    title: 'Diện tích',
+                    width: 100,
+				    headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:right" },
+
+				},
+				{
+                    field: 'StrVNDienTichKhaiThac',
+					title: dienTich,
+					headerattributes: { style: "text-align:center" },
+					attributes: { style: "text-align:right" },
+                    editable : true
+				},
+				{
+					field: "ID",
+					title: "Thao tác",
+					width: 130,
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+					template: function (dataItem) {
+						//return
+						//"<a class='btn btn-sm btn-outline-secondary' data-title='Thêm mới, sửa tài sản' data-toggle='modal' data-target='#globalModalIframe' href='javascript:danhSachKhaiThacTaiSanJS.editTaiSanKhaiThac(" + dataItem.ID + ")' title='Sửa' data-src=''>Sửa</a>" + "&nbsp;"
+						//	+
+                        return `<a href="javascript:EditChiTietTaiSanKhaiThac(${dataItem.TAI_SAN_ID},${dataItem.ID})"  class='btn btn-sm btn-outline-secondary'  title='Sửa'>Sửa</a>
+                                &nbsp;<a href="javascript:danhSachKhaiThacTaiSanJS.xoaTaiSanKhaiThac(${dataItem.KHAI_THAC_ID},${dataItem.TAI_SAN_ID})" data-id = ${dataItem.TAI_SAN_ID}  class='btn btn-sm btn-danger' style='color:white;' title='Xóa'>Xóa</a>`;
+					}
+				},
+				{
+					title: 'Select All',
+                    field: 'SelectAll',
+					headerTemplate: "<input type='checkbox' id='header-ts-kt-chb' class='k-checkbox  header-checkbox' ><label class='k-checkbox-label' style='margin-left: 3px;' for='header-ts-kt-chb'></label>",
+					template: function (dataItem) {
+						return "<input type='checkbox' id='tskt_" + dataItem.TAI_SAN_ID + "' class='k-checkbox row-checkbox-ts-kt'><label class='k-checkbox-label' for='tskt_" + dataItem.TAI_SAN_ID + "'></label>";
+					},
+					attributes: {
+						style: "text-align: center;"
+					},
+				},
+			]
+		});
+		if ($('#LOAI_HINH_KHAI_THAC_ID').val() == @((int)enumHinhThucKhaiThac.SXKD)) {
+			$("#danh-sach-tai-san-khai-thac thead [data-field=StrVNDienTichKhaiThac]").html("Diện tích SXKD");
+		}
+		//thêm bớt cột trên danh-sach-tai-san-khai-thac
+
+		$('#header-ts-kt-chb').change(function (ev) {
+			var checked = ev.target.checked;
+			$('.row-checkbox-ts-kt').each(function (idx, item) {
+				if (checked) {
+					if (!($(item).closest('tr').is('.k-state-selected'))) {
+						$(item).click();
+					}
+				} else {
+					if ($(item).closest('tr').is('.k-state-selected')) {
+						$(item).click();
+					}
+				}
+			});
+		});
+		grid_ts_kt = $("#danh-sach-tai-san-khai-thac").data("kendoGrid");
+		grid_ts_kt.table.on("click", ".row-checkbox-ts-kt", selectRow_ts_kt);
+		if (parseInt( $('#LOAI_HINH_KHAI_THAC_ID').val()) == @((int)enumHinhThucKhaiThac.CHO_THUE_TS)) {
+            //grid_ts_kt.showColumn("HOP_DONG_SO");
+            //grid_ts_kt.showColumn("HOP_DONG_NGAY");
+            //grid_ts_kt.showColumn("NGAY_KHAI_THAC");
+            //grid_ts_kt.showColumn("NGAY_KHAI_THAC_DEN");
+            //grid_ts_kt.showColumn("DoiTacTen");
+            //grid_ts_kt.showColumn("phuongthucchothueten");
+            //grid_ts_kt.showColumn("DON_GIA_CHO_THUE");
+            //grid_ts_kt.showColumn("ID");
+
+			grid_ts_kt.hideColumn("HinhThucLDLKTen");
+            grid_ts_kt.hideColumn("LoaiTaiSanTen");
+            grid_ts_kt.hideColumn("StrVNDienTich");
+            grid_ts_kt.hideColumn("SelectAll");
+		} else if (parseInt($('#LOAI_HINH_KHAI_THAC_ID').val()) == @((int)enumHinhThucKhaiThac.LDLK))
+		{
+            //grid_ts_kt.showColumn("HOP_DONG_SO");
+            //grid_ts_kt.showColumn("HOP_DONG_NGAY");
+            //grid_ts_kt.showColumn("NGAY_KHAI_THAC");
+            //grid_ts_kt.showColumn("NGAY_KHAI_THAC_DEN");
+            //grid_ts_kt.showColumn("HinhThucLDLKTen");
+            //grid_ts_kt.showColumn("ID");
+            grid_ts_kt.hideColumn("StrVNDienTich");
+            grid_ts_kt.hideColumn("phuongthucchothueten");
+            grid_ts_kt.hideColumn("LoaiTaiSanTen");
+            grid_ts_kt.hideColumn("SelectAll");
+        }
+		else {
+            grid_ts_kt.showColumn("SelectAll");
+            grid_ts_kt.hideColumn("ID");
+			grid_ts_kt.hideColumn("HOP_DONG_SO");
+            grid_ts_kt.hideColumn("NgayKhaiThacString");
+            grid_ts_kt.hideColumn("DoiTacTen");
+			grid_ts_kt.hideColumn("phuongthucchothueten");
+            grid_ts_kt.hideColumn("HinhThucLDLKTen");
+
+        }
+		var checkedIds_ts_kt = {};
+		function selectRow_ts_kt() {
+			
+			var checked = this.checked,
+				row = $(this).closest("tr"),
+				grid_ts_kt = $("#danh-sach-tai-san-khai-thac").data("kendoGrid");
+				dataItem = grid_ts_kt.dataItem(row);
+			checkedIds_ts_kt[dataItem.ID] = checked;
+			if (checked) {
+				//-select the row
+				row.addClass("k-state-selected");
+				var checkHeader = true;
+				var ListItem_ts_kt = [];
+				var ind = 0;
+				$.each(grid_ts_kt.items(), function (index, item) {
+					if ($(item.cells[0].firstChild).hasClass("k-checkbox")) {
+						ListItem_ts_kt.push(item);
+					}
+				});
+				for (var i = 0; i < ListItem_ts_kt.length; i++) {
+					if (!$(ListItem_ts_kt[i]).hasClass("k-state-selected")) {
+						checkHeader = false;
+						break;
+					}
+				}
+				$("#header-ts-kt-chb")[0].checked = checkHeader;
+				$('#XoaNhieu').show();
+			}
+			else {
+				//-remove selection
+				row.removeClass("k-state-selected");
+				$("#header-ts-kt-chb")[0].checked = false;
+				var allSelected = $("#danh-sach-tai-san-khai-thac tr.k-state-selected");
+				if (allSelected.length > 0) {
+					$('#XoaNhieu').show();
+
+				} else {
+					$('#XoaNhieu').hide();
+				}
+			}
+		}
+		$('#XoaNhieu').click(() => {
+			bootbox.confirm({
+				message: "Bạn có chắc chắn xóa những tài sản này?",
+				className: 'bootbox-sm',
+				buttons: {
+					confirm: {
+						label: 'Đồng ý',
+					},
+					cancel: {
+						label: 'Hủy',
+					},
+				},
+				callback: function (result) {
+					if (result) {
+						let allSelected = $("#danh-sach-tai-san-khai-thac tr.k-state-selected");
+						let allSelectedModels = [];
+						let strTaiSanId = "";
+						$.each(allSelected, function (e) {
+							let row = $(this);
+							let grid_chonts = $("#danh-sach-tai-san-khai-thac").data("kendoGrid");
+							let dataItem = grid_chonts.dataItem(row);
+							allSelectedModels.push(dataItem.TAI_SAN_ID);
+						})
+					//nếu có nhiều hơn 1 tài sản đủ điều kiện
+						if (allSelectedModels.length > 0) {
+							strTaiSanId = allSelectedModels.join(",");
+							let dt = {
+								strTaiSanIds: strTaiSanId,
+								khaiThacId: $('#KHAI_THAC_ID').val()
+							}
+							ajaxPost(dt, '@Url.Action("_deleteNhieuKhaiThacTaiSan", "KhaiThac")').done(() => {
+								ShowSuccessMessage("Thành công");
+								var grid = $('#danh-sach-tai-san-khai-thac').data('kendoGrid');
+								grid.dataSource.page(1); //new search. Set page size to 1
+							}).fail(function (jqXHR, textStatus, errorThrow) {
+								console.log(textStatus + ': ' + errorThrow);
+							});
+
+						}
+						else {
+							ShowErrorMessage("Chưa chọn tài sản");
+						}
+					}
+					return;
+				},
+			});
+		})
+	})
+
+	//Function tài sản vừa nhập vào, tài sản trạng thái CHO_DUYET, tất cả yêu cầu trạng thái CHO_DUYET
+		function EditChiTietTaiSanKhaiThac(id, KhaiThacChiTietId) {
+
+			var TaiSanId = id;
+			var KhaiThacId = '@Model.KHAI_THAC_ID';
+		  var _url = `@(Url.Action("_ChiTietTaiSanKhaiThac", "KhaiThac"))?TaiSanId=${TaiSanId}&KhaiThacId=${KhaiThacId}&LOAI_HINH_KHAI_THAC_ID=${parseInt($("#LOAI_HINH_KHAI_THAC_ID").val())}&KhaiThacChiTietId=${KhaiThacChiTietId}`;
+            OpenModalManual("Sửa thông tin", _url, 80);
+        };
+        function OpenModalEdit(title, src, mw) {
+            var khaithac = $('#KhaiThacChiTietModal');
+            $.ajax({
+                type: "POST",
+				url: src,
+				async: false,
+				success: function (data) {
+                    $("#KhaiThacChiTietModal .modal-body").html(data);
+                    khaithac.modal('show');
+                },
+            });
+
+		}
+
+	class DanhSachKhaiThacTaiSanJS{
+
+		constructor() {
+			this.initEvents();
+		}
+
+		initEvents() {
+
+		}
+
+		addDataSearchTaiSanKhaiThacs() {
+			var data = {
+				KHAI_THAC_ID:@Model.KHAI_THAC_ID,
+			}
+			return data;
+		}
+		xoaTaiSanKhaiThac(khaiThacId, taiSanId) {
+			bootbox.confirm({
+				message: "Bạn có chắc chắn xóa tài sản này?",
+				className: 'bootbox-sm',
+				buttons: {
+					confirm: {
+						label: 'Đồng ý',
+					},
+					cancel: {
+						label: 'Hủy',
+					},
+				},
+				callback: function (result) {
+					if (result) {
+						var url = "/KhaiThac/_deleteKhaiThacTaiSan?khaiThacId=" + khaiThacId + "&taiSanId=" + taiSanId;
+						var KTTSDeleteRequest = ajaxDelete(url);
+						KTTSDeleteRequest.done(function (result) {
+							if (result.Code == '00') {
+								ShowSuccessMessage(result.Message);
+								$('#danh-sach-tai-san-khai-thac').data('kendoGrid').dataSource.page(1);
+							} else
+								ShowErrorMessage(result.Message);
+						}).fail(function (jqXHR, textStatus, errorThrow) {
+							console.log(textStatus + ': ' + errorThrow);
+						});
+					}
+				},
+			});
+
+		}
+
+		editTaiSanKhaiThac(taiSanKhaiThacId) {
+			var _url = "@(Url.Action("", "KhaiThac"))?&taiSanKhaiThacId=" + taiSanKhaiThacId;
+            OpenModalManual("Thêm mới, sửa tài sản", _url, 80);
+		}
+	}
+
+</script>

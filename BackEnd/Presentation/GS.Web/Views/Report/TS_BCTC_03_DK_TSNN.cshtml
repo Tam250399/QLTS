@@ -1,0 +1,628 @@
+﻿@model BaoCaoTaiSanChiTietSearchModel
+
+@{
+	//page title
+	//ViewBag.Title = "BÁO CÁO TÀI SẢN NHÀ NƯỚC CỦA ĐƠN VỊ TRỰC TIẾP SỬ DỤNG";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("BaoCaoTCSL");
+}
+<style>
+	.don-vi-tinh{
+		padding-left:30px;
+	}
+</style>
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+	<h6>Điều kiện báo cáo</h6>
+    <form asp-controller="Report" asp-action="TS_BCTC_03_DK_TSNN_CHAYNGAM" method="post">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Đơn vị</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="DonVi" asp-filter="true" asp-items="Model.DDLDonVi" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày báo cáo</label>
+            <div class="col-sm-2">
+                <nop-editor asp-for="NgayKetThuc" />
+                <span asp-validation-for="NgayKetThuc"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Loại tài sản</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="ListLoaiTaiSanId" asp-filter="true" asp-items="Model.DDLLoaiTaiSan" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Bậc tài sản</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="BacTaiSan" asp-items="Model.DDLCapBaoCao" />
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left ">Loại đơn vị</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="ListLoaiDonViId" asp-filter="true" asp-items="Model.DDLLoaiDonVi" asp-multiple="true" asp-arrow="true" asp-placeholder="Tất cả" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left ">Nhãn hiệu xe</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="NHAN_XE_ID" asp-filter="true" asp-items="Model.DDLNhanXe" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left ">Chức danh</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="CHUC_DANH_ID" asp-filter="true" asp-items="Model.DDLChucDanh" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Số cầu</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="SoCau_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoCau_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-1 SoCau_Value1_div" style="display:none;">
+                <nop-editor asp-for="SoCau_Value1" />
+                <span asp-validation-for="SoCau_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoCau_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-4 SoCau_Value2_div" style="display:none;">
+                <nop-editor asp-for="SoCau_Value2" />
+                <span asp-validation-for="SoCau_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Năm sử dụng</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NamSD_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NamSD_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-1 NamSD_Value1_div" style="display:none;">
+                <nop-editor asp-for="NamSD_Value1" />
+                <span asp-validation-for="NamSD_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NamSD_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-4 NamSD_Value2_div" style="display:none;">
+                <nop-editor asp-for="NamSD_Value2" />
+                <span asp-validation-for="NamSD_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Năm sản xuất (xây dựng)</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NamSx_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NamSx_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-1 NamSx_Value1_div" style="display:none;">
+                <nop-editor asp-for="NamSx_Value1" />
+                <span asp-validation-for="NamSx_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NamSx_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-4 NamSx_Value2_div" style="display:none;">
+                <nop-editor asp-for="NamSx_Value2" />
+                <span asp-validation-for="NamSx_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Số tầng</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="SoTang_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoTang_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 SoTang_Value1_div" style="display:none;">
+                <nop-editor asp-for="SoTang_Value1" asp-min-number="0" asp-amount="true" />
+                <span asp-validation-for="SoTang_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoTang_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 SoTang_Value2_div" style="display:none;">
+                <nop-editor asp-for="SoTang_Value2" asp-min-number="0" asp-amount="true" />
+                <span asp-validation-for="SoTang_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Diện tích</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="DienTich_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left DienTich_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 DienTich_Value1_div" style="display:none;">
+                <nop-editor asp-for="DienTich_Value1" asp-min-number="0" />
+                <span asp-validation-for="DienTich_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left DienTich_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 DienTich_Value2_div" style="display:none;">
+                <nop-editor asp-for="DienTich_Value2" asp-min-number="0" />
+                <span asp-validation-for="DienTich_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Số chỗ ngồi</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="SoChoNgoi_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoChoNgoi_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 SoChoNgoi_Value1_div" style="display:none;">
+                <nop-editor asp-for="SoChoNgoi_Value1" asp-min-number="0" asp-amount="true" />
+                <span asp-validation-for="SoChoNgoi_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left SoChoNgoi_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 SoChoNgoi_Value2_div" style="display:none;">
+                <nop-editor asp-for="SoChoNgoi_Value2" asp-min-number="0" asp-amount="true" />
+                <span asp-validation-for="SoChoNgoi_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Tải trọng</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="TaiTrong_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TaiTrong_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 TaiTrong_Value1_div" style="display:none;">
+                <nop-editor asp-for="TaiTrong_Value1" asp-min-number="0" />
+                <span asp-validation-for="TaiTrong_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TaiTrong_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 TaiTrong_Value2_div" style="display:none;">
+                <nop-editor asp-for="TaiTrong_Value2" asp-min-number="0" />
+                <span asp-validation-for="TaiTrong_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nguồn NS</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NguyenGiaNS_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaNS_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 NguyenGiaNS_Value1_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaNS_Value1" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaNS_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaNS_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 NguyenGiaNS_Value2_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaNS_Value2" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaNS_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nguồn khác</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NguyenGiaKhac_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaKhac_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 NguyenGiaKhac_Value1_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaKhac_Value1" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaKhac_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaKhac_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 NguyenGiaKhac_Value2_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaKhac_Value2" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaKhac_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nguồn ODA</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NguyenGiaODA_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaODA_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 NguyenGiaODA_Value1_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaODA_Value1" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaODA_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaODA_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 NguyenGiaODA_Value2_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaODA_Value2" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaODA_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nguồn viện trợ</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="NguyenGiaVienTro_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaVienTro_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 NguyenGiaVienTro_Value1_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaVienTro_Value1" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaVienTro_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left NguyenGiaVienTro_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 NguyenGiaVienTro_Value2_div" style="display:none;">
+                <nop-editor asp-for="NguyenGiaVienTro_Value2" asp-min-number="0" />
+                <span asp-validation-for="NguyenGiaVienTro_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Nguyên giá</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="TongNguyenGia_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TongNguyenGia_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 TongNguyenGia_Value1_div" style="display:none;">
+                <nop-editor asp-for="TongNguyenGia_Value1" asp-min-number="0" />
+                <span asp-validation-for="TongNguyenGia_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TongNguyenGia_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 TongNguyenGia_Value2_div" style="display:none;">
+                <nop-editor asp-for="TongNguyenGia_Value2" asp-min-number="0" />
+                <span asp-validation-for="TongNguyenGia_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">GTCL</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="GTCL_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left GTCL_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 GTCL_Value1_div" style="display:none;">
+                <nop-editor asp-for="GTCL_Value1" asp-min-number="0" />
+                <span asp-validation-for="GTCL_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left GTCL_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 GTCL_Value2_div" style="display:none;">
+                <nop-editor asp-for="GTCL_Value2" asp-min-number="0" />
+                <span asp-validation-for="GTCL_Value2"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Tỷ lệ GTCL</label>
+            <div class="col-sm-2">
+                <nop-select asp-for="TyLeChatLuong_CompareSign" asp-items="Model.DDLCompareSign" />
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TyLeChatLuong_Value2_div" style="display:none;">Từ </label>
+            <div class="col-sm-3 TyLeChatLuong_Value1_div" style="display:none;">
+                <nop-editor asp-for="TyLeChatLuong_Value1" asp-min-number="0" asp-max-number="100" />
+                <span asp-validation-for="TyLeChatLuong_Value1"></span>
+            </div>
+            <label class="col-form-label col-sm-1 text-sm-left TyLeChatLuong_Value2_div" style="display:none;">Đến </label>
+            <div class="col-sm-3 TyLeChatLuong_Value2_div" style="display:none;">
+                <nop-editor asp-for="TyLeChatLuong_Value2" asp-min-number="0" asp-max-number="100" />
+                <span asp-validation-for="TyLeChatLuong_Value2"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Đơn vị tính cho	</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left don-vi-tinh">Diện tích đất - nhà</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="DonViDienTich" asp-items="Model.DDLDonViDienTich" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left don-vi-tinh">Giá trị</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="DonViTien" asp-items="Model.DDLDonViTien" />
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left don-vi-tinh">Số lượng</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="So_luong_Object" asp-items="Model.DDLSo_luong_Object" />
+            </div>
+
+        </div>
+
+        <div class="form-group row" style="text-align:left">
+            <div class="col-2"></div>
+            <div class="col-10">
+                <button class="btn btn-primary" type="button" id="btnBaoCao">Báo cáo</button>
+                <button class="btn btn-primary" type="button" id="btnExport">Xuất excel</button>
+                @await Html.PartialAsync("_BtnGroupBaoCaoNgam")
+            </div>
+
+
+
+            @*<button class="btn btn-success" style="display:none;" id="btnBaoCaoNgam" type="submit">Báo cáo ngầm</button>*@
+        </div>
+    </form>
+</div>
+<div id="view-contentTask"></div>
+<iframe id="view-contentReport" style="width:100%;height:1100px;" frameborder="0"></iframe>
+<script>
+    $("#NgayKetThuc").change(function () {
+        var check = true;
+        var ngaybaocao = $("#NgayKetThuc").val();
+        if (!ngaybaocao) {
+            check = false;
+			showInvalidMessage('NgayKetThuc','Ngày không được để trống')
+        }
+        if (!checkValidateDateFormat('#NgayKetThuc', 'NgayKetThuc', 'Sai định dạng ngày')) {
+            check = false;
+        };
+        var temp = ngaybaocao.split('/');
+        var d = temp[1] + '/' + temp[0] + '/' + temp[2];
+        if (check) {
+            $.ajax({
+                type: "GET",
+                url: "/Report/GetJsonBacBaoCaoByDate?NgayBaoCao=" + d,
+                success: function (data) {
+                    var ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+                    ddlCap.setDataSource(data);
+                    ddlCap.select(0);
+                }
+            })
+        }
+    });
+	$(function () {
+		Prepare();
+		// hiển thị lịch sử xuất báo cáo ngầm
+		let _data = {
+			MaBaoCao: "@Model.MaBaoCao"
+		};
+		let _url = '@Url.Action("Detail","QueueProcess")';
+		ajaxPost(_data, _url, true).done(function (data) {
+			$('#view-contentTask').html(data);
+		});
+    });
+    function checkvaliDate() {
+        var check = true;
+		var nkt = $("#NgayKetThuc").val();
+        if (!nkt) {
+            check = false;
+			showInvalidMessage('NgayKetThuc','Ngày không được để trống')
+        }
+		else
+        {
+            hideValmsg("NgayKetThuc");
+        }
+		if (!checkValidateDateFormat('#NgayKetThuc', 'NgayKetThuc', 'Sai định dạng ngày'))
+			check = false;
+
+		if (checkInRange('NamSD', 'Năm đến nhỏ hơn hoặc bằng năm bắt đầu') == false || checkNotNull('NamSD') == false ) {
+			check = false;
+		}
+		if (checkInRange('NamSx', 'Năm đến nhỏ hơn hoặc bằng năm bắt đầu') == false || checkNotNull('NamSx') == false) {
+			check = false;
+		}
+		if (checkInRange('SoTang', 'Số tầng đến nhỏ hơn hoặc bằng số tầng bắt đầu') == false || checkNotNull('SoTang') == false) {
+			check = false;
+		}
+		if (checkInRange('DienTich', 'Diện tích đến nhỏ hơn hoặc bằng diện tích bắt đầu') == false || checkNotNull('DienTich') == false) {
+			check = false
+		}
+		if (checkInRange('SoChoNgoi', 'Số chỗ ngồi đến nhỏ hơn hoặc bằng số chỗ ngồi bắt đầu') == false || checkNotNull('SoChoNgoi') == false) {
+			check = false
+		}
+		if (checkInRange('TaiTrong', 'Tải trọng đến nhỏ hơn hoặc bằng tải trọng bắt đầu') == false || checkNotNull('TaiTrong') == false) {
+			check = false
+		}
+		if (checkInRange('NguyenGiaNS', 'Nguyên giá NS đến nhỏ hơn hoặc bằng nguyên giá NS bắt đầu') == false || checkNotNull('NguyenGiaNS') == false) {
+			check = false
+		}
+		if (checkInRange('NguyenGiaKhac', 'Nguyên giá khác đến nhỏ hơn hoặc bằng nguyên giá khác bắt đầu') == false || checkNotNull('NguyenGiaKhac') == false) {
+			check = false
+		}
+		if (checkInRange('NguyenGiaVienTro', 'Nguyên giá VT đến nhỏ hơn hoặc bằng nguyên giá VT bắt đầu') == false || checkNotNull('NguyenGiaVienTro') == false) {
+			check = false
+		}
+		if (checkInRange('NguyenGiaODA', 'Nguyên giá ODA đến nhỏ hơn hoặc bằng nguyên giá ODA bắt đầu') == false || checkNotNull('NguyenGiaODA') == false) {
+			check = false
+		}
+		if (checkInRange('TongNguyenGia', 'Tổng NG đến nhỏ hơn hoặc bằng tổng NG bắt đầu') == false || checkNotNull('TongNguyenGia') == false) {
+			check = false
+		}
+		if (checkInRange('GTCL', 'GTCL đến nhỏ hơn hoặc bằng GTCL bắt đầu') == false || checkNotNull('GTCL') == false) {
+			check = false
+		}
+		if (checkInRange('TyLeChatLuong', 'Tỷ lệ chất lượng đến nhỏ hơn hoặc bằng tỷ lệ chất lượng bắt đầu') == false || checkNotNull('TyLeChatLuong') == false) {
+			check = false
+		}
+
+        return check;
+	}
+	function checkInRange(prefix, errorString) {
+		let compareSign = prefix + "_CompareSign";
+		let value1 = prefix +"_Value1"
+		let value2 = prefix +"_Value2"
+		if ($("#" + compareSign).val() == '@((int)enumCompare.InRange)') {
+			debugger
+			if (checkValidateIsNumberLowerThan('#' + value1, value1, ConvertToNumber('#' +value2), false, errorString)!=true)
+				return false;
+		}
+		return true;
+	}
+	function checkNotNull(prefix) {
+		let res = true;
+		let compareSign = prefix + "_CompareSign";
+		let value1 = prefix + "_Value1"
+		let value2 = prefix + "_Value2"
+		if ($("#" + compareSign).val() == '@((int)enumCompare.InRange)') {
+			if ($('#' + value1).val() == '' || $('#' + value2).val() == '')
+				res =  false;
+		}
+		else if ($("#" + compareSign).val() != '@((int)enumCompare.All)' && $("#" + compareSign).val() != '@((int)enumCompare.InRange)') {
+			if ($('#' + value1).val() == '')
+				res= false;
+		}
+		if (res == false) {
+			showInvalidMessage(value1, 'Nhập thiếu dữ liệu');
+		}
+		else
+			hideValmsg(value1)
+		return res;
+	}
+	//kiểm tra lúc thay đổi toán tử so sánh
+	function checkChangeCompareSigns(e) {
+		let id = e.sender.element[0].id;
+		let prefix = id.split('_')[0];
+		if ($("#" + prefix + "_CompareSign").val() == '@((int)enumCompare.All)') {
+			$('.' + prefix + '_Value1_div').hide('fast');
+			$('.' + prefix + '_Value2_div').hide('fast');
+		}
+		else if ($("#" + prefix + "_CompareSign").val() == '@((int)enumCompare.InRange)') {
+			$('.' + prefix + '_Value1_div').show('fast');
+			$('.' + prefix + '_Value2_div').show('fast');
+		}
+		else {
+			$('.' + prefix + '_Value1_div').show('fast');
+			$('.' + prefix + '_Value2_div').hide('fast');
+		}
+	}
+
+    function submitReport(isExportExcel) {
+        if (checkvaliDate()) {
+            let StringLoaiTaiSan = null;
+            if ($("#ListLoaiTaiSanId").val()) {
+                StringLoaiTaiSan = $("#ListLoaiTaiSanId").val().join(',');
+            }
+			let StringLoaiDonVi = null;
+            if ($("#ListLoaiDonViId").val()) {
+                StringLoaiDonVi = $("#ListLoaiDonViId").val().join(',');
+            }
+            var data = {
+                NgayBatDau:			getDateFormatForGetMethod($("#NgayBatDau").val()),
+                NgayKetThuc:		getDateFormatForGetMethod($("#NgayKetThuc").val()),
+                DonVi:				$("#DonVi").val(),
+                StringLoaiTaiSan:	StringLoaiTaiSan,
+				StringLoaiDonVi:	StringLoaiDonVi,
+                DonViTien:			$("#DonViTien").val(),
+                DonViDienTich:		$("#DonViDienTich").val(),
+				NHAN_XE_ID:			$("#NHAN_XE_ID").val(),
+                BacTaiSan:			$("#BacTaiSan").val(),
+                So_luong_Object:	$("#So_luong_Object").val(),
+				NamSD_CompareSign:	$("#NamSD_CompareSign").val(),
+				NamSD_Value1:		$("#NamSD_Value1").val(),
+				NamSD_Value2:		$("#NamSD_Value2").val(),
+				NamSx_CompareSign:	$("#NamSx_CompareSign").val(),
+				NamSx_Value1:		$("#NamSx_Value1").val(),
+				NamSx_Value2:		$("#NamSx_Value2").val(),
+				SoTang_CompareSign: $("#SoTang_CompareSign").val(),
+				SoTang_Value1:		$("#SoTang_Value1").data("kendoNumericTextBox").value(),
+				SoTang_Value2:		$("#SoTang_Value2").data("kendoNumericTextBox").value(),
+				DienTich_CompareSign:$("#DienTich_CompareSign").val(),
+				DienTich_Value1:	$("#DienTich_Value1").data("kendoNumericTextBox").value(),
+				DienTich_Value2:	$("#DienTich_Value2").data("kendoNumericTextBox").value(),
+				SoChoNgoi_CompareSign: $("#SoChoNgoi_CompareSign").val(),
+				SoChoNgoi_Value1: $("#SoChoNgoi_Value1").data("kendoNumericTextBox").value(),
+				SoChoNgoi_Value2: $("#SoChoNgoi_Value2").data("kendoNumericTextBox").value(),
+				TaiTrong_CompareSign: $("#TaiTrong_CompareSign").val(),
+				TaiTrong_Value1: $("#TaiTrong_Value1").data("kendoNumericTextBox").value(),
+				TaiTrong_Value2: $("#TaiTrong_Value2").data("kendoNumericTextBox").value(),
+				NguyenGiaNS_CompareSign: $("#NguyenGiaNS_CompareSign").val(),
+				NguyenGiaNS_Value1: $("#NguyenGiaNS_Value1").data("kendoNumericTextBox").value(),
+				NguyenGiaNS_Value2: $("#NguyenGiaNS_Value2").data("kendoNumericTextBox").value(),
+				NguyenGiaKhac_CompareSign: $("#NguyenGiaKhac_CompareSign").val(),
+				NguyenGiaKhac_Value1: $("#NguyenGiaKhac_Value1").data("kendoNumericTextBox").value(),
+				NguyenGiaKhac_Value2: $("#NguyenGiaKhac_Value2").data("kendoNumericTextBox").value(),
+				NguyenGiaVienTro_CompareSign: $("#NguyenGiaVienTro_CompareSign").val(),
+				NguyenGiaVienTro_Value1: $("#NguyenGiaVienTro_Value1").data("kendoNumericTextBox").value(),
+				NguyenGiaVienTro_Value2: $("#NguyenGiaVienTro_Value2").data("kendoNumericTextBox").value(),
+				NguyenGiaODA_CompareSign: $("#NguyenGiaODA_CompareSign").val(),
+				NguyenGiaODA_Value1: $("#NguyenGiaODA_Value1").data("kendoNumericTextBox").value(),
+				NguyenGiaODA_Value2: $("#NguyenGiaODA_Value2").data("kendoNumericTextBox").value(),
+				TongNguyenGia_CompareSign: $("#TongNguyenGia_CompareSign").val(),
+				TongNguyenGia_Value1: $("#TongNguyenGia_Value1").data("kendoNumericTextBox").value(),
+				TongNguyenGia_Value2: $("#TongNguyenGia_Value2").data("kendoNumericTextBox").value(),
+				GTCL_CompareSign: $("#GTCL_CompareSign").val(),
+				GTCL_Value1: $("#GTCL_Value1").data("kendoNumericTextBox").value(),
+				GTCL_Value2: $("#GTCL_Value2").data("kendoNumericTextBox").value(),
+				TyLeChatLuong_CompareSign: $("#TyLeChatLuong_CompareSign").val(),
+				TyLeChatLuong_Value1: $("#TyLeChatLuong_Value1").data("kendoNumericTextBox").value(),
+                TyLeChatLuong_Value2: $("#TyLeChatLuong_Value2").data("kendoNumericTextBox").value(),
+                CHUC_DANH_ID: $("#CHUC_DANH_ID").val(),
+                SoCau_CompareSign: $("#SoCau_CompareSign").val(),
+                SoCau_Value1: $("#SoCau_Value1").data("kendoNumericTextBox").value(),
+                SoCau_Value2: $("#SoCau_Value2").data("kendoNumericTextBox").value(),
+                IsExportExcel: isExportExcel,
+            };
+			submit_post_via_hidden_form("/Report/TS_BCTC_03_DK_TSNN_", data, 'GET');
+        }
+		//}
+    }
+
+    $("#btnBaoCao").click(function () {
+        submitReport(false)
+    })
+    $("#btnExport").click(function () {
+        submitReport(true)
+    })
+
+	function Prepare() {
+		let ddlDVTien = $("#DonViTien").data("kendoDropDownList");
+		if (ddlDVTien) {
+			ddlDVTien.select(1);
+		}
+		let ddlDVDT = $("#DonViDienTich").data("kendoDropDownList");
+		if (ddlDVDT) {
+			ddlDVDT.select(0);
+		}
+		let ddlCap = $("#BacTaiSan").data("kendoDropDownList");
+		if (ddlCap) {
+			ddlCap.select(0);
+		}
+		let ddlSL = $("#So_luong_Object").data("kendoDropDownList");
+		if (ddlSL) {
+			ddlSL.select(0);
+		}
+		//năm sử dụng
+		let ddlNamSD = $("#NamSD_CompareSign").data("kendoDropDownList");
+		if (ddlNamSD) {
+			ddlNamSD.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNamSx = $("#NamSx_CompareSign").data("kendoDropDownList");
+		if (ddlNamSx) {
+			ddlNamSx.bind("change", checkChangeCompareSigns);
+		}
+
+		let ddlSoTang = $("#SoTang_CompareSign").data("kendoDropDownList");
+		if (ddlSoTang) {
+			ddlSoTang.bind("change", checkChangeCompareSigns);
+		}
+		let ddlDienTich = $("#DienTich_CompareSign").data("kendoDropDownList");
+		if (ddlDienTich) {
+			ddlDienTich.bind("change", checkChangeCompareSigns);
+		}
+		let ddlSoChoNgoi = $("#SoChoNgoi_CompareSign").data("kendoDropDownList");
+		if (ddlSoChoNgoi) {
+			ddlSoChoNgoi.bind("change", checkChangeCompareSigns);
+		}
+		let ddlTaiTrong = $("#TaiTrong_CompareSign").data("kendoDropDownList");
+		if (ddlTaiTrong) {
+			ddlTaiTrong.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNguyenGiaNS = $("#NguyenGiaNS_CompareSign").data("kendoDropDownList");
+		if (ddlNguyenGiaNS) {
+			ddlNguyenGiaNS.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNguyenGiaKhac = $("#NguyenGiaKhac_CompareSign").data("kendoDropDownList");
+		if (ddlNguyenGiaKhac) {
+			ddlNguyenGiaKhac.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNguyenGiaVienTro = $("#NguyenGiaVienTro_CompareSign").data("kendoDropDownList");
+		if (ddlNguyenGiaVienTro) {
+			ddlNguyenGiaVienTro.bind("change", checkChangeCompareSigns);
+		}
+		let ddlNguyenGiaODA = $("#NguyenGiaODA_CompareSign").data("kendoDropDownList");
+		if (ddlNguyenGiaODA) {
+			ddlNguyenGiaODA.bind("change", checkChangeCompareSigns);
+		}
+		let ddlTongNguyenGia = $("#TongNguyenGia_CompareSign").data("kendoDropDownList");
+		if (ddlTongNguyenGia) {
+			ddlTongNguyenGia.bind("change", checkChangeCompareSigns);
+		}
+		let ddlGTCL = $("#GTCL_CompareSign").data("kendoDropDownList");
+		if (ddlGTCL) {
+			ddlGTCL.bind("change", checkChangeCompareSigns);
+		}
+		let ddlTyLeChatLuong = $("#TyLeChatLuong_CompareSign").data("kendoDropDownList");
+		if (ddlTyLeChatLuong) {
+			ddlTyLeChatLuong.bind("change", checkChangeCompareSigns);
+        }
+
+        //số cầu
+        let ddlSoCau = $("#SoCau_CompareSign").data("kendoDropDownList");
+        if (ddlSoCau) {
+            ddlSoCau.bind("change", checkChangeCompareSigns);
+        }
+        
+	}
+</script>

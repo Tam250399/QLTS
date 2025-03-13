@@ -1,0 +1,152 @@
+﻿@model DeNghiXuLyTaiSanModel
+<script>
+        function SaveTaiSanDeNghi(id) {
+            var _data = {
+                ID: id,
+                DE_NGHI_XU_LY_ID: $("#DE_NGHI_XU_LY_ID_" + id).val(),
+                TAI_SAN_ID: $("#TAI_SAN_ID_" + id).val(),
+                MA_TAI_SAN: $("#MA_TAI_SAN_" + id).val(),
+                PHUONG_THUC_XU_LY: $("#PHUONG_THUC_XU_LY_" + id).val(),
+                LY_DO_BIEN_DONG_ID: $("#LY_DO_BIEN_DONG_ID_" + id).val()
+            };
+            $.ajax({
+                type: "POST",
+                data: _data,
+                url: "/DeNghiXuLyTaiSan/_CreateOrUpdateForXuLy",
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        //HideModalManual();
+                        ShowSuccessMessage(data.Message);
+                        $('#themTaiSan').modal("hide");
+                        $('#globalModalIframe').modal("hide");
+                        var grid = $('#items-grid-DeNghiXuLyTaiSan').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        return false;
+                        //$("#btnSearchKK").click();
+                    }
+                    else {
+                        ShowErrorMessage(data.Message);
+                        return false;
+                    }
+                }
+            });
+        @*bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn lưu?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    var _data = {
+                        ID: id,
+                        DE_NGHI_XU_LY_ID: $("#DE_NGHI_XU_LY_ID_" + id).val(),
+                        TAI_SAN_ID: $("#TAI_SAN_ID_" + id).val(),
+                        MA_TAI_SAN: $("#MA_TAI_SAN_" + id).val(),
+                        PHUONG_THUC_XU_LY: $("#PHUONG_THUC_XU_LY_" + id).val()
+                    };
+                    $.ajax({
+                        type: "POST",
+                        data: _data,
+                        url: "/DeNghiXuLyTaiSan/_CreateOrUpdateForXuLy",
+                        success: function (data) {
+                            if (CheckValidMessageReturn(data)) {
+                                //HideModalManual();
+                                ShowSuccessMessage(data.Message);
+                                $('#themTaiSan').modal("hide");
+                                $('#globalModalIframe').modal("hide");
+                                var grid = $('#items-grid-DeNghiXuLyTaiSan').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                                //$("#btnSearchKK").click();
+                            }
+                            else {
+                                ShowErrorMessage(data.Message);
+                            }
+                        }
+                    })
+                }
+            }
+        })*@
+
+    }
+</script>
+<input asp-for="ID" id="DE_NGHI_XU_LY_TAI_SAN_ID_@Model.ID" type="hidden" />
+<input asp-for="DE_NGHI_XU_LY_ID" id="DE_NGHI_XU_LY_ID_@Model.ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" id="TAI_SAN_ID_@Model.ID" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Mã tài sản:</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="MA_TAI_SAN" id="MA_TAI_SAN_@Model.ID" asp-disabled="true"/>
+        <span asp-validation-for="MA_TAI_SAN"></span>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#searchTaiSanForXyLy">Tìm kiếm</button>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Tên tài sản:</label>
+    <div class="col-sm-9">
+        <nop-editor asp-for="TEN_TAI_SAN" id="TEN_TAI_SAN_@Model.ID" asp-disabled="true"/>
+        <span asp-validation-for="TEN_TAI_SAN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Phương thức xử lý:</label>
+    <div class="col-sm-9">
+        <nop-select asp-for="LY_DO_BIEN_DONG_ID" id="LY_DO_BIEN_DONG_ID_@Model.ID" asp-items="@Model.ListLyDo" />
+        <span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-10"></label>
+    <div class="col-sm-2">
+        <button type="button" onclick="SaveTaiSanDeNghi(@Model.ID)" class="btn btn-success" style="float:right; margin-right: 5px;">
+            <i class="fas fa-save"></i>
+            Thêm vào danh sách
+        </button>
+    </div>
+
+</div>
+<script>
+    function chonTaiSan(id, ma, ten) {
+        $("#TAI_SAN_ID_@Model.ID").val(id);
+        $("#MA_TAI_SAN_@Model.ID").val(ma);
+        $("#TEN_TAI_SAN_@Model.ID").val(ten);
+        $('#searchTaiSanForXyLy').modal("hide");
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#searchTaiSanForXyLy').on('show.bs.modal', function (event) {
+            ShowViewLoading("#searchTaiSanForXyLyBody");
+            var _data = {
+                KeySearch: $("#MA_TAI_SAN_@Model.ID").val(),
+                @if (Model.ID == 0)
+                {
+                    <text>
+                    DE_NGHI_XU_LY_ID: $("#DE_NGHI_XU_LY_ID_@Model.ID").val(),
+                    </text>
+                }                
+            }
+            $.ajax({
+                type: "GET",
+                data: _data,
+                url: "/TaiSan/_ListTaiSanForDeNghiXuLy",
+                success: function (data) {
+                    $("#searchTaiSanForXyLyBody").html(data);
+                },
+            });
+        });
+    });
+</script>
+
+
+

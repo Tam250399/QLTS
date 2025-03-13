@@ -1,0 +1,52 @@
+﻿@model TestModel
+<nop-antiforgery-token />
+<div class="card">
+    <div class="card-header">Test Api Kho</div>
+
+    <div class="card-body">
+        {"LoaiBienDongId":1,"ListTaiSanId":[1,2,3,4,5]}
+        <div class="row form-group">
+            <div class=" col-md-2">Json Data:  </div>
+            <div class=" col-md-10">
+                <textarea id="jsonData" style="width:100%; height:150px;"></textarea>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class=" col-md-2">Response:  </div>
+            <div class=" col-md-10">
+                <textarea id="ResponseApi" style="width:100%; height:150px;"></textarea>
+            </div>
+            <br />
+            <span id="TrangThaiTestApi" style="color:red"></span>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button id="SendRequest" class="btn btn-sm btn-outline-danger">Gửi Request</button>
+        <script>
+            $(document).ready(function () {
+                $("#SendRequest").click(function () {
+                    var _data = {
+                        jsonData: $("#jsonData").val()
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/DongBoTaiSan",
+                        data: _data,
+                        async: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $("#ResponseApi").val(data.Data);
+                                $('#TrangThaiTestApi').text("Thành công")
+                            }
+                            else {
+                                $("#ResponseApi").val(data.Error);
+                                $('#TrangThaiTestApi').text("Thất bại")
+                            }
+                        }
+                    })
+                })
+            });
+        </script>
+    </div>
+
+</div>

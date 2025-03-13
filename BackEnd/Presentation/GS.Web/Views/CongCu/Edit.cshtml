@@ -1,0 +1,152 @@
+@model CongCuModel
+@{
+    //page title
+    ViewBag.Title = "Công cụ, dụng cụ";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NhapLoCongCuDungCu");
+}
+<div class="card mb-4">
+    <h6 class="card-header">
+        Sửa thông tin công cụ, dụng cụ
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="List">Quay lại danh sách</a>
+        </small>
+        <a class="btn btn-default btnClose btn-sm" style="float:right;margin-right: 5px;" asp-action="List">
+            <i class="ion ion-ios-close-circle-outline"></i>
+            Đóng
+        </a>
+        <span id="item-delete" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+            <i class="fas fa-trash"></i>
+            Xóa
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-primary" style="float:right; margin-right: 5px;" id="btnSaveEdit">
+            <i class="fas fa-save"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+<script>
+    $("#btnSaveEdit").click(function () {
+        var ListLoCongCu = [];
+        var checkValidation = true;
+        $(".ContentLoCongCu").each(function () {
+            var IDF = $(this).data("guid");
+            var ID_VAL = $("#ID_VAL_" + IDF).val();
+            var NHOM_CONG_CU_ID_VAL = $("#NHOM_CONG_CU_ID_" + IDF).val();
+            var SO_LUONG_VAL = $("#SO_LUONG_" + IDF).val();
+            var DON_GIA_VAL = $("#DON_GIA_" + IDF).val();
+            var THANH_TIEN_VAL = $("#THANH_TIEN_" + IDF).text();
+            //var TRANG_THAI_ID_VAL = $("#TRANG_THAI_ID_" + IDF).val();
+            var CONG_CU_ID_VAL = $("#addCongCu_" + IDF).val();
+            var TEN_CONG_CU_VAL = $("#CONG_CU_ID_" + IDF).data("kendoComboBox").text();
+            var MapId_VAL = $("#MapId_" + IDF).val();
+            var LoCongCu = {
+                ID: ID_VAL,
+                NHOM_CONG_CU_ID: NHOM_CONG_CU_ID_VAL,
+                SO_LUONG: SO_LUONG_VAL,
+                DON_GIA: DON_GIA_VAL,
+                THANH_TIEN: THANH_TIEN_VAL,
+                //TRANG_THAI_ID: TRANG_THAI_ID_VAL,
+                CongCuId: CONG_CU_ID_VAL,
+                TEN: TEN_CONG_CU_VAL,
+                MapId: MapId_VAL
+            };
+            ClearValidated(IDF);
+            if (!CheckCongCuValidation(IDF)) {
+                checkValidation = CheckCongCuValidation(IDF);
+            }
+            ListLoCongCu.push(LoCongCu);
+        });
+        var data = {
+            ListLoCongCu: ListLoCongCu,
+            CurrentDonViMa: $("#CurrentDonViMa").val(),
+            DON_VI_BO_PHAN_ID: $("#DON_VI_BO_PHAN_ID").val(),
+            TenXuatNhap: $("#TenXuatNhap").val(),
+            NgayXuatNhap: $("#NgayXuatNhap").val(),
+            ChungTuSoXuatNhap: $("#ChungTuSoXuatNhap").val(),
+            ChungTuNgayXuatNhap: $("#ChungTuNgayXuatNhap").val(),
+            GhiChuXuatNhap: $("#GhiChuXuatNhap").val(),
+            MucDichXuatNhapId: $("#MucDichXuatNhapId").val(),
+            XuatNhapId: $("#XuatNhapId").val(),
+            TRANG_THAI_ID: $("#TRANG_THAI_ID").val(),
+        };
+        if (checkValidation) {
+            $.ajax({
+                url: "/CongCu/Edit",
+                type: "POST",
+                data: data,
+                success: function (data) {
+                    if (CheckValidMessageReturn(data)) {
+                        ShowSuccessMessage(data.Message);
+                        document.location.href = '/CongCu/List?IsLoadSession=true';
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+    })
+    function CheckCongCuValidation(e) {
+        var check = true;
+        var TEN = $("#TEN_" + e).val();
+        if (TEN != undefined && (TEN == "" || TEN == null)) {
+            $("#err_TEN_" + e).show();
+            check = false;
+        }
+        var NHOM_CONG_CU_ID_VAL = $("#NHOM_CONG_CU_ID_" + e).val();
+        if (NHOM_CONG_CU_ID_VAL != undefined && (NHOM_CONG_CU_ID_VAL == 0)) {
+            $("#err_NHOM_CONG_CU_ID_" + e).show();
+            check = false;
+        }
+        var CONG_CU_ID_VAL = $("#CONG_CU_ID_" + e).val();
+        if (CONG_CU_ID_VAL != undefined && (CONG_CU_ID_VAL == 0)) {
+            $("#err_CONG_CU_ID_" + e).show();
+            check = false;
+        }
+        var SO_LUONG_VAL = $("#SO_LUONG_" + e).val();
+        if (SO_LUONG_VAL != undefined && (SO_LUONG_VAL == null || SO_LUONG_VAL == 0)) {
+            $("#err_SO_LUONG_" + e).show();
+            check = false;
+        }
+        var DON_GIA_VAL = $("#DON_GIA_" + e).val();
+        if (DON_GIA_VAL != undefined && (DON_GIA_VAL == null || DON_GIA_VAL == 0)) {
+            $("#err_DON_GIA_" + e).show();
+            check = false;
+        }
+        //var TRANG_THAI_VAL = $("#TRANG_THAI_ID_" + e).val();
+        //if (TRANG_THAI_VAL != undefined && (TRANG_THAI_VAL == null || TRANG_THAI_VAL == 0)) {
+        //    $("#err_TRANG_THAI_ID_" + e).show();
+        //    check = false;
+        //}
+
+        return check;
+    }
+    function ClearValidated(e) {
+        var TEN = $("#TEN_" + e).val();
+        if (TEN != undefined) {
+            $("#err_TEN_" + e).hide();
+        }
+        var NHOM_CONG_CU_ID_VAL = $("#NHOM_CONG_CU_ID_" + e).val();
+        if (NHOM_CONG_CU_ID_VAL != undefined) {
+            $("#err_NHOM_CONG_CU_ID_" + e).hide();
+        }
+        var CONG_CU_ID_VAL = $("#CONG_CU_ID_" + e).val();
+        if (CONG_CU_ID_VAL != undefined) {
+            $("#err_CONG_CU_ID_" + e).hide();
+        }
+        var SO_LUONG_VAL = $("#SO_LUONG_" + e).val();
+        if (SO_LUONG_VAL != undefined) {
+            $("#err_SO_LUONG_" + e).hide();
+        }
+        var DON_GIA_VAL = $("#DON_GIA_" + e).val();
+        if (DON_GIA_VAL != undefined) {
+            $("#err_DON_GIA_" + e).hide();
+        }
+    }
+</script>
+<nop-delete-confirmation asp-model-id="@Model.XuatNhapId" asp-button-id="item-delete" />

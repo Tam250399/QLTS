@@ -1,0 +1,38 @@
+﻿@model NguoiDungModel
+
+@{
+    //page title
+    ViewBag.Title = "Người dùng";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NguoiDungDanhSach");
+}
+
+<form asp-controller="NguoiDung" asp-action="Create" method="post" id="NguoiDungForm">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới người dùng
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu và tiếp tục sửa
+            </button>
+            <button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px; " id="btnAddNguoiDung">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $("#NguoiDungForm").submit(function () {
+            $("#btnAddNguoiDung").attr("disabled", "disabled");
+        });
+    });
+</script>

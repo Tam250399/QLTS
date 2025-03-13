@@ -1,0 +1,51 @@
+﻿@model SiteMapNode
+
+@using GS.Web.Framework.Menu
+@{
+    //load sitemap theo menu chinh
+    var mainNode = Model;
+}
+
+@if (mainNode != null)
+{
+    <ul class="sidebar-nav pad-l0">
+        <li class="sidebar-brand"> <a href="javascript:void(0)"><span class="font400">@mainNode.Title</span></a> </li>
+        @foreach (var item in mainNode.ChildNodes.Where(x => x.Visible))
+        {
+            @await Html.PartialAsync("_MenuItemTSCV1", item)
+        }
+    </ul>
+    <script>
+        $(document).ready(function () {
+            @*$("#wrapper").css("min-height",@(((mainNode.ChildNodes.Count() + mainNode.ChildNodes.Sum(c=>(c.ChildNodes.Count() + c.ChildNodes.Sum(x=>x.ChildNodes.Count())))) * 40)+50)+"px");*@
+            $("#wrapper").css("min-height",@(mainNode.ChildNodes.Where(x => x.Visible).Count() * 40 + 40)+"px");
+            $("#wrapper a[data-toggle='collapse']").click(function (e) {
+                let el = this;
+                let data_target_first = $(el).attr('data-target');
+                let numChildren = $(data_target_first).children().length;
+                let i = numChildren;
+                $(data_target_first).find("[data-toggle='collapse']").each(function (index) {
+                    let x = $(this);
+                    setTimeout(function () {
+                        if ($(x).attr('aria-expanded') == 'true') {
+                            let data_target = $(x).attr('data-target');
+                            i += $(data_target).children().length;
+                        }
+                    }, 0);
+                });
+
+                setTimeout(function () {
+                    let min_h = parseInt($("#wrapper").css("min-height").replace('px', ''));
+                    if ($(el).attr('aria-expanded') == 'true') {
+                        min_h = min_h + i * 40;
+                        $("#wrapper").css("min-height", min_h + "px");
+                    } else {
+                        min_h = min_h - i * 40;
+                        $("#wrapper").css("min-height", min_h + "px");
+                    }
+                }, 10);
+            });
+        });
+    </script>
+}
+

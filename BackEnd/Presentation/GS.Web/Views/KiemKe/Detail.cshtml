@@ -1,0 +1,337 @@
+﻿@model KiemKeModel
+@{
+    //page title
+    ViewBag.Title = "Kiểm kê";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("KiemKeCongCuDungCu");
+}
+
+<input asp-for="ID" type="hidden" />
+<div>
+    <small>
+        <i class="fa fa-arrow-circle-left"></i>
+        <a asp-action="List">Quay lại danh sách</a>
+    </small>
+    <button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/KiemKe/List';" style="float:right; margin-right: 5px;">
+		<i class="ion ion-ios-close-circle-outline"></i>
+		Đóng
+	</button>
+</div>
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin kiểm kê</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị sử dụng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="MaDonVi" asp-disabled="true" />
+        </div>
+        <div class="col-sm-6">
+            <nop-editor asp-for="TenDonVi" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày kiểm kê</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_KIEM_KE" asp-disabled="true" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Số kiểm kê</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SO_KIEM_KE" asp-disabled="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Đơn vị bộ phận</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" asp-disabled="true"/>
+        </div>
+    </div>
+</div>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thành phần tham gia kiểm kê</h6>
+    <div id="view_ListHoiDong">
+        <script> 
+            $(document).ready(function () {
+                LoadViewHoiDong();
+            })
+            function LoadViewHoiDong() {
+                ShowViewLoading("#view_ListHoiDong");
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemKeHoiDong/_List?KiemKeId=@Model.ID",
+                    success: function (data) {
+                        $("#view_ListHoiDong").html(data);
+                    }
+                });
+            }
+        </script>
+    </div>
+    @*<div id="view-hoiDongKiemKe"></div>
+    <div id="view-hoiDongKiemKeValue"></div>
+    <div class="row">
+        <div class="col-md-11"></div>
+        <div class="col-md-1" style="text-align:right">
+            <button class="btn btn-success" id="btn-save-thanhvienhoidong">
+                Lưu
+            </button>
+        </div>
+    </div>
+    @if (Model.ListKiemKeHoiDongModel.Count() > 0)
+    {
+        foreach (var hoidong in Model.ListKiemKeHoiDongModel)
+        {
+            <script>
+                var data = {
+                    ID: @hoidong.ID,
+                    KIEM_KE_ID: @hoidong.KIEM_KE_ID,
+                    HO_TEN: '@Html.Raw(hoidong.HO_TEN)',
+                    CHUC_VU: '@Html.Raw(hoidong.CHUC_VU)',
+                    DAI_DIEN: '@Html.Raw(hoidong.DAI_DIEN)',
+                    VI_TRI_ID: '@hoidong.VI_TRI_ID'
+                };
+                $.ajax({
+                    type: "GET",
+                    data: data,
+                    url: "/KiemKeHoiDong/_CreateOrUpdate",
+                    success: function (data) {
+                        $("#view-hoiDongKiemKeValue").append(data);
+                    }
+                });
+            </script>
+        }
+    }
+    else
+    {
+        <script>
+            $(document).ready(function () {
+                ShowViewLoading("#view-hoiDongKiemKe");
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemKeHoiDong/_CreateOrUpdate?isFirst=true",
+                    success: function (data) {
+                        $("#view-hoiDongKiemKe").html(data);
+                    }
+                })
+            })
+        </script>
+    }
+    <script>
+        $("#btnAddThanhVienHoiDong").click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/KiemKeHoiDong/_CreateOrUpdate",
+                success: function (data) {
+                    $("#view-hoiDongKiemKe").append(data);
+                }
+            })
+        })
+        $("#btn-save-thanhvienhoidong").click(function () {
+            var checkValidation = true;
+            var listhoidong = [];
+            $(".list-hoidongkiemke").each(function () {
+                var IDF = $(this).data("guid");
+                var ID_VAL = $("#ID_" + IDF).val();
+                var HO_TEN_VAL = $("#HO_TEN_" + IDF).val();
+                var CHUC_VU_VAL = $("#CHUC_VU_" + IDF).val();
+                var DAI_DIEN_VAL = $("#DAI_DIEN_" + IDF).val();
+                var VI_TRI_ID_VAL = $("#VI_TRI_ID_" + IDF).val();
+                var ListHoiDongKiemKe = {
+                    HO_TEN: HO_TEN_VAL,
+                    CHUC_VU: CHUC_VU_VAL,
+                    DAI_DIEN: DAI_DIEN_VAL,
+                    VI_TRI_ID: VI_TRI_ID_VAL,
+                    ID: ID_VAL
+                };
+                ClearValidationHoiDongKiemKe(IDF);
+                if (!ValidationHoiDongKiemKe(IDF)) {
+                    checkValidation = false;
+                }
+                listhoidong.push(ListHoiDongKiemKe);
+            });
+            var data = {
+                ListHoiDongKiemKe: listhoidong,
+                ID: $("#ID").val()
+            };
+            if (checkValidation) {
+                $.ajax({
+                    url: "/KiemKe/CreateHoiDongKiemKe",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (CheckValidMessageReturn(data)) {
+                            ShowSuccessMessage(data.Message);
+                        }
+                    },
+                    error: function (data) {
+
+                    }
+                })
+            }
+        })
+        function ValidationHoiDongKiemKe(e) {
+            var check = true;
+            var HO_TEN = ($("#HO_TEN_" + e).val()).trim();
+            if (HO_TEN != undefined && (HO_TEN == "" || HO_TEN == null)) {
+                $("#err_HO_TEN_" + e).show();
+                check = false;
+            }
+            var CHUC_VU = ($("#CHUC_VU_" + e).val()).trim();
+            if (CHUC_VU != undefined && (CHUC_VU == "" || CHUC_VU == null)) {
+                $("#err_CHUC_VU_" + e).show();
+                check = false;
+            }
+            var DAI_DIEN = ($("#DAI_DIEN_" + e)).val().trim();
+            if (DAI_DIEN != undefined && (DAI_DIEN == "" || DAI_DIEN == null)) {
+                $("#err_DAI_DIEN_" + e).show();
+                check = false;
+            }
+
+            return check;
+        }
+        function ClearValidationHoiDongKiemKe(e) {
+            var HO_TEN = $("#HO_TEN_" + e).val();
+            if (HO_TEN != undefined) {
+                $("#err_HO_TEN_" + e).hide();
+            }
+            var CHUC_VU = $("#CHUC_VU_" + e).val();
+            if (CHUC_VU != undefined) {
+                $("#err_CHUC_VU_" + e).hide();
+            }
+            var DAI_DIEN = $("#DAI_DIEN_" + e).val();
+            if (DAI_DIEN != undefined) {
+                $("#err_DAI_DIEN_" + e).hide();
+            }
+        }
+    </script>*@
+</div>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết công cụ, dụng cụ kiểm kê</h6>
+    <div id="view-congCuKiemKe"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        LoadCongCuKiemKe();
+    })
+    function LoadCongCuKiemKe() {
+         ShowViewLoading("#view-congCuKiemKe");
+        $.ajax({
+            type: "GET",
+            url: "/KiemKeCongCu/List?KiemKeId=@Model.ID",
+            success: function (data) {
+                $("#view-congCuKiemKe").html(data);
+            }
+        })
+    }
+</script>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Chi tiết công cụ, dụng cụ phát hiện thừa</h6>
+    <div style="text-align:right">
+        <button type="button" class="btn btn-xs btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-title="Thêm mới" data-src="/KiemKeCongCu/Create?KiemKeId=@Model.ID" style="margin:10px;">
+            <i class="ion ion-md-add"></i>
+            Thêm CCDC phát hiện thừa
+        </button>
+    </div>
+    <div id="view-congCuPhatHienThua"></div>
+    <script>
+    $(document).ready(function () {
+        LoadCongCuThuaKiemKe();
+    })
+        function LoadCongCuThuaKiemKe() {
+         ShowViewLoading("#view-congCuPhatHienThua");
+        $.ajax({
+            type: "GET",
+            url: "/KiemKeCongCu/ListCongCuThua?KiemKeId=@Model.ID",
+            success: function (data) {
+                $("#view-congCuPhatHienThua").html(data);
+            }
+        })
+    }
+    </script>
+</div>
+
+<script>
+    function DeleteHoiDongKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeHoiDong/DeleteForKiemKe?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadViewHoiDong();
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    function DeleteCongCuKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeCongCu/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadCongCuKiemKe();
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    function DeleteCongCuThuaKiemKe(e) {
+        bootbox.confirm({
+            message: 'Bạn có chắc chắn muốn xóa ?',
+            className: 'bootbox-sm',
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (result) {
+                if (result) {
+                    kendo.ui.progress($(".progress-bar"), true);
+                    $.ajax({
+                        type: "POST",
+                        url: "/KiemKeCongCu/Delete?id=" + e,
+                        success: function (data) {
+                            ShowSuccessMessage(data.Message);
+                            LoadCongCuThuaKiemKe();
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>

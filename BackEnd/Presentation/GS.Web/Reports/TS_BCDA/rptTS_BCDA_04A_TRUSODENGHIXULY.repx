@@ -1,0 +1,486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="18.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="rptTS_BCDA_04A_TRUSODENGHIXULY" Landscape="true" Margins="39, 15, 30, 30" PaperKind="A4" PageWidth="1169" PageHeight="827" Version="18.2" EventsInfo="|ReportHeader,BeforePrint,ReportHeader_BeforePrint;groupDat,BeforePrint,groupDat_BeforePrint;GroupHeader1,BeforePrint,GroupHeader1_BeforePrint;GroupFooter1,BeforePrint,GroupFooter1_BeforePrint;ReportFooter,BeforePrint,ReportFooter_BeforePrint" DataSource="#Ref-0" Font="Arial, 9.75pt">
+  <Bands>
+    <Item1 Ref="2" ControlType="TopMarginBand" Name="TopMargin" HeightF="30" />
+    <Item2 Ref="3" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="30">
+      <Controls>
+        <Item1 Ref="4" ControlType="XRPageInfo" Name="pageInfo1" TextFormatString="Trang {0}/{1}" TextAlignment="MiddleRight" SizeF="100,23" LocationFloat="1005, 0" Padding="2,2,0,0,100">
+          <StylePriority Ref="5" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="6" ControlType="DetailBand" Name="Detail" HeightF="35">
+      <Controls>
+        <Item1 Ref="7" ControlType="XRTable" Name="table3" SizeF="1115,35" LocationFloat="0, 0">
+          <Rows>
+            <Item1 Ref="8" ControlType="XRTableRow" Name="tableRow12" Weight="1">
+              <Cells>
+                <Item1 Ref="9" ControlType="XRTableCell" Name="tableCell18" Weight="1.7624998474121094" Multiline="true" TextAlignment="MiddleLeft" Font="Times New Roman, 9.75pt" Padding="5,2,0,0,100" Borders="Left, Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="10" Expression="[TAI_SAN_NHA_TEN]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="11" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="12" ControlType="XRTableCell" Name="tableCell19" Weight="0.61355804443359374" Multiline="true" TextAlignment="MiddleLeft" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="13" Expression="[TEN_LOAI_TAI_SAN_NHA]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="14" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="15" ControlType="XRTableCell" Name="tableCell20" Weight="0.72394210815429694" Multiline="true" TextAlignment="MiddleCenter" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="16" Expression="[NHA_NAM_XAY_DUNG]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="17" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="18" ControlType="XRTableCell" Name="tableCell21" Weight="0.61666656494140626" TextFormatString="{0:yyyy}" Multiline="true" TextAlignment="MiddleCenter" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="19" Expression="[NGAY_SU_DUNG]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="20" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="21" ControlType="XRTableCell" Name="tableCell31" Weight="0.92916687011718746" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="22" Expression="[NHA_NGUYEN_GIA]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="23" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="24" ControlType="XRTableCell" Name="tableCell32" Weight="0.92916656494140626" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="25" Expression="[NHA_NGUYEN_GIA_NS]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="26" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="27" ControlType="XRTableCell" Name="tableCell33" Weight="0.92916748046875" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="28" Expression="[NHA_NGUYEN_GIA_ODA]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="29" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="30" ControlType="XRTableCell" Name="tableCell49" Weight="0.929166259765625" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="31" Expression="[NHA_NGUYEN_GIA_VIEN_TRO]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="32" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="33" ControlType="XRTableCell" Name="tableCell50" Weight="0.92916564941406243" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="34" Expression="[NHA_NGUYEN_GIA_KHAC]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="35" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="36" ControlType="XRTableCell" Name="tableCell51" Weight="1.3041680908203124" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="37" Expression="[NHA_GTCL]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="38" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="39" ControlType="XRTableCell" Name="tableCell52" Weight="0.55416564941406254" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="40" Expression="[SO_TANG]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="41" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="42" ControlType="XRTableCell" Name="tableCell53" Weight="0.92916687011718746" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <ExpressionBindings>
+                    <Item1 Ref="43" Expression="[NHA_TONG_DIEN_TICH_XD]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="44" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item12>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+      </Controls>
+    </Item3>
+    <Item4 Ref="45" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="120.125023">
+      <Controls>
+        <Item1 Ref="46" ControlType="XRLabel" Name="label2" Multiline="true" Text="(Ban hành kèm Thông tư số 198/2013/TT-BTC ngày&#xD;&#xA;20/12/2013 của Bộ Tài chính)&#xD;&#xA;" TextAlignment="TopCenter" SizeF="304.892761,43.3333359" LocationFloat="808.750061, 18.0000057" Font="Times New Roman, 9.75pt, style=Italic" Padding="2,2,0,0,100">
+          <StylePriority Ref="47" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="48" ControlType="XRLabel" Name="lblDieuKien" Multiline="true" Text="Thời điểm báo cáo: 01/10/2020" TextAlignment="MiddleCenter" SizeF="1113.64282,23.0000076" LocationFloat="0, 90.12502" Font="Times New Roman, 10.2pt, style=Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="49" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="50" ControlType="XRLabel" Name="leftHeader" Multiline="true" Text="Cơ quan chủ quản: Bộ Nông nghiệp và Phát triển Nông thôn&#xD;&#xA;Tên Ban QLDA: Ban quản lý dự án" SizeF="808.750061,61.33334" LocationFloat="0, 0" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100">
+          <StylePriority Ref="51" UseFont="false" />
+        </Item3>
+        <Item4 Ref="52" ControlType="XRLabel" Name="label4" Multiline="true" Text="Mẫu số 04a-DM/TSDA&#xD;&#xA;" TextAlignment="TopCenter" SizeF="304.892761,18.0000057" LocationFloat="808.750061, 0" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100">
+          <StylePriority Ref="53" UseFont="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="54" ControlType="XRLabel" Name="centerHeader" Multiline="true" Text="DANH MỤC TRỤ SỞ LÀM VIỆC ĐỀ NGHỊ XỬ LÝ&#xD;&#xA;" TextAlignment="MiddleCenter" SizeF="1113.64282,28.7916832" LocationFloat="0, 61.33334" Font="Times New Roman, 12.75pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="55" UseFont="false" UseTextAlignment="false" />
+        </Item5>
+      </Controls>
+    </Item4>
+    <Item5 Ref="56" ControlType="GroupHeaderBand" Name="groupDat" Level="1" HeightF="150">
+      <GroupFields>
+        <Item1 Ref="57" FieldName="TAI_SAN_DAT_ID" />
+        <Item2 Ref="58" FieldName="DU_AN_ID" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="59" ControlType="XRTable" Name="table2" SizeF="1066.14282,150" LocationFloat="47.5, 0" Font="Times New Roman, 10.8pt, charSet=0">
+          <Rows>
+            <Item1 Ref="60" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="61" ControlType="XRTableCell" Name="tableCell1" Weight="1.6564417353665628" Multiline="true" Text="Địa chỉ:" TextAlignment="TopLeft" Font="Times New Roman, 10.8pt, style=Bold" Padding="2,2,0,0,100">
+                  <StylePriority Ref="62" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="63" ControlType="XRTableCell" Name="tbcDiaChi" Weight="7.6331410678062568" Multiline="true" TextAlignment="MiddleLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="64" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+            <Item2 Ref="65" ControlType="XRTableRow" Name="tableRow13" Weight="1">
+              <Cells>
+                <Item1 Ref="66" ControlType="XRTableCell" Name="tableCell11" Weight="1.6564417353665628" Multiline="true" Text="Tên dự án" TextAlignment="TopLeft" Font="Times New Roman, 10.8pt, style=Bold" Padding="2,2,0,0,100">
+                  <StylePriority Ref="67" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="68" ControlType="XRTableCell" Name="tbci" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <ExpressionBindings>
+                    <Item1 Ref="69" Expression="[DU_AN_TEN]" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="70" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="71" ControlType="XRTableRow" Name="tableRow4" Weight="1">
+              <Cells>
+                <Item1 Ref="72" ControlType="XRTableCell" Name="tableCell5" Weight="1.6564417353665628" Multiline="true" Text="I. Về đất" TextAlignment="TopLeft" Font="Times New Roman, 10.8pt, style=Bold" Padding="2,2,0,0,100">
+                  <StylePriority Ref="73" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="74" ControlType="XRTableCell" Name="tbcng" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="75" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item3>
+            <Item4 Ref="76" ControlType="XRTableRow" Name="tableRow7" Weight="1">
+              <Cells>
+                <Item1 Ref="77" ControlType="XRTableCell" Name="tableCell7" Weight="1.6564417353665628" Multiline="true" Text="a- Diện tích khuôn viên Đất:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="78" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="79" ControlType="XRTableCell" Name="tbcDienTich" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="80" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item4>
+            <Item5 Ref="81" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+              <Cells>
+                <Item1 Ref="82" ControlType="XRTableCell" Name="tableCell4" Weight="1.6564417353665628" Multiline="true" Text="b- Hiện trạng sử dụng:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="83" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="84" ControlType="XRTableCell" Name="tbcHienTrang" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="85" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item5>
+            <Item6 Ref="86" ControlType="XRTableRow" Name="tableRow8" Weight="1">
+              <Cells>
+                <Item1 Ref="87" ControlType="XRTableCell" Name="tableCell9" Weight="1.6564417353665628" Multiline="true" Text="II. Về nhà" TextAlignment="TopLeft" Font="Times New Roman, 10.8pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+                  <StylePriority Ref="88" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="89" ControlType="XRTableCell" Name="tableCell10" Weight="7.6331410678062568" Multiline="true" TextAlignment="MiddleLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="90" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item6>
+          </Rows>
+          <StylePriority Ref="91" UseFont="false" />
+        </Item1>
+      </Controls>
+    </Item5>
+    <Item6 Ref="92" ControlType="GroupHeaderBand" Name="GroupHeader1" RepeatEveryPage="true" KeepTogether="true">
+      <Controls>
+        <Item1 Ref="93" ControlType="XRLabel" Name="chuthich" Multiline="true" Text="ĐVT cho: Diện tích là: m2; Giá trị là: Nghìn đồng" TextAlignment="MiddleRight" SizeF="1113.64282,25" LocationFloat="2.54313145E-05, 0" Font="Times New Roman, 9pt, style=Italic" Padding="2,2,0,0,100">
+          <StylePriority Ref="94" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="95" ControlType="XRTable" Name="table1" SizeF="1115,75" LocationFloat="0, 25">
+          <Rows>
+            <Item1 Ref="96" ControlType="XRTableRow" Name="tableRow9" Weight="1">
+              <Cells>
+                <Item1 Ref="97" ControlType="XRTableCell" Name="tableCell13" Weight="1.8968608907519966" RowSpan="3" Multiline="true" Text="TÀI SẢN" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="All">
+                  <StylePriority Ref="98" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="99" ControlType="XRTableCell" Name="tableCell14" Weight="0.66033151395652323" RowSpan="3" Multiline="true" Text="CẤP HẠNG" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="100" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="101" ControlType="XRTableCell" Name="tableCell15" Weight="0.7791305473567125" RowSpan="3" Multiline="true" Text="NĂM XÂY DỰNG" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="102" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="103" ControlType="XRTableCell" Name="tableCell16" Weight="0.66367704793476745" RowSpan="3" Multiline="true" Text="NĂM SỬ DỤNG" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="104" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="105" ControlType="XRTableCell" Name="tableCell17" Weight="5" Multiline="true" Text="NGUYÊN GIÁ" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right">
+                  <StylePriority Ref="106" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="107" ControlType="XRTableCell" Name="tableCell22" Weight="1.403588511377172" RowSpan="3" Multiline="true" Text="GIÁ TRỊ &#xD;&#xA;CÒN LẠI" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="108" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="109" ControlType="XRTableCell" Name="tableCell23" Weight="0.596411488622828" RowSpan="3" Multiline="true" Text="SỐ TẦNG" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="110" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="111" ControlType="XRTableCell" Name="tableCell24" Weight="1" RowSpan="3" Multiline="true" Text="DT SÀN XÂY DỰNG" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="112" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item8>
+              </Cells>
+            </Item1>
+            <Item2 Ref="113" ControlType="XRTableRow" Name="tableRow10" Weight="1">
+              <Cells>
+                <Item1 Ref="114" ControlType="XRTableCell" Name="tableCell25" Weight="1.8968608907519966" Multiline="true" Text="tableCell25" Padding="2,2,0,0,100" Borders="All">
+                  <StylePriority Ref="115" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="116" ControlType="XRTableCell" Name="tableCell26" Weight="0.66033151395652323" Multiline="true" Text="tableCell26" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="117" UseBorders="false" />
+                </Item2>
+                <Item3 Ref="118" ControlType="XRTableCell" Name="tableCell27" Weight="0.7791305473567125" Multiline="true" Text="tableCell27" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="119" UseBorders="false" />
+                </Item3>
+                <Item4 Ref="120" ControlType="XRTableCell" Name="tableCell28" Weight="0.66367704793476745" Multiline="true" Text="tableCell28" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="121" UseBorders="false" />
+                </Item4>
+                <Item5 Ref="122" ControlType="XRTableCell" Name="tableCell29" Weight="1" RowSpan="2" Multiline="true" Text="Tổng cộng" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="123" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="124" ControlType="XRTableCell" Name="tableCell30" Weight="4" Multiline="true" Text="Trong đó" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right">
+                  <StylePriority Ref="125" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="126" ControlType="XRTableCell" Name="tableCell34" Weight="1.403588511377172" Multiline="true" Text="tableCell34" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="127" UseBorders="false" />
+                </Item7>
+                <Item8 Ref="128" ControlType="XRTableCell" Name="tableCell35" Weight="0.596411488622828" Multiline="true" Text="tableCell35" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="129" UseBorders="false" />
+                </Item8>
+                <Item9 Ref="130" ControlType="XRTableCell" Name="tableCell36" Weight="1" Multiline="true" Text="tableCell36" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="131" UseBorders="false" />
+                </Item9>
+              </Cells>
+            </Item2>
+            <Item3 Ref="132" ControlType="XRTableRow" Name="tableRow11" Weight="1">
+              <Cells>
+                <Item1 Ref="133" ControlType="XRTableCell" Name="tableCell37" Weight="1.8968608907519966" Multiline="true" Text="tableCell37" Padding="2,2,0,0,100" Borders="All">
+                  <StylePriority Ref="134" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="135" ControlType="XRTableCell" Name="tableCell38" Weight="0.66033151395652323" Multiline="true" Text="tableCell38" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="136" UseBorders="false" />
+                </Item2>
+                <Item3 Ref="137" ControlType="XRTableCell" Name="tableCell39" Weight="0.7791305473567125" Multiline="true" Text="tableCell39" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="138" UseBorders="false" />
+                </Item3>
+                <Item4 Ref="139" ControlType="XRTableCell" Name="tableCell40" Weight="0.66367704793476745" Multiline="true" Text="tableCell40" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="140" UseBorders="false" />
+                </Item4>
+                <Item5 Ref="141" ControlType="XRTableCell" Name="tableCell41" Weight="1" Multiline="true" Text="tableCell41" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="142" UseBorders="false" />
+                </Item5>
+                <Item6 Ref="143" ControlType="XRTableCell" Name="tableCell42" Weight="1" Multiline="true" Text="Nguồn NS" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="144" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="145" ControlType="XRTableCell" Name="tableCell43" Weight="1" Multiline="true" Text="Nguồn ODA" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="146" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="147" ControlType="XRTableCell" Name="tableCell44" Weight="1" Multiline="true" Text="Nguồn viện trợ " TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="148" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="149" ControlType="XRTableCell" Name="tableCell45" Weight="1" Multiline="true" Text="Nguồn khác" TextAlignment="MiddleCenter" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="150" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="151" ControlType="XRTableCell" Name="tableCell46" Weight="1.403588511377172" Multiline="true" Text="tableCell46" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="152" UseBorders="false" />
+                </Item10>
+                <Item11 Ref="153" ControlType="XRTableCell" Name="tableCell47" Weight="0.596411488622828" Multiline="true" Text="tableCell47" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="154" UseBorders="false" />
+                </Item11>
+                <Item12 Ref="155" ControlType="XRTableCell" Name="tableCell48" Weight="1" Multiline="true" Text="tableCell48" Padding="2,2,0,0,100" Borders="Top, Right, Bottom">
+                  <StylePriority Ref="156" UseBorders="false" />
+                </Item12>
+              </Cells>
+            </Item3>
+          </Rows>
+        </Item2>
+      </Controls>
+    </Item6>
+    <Item7 Ref="157" ControlType="GroupFooterBand" Name="GroupFooter1" PageBreak="AfterBandExceptLastEntry" HeightF="222.374985">
+      <Controls>
+        <Item1 Ref="158" ControlType="XRTable" Name="table4" SizeF="1115,35" LocationFloat="0, 0">
+          <Rows>
+            <Item1 Ref="159" ControlType="XRTableRow" Name="tableRow14" Weight="1">
+              <Cells>
+                <Item1 Ref="160" ControlType="XRTableCell" Name="tableCell54" Weight="1.7624998474121094" Multiline="true" Text="Tổng cộng" TextAlignment="MiddleCenter" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,100" Borders="Left, Right, Bottom">
+                  <StylePriority Ref="161" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="162" ControlType="XRTableCell" Name="tableCell55" Weight="0.61355804443359374" Multiline="true" TextAlignment="MiddleLeft" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <StylePriority Ref="163" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="164" ControlType="XRTableCell" Name="tableCell56" Weight="0.72394210815429694" Multiline="true" TextAlignment="MiddleCenter" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <StylePriority Ref="165" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="166" ControlType="XRTableCell" Name="tableCell57" Weight="0.61666656494140626" Multiline="true" TextAlignment="MiddleCenter" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <StylePriority Ref="167" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="168" ControlType="XRTableCell" Name="tableCell58" Weight="0.92916687011718746" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="169" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="170" Expression="sumSum([NHA_NGUYEN_GIA])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="171" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="172" ControlType="XRTableCell" Name="tableCell59" Weight="0.92916656494140626" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="173" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="174" Expression="sumSum([NHA_NGUYEN_GIA_NS])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="175" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="176" ControlType="XRTableCell" Name="tableCell60" Weight="0.92916748046875" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="177" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="178" Expression="sumSum([NHA_NGUYEN_GIA_ODA])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="179" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="180" ControlType="XRTableCell" Name="tableCell61" Weight="0.929166259765625" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="181" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="182" Expression="sumSum([NHA_NGUYEN_GIA_VIEN_TRO])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="183" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="184" ControlType="XRTableCell" Name="tableCell62" Weight="0.92916564941406243" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="185" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="186" Expression="sumSum([NHA_NGUYEN_GIA_KHAC])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="187" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="188" ControlType="XRTableCell" Name="tableCell63" Weight="1.3041680908203124" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="189" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="190" Expression="sumSum([NHA_GTCL])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="191" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="192" ControlType="XRTableCell" Name="tableCell64" Weight="0.55416564941406254" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <StylePriority Ref="193" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item11>
+                <Item12 Ref="194" ControlType="XRTableCell" Name="tableCell65" Weight="0.92916687011718746" TextFormatString="{0:#,##0.#0;(#,##0.#0);'';''}" Multiline="true" TextAlignment="MiddleRight" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,100" Borders="Right, Bottom">
+                  <Summary Ref="195" Running="Group" />
+                  <ExpressionBindings>
+                    <Item1 Ref="196" Expression="sumSum([NHA_TONG_DIEN_TICH_XD])" PropertyName="Text" EventName="BeforePrint" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="197" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                </Item12>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+        <Item2 Ref="198" ControlType="XRTable" Name="table5" SizeF="1031.5,150" LocationFloat="47.4999733, 62.0000763" Font="Times New Roman, 10.8pt, charSet=0">
+          <Rows>
+            <Item1 Ref="199" ControlType="XRTableRow" Name="tableRow6" Weight="1">
+              <Cells>
+                <Item1 Ref="200" ControlType="XRTableCell" Name="tableCell106" Weight="9.28958280317282" Multiline="true" Text="III. Các hồ sơ, giấy tờ liên quan đến quyền quản lý, sử dụng nhà, đất: (Giấy chứng nhận quyền sử dụng đất, Hợp đồng thuê đất, Giấy tờ khác)." TextAlignment="MiddleLeft" Font="Times New Roman, 10.8pt, style=Bold" Padding="2,2,0,0,100">
+                  <StylePriority Ref="201" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+              </Cells>
+            </Item1>
+            <Item2 Ref="202" ControlType="XRTableRow" Name="rowGiayCNSDDat" Weight="1">
+              <Cells>
+                <Item1 Ref="203" ControlType="XRTableCell" Name="lblHSCNQSDDat" Weight="1.6564417353665628" Multiline="true" Text="- Giấy CNQSD đất:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="204" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="205" ControlType="XRTableCell" Name="lblHSCNQSDDatValue" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="206" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="207" ControlType="XRTableRow" Name="rowQDGiaoDat" Weight="1">
+              <Cells>
+                <Item1 Ref="208" ControlType="XRTableCell" Name="lblQDGiaoDat" Weight="1.6564417353665628" Multiline="true" Text="- Quyết định giao đất:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="209" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="210" ControlType="XRTableCell" Name="lblQDGiaoDatValue" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="211" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item3>
+            <Item4 Ref="212" ControlType="XRTableRow" Name="rowQDChoThue" Weight="1">
+              <Cells>
+                <Item1 Ref="213" ControlType="XRTableCell" Name="lblQDChoThueDat" Weight="1.6564417353665628" Multiline="true" Text="- Quyết định cho thuê đất:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="214" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="215" ControlType="XRTableCell" Name="lblQDChoThueDatValue" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="216" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item4>
+            <Item5 Ref="217" ControlType="XRTableRow" Name="rowHDChoThue" Weight="1">
+              <Cells>
+                <Item1 Ref="218" ControlType="XRTableCell" Name="lblHDChoThueDat" Weight="1.6564417353665628" Multiline="true" Text="- Hợp đồng cho thuê đất:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="219" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="220" ControlType="XRTableCell" Name="lblHDChoThueDatValue" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="221" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item5>
+            <Item6 Ref="222" ControlType="XRTableRow" Name="rowKhac" Weight="1">
+              <Cells>
+                <Item1 Ref="223" ControlType="XRTableCell" Name="lblKhac" Weight="1.6564417353665628" Multiline="true" Text="- Giấy tờ pháp lý khác:" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="224" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="225" ControlType="XRTableCell" Name="lblKhacValue" Weight="7.6331410678062568" Multiline="true" TextAlignment="TopLeft" Padding="2,2,0,0,100">
+                  <StylePriority Ref="226" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item6>
+          </Rows>
+          <StylePriority Ref="227" UseFont="false" />
+        </Item2>
+      </Controls>
+    </Item7>
+    <Item8 Ref="228" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="183.333328" KeepTogether="true">
+      <Controls>
+        <Item1 Ref="229" ControlType="XRLabel" Name="lb_GhiChuThuTruong" Multiline="true" Text="(Ký, đóng dấu, ghi rõ họ tên)" TextAlignment="MiddleCenter" SizeF="187.708252,23" LocationFloat="809.728943, 63.5832977" Font="Times New Roman, 11.25pt, style=Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="230" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="231" ControlType="XRLabel" Name="label12" Multiline="true" Text=", ngày ..... tháng ..... năm ......" TextAlignment="TopRight" SizeF="202.083313,23" LocationFloat="871.5209, 10" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="232" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="233" ControlType="XRLabel" Name="DiaDanhBaoCao" Multiline="true" TextAlignment="TopRight" SizeF="154.166626,23" LocationFloat="717.354248, 10" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="234" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="235" ControlType="XRLabel" Name="ChucDanhThuTruongDonVi" Multiline="true" Text="Thủ trưởng đơn vị" TextAlignment="MiddleCenter" SizeF="356.249939,23" LocationFloat="717.354248, 40.58329" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="236" UseFont="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="237" ControlType="XRLabel" Name="TenThuTruongDonVi" Multiline="true" Text="TenThuTruongDonVi" TextAlignment="MiddleCenter" SizeF="160.624939,23" LocationFloat="823.270569, 126.583344" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="238" UseFont="false" UseTextAlignment="false" />
+        </Item5>
+        <Item6 Ref="239" ControlType="XRLabel" Name="TenKeToanTruong" Multiline="true" Text="TenKeToanTruong" TextAlignment="MiddleCenter" SizeF="149.999908,23" LocationFloat="482.715057, 126.583344" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="240" UseFont="false" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="241" ControlType="XRLabel" Name="ChucDanhKeToanTruong" Multiline="true" Text="Kế toán trưởng" TextAlignment="MiddleCenter" SizeF="149.999969,23" LocationFloat="482.715057, 40.58332" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="242" UseFont="false" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="243" ControlType="XRLabel" Name="ChucDanhNguoiLapBieu" Multiline="true" Text="Người lập biểu" TextAlignment="MiddleCenter" SizeF="356.250031,23" LocationFloat="42.2984, 40.5833435" Font="Times New Roman, 11.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="244" UseFont="false" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="245" ControlType="XRLabel" Name="TenNguoiLapBieu" Multiline="true" Text="TenNguoiLapBieu" TextAlignment="MiddleCenter" SizeF="150,23" LocationFloat="148.131744, 126.583344" Font="Times New Roman, 11.25pt, style=Bold, Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="246" UseFont="false" UseTextAlignment="false" />
+        </Item9>
+        <Item10 Ref="247" ControlType="XRLabel" Name="lb_GhiChuNLB" Multiline="true" Text="(Ký, ghi rõ họ tên)" TextAlignment="MiddleCenter" SizeF="120.02977,23" LocationFloat="158.072235, 63.5832977" Font="Times New Roman, 11.25pt, style=Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="248" UseFont="false" UseTextAlignment="false" />
+        </Item10>
+        <Item11 Ref="249" ControlType="XRLabel" Name="lb_GhiChuKeToan" Multiline="true" Text="(Ký, ghi rõ họ tên)" TextAlignment="MiddleCenter" SizeF="120.02977,23.0000076" LocationFloat="497.4473, 63.5833054" Font="Times New Roman, 11.25pt, style=Italic, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="250" UseFont="false" UseTextAlignment="false" />
+        </Item11>
+        <Item12 Ref="251" ControlType="XRLabel" Name="label3" Multiline="true" TextAlignment="TopRight" SizeF="154.166626,23" LocationFloat="42.2984, 10" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="252" UseFont="false" UseTextAlignment="false" />
+        </Item12>
+        <Item13 Ref="253" ControlType="XRLabel" Name="label1" Multiline="true" Text=", ngày ..... tháng ..... năm ......" TextAlignment="TopRight" SizeF="202.083313,23" LocationFloat="196.465149, 10" Font="Times New Roman, 11.25pt, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="254" UseFont="false" UseTextAlignment="false" />
+        </Item13>
+      </Controls>
+    </Item8>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v18.2" Name="objectDataSource1" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2JqZWN0RGF0YVNvdXJjZTEiPjxEYXRhU291cmNlIFR5cGU9IkdTLkNvcmUuRG9tYWluLkJhb0Nhb3MuVFNfQkNEQS5UU19CQ0RBXzA0QV9UUlVTT0RFTkdISVhVTFksIEdTLkNvcmUsIFZlcnNpb249NC4xLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1udWxsIiAvPjwvT2JqZWN0RGF0YVNvdXJjZT4=" />
+  </ComponentStorage>
+</XtraReportsLayoutSerializer>

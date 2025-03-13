@@ -1,0 +1,19 @@
+﻿@model DateTime
+        <input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString(GS.Core.CommonHelper.DATE_FORMAT_VN))" />
+        <script>
+    $(document).ready(function () {
+        $("#@Html.IdForModel()").kendoDatePicker({
+            format: "@(GS.Core.CommonHelper.DATE_FORMAT_VN)",
+            culture: "vi-VN",
+            change: function () {
+                var value = this.value();
+                console.log(value); //value is the selected date in the datepicker
+            }
+        }); 
+        $("#@Html.IdForModel()").change(function () {
+            if (!checkValidateDate("#@Html.IdForModel()")) {
+                $("#@Html.IdForModel()").data("kendoDatePicker").value(null);
+            }
+        });
+    });
+        </script>

@@ -1,0 +1,54 @@
+﻿@model NguonVonBDModel
+
+@{
+	var _id = Decimal.ToInt32(Model.NGUON_VON_ID);
+}
+<div id="TaiSanNguonvon_@_id">
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		@*<div class="col-md-2">
+			<label class="col-form-label">Giá trị giảm</label>
+		</div>*@
+		<div class="col-md-2">
+			<label class="col-form-label"  style="font-style:italic">@Model.TEN</label>
+		</div>
+		<div class="col-md-4">
+			<div class=" NguonVon" data-idnguonvon="@_id" data-tennguonvon="@Model.TEN">
+				<nop-editor asp-for="GIA_TRI_BD" asp-min-number="0" asp-max-number="@Model.GIA_TRI_CU" asp-dvt="c" id="NguonVon_@_id" />
+				<span class="field-validation-valid" data-valmsg-for="NguonVon_@_id" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+		@*<div class="col-md-2">
+			<label class="col-form-label">@Model.TEN</label>
+		</div>
+		<div class="col-md-4">
+			<nop-editor asp-for="GIA_TRI_CU" asp-disabled="true" asp-dvt="c" id="NguonVonCu_@_id" />
+		</div>*@
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		@*$("#NguonVon_@_id").data("kendoNumericTextBox").bind("change", function () {
+			var val = this.value();
+			TinhTongNguyenGia();
+			let TongNguonVon = $("#TongNguyenGia").data("kendoNumericTextBox");
+			if (TongNguonVon) {
+				TongNguonVon.trigger('change');
+			}
+		});*@
+        $("#NguonVon_@_id").change(function () {
+            var val = $(this).val();
+            TinhTongNguyenGia();
+        });
+    });
+	function TinhTongNguyenGia() {
+		
+        var TotalNguyenGia = 0;
+        $(".NguonVon").each(function () {
+                var nguonvonId = $(this).data("idnguonvon");
+                var _ValueNguonVon = ConvertToNumber("#NguonVon_" + nguonvonId);
+                TotalNguyenGia = parseFloat(TotalNguyenGia) + parseFloat(_ValueNguonVon);
+            });
+        $("#TongNguyenGia").data("kendoNumericTextBox").value(TotalNguyenGia);
+    }
+</script>
+

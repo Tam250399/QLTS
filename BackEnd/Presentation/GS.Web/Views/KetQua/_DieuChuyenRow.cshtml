@@ -1,0 +1,66 @@
+﻿@model KetQuaModel
+
+
+<tr id="row_@(Model.GUID)" style="text-align:center">
+    <th scope="row" id="Index_@(Model.GUID)" style="text-align:center" class="row-guid" data-guid="@Model.GUID"></th>
+    <td>
+        <div id="div_DON_VI_CHUYEN_ID_@(Model.GUID)">
+            <nop-select asp-for="DON_VI_CHUYEN_ID" asp-items="Model.DDLDonVi" id="DON_VI_CHUYEN_ID_@(Model.GUID)" asp-filter="true"/>
+            <span data-valmsg-for="DON_VI_CHUYEN_ID_@Model.GUID"></span>
+            <script>
+                $(document).ready(function () {
+                    $("#DON_VI_CHUYEN_ID_@(Model.GUID)").kendoDropDownList({
+                        value:@(Model.DON_VI_CHUYEN_ID??0),
+                        dataTextField: "Text",
+                        dataValueField: "Value",
+                        select: function (e) {
+                            if (e.dataItem.Disabled) {
+                                e.preventDefault();
+                            }
+                        },
+                        dataSource: JSON.parse(String.raw`@Html.Raw(((Model.DDLDonVi).toStringJson()))`),
+                        popup: {
+                            appendTo: PopUpID==""? $("body"):$("#" + PopUpID),
+                        }
+                    });
+                });
+                var PopUpID = "";
+                $(".modal").each(function (index) {
+                    if ($(this).data('bs.modal') && $(this).data('bs.modal')._isShown) {
+                        PopUpID = $(this).attr("id");
+                        return;
+                    }
+                });
+            </script>
+        </div>
+    </td>
+    <td>
+        <nop-editor asp-for="SO_LUONG" id="SO_LUONG_@(Model.GUID)" asp-min-number="0" />
+        <span data-valmsg-for="SO_LUONG_@Model.GUID" class="sldc"></span>
+    </td>
+    <td>
+        <nop-editor asp-for="NGAY_XU_LY" id="NGAY_XU_LY_@(Model.GUID)" />
+        <span data-valmsg-for="NGAY_XU_LY_@Model.GUID"></span>
+
+    </td>
+    <td>
+        <nop-editor asp-for="GIA_TRI_BAN" id="GIA_TRI_BAN_@(Model.GUID)" />
+        <span data-valmsg-for="GIA_TRI_BAN_@Model.GUID"></span>
+    </td>
+    <td>
+        <div class="btn-group">
+            <a style="color:black" class="btn btn-sm btn-outline-success" href="javascript:void(0)" onclick=AddRowDieuChuyen()>Thêm đơn vị nhận</a>
+        </div>
+        @if (Model.is_Delete)
+        {
+            <div class="btn-group">
+                <a style="color:black" class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaRowTaiSan('@(Model.GUID)')>Xóa</a>
+            </div>
+        }
+    </td>
+</tr>
+<script>
+    $(document).ready(function () {
+            Index_Row();
+        });
+</script>

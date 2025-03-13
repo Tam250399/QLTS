@@ -1,0 +1,42 @@
+﻿@*@model DonViModel*@
+@*@{
+        await Html.RenderPartialAsync("_SoLuongTaiSanTheoLoaiHinh");
+    }*@
+
+@*@{
+        await Html.RenderPartialAsync("../Report/_SoLuongTaiSanTheoLoaiHinh");
+    }*@
+@{
+    await Html.RenderPartialAsync("../Report/_GiaTriSoLuongTaiSanTheoLoaiHinhVaDonVI");
+}
+@*<div class="row">
+        <div class="col-md-6">
+            @{
+                await Html.RenderPartialAsync("../Report/_SoLuongLoaiTaiSanTren500");
+                //await Html.RenderPartialAsync("_SoLuongLoaiTaiSanTren500");
+            }
+        </div>
+        <div class="col-md-6">
+            @{
+                await Html.RenderPartialAsync("../Report/_SoLuongLoaiTaiSanDuoi500");
+                //await Html.RenderPartialAsync("_SoLuongLoaiTaiSanDuoi500");
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @{
+                await Html.RenderPartialAsync("../Report/_GiaTriTaiSanTheoLoaiHinh");
+            }
+        </div>
+    </div>*@
+<script>
+        $(function () {
+                    OpenModalManual('Cảnh báo', '@Url.Action("CanhBaoDuLieuTaiSan","TaiSan")');
+        })
+    </script>
+@*@if (Model.IsThongBaoChuyenMa)
+    {
+        await Html.RenderPartialAsync("../DonVi/ThongBaoDonViChuaCapNhatMaT");
+    }*@

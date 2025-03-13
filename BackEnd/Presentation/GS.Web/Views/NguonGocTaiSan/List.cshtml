@@ -1,0 +1,245 @@
+@model NguonGocTaiSanSearchModel
+@{
+    //page title
+    ViewBag.Title = "Nguồn gốc tài sản";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucNguonGocTaiSan");
+}
+
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @*@ViewBag.Title*@
+        <br />
+    </h5>
+
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-1 text-sm-left" style="right:22px;">Từ khóa:</label>
+        <div class="col-sm-8" style="right:22px;">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+
+        </div>
+        
+    </div>
+    
+</div>
+<div class="form-group row">
+	<div class="col-sm-10 d-flex align-items-center">
+		<div class="tle1">
+			<i class=" fas fa-list-ul mr-2"></i><span id="name-list">Danh sách nguồn gốc tài sản</span>
+		</div>
+	</div>
+	<div class="col-sm-2 text-right">
+		<a asp-action="Create" class="btn  btn-sm btn-outline-primary">
+			<i class="fa fa-plus-square"></i>
+			Thêm mới
+		</a>
+	</div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        var record = 0;
+						$(document).ready(function () {
+							function SearchData() {
+								var _data = {
+									KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val()
+								};
+								addAntiForgeryToken(_data);
+								return _data;
+							}
+							$("#btnSearch").click(function () {
+								var grid = $('#items-grid').data('kendoGrid');
+								var record = 0;
+								grid.dataSource.page(1); //new search. Set page size to 1
+								return false;
+							});
+							$("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+								if (event.keyCode === 13) {
+									$("#btnSearch").click();
+									return false;
+								}
+							});
+							$("#items-grid").kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("List", "NguonGocTaiSan"))",
+											type: "POST",
+											dataType: "json",
+											data: SearchData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+								},
+								dataBinding: function () {
+									record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								detailInit: detailInit,
+								scrollable: false,
+								columns: [
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 35,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{ field: 'MA', title: 'Mã nguồn gốc tài sản', template: '#=CountSub>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+CountSub+"</span>)":MA#' },
+									{ field: 'TEN', title: 'Tên nguồn gốc tài sản' },
+									{
+										field: "ID",
+										title: "Thao Tác",
+										width: 150,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: kendo.template($("#edit-gird-Tem").html()),
+
+									}
+
+								]
+							});
+						});
+						function detailInit(e) {
+							let detailData = {
+								ParentId: e.data.ID,
+							};
+							addAntiForgeryToken(detailData);
+
+							$("<div/>").appendTo(e.detailCell).kendoGrid({
+								dataSource: {
+									type: "json",
+									transport: {
+										read: {
+											url: "@Html.Raw(Url.Action("List", "NguonGocTaiSan"))",
+											type: "POST",
+											dataType: "json",
+											data: detailData
+										}
+									},
+									schema: {
+										data: "Data",
+										total: "Total",
+										errors: "Errors"
+									},
+									error: function (e) {
+										display_kendoui_grid_error(e);
+										// Cancel the changes
+										this.cancelChanges();
+									},
+									pageSize: @(Model.PageSize),
+									serverPaging: true,
+									serverFiltering: true,
+									serverSorting: true
+								},
+								pageable: {
+									refresh: true,
+									pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+								},
+								dataBinding: function () {
+									record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+								},
+								editable: {
+									confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+									mode: "inline"
+								},
+								detailInit: detailInit,
+								scrollable: false,
+								columns: [
+									{
+										title: "STT",
+										template: "#= ++record #",
+										width: 35,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+									},
+									{
+										field: 'MA',
+										title: 'Mã nguồn gốc tài sản',
+										template: '#=CountSub>0?MA+" &nbsp;(<span class=\'gs-grid-has-child\' style=\'color: red;\'>"+CountSub+"</span>)":MA#'
+									},
+									{ field: 'TEN', title: 'Tên nguồn gốc tài sản' },
+									{
+										field: "ID",
+										title: "Thao Tác",
+										width: 150,
+										headerAttributes: { style: "text-align:center" },
+										attributes: { style: "text-align:center" },
+										template: kendo.template($("#edit-gird-Tem").html()),
+
+									}
+
+								]
+							});
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function deleteNguonGocTaiSan(ID) {
+        $.ajax({
+            url: "/NguonGocTaiSan/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (data) {
+                if (data.Code == '00') {
+                    var grid = $('#items-grid').data('kendoGrid');
+                    grid.dataSource.page(grid.dataSource.page());
+                        ShowSuccessMessage(data.Message);
+                } else {
+                    ShowErrorMessage(data.Message);
+                }
+            },
+
+        });
+
+    }
+
+
+</script>
+<script id="edit-gird-Tem" type="text/x-kendo-tmpl">
+    <a class="btn btn-sm btn-outline-secondary" href="/NguonGocTaiSan/Edit?ID=#=ID#"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>&nbsp;
+    <a class="btn btn-sm btn-outline-secondary disabled #if(CountSub>0||IsUsed== true){# disabled #}# "  onclick="GS_Delete('Bạn có chắc chắn muốn xóa nguồn gốc tài sản này không ?',deleteNguonGocTaiSan,#=ID#)"><i class="far fa-trash-alt d-block"></i>Xóa</a>
+</script>

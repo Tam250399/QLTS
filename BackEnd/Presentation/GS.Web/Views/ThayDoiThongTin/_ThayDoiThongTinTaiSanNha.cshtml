@@ -1,0 +1,164 @@
+﻿@model TaiSanNhaModel
+<style>
+    .disabledevents {
+        pointer-events: none;
+        opacity: 0.2;
+    }
+</style>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2 ">Diện tích XD</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="DIEN_TICH_XAY_DUNG" asp-dvt="m2" asp-disabled="true" />
+        <span asp-validation-for="DIEN_TICH_XAY_DUNG"></span>
+        <span id="checkdientichmax" class="field-validation-error text-danger" style="display:none ;color:red"> Diện tích xây dựng không được lớn hơn diện tích sản sử dụng </span>
+    </div>
+    <label class="col-form-label col-sm-2 ">Diện tích sàn sử dụng</label>
+    <div class="col-sm-4">
+        <nop-editor asp-for="DIEN_TICH_SAN_XAY_DUNG" asp-dvt="m2" asp-disabled="true" />
+        <span asp-validation-for="DIEN_TICH_SAN_XAY_DUNG"></span>
+        <span id="checkhientrangmax" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được lớn hơn diện tích sàn sử dụng </span>
+        <span id="checkhientrangmin" class="field-validation-error text-danger" style="display:none ;color:red"> Tổng hiện trạng không được nhỏ hơn diện tích sàn sử dụng </span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-2  text-required">Số tầng</label>
+    <div class="col-md-4">
+        <nop-editor asp-for="NVYeuCauChiTietModel.NHA_SO_TANG" />
+        <span asp-validation-for="NVYeuCauChiTietModel.NHA_SO_TANG"></span>
+    </div>
+</div>
+@if (!Model.isQuanLyDat)
+{
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required ">Địa chỉ</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NHA_DIA_CHI" />
+            <span asp-validation-for="NHA_DIA_CHI"></span>
+        </div>
+        
+        @*<label class="col-form-label col-sm-2  text-required">Số tầng</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="NHA_SO_TANG" />
+            <span asp-validation-for="NHA_SO_TANG"></span>
+        </div>*@
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required ">Tỉnh/Thành phố</label>
+        <div class="col-sm-4">
+            <app-select asp-for="NHA_TinhId" asp-items="Model.AvailableTinh" asp-filter="true" />
+            <span asp-validation-for="NHA_TinhId"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-required ">Quận/Huyện</label>
+        <div class="col-sm-4">
+            <app-select asp-for="NHA_HuyenId" asp-items="Model.AvailableHuyen" asp-filter="true" />
+            <span asp-validation-for="NHA_HuyenId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-required ">Xã/Phường</label>
+        <div class="col-sm-4">
+            <app-select asp-for="NHA_XaId" asp-items="Model.AvailableXa" asp-filter="true" />
+            <span asp-validation-for="NHA_XaId"></span>
+        </div>
+    </div>
+}
+<script>
+
+    $(function () {
+        CompareDientich();
+        $(".HienTrang").change(CompareDientich);
+    });
+    function CompareDientich() {
+        var total = 0;
+        $(".HienTrang").each(function () {
+            var _hientrangId = $(this).data("idhientrang");
+            var _Value = ConvertToNumber("#HienTrang_" + _hientrangId);
+            total = total + _Value
+        });
+        var tonghientrang = total.toFixed(2);
+        var gt = ConvertToNumber("#DIEN_TICH_SAN_XAY_DUNG");
+        if (tonghientrang != gt) {
+            if (tonghientrang > gt) {
+                $("#checkhientrangmax").show();
+                $("#checkhientrangmin").hide();
+                $("#btnSave").prop("disabled", true);
+                $(".btnAdd").prop("disabled", true);
+                $(".btnAdd").addClass('disabledevents');
+            }
+            if (tonghientrang < gt) {
+                $("#checkhientrangmin").show();
+                $("#checkhientrangmax").hide();
+                $("#btnSave").prop("disabled", true);
+                $(".btnAdd").prop("disabled", true);
+                $(".btnAdd").addClass('disabledevents');
+            }
+        }
+        else {
+            $("#checkhientrangmin").hide();
+            $("#checkhientrangmax").hide();
+            $("#btnSave").prop("disabled", false);
+            $(".btnAdd").prop("disabled", false);
+            $(".btnAdd").removeClass('disabledevents');
+        }
+    }
+</script>
+<script>
+    $(function () {
+        
+            $("#NHA_TinhId").change(function () {
+                $("#NHA_HuyenId").val(0);
+                var quocgiaId = $("#QuocGiaId").val();
+                var _ParentId = $(this).val();
+                var _str = "-- Chọn quận/huyện --";
+                var _data = {
+                    QuocGiaId: quocgiaId,
+                    ParentId: _ParentId,
+                    str: _str
+                }
+                $.ajax({
+                    url: "/TaiSan/GetDataSource",
+                    type: "POST",
+                    data: _data,
+                    success: function (result) {
+                        var dropdownlistHuyen = $("#NHA_HuyenId").data("kendoDropDownList");
+                        if (dropdownlistHuyen) {
+                            dropdownlistHuyen.setDataSource(new kendo.data.DataSource({ data: result }));
+                        }
+                        
+                        $("#NHA_HuyenId").val(0);
+                        var text = $("#HuyenId option:first-child").text();
+                        $("#NHA_HuyenId").parent().find(".k-input").text(text);
+                        $("#NHA_XaId").val(0);
+                        var text = $("#NHA_XaId option:first-child").text();
+                        $("#NHA_XaId").parent().find(".k-input").text(text);
+                    }
+                });
+            });
+            $("#NHA_HuyenId").change(function () {
+                $("#NHA_XaId").val(0);
+                var quocgiaId = $("#QuocGiaId").val();
+                var _ParentId = $(this).val();
+                var _str = "-- Chọn xã/phường --";
+                var _data = {
+                    QuocGiaId: quocgiaId,
+                    ParentId: _ParentId,
+                    str: _str
+                }
+                $.ajax({
+                    url: "/TaiSan/GetDataSource",
+                    type: "POST",
+                    data: _data,
+                    success: function (result) {
+                        var dropdownlistXa = $("#NHA_XaId").data("kendoDropDownList");
+                        if (dropdownlistXa) {
+                            dropdownlistXa.setDataSource(new kendo.data.DataSource({ data: result }));
+                        }
+                       
+                        $("#NHA_XaId").val(0);
+                        var text = $("#NHA_XaId option:first-child").text();
+                        $("#NHA_XaId").parent().find(".k-input").text(text);
+                    }
+                });
+            });
+        })
+</script>

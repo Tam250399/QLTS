@@ -1,0 +1,94 @@
+﻿@model CauHinhBaoCaoModel
+@{
+	//page title
+	ViewBag.Title = "Cập nhật cấu hình báo cáo";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhThamSoBaoCao");
+}
+<form asp-controller="BaoCao" asp-action="EditAllCauHinh" method="post">
+	<div class="card mb-4">
+		<h6 class="card-header">
+			Sửa thông tin cấu hình
+			<small>
+				<i class="fa fa-arrow-circle-left"></i>
+				<a asp-action="ListCauHinh">Quay lại danh sách</a>
+			</small>
+			<button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+				<i class="fas fa-save"></i>
+				Lưu
+			</button>
+		</h6>
+		<div class="card-body">
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Canh lề trái báo cáo</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MarginLeft" />
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Canh lề phải báo cáo</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MarginRight" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Canh lề trên báo cáo</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MarginTop" />
+				</div>
+				<label class="col-form-label col-sm-2 text-sm-right">Canh lề dưới báo cáo</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="MarginBottom" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Chức danh người lập biểu</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="ChucDanhNguoiLapBieu" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Chức danh kế toán trưởng</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="ChucDanhKeToanTruong" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Chức danh thủ trưởng đơn vị</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="ChucDanhThuTruongDonVi" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Tên người lập biểu</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="TenNguoiLapBieu" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Tên kế toán trưởng</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="TenKeToanTruong" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Tên thủ trưởng đơn vị</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="TenThuTruongDonVi" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Địa danh báo cáo</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="DiaDanhBaoCao" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-sm-right">Tên đơn vị khai thác</label>
+				<div class="col-sm-10">
+					<nop-editor asp-for="DonViKhaiThac" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+

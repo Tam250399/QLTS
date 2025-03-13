@@ -1,0 +1,227 @@
+@model BienDongSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh sách biến động";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("TimKiemBienDong");
+}
+
+<nop-antiforgery-token />
+<div class="ui-bordered px-4 pt-4 mb-4">
+    @if (Model.DON_VI_ID == (int)enumDonVi.TRUNG_TAM_DU_LIEU_QUOC_GIA_VE_TS_CONG)
+    {
+        <div class="form-group row">
+            <label class="col-form-label col-md-2 text-sm-left">Mã đơn vị</label>
+            <div class="col-md-10">
+                <nop-editor asp-for="MaDonVi" placeholder="Nhập mã đơn vị...." />
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Từ khóa</label>
+        <div class="col-md-10">
+            <nop-editor asp-for="KeySearch" placeholder="Nhập tên hoặc mã...." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-2 text-sm-left">Loại tài sản</label>
+        <div class="col-md-4">
+            <nop-select asp-for="LstLoaiHinhTaiSan" asp-items="Model.LoaiHinhTaiSanAvailable" asp-multiple="true" asp-placeholder="Tất cả" />
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left">Loại biến động</label>
+        <div class="col-md-4">
+            <nop-select asp-for="LstLoaiBienDong" asp-items="Model.LoaiBienDongAvailable"  asp-multiple="true"  asp-placeholder="Tất cả" />
+        </div>
+    </div>
+    <div class=" form-group row">
+        <label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 30px;" *@>Biến động từ ngày</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="FromDate" /><br />
+            <span asp-validation-for="FromDate"></span>
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 20px;" *@>Đến ngày</label>
+        <div class="col-md-4">
+            <nop-editor asp-for="ToDate" /><br />
+            <span asp-validation-for="ToDate"></span>
+        </div>
+    </div>
+    <div class=" form-group row">
+        <label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 20px;" *@>Trạng thái đồng bộ</label>
+        <div class="col-md-4">
+            <nop-select asp-for="LstTrangThaiDongBo" asp-items="Model.TrangThaiDongBoAvailabe" asp-multiple="true"  asp-placeholder="Tất cả" />
+        </div>
+        <label class="col-form-label col-md-2 text-sm-left" @*style="width:13%;padding-left: 20px;" *@>Nguồn tài sản</label>
+        <div class="col-md-4">
+            <nop-select asp-for="NguonTaiSanId" asp-items="Model.NguonTaiSanAvailable"  asp-placeholder="Tất cả" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(model => model.LOAI_HINH_TAI_SAN_ID)').val(),
+                                    LOAI_LY_DO_BD_ID: $('#@Html.IdFor(model => model.LOAI_LY_DO_BD_ID)').val(),
+                                    FromDate: $('#@Html.IdFor(model=>model.FromDate)').val(),
+                                    ToDate: $('#@Html.IdFor(model=>model.ToDate)').val(),
+                                    MaDonVi: $('#@Html.IdFor(model => model.MaDonVi)').val(),
+                                    IsDongBoBienDong: $('#IsDongBoBienDong').prop('checked'),
+                                    LstLoaiHinhTaiSan: $('#@Html.IdFor(model=>model.LstLoaiHinhTaiSan)').val(),
+                                    LstLoaiBienDong: $('#@Html.IdFor(model=>model.LstLoaiBienDong)').val(),
+                                    NguonTaiSanId: $('#@Html.IdFor(model=>model.NguonTaiSanId)').val(),
+                                    LstTrangThaiDongBo: $('#@Html.IdFor(model=>model.LstTrangThaiDongBo)').val()
+
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "BienDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,                                
+                                columns: [
+								//{
+								//	field: 'TAI_SAN_MA',
+								//	title: 'Mã tài sản'
+								//},
+                                    {
+                                        field: "TAI_SAN_MA",
+                                        title: "Mã tài sản",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "white-space: nowrap" },
+                                        template: function (dataItem) {
+                                            return "<a class='link_href' href='javascript:openViewThongTinYeuCau(" + dataItem.ID + ", 1 )'>" + dataItem.TAI_SAN_MA + "</a>";
+                                        }
+                                    },
+								{
+									field: 'TAI_SAN_TEN',
+									title: 'Tên Tài sản'
+								},
+								{
+                                    field: 'TenLoaiTaiSan',
+									title: 'Loại tài sản'
+								},
+                                {
+                                    field: "NGAY_BIEN_DONG",
+                                    title: "Ngày biến động", type: "Date",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    format: "{0:dd/MM/yyyy}",
+                                },
+								{
+                                    field: 'TenLyDoBienDong',
+									title: 'Lý do biến động'
+								}
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+	function openViewThongTinYeuCau(yeucauId, BDorYC) {
+        var _url = "@(Url.Action("_ThongTinYeuCauBienDong", "TrungGianBDYC"))?Id=" + yeucauId + '&BDorYC=' + BDorYC;
+        
+		OpenModalManual("Thông tin biến động", _url, 72);
+	}
+	function deleteYeuCauBienDong(yeuCauId) {
+		bootbox.confirm({
+			message: "Bạn có chắc chắn xóa tài sản này?",
+			className: 'bootbox-sm',
+			buttons: {
+				confirm: {
+					label: 'Đồng ý',
+				},
+				cancel: {
+					label: 'Hủy',
+				},
+			},
+			callback: function (result) {
+				if (result) {
+					var _url = "@(Url.Action("DeleteYeuCauBienDong", "YeuCau"))?yeuCauId=" + yeuCauId + "&loaiBienDongId=@Model.LOAI_LY_DO_BD_ID.ToVNStringNumber()";
+					var deleteYeuCau = ajaxDelete(_url, false);
+					deleteYeuCau.done(function (result) {
+						if (result.Code == '00') {
+							ShowSuccessMessage(result.Message);
+							//location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_LY_DO_BD_ID;
+						} else if (result.Code == '01') {
+							ShowErrorMessage(result.Message);
+							//location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=' + @Model.LOAI_LY_DO_BD_ID;
+						}
+						var grid = $('#items-grid').data('kendoGrid');
+						grid.dataSource.page(grid.dataSource.page());
+					}).fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+				}
+			}
+		});
+	}
+</script>

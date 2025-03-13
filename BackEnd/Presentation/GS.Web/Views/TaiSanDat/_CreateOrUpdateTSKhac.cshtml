@@ -1,0 +1,239 @@
+﻿@model TaiSanMayMocModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="TAI_SAN_ID" type="hidden" />
+<div class="gs-form-group ">
+	<h6>Thông tin tài sản đất</h6>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2">Đơn vị</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.DonViMa" asp-disabled="true" />
+		</div>
+		<div class="col-sm-6">
+			<nop-editor asp-for="TaiSanModel.DonViTen" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2   text-required">Mã tự sinh</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.MA" asp-disabled="true" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2   text-required">Tên tài sản</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.TEN" placeholder="Tên tài sản" maxlength="255" />
+			<span asp-validation-for="TaiSanModel.TEN" class="TEN"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Lý do tăng</label>
+		<div class="col-sm-4">
+			<app-select asp-for="TaiSanModel.LY_DO_BIEN_DONG_ID" asp-items="Model.TaiSanModel.LyDoTangAvailable" asp-filter="true" />
+			<span asp-validation-for="TaiSanModel.LY_DO_BIEN_DONG_ID" class="LY_DO_BIEN_DONG_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2 text-required ">Ngày tăng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.NGAY_NHAP" />
+			<span asp-validation-for="TaiSanModel.NGAY_NHAP" class="valid-ngay-nhap-ts"></span>
+		</div>
+
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 text-required ">Loại tài sản</label>
+		<div class="col-sm-4">
+			@*<select id="LOAI_TAI_SAN_ID" name="LOAI_TAI_SAN_ID" class="form-control"></select>*@
+			<app-select asp-for="TaiSanModel.LOAI_TAI_SAN_ID" asp-items="Model.TaiSanModel.LoaiTaiSanAvailable" asp-filter="true" />
+			<span asp-validation-for="TaiSanModel.LOAI_TAI_SAN_ID" class="LOAI_TAI_SAN_ID"></span>
+			<script>
+
+           $(document).ready(function () {
+               $("#LOAI_TAI_SAN_ID").kendoDropDownList({
+                    dataTextField: "Text",
+                   dataValueField: "Value",
+                   filter: "contains",
+                   template: function (e) {
+                        if (e.Disabled) {
+                            return '<span class="k-state-default" style="color: red;">'+e.Text+'</span>';
+                        } else {
+                            return '<span class="k-state-default">'+e.Text+'</span>';
+                        }
+                   },
+                    select: function (e) {
+                        if (e.dataItem.Disabled) {
+                            e.preventDefault();
+                        }
+                    },
+                   dataSource: JSON.parse(String.raw`@Html.Raw(((Model.TaiSanModel.LoaiTaiSanAvailable).toStringJson()))`),
+               }).data("kendoDropDownList");
+           });
+			</script>
+		</div>
+		<label class="col-form-label col-sm-2">Ký hiệu</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="THONG_SO_KY_HIEU" />
+			<span asp-validation-for="THONG_SO_KY_HIEU"></span>
+		</div>
+
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Nước sản xuất</label>
+		<div class="col-sm-4">
+			<app-select asp-for="TaiSanModel.NUOC_SAN_XUAT_ID" asp-items="Model.TaiSanModel.QuocGiaAvailable" asp-filter="true" />
+			<span asp-validation-for="TaiSanModel.NUOC_SAN_XUAT_ID"></span>
+		</div>
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Năm sản xuất</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.NAM_SAN_XUAT" />
+			<span asp-validation-for="TaiSanModel.NAM_SAN_XUAT"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Năm đưa vào sử dụng</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.NGAY_SU_DUNG" />
+			<span asp-validation-for="TaiSanModel.NGAY_SU_DUNG"></span>
+		</div>
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Bộ phận sử dụng</label>
+		<div class="col-sm-4 d-flex">
+			<div class="flex-sm-grow-1">
+				<app-select asp-for="TaiSanModel.DON_VI_BO_PHAN_ID" asp-items="Model.TaiSanModel.BoPhanSuDungAvailable" asp-filter="true" />
+				<span asp-validation-for="TaiSanModel.DON_VI_BO_PHAN_ID"></span>
+			</div>
+			<div class="">
+				<button type="button" class="btn icon-btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#globalModalIframe" data-width="400" data-title="Thêm mới bộ phận của đơn vị" data-src="/DonViBoPhan/_Create" style="margin:3px 0px 0px 2px;">
+					<span class="ion ion-md-add"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Thông số kỹ thuật</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="THONG_SO_KY_THUAT" />
+			<span asp-validation-for="THONG_SO_KY_THUAT"></span>
+		</div>
+		<label class="col-form-label col-sm-2" style="margin-top:3px;">Mô tả chung</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="TaiSanModel.GHI_CHU" />
+			<span asp-validation-for="TaiSanModel.GHI_CHU"></span>
+		</div>
+	</div>
+</div>
+
+<div class="gs-form-group ">
+	<h6>Giá trị</h6>
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10" style="display:none">
+		<label class="col-form-label col-sm-2 ">Chọn nguồn vốn</label>
+		<div class="col-md-10">
+			<nop-select asp-for="TaiSanModel.SelectedNguonVonIds" asp-items="Model.TaiSanModel.NguonVonAvailable" asp-multiple="true" />
+		</div>
+	</div>
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<label class="col-form-label col-sm-2 ">Nguyên giá</label>
+		<div class="col-sm-4 gs-mg-top-bot-10">
+			<nop-editor asp-for="NVYeuCauChiTietModel.NGUYEN_GIA" asp-dvt="c" id="TongNguyenGia" asp-disabled="false">
+				<span asp-validation-for="NVYeuCauChiTietModel.NGUYEN_GIA" class="nguyen-gia-ts"></span>
+				<span id="check-gia-tri-than-1bill" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 1.000.000.000 vnđ, đề nghị kiểm tra lại!<br /> </span>
+				<span id="checkGiaTri1m2-vkt" class="field-validation-error text-danger d-none" style="color:red"> Giá trị nhập vào quá 30.000.000/(m<sup>2</sup>/m<sup>3</sup>/m), đề nghị kiểm tra lại! </span>
+		</div>
+
+	</div>
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2  font-weight-bold">Trong đó:</label>
+	</div>
+	<div id="ListNguonVon">
+			@foreach (var _nv in Model.TaiSanModel.lstNguonVonModel)
+			{
+				@await Html.PartialAsync("../TaiSan/_NguonVon", _nv);
+			}
+	</div>
+	<script>
+		$(document).ready(function () {
+			//$("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").value(1300000000);
+			$("#NguonVon_@((int)GS.Core.Domain.DanhMuc.enumNGUON_VON_DEFAULT.NGAN_SACH)").data("kendoNumericTextBox").enable(false);
+		})
+	</script>
+
+	<div class="form-group row gs-mg-top-10 gs-mg-r-10">
+		<label class="col-form-label col-sm-2">Giá trị còn lại</label>
+		<div class="col-sm-4">
+			<nop-editor asp-for="NVYeuCauChiTietModel.HM_GIA_TRI_CON_LAI" asp-min-number="0" asp-dvt="c" />
+			<span asp-validation-for="NVYeuCauChiTietModel.HM_GIA_TRI_CON_LAI"></span>
+			<span id="checkgtcl" class="field-validation-error text-danger" style="display:none ;color:red"> Giá trị còn lại không được lớn hơn tổng nguyên giá </span>
+		</div>
+	</div>
+	@*Hiển thị chế độ tính khấu hao*@
+	<div class="form-group row">
+
+		<label class="custom-control custom-checkbox" style="margin-left: 12px;">
+			@Html.CheckBoxFor(c => c.TRANG_THAI_KH, new { @class = "custom-control-input", id = "checktinhkhauhao" })
+			<span class="custom-control-label font-weight-bold">Tính khấu hao </span>
+		</label>
+	</div>
+	<div id="tinhkhauhao" style="display: none">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 ">Phương pháp trích KH</label>
+			<div class="col-sm-4">
+				<nop-select asp-for="NVYeuCauChiTietModel.PHUONG_PHAP_TINH_KHAU_HAO_ID" asp-items="Model.NVYeuCauChiTietModel.PhuongPhapTinhKhauHaoAvailable" />
+			</div>
+		</div>
+		<div class="form-group row" style="border-top:1px solid #ececec">
+			<div class="col-sm-2">
+				<label class="col-form-label">Tỷ lệ KH theo QĐ</label>
+				@*<input class="form-control" type="text" id="KH_TiLe" name="tylekhauhao" disabled />*@
+				<nop-editor asp-for="LoaiTaiSanModel.KH_TyLe" id="KH_TiLe" asp-dvt="%" asp-disabled="true" />
+			</div>
+			<div class="col-sm-4">
+				<label class="col-form-label ">Nguyên giá trích KH</label>
+				<nop-editor asp-for="NVYeuCauChiTietModel.KH_GIA_TINH_KHAU_HAO" asp-dvt="c" />
+				<span asp-validation-for="NVYeuCauChiTietModel.KH_GIA_TINH_KHAU_HAO"></span>
+				<span id="checkNGKH" class="field-validation-error text-danger" style="display:none ;color:red">Nguyên giá tính không được lớn hơn tổng nguyên giá </span>
+			</div>
+			<div class="col-sm-4">
+				<label class="col-form-label ">Giá trị KH/tháng tiếp theo</label>
+				<nop-editor asp-for="NVYeuCauChiTietModel.KH_GIA_TRI_TRICH_THANG" asp-min-number="0" asp-disabled="true" asp-dvt="c" />
+				<span asp-validation-for="NVYeuCauChiTietModel.KH_GIA_TRI_TRICH_THANG"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-2">
+				<label class="col-form-label ">Số tháng KH còn lại</label>
+				<nop-editor asp-for="NVYeuCauChiTietModel.KH_THANG_CON_LAI" asp-min-number="0" asp-dvt="tháng" />
+				<span asp-validation-for="NVYeuCauChiTietModel.KH_THANG_CON_LAI"></span>
+			</div>
+			<div class="col-sm-4">
+				<label class="col-form-label  ">Số KH luỹ kế</label>
+				<nop-editor asp-for="NVYeuCauChiTietModel.KH_LUY_KE" asp-min-number="0" asp-dvt="c" />
+				<span asp-validation-for="NVYeuCauChiTietModel.KH_LUY_KE"></span>
+			</div>
+			<div class="col-sm-4">
+				<label class="col-form-label ">Giá trị KH còn lại</label>
+				<nop-editor asp-for="NVYeuCauChiTietModel.KH_CON_LAI" asp-min-number="0" asp-dvt="c" />
+				<span asp-validation-for="NVYeuCauChiTietModel.KH_CON_LAI"></span>
+			</div>
+		</div>
+
+	</div>
+	<script>
+		$(function () {
+			if ($("#checktinhkhauhao").is(":checked")) { $("#tinhkhauhao").show(); }
+			$("#checktinhkhauhao").click(function () {
+				if ($(this).is(":checked")) {
+					$("#tinhkhauhao").show();
+				} else {
+					$("#tinhkhauhao").hide();
+				}
+			});
+		});
+	</script>
+</div>
+<div class="gs-form-group ">
+	<h6>Hiện trạng sử dụng</h6>
+	<div class="form-group row ">
+		@foreach (var obj in Model.NVYeuCauChiTietModel.lstHienTrang)
+		{
+			@await Html.PartialAsync("../TaiSan/_HienTrangSuDung", obj)
+		}
+	</div>
+</div>

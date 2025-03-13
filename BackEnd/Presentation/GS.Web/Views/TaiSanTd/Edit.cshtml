@@ -1,0 +1,98 @@
+@model TaiSanTdModel
+@{
+	//page title
+	ViewBag.Title = "TaiSanTd";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("DanhSachQuyetDinhTichThuTSTD");
+}
+
+<div class="card mb-4">
+	<h6 class="card-header">
+		Sửa
+		<small>
+			<i class="fa fa-arrow-circle-left"></i>
+			<a href="/QuyetDinhTichThu/List">Quay lại danh sách</a>
+		</small>
+        @if (Model.quyetdinh.is_delete == true)
+        {
+		<span id="item-delete" class="btn btn-sm btn-danger" style="float:right;margin-right: 5px;">
+			<i class="fas fa-trash"></i>
+			Xóa
+		</span>
+		<button id="btnSaveTSTD" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+        }
+	</h6>
+	<div class="card-body">
+		@await Html.PartialAsync("_CreateOrUpdate", Model)
+	</div>
+</div>
+<script>
+    $(document).ready(function () {
+	//$("#btnSaveTSTD").click(function () { SaveTSTD("/taisantd/EditByTaiSan", "/taisantd/List") });
+        $("#item-delete").click(function () { xoaQuyetDinh('@Model.quyetdinh.GUID'); });
+    });
+
+    function xoaQuyetDinh(Guid) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa quyết định này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            //required: true,
+            //placeholder: "Lý do từ chối tài sản(*)",
+            callback: function (confirm) {
+                if (confirm) {
+					var data = {
+						Guid: Guid
+					}
+					var _urlDelete = "/QuyetDinhTichThu/Delete";
+					var xoaQuyetDinh = ajaxPost(data, _urlDelete,false);
+                    xoaQuyetDinh.done(function (result) {
+                        if (result) {
+							if (result.Code == '00') {
+                                ShowSuccessMessage(result.Message);
+								location.href = "/QuyetDinhTichThu/List";
+                            }
+							else if (result.Code == '01'){
+                                ShowErrorMessage(result.Message);
+                            }
+                        }
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+						// If fail
+						console.log(textStatus + ': ' + errorThrown);
+					});
+      //              $.ajax({
+      //                  type: "Post",
+      //                  data: data,
+      //                  url: "/TaiSanTd/Delete",
+						//success: function (result) {
+						//	if (result) {
+      //                          if (result.Code == '00') {
+      //                              ShowSuccessMessage(result.Message)
+						//			var grid = $('#items-grid').data('kendoGrid');
+						//			grid.dataSource.page(1);
+      //                          }
+      //                          else {
+						//		    ShowErrorMessage(result.Message)
+						//	    }
+      //                      }
+      //                  }
+      //              })
+                }
+                return;
+
+            }
+        })
+    }
+</script>
+
+

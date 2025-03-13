@@ -1,0 +1,47 @@
+﻿@model ThongTinChungTaiSanModel
+<div class="font-weight-bold mb-2">Thông tin chung:</div>
+<div class="row">
+	<div class="col-sm-8 pb-4">
+		<table>
+            <tbody>
+                <tr>
+                    <td class="pr-3">Tên đơn vị:</td>
+                    <td>@Model.TenDonVi</td>
+                </tr>
+
+                <tr>
+                    <td class="pr-3">Tên tài sản:</td>
+                    <td>@Model.TAI_SAN_TEN</td>
+                </tr>
+                <tr>
+                    <td class="pr-3">Loại tài sản:</td>
+                    <td>@*@Model.TenLoaiTaiSanParent -*@ @Model.TenLoaiTaiSan</td>
+                </tr>
+               
+            </tbody>
+		</table>
+	</div>
+	<div class="col-sm-4 pb-4">
+		<table>
+			<tbody>
+				<tr>
+					<td class="pr-3"><br /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="pr-3">Mã tài sản:</td>
+					<td>
+						@Model.TAI_SAN_MA
+					</td>
+				</tr>
+				@if (Model.LOAI_HINH_TAI_SAN_ID != (int)enumLOAI_HINH_TAI_SAN.DAT)
+				{
+					<tr>
+						<td class="pr-3">Phòng ban:</td>
+						<td>@Model.TenDonViBoPhan</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+@model ChoThueModel
+@{
+    //page title
+    ViewBag.Title = "Cho thuê";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ChoThueCongCuDungCu");
+}
+<form asp-controller="ChoThue" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a class="btn btn-default btnClose btn-sm" onclick="window.location.href = '/ChoThue/ChonTaiSan';" style="float:right;margin-right: 5px;">
+                <i class="ion ion-ios-close-circle-outline"></i>
+                Đóng
+            </a>
+            <button type="submit" name="save" class="btn btn-sm btn-outline-primary" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+

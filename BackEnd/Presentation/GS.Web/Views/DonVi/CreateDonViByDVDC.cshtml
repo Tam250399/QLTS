@@ -1,0 +1,64 @@
+﻿@model DonViModel
+@{
+    //page title
+    ViewBag.Title = "Đơn vị";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhMucDonVi");
+    // tạm thời để disable, nao bỏ đi
+}
+
+<div class="card mb-4">
+    <h6 class="card-header">
+       Thêm mới đơn vị
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="#" onclick="appendListTaiSan()">Quay lại danh sách</a>
+        </small>
+        <button type="button" class="btn btn-sm btn-outline-primary btnAdd " style="float:right;margin-right:5px;">
+            <i class="fas fa-save" style="margin-right:5px;"></i>
+            Lưu
+        </button>
+    </h6>
+    <div class="card-body">
+        @await Html.PartialAsync("_CreateOrUpdate", Model)
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var donViChaInput = $("#DonViChaInput").data("kendoComboBox");
+        if (donViChaInput) {
+            donViChaInput.trigger('change');
+
+        }
+    })
+
+</script>
+ 
+<script>
+    $('.btnAdd').on('click', function () {
+        var _data = addData();
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/DonVi/CreateDonViByDVDC",
+            success: function (result) {
+                if (CheckValidMessageReturn(result)) {
+                    if (result.Code == '00') {
+                        ShowSuccessMessage(result.Message);
+                        appendListTaiSan();
+                    }
+                }
+                else {
+
+                    ShowErrorMessage(result.Message);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(thrownError);
+
+            }
+        })
+    });
+
+</script>

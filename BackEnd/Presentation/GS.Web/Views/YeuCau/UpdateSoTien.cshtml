@@ -1,0 +1,144 @@
+﻿@model TrungGianBDYCModel
+@{
+	//page title
+	ViewBag.Title = "Cập nhật số tiền bán, thanh lý";
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CapNhatTien");
+}
+<input asp-for="GUID" type="hidden" />
+<input asp-for="BDorYC" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+
+<div class="card mb-4">
+	<h6 class="card-header">
+		@ViewBag.Title
+		<button type="button" class="btn btn-sm btn-default btnClose" onclick="window.location.href = '/YeuCau/ListBienDongTaiSan?loaiLyDoId=@Model.LOAI_BIEN_DONG_ID';" style="float:right; margin-right: 5px;">
+			<i class="ion ion-ios-close-circle-outline"></i>
+			Đóng
+		</button>
+		<button type="button" class="btn btn-sm btn-primary btnAdd" style="float:right;margin-right:5px;">
+			<i class="fas fa-save" style="margin-right:5px;"></i>
+			Lưu
+		</button>
+	</h6>
+	<div class="card-body">
+		@await Html.PartialAsync("_BDThongTinTaiSan_TrungGianModel", Model)
+		<div class="gs-form-group  ">
+			<h6>Thông tin giảm tài sản</h6>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-required">Lý do giảm</label>
+				<div class="col-sm-4">
+					<app-select asp-for="LY_DO_BIEN_DONG_ID" asp-style="" asp-disabled="true" asp-items="@Model.LyDoTangAvailable" />
+					<span asp-validation-for="LY_DO_BIEN_DONG_ID"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-required">Ngày biến động</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="NGAY_BIEN_DONG" asp-disabled="true" /><br />
+					<span asp-validation-for="NGAY_BIEN_DONG"></span>
+				</div>
+
+			</div>
+			<div class="form-group row">
+				<label class="col-form-label col-sm-2 text-required ">Quyết định xử lý số</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="QUYET_DINH_SO"  />
+					<span asp-validation-for="QUYET_DINH_SO"></span>
+				</div>
+				<label class="col-form-label col-sm-2 text-required ">Ngày</label>
+				<div class="col-sm-4">
+					<nop-editor asp-for="QUYET_DINH_NGAY"  /><br />
+					<span asp-validation-for="QUYET_DINH_NGAY"></span>
+				</div>
+
+			</div>
+
+			<div id="HinhThucThanhLy">
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2 text-required">Hình thức </label>
+					<div class="col-sm-4">
+						<app-select asp-for="HINH_THUC_XU_LY_ID" asp-items="Model.ddlPhuongAnXuLy" />
+						<span asp-validation-for="HINH_THUC_XU_LY_ID"></span>
+					</div>
+					<label class="col-form-label col-sm-2 text-required">Ngày bán, thanh lý </label>
+					<div class="col-sm-4">
+						<nop-editor asp-for="TrungGianBDYCChiTietModel.NGAY_BAN_THANH_LY" /><br />
+						<span asp-validation-for="TrungGianBDYCChiTietModel.NGAY_BAN_THANH_LY"></span>
+					</div>
+				</div>
+
+				<div class="form-group row" id="ThuTuGiam">
+                    <label class="col-form-label col-sm-2 text-required">Số tiền thu được</label>
+					<div class="col-sm-4">
+						<nop-editor asp-for="TrungGianBDYCChiTietModel.PHI_THU" asp-min-number="0"  asp-dvt="c" />
+						<span asp-validation-for="TrungGianBDYCChiTietModel.PHI_THU"></span>
+					</div>
+					<label class="col-form-label col-sm-2">Chi phí xử lý tài sản</label>
+					<div class="col-sm-4">
+						<nop-editor asp-for="TrungGianBDYCChiTietModel.PHI_BU_DAP" asp-min-number="0" asp-max-number="@Model.TrungGianBDYCChiTietModel.NGUYEN_GIA_CU" asp-dvt="c" />
+						<span asp-validation-for="TrungGianBDYCChiTietModel.PHI_BU_DAP"></span>
+					</div>
+				</div>
+				<div class="form-group row ThuTuGiam">
+					<label class="col-form-label col-sm-2">Nộp tài khoản tạm giữ</label>
+					<div class="col-sm-4">
+						<nop-editor asp-for="TrungGianBDYCChiTietModel.PHI_NOP_NGAN_SACH" asp-min-number="0" asp-max-number="@Model.TrungGianBDYCChiTietModel.NGUYEN_GIA_CU" asp-dvt="c" />
+						<span asp-validation-for="TrungGianBDYCChiTietModel.PHI_NOP_NGAN_SACH"></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+
+		$(".btnAdd").click(function () {
+
+			var _data = {
+				ID: $('#@Html.IdFor(c => c.ID)').val(),
+				LY_DO_BIEN_DONG_ID: $('#@Html.IdFor(c => c.LY_DO_BIEN_DONG_ID)').val(),
+				LOAI_BIEN_DONG_ID: $('#@Html.IdFor(c => c.LOAI_BIEN_DONG_ID)').val(),
+				LOAI_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_TAI_SAN_ID)').val(),
+				LOAI_HINH_TAI_SAN_ID: $('#@Html.IdFor(c => c.LOAI_HINH_TAI_SAN_ID)').val(),
+				TAI_SAN_MA: $('#@Html.IdFor(c => c.TAI_SAN_MA)').val(),
+				TAI_SAN_TEN: $('#@Html.IdFor(c => c.TAI_SAN_TEN)').val(),
+				TAI_SAN_ID: $('#@Html.IdFor(c => c.TAI_SAN_ID)').val(),
+				NGAY_BIEN_DONG: $('#@Html.IdFor(c => c.NGAY_BIEN_DONG)').val(),
+				QUYET_DINH_SO: $('#@Html.IdFor(c => c.QUYET_DINH_SO)').val(),
+				QUYET_DINH_NGAY: $('#@Html.IdFor(c => c.QUYET_DINH_NGAY)').val(),
+				CHUNG_TU_SO: $('#@Html.IdFor(c => c.CHUNG_TU_SO)').val(),
+				CHUNG_TU_NGAY: $('#@Html.IdFor(c => c.CHUNG_TU_NGAY)').val(),
+				GHI_CHU: $('#@Html.IdFor(c => c.GHI_CHU)').val(),
+				BDorYC: $('#@Html.IdFor(c => c.BDorYC)').val(),
+				GUID: $('#@Html.IdFor(c => c.GUID)').val(),
+				pageIndex: $("#@Html.IdFor(c=>c.pageIndex)").val(),
+				DonViNhanDieuChuyenId: $("#DonViNhanDieuChuyenId").val(),
+				TrungGianBDYCChiTietModel: {
+					PHI_THU: $("#TrungGianBDYCChiTietModel_PHI_THU").val(),
+					IS_BAN_THANH_LY: true,
+					HINH_THUC_XU_LY_ID: $("#HINH_THUC_XU_LY_ID").val(),
+					DON_VI_NHAN_DIEU_CHUYEN_ID: $("#DonViNhanDieuChuyenId").val(),
+					NGAY_BAN_THANH_LY: $("#TrungGianBDYCChiTietModel_NGAY_BAN_THANH_LY").val(),
+					PHI_BU_DAP: $("#TrungGianBDYCChiTietModel_PHI_BU_DAP").val(),
+					PHI_NOP_NGAN_SACH: $("#TrungGianBDYCChiTietModel_PHI_NOP_NGAN_SACH").val(),
+				}
+			}
+			$.ajax({
+				url: "/YeuCau/UpdateSoTien",
+				type: "POST",
+				data: _data,
+				success: function (data) {
+					if (CheckValidMessageReturn(data)) {
+						ShowSuccessMessage(data.Message);
+						location.href = '/YeuCau/ListCapNhatSoTienBanThanhLy?pageIndex=' + _data.pageIndex;
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					console.log("error");
+				}
+			});
+		});
+
+	});
+</script>

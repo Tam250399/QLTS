@@ -1,0 +1,130 @@
+﻿@model GiamDieuChuyenSearchModel
+
+<nop-antiforgery-token />
+<input asp-for="IsDieuChuyenNgoai" type="hidden" />
+<div class="ui-bordered px-4 pt-4 mb-4" >
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã..." />
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">Đơn vị bộ phận:</label>
+        <div class="col-sm-8">
+            <nop-select asp-for="DonViBoPhanId" asp-items="Model.DDLDonViBoPhan" asp-filter="true" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearchCongCu">Tìm kiếm</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" onclick="Navigate()">Điều chuyển</button>
+            <script>
+                function Navigate() {
+                    var Guids = $("#list-congcu-grid input[type=checkbox]:checked")
+                        .map(function () { return $(this).attr("data-guid"); })
+                        .get();
+                    var IsDieuChuyenNgoai = $("#IsDieuChuyenNgoai").val();
+                    if (Guids.length > 0) {
+                        var StringId = Guids.join(',');
+                        window.location.href = '/GiamDieuChuyen/Create?StringId=' + StringId + '&isDieuChuyenNgoai=' + IsDieuChuyenNgoai;
+                    } else {
+                        ShowErrorMessage("Không có công cụ, dụng cụ được chọn!");
+                    }
+                }
+            </script>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="list-congcu-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearchCongCu: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    DonViBoPhanId: $("#DonViBoPhanId").val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearchCongCu").click(function () {
+                                var grid = $('#list-congcu-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearchCongCu").click();
+                                    return false;
+                                }
+                            });
+                            $("#list-congcu-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("_ChonTaiSan", "GiamDieuChuyen"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    { field: 'MaCongCuText', title: 'Mã CCDC' },
+                                    { field: 'TenCongCuText', title: 'Tên CCDC' },
+                                    { field: 'SoLuongText', title: 'Số lượng' },
+                                    { field: 'NhomCongCuText', title: 'Nhóm CCDC' },
+                                    { field: 'DonGiaText', title: 'Đơn giá' },
+                                    { field: 'BoPhanSuDungText', title: 'Bộ phận sử dụng' },
+                                    {
+                                        field: "MapId",
+                                        title: "Chọn",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<input id="#:MapId#" data-guid="#:MapId#" type="checkbox">'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

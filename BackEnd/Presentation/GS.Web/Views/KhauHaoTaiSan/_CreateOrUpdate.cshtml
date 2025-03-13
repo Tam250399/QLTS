@@ -1,0 +1,110 @@
+﻿@model KhauHaoTaiSanModel
+
+<div class="form-group row">
+    <label class="col-form-label col-md-2 text-sm-left">Tháng khấu hao</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="1" asp-for="THANG_KHAU_HAO" />
+        <span asp-validation-for="THANG_KHAU_HAO"></span>
+    </div>
+    <label class="col-form-label col-md-2 text-sm-left">Năm Khấu hao</label>
+    <div class="col-md-4">
+        <nop-editor asp-amount="true" asp-min-number="0" asp-max-number="9999" asp-for="NAM_KHAU_HAO" />
+        <span asp-validation-for="NAM_KHAU_HAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-md-2 text-sm-left">Giá trị khấu hao</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="0" asp-dvt="c" asp-for="GIA_TRI_KHAU_HAO" />
+        <span asp-validation-for="GIA_TRI_KHAU_HAO"></span>
+    </div>
+    <label class="col-form-label col-md-2 text-sm-left">Tỷ lệ khấu hao</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="0" asp-dvt="c" asp-for="TY_LE_KHAU_HAO" />
+        <span asp-validation-for="TY_LE_KHAU_HAO"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-md-2 text-sm-left">Nguyên giá</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="0" asp-dvt="c" asp-for="TONG_NGUYEN_GIA" />
+        <span asp-validation-for="TONG_NGUYEN_GIA"></span>
+    </div>
+    <label class="col-form-label col-md-2 text-sm-left">Tổng GTCL</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="0" asp-dvt="c" asp-for="TONG_GIA_TRI_CON_LAI" />
+        <span asp-validation-for="TONG_GIA_TRI_CON_LAI"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-md-2 text-sm-left">Khấu hao lũy kế</label>
+    <div class="col-md-4">
+        <nop-editor asp-min-number="0" asp-dvt="c" asp-for="TONG_KHAU_HAO_LUY_KE"/>
+        <span asp-validation-for="TONG_KHAU_HAO_LUY_KE"></span>
+    </div>
+</div>
+    @*<input asp-for="ID" type="hidden" />
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">TAI_SAN_ID:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="TAI_SAN_ID" />
+        <span asp-validation-for="TAI_SAN_ID"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">MA_TAI_SAN:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="MA_TAI_SAN" />
+        <span asp-validation-for="MA_TAI_SAN"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">NAM_KHAU_HAO:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="NAM_KHAU_HAO" />
+        <span asp-validation-for="NAM_KHAU_HAO"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">GIA_TRI_KHAU_HAO:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="GIA_TRI_KHAU_HAO" />
+        <span asp-validation-for="GIA_TRI_KHAU_HAO"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">TONG_KHAU_HAO_LUY_KE:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="TONG_KHAU_HAO_LUY_KE" />
+        <span asp-validation-for="TONG_KHAU_HAO_LUY_KE"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">TONG_GIA_TRI_CON_LAI:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="TONG_GIA_TRI_CON_LAI" />
+        <span asp-validation-for="TONG_GIA_TRI_CON_LAI"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">TY_LE_KHAU_HAO:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="TY_LE_KHAU_HAO" />
+        <span asp-validation-for="TY_LE_KHAU_HAO"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">TONG_NGUYEN_GIA:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="TONG_NGUYEN_GIA" />
+        <span asp-validation-for="TONG_NGUYEN_GIA"></span>
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-right">THANG_KHAU_HAO:</label>
+        <div class="col-sm-10">
+        <nop-editor asp-for="THANG_KHAU_HAO" />
+        <span asp-validation-for="THANG_KHAU_HAO"></span>
+        </div>
+        </div>*@
+

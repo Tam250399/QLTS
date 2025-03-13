@@ -1,0 +1,110 @@
+@model ThuocTinhModel
+@using GS.Core.Domain.ThuocTinhs;
+@{
+    //page title
+    ViewBag.Title = "ThuocTinh";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ThuocTinh");
+}
+<form asp-controller="ThuocTinh" asp-action="Create" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Quay lại danh sách</a>
+            </small>
+            <a id="btnSave" href="javascript:void(0)" onclick="SaveThuocTinh()" class="btn btn-success" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </a>
+        </h6>
+        <div class="card-body">
+            @await Html.PartialAsync("_CreateOrUpdate", Model)
+        </div>
+    </div>
+</form>
+<script>
+    function SaveThuocTinh() {
+        var ThuocTinh = {
+            MA: $("#MA").val(),
+            TEN: $("#TEN").val(),
+            ListLoaiTaiSanId: $("#ListLoaiTaiSanId").val()
+        }
+        var _data = {
+            listmodel: GetDuLieuThuocTinh(),
+            model: ThuocTinh
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: "/ThuocTinh/Create",
+            success: function (data) {
+                if (CheckValidMessageReturn(data)) {
+                    ShowSuccessMessage(data.Message);
+                };
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(ajaxOptions + ": " + thrownError);
+            }           
+        })
+    }
+    function GetDuLieuThuocTinh() {
+        var listmodel = [];
+        //lấy model tổng 
+        var tong = {
+            LoaiDuLieuId: $("#LoaiDuLieuId").val(),
+            NAME: $("#TEN_NHOM").val(),
+            IS_VALIDATE: $('#Vali_NHOM').is(":checked"),
+            SapXep:$("#SapXep").val()
+        }
+        listmodel.push(tong);
+        $(".LoaiObject").each(function () {
+            var GUID = this.id;
+            var Loai = $("#LoaiDuLieuCon_" + GUID).val();
+            //lấy giá trị mặc định theo loại tt
+            if (Loai == @((int)enumLoaiDuLieuCauHinh.RD)) {
+                var model1 = {
+                    GUID: GUID,
+                    GuidParrent: $(this).val(),
+                    LoaiDuLieuId: Loai,
+                    NAME: $("#NAME_" + GUID).val(),
+                    NameTT: $("#NAME_TT1_" + GUID).val(),
+                    ValueTT: $("#Value_TT1_" + GUID).val(),
+                    stt: $("#STT1_" + GUID).val(),
+                    IS_VALIDATE: $('#Vali_' + GUID).is(":checked"),
+                    Is_Default : $('#Default_TT1_' + GUID).is(":checked")
+                };
+                listmodel.push(model1);
+                var model2 = {
+                    GUID: GUID,
+                    GuidParrent: $(this).val(),
+                    LoaiDuLieuId: Loai,
+                    NAME: $("#NAME_" + GUID).val(),
+                    NameTT: $("#NAME_TT2_" + GUID).val(),
+                    ValueTT: $("#Value_TT2_" + GUID).val(),
+                    stt: $("#STT2_" + GUID).val(),
+                    Is_Default : $('#Default_TT2_' + GUID).is(":checked")
+                }
+                listmodel.push(model2);
+            }
+            else {
+                var model = {
+                    GUID: GUID,
+                    GuidParrent: $(this).val(),
+                    LoaiDuLieuId: Loai,
+                    NAME: $("#NAME_" + GUID).val(),
+                    NameTT: $("#NAME_TT_" + GUID).val(),
+                    ValueTT: $("#Value_TT_" + GUID).val(),
+                    stt: $("#STT_" + GUID).val(),
+                    IS_VALIDATE: $('#Vali_' + GUID).is(":checked"),
+                    Is_Default : $('#Default_TT_' + GUID).is(":checked")
+                }
+                listmodel.push(model);
+            }
+
+        });
+        return listmodel;
+    }
+</script>
+

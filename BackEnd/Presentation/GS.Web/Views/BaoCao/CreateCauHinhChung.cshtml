@@ -1,0 +1,74 @@
+﻿@model CauHinhBaoCaoChungModel
+@{
+    //page title
+    ViewBag.Title = "Cấu hình báo cáo";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("CauHinhThamSoBaoCao");
+}
+<form asp-controller="BaoCao" asp-action="CreateCauHinhChung" method="post">
+    <div class="card mb-4">
+        <h6 class="card-header">
+            Thêm mới
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListCauHinh">Quay lại danh sách</a>
+            </small>
+            <button type="submit" name="save-continue" class="btn btn-secondary" style="float:right;margin-right:5px;">
+                <i class="far fa-save" style="margin-right:5px;"></i>
+                Lưu và tiếp tục sửa
+            </button>
+            <button type="submit" name="save" class="btn btn-success" style="float:right;margin-right:5px; ">
+                <i class="fas fa-save" style="margin-right:5px;"></i>
+                Lưu
+            </button>
+        </h6>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Canh lề trái báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="MarginLeft" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Canh lề phải báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="MarginRight" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Canh lề trên báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="MarginTop" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Canh lề dưới báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="MarginBottom" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Màu báo cáo</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="Color" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Màu viền </label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="ColorBorder" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Kiểu chữ</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="Font" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Kiểu viền</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="StyleBorder" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Độ rộng viền</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="WidthBorder" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

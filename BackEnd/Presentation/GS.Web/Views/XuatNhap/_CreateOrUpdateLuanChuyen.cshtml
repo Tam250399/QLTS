@@ -1,0 +1,81 @@
+﻿@model XuatNhapModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="MapId" type="hidden" />
+<input asp-for="BoPhanId" type="hidden" />
+<input id="DateBefore" value="@Model.DateBefore.toDateVNString()" type="hidden"/>
+<table class="table card-table table-bordered table-striped">
+    <thead class="thead-light">
+        <tr>
+            <th class="text-center font-weight-bold">STT</th>
+            <th class="text-center font-weight-bold">Đơn vị sử dụng</th>
+            <th class="text-center font-weight-bold">Mã CCDC</th>
+            <th class="text-center font-weight-bold">Tên CCDC</th>
+            <th class="text-center font-weight-bold">Nhóm CCDC</th>
+            <th class="text-center font-weight-bold">Đơn giá</th>
+            <th class="text-center font-weight-bold">Số lượng</th>
+            <th class="text-center font-weight-bold">Bộ phận sử dụng</th>
+            <th class="text-center font-weight-bold">Ngày phân bổ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>@Model.DonViText</td>
+            <td>@Model.MaCongCuText</td>
+            <td>@Model.TenCongCuText</td>
+            <td>@Model.NhomCongCuText</td>
+            <td class="text-right">@Model.DonGiaText</td>
+            <td class="text-right">@Model.SoLuongText</td>
+            <td>@Model.BoPhanSuDungText</td>
+            <td>@Model.DateBefore.toDateVNString()</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="gs-form-group mb-4" style="margin-top:25px;">
+    <h6>Thông tin luân chuyển</h6>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Số quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_SO" />
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left">Ngày quyết định</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="QUYET_DINH_NGAY" />
+            <span asp-validation-for="QUYET_DINH_NGAY"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Bộ phận tiếp nhận</label>
+        <div class="col-sm-10">
+            <nop-select asp-for="DON_VI_BO_PHAN_ID" asp-items="Model.DDLDonViBoPhan" asp-filter="true"/>
+            <span id="err_DON_VI_BO_PHAN_ID" style="display:none;" class="field-validation-error">Bộ phận tiếp nhận không hợp lệ</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Ngày luân chuyển</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_XUAT_NHAP" />
+            <span asp-validation-for="NGAY_XUAT_NHAP"></span>
+        </div>
+        <label class="col-form-label col-sm-2 text-sm-left text-required">Số lượng</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="SoLuongPhanBo" asp-min-number="0" asp-amount="true"/>
+            <span id="err_SoLuongPhanBo" style="display:none;" class="field-validation-error">Số lượng không được để trống </span>
+            <span id="err_SoLuongPhanBoCheck" style="display:none;" class="field-validation-error">Số lượng không được lớn hơn tổng số lượng</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Diễn giải</label>
+        <div class="col-sm-10">
+            <app-textarea asp-for="GHI_CHU" />
+        </div>
+    </div>
+</div>
+<style>
+    th {
+        text-align: left !important;
+    }
+</style>

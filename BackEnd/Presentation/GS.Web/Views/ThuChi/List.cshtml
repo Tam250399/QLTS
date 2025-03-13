@@ -1,0 +1,337 @@
+@model ThuChiSearchModel
+@{
+    //page title
+    ViewBag.Title = "Danh sách Quản lý thu chi";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("DanhSachThuChiTSTD");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        @ViewBag.Title
+    </h5>
+    <div class="pull-right" style="margin-bottom:5px;">
+        <a asp-action="CreateThuChiTong" class="btn btn-sm btn-outline-success">
+            <i class="fa fa-plus-square"></i>
+            Thêm mới
+        </a>
+    </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4" style="padding-bottom: 24px;">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-sm-left">Từ khóa:</label>
+        <div class="col-sm-8">
+            <nop-editor asp-for="KeySearch" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        kendo.culture("vi-VN");
+                        var record = 0;
+                        var recordChildren = 0;
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val()
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                
+                                    record = 0;
+                                    var grid = $('#items-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    return false;
+                                
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function (event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ListKetQua", "ThuChi"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                dataBinding: function() {
+                                      record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+                                 },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++record #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                    {
+                                        field: 'TenKetQua',
+                                        title: 'Quyết định phê duyệt PAXL',
+                                        
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:left;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_PHAI_THU',
+                                        title: 'Tổng số tiền phải thu',
+                                        format: "{0:#,#}",                                      
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_THU',
+                                        title: 'Tổng số tiền đã thu',
+                                        format: "{0:#,#}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_CON_PHAI_THU',
+                                        title: 'Tổng số tiền còn phải thu',
+                                        format: "{0:#,#}",                                      
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    
+                                    {
+                                        field: 'CHI_PHI',
+                                        title: 'Tổng chi phí xử lý',
+                                        format: "{0:#,#}",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-sm btn-outline-secondary" href="EditThuChiTong?ListXuLyIdString=#=LIST_XU_LY_ID#">Sửa</a>&nbsp;<a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaThuChiByXuLyId(' + '"#:LIST_XU_LY_ID#"' + ')>Xóa</a>'
+                                    }
+                                ]
+                            });
+                            function detailInit(e) {
+                                recordChildren = 0
+                                $('tr[data-uid="' + e.masterRow[0].dataset.uid + '"]').addClass("row-class");
+                                var data = {
+                                    ListXulyIdString: e.data.LIST_XU_LY_ID
+                                };
+                                addAntiForgeryToken(data);
+                                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("List", "ThuChi"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: data
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    dataBinding: function () {
+                                        recordChildren = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                                    },
+                                    editable: {
+                                        confirmation: "Bạn có chắc chắn xóa chỉ tiêu này không",
+                                        mode: "inline"
+                                    },
+
+                                    scrollable: false,
+                                    columns: [
+                                    {
+                                        title: "STT",
+                                        template: "#= ++recordChildren #",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                    },
+                                         {
+                                        field: 'NGAY_THU',
+                                        title: 'Ngày thu',
+                                        template: "#= kendo.toString(kendo.parseDate(NGAY_THU, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_PHAI_THU',
+                                        title: 'Số tiền phải thu',
+                                        format: "{0:#,#}",
+                                        //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                     },
+                                    {
+                                        field: 'SO_TIEN_THU',
+                                        title: 'Số tiền đã thu',
+                                        format: "{0:#,#}",
+                                        //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    {
+                                        field: 'SO_TIEN_CON_PHAI_THU',
+                                        title: 'Số tiền còn phải thu',
+                                        format: "{0:#,#}",
+                                        //template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:right;" }
+                                    },
+                                    
+                                   
+                                    {
+                                        field: 'CHI_PHI',
+                                        title: 'Chi phí xử lý',
+                                        format: "{0:#,#}",
+                                        // template: "#= kendo.toString(kendo.parseDate(QUYET_DINH_NGAY, 'yyyy-MM-dd'), 'dd/MM/yyyy') #",
+                                        headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:right;" }
+
+                                    },
+                                    {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '#if(Is_First){  }else{ # <a class="btn btn-sm btn-outline-danger" href="javascript:void(0)" onclick=XoaThuChi(#:ID#)>Xóa</a>#}#'
+                                    }
+                                ]
+                                });
+                            };
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function XoaThuChiByXuLyId(ListXuLyId) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa thu chi của kết quả xử lý này?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                   
+                    $.ajax({
+                        type: "POST",
+                        url: "/ThuChi/DeleteByXuLyId?ListXuLyId=" + ListXuLyId,
+                        success: function (data) {
+                            if (data.Code == "00") {
+                                ShowSuccessMessage(data.Message);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        });
+    }
+    function XoaThuChi(ID) {
+        bootbox.confirm({
+            message: "Bạn có chắc chắn xóa thu chi?",
+            buttons: {
+                confirm: {
+                    label: '@T("admin.common.yes")',
+                },
+                cancel: {
+                    label: '@T("admin.common.no")',
+                },
+            },
+            callback: function (confirm) {
+                if (confirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ThuChi/Delete?id=" + ID,
+                        success: function (data) {
+                            if (data.Code == "00") {
+                                ShowSuccessMessage(data.Message);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                ShowErrorMessage(data.message)
+                            }
+                        }
+                    })
+                }
+                return;
+            }
+        });
+    }
+</script>
+
+

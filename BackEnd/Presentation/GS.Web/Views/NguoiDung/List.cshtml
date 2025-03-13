@@ -1,0 +1,185 @@
+﻿@model NguoiDungSearchModel
+
+@inject IWorkContext workContext
+@{
+    //page title
+    ViewBag.Title = "Người dùng";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("NguoiDungDanhSach");
+    var currentCustomer = workContext.CurrentCustomer;
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        Danh sách người dùng
+    </h5>
+    <div class="pull-right " style="margin-bottom:5px;">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fa fa-plus-square"></i>
+                Thêm mới
+            </a>
+        </div>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class=" row">
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Từ khoá:</label>
+                <div class="col-sm-10">
+                    <nop-editor asp-for="KeySearch" placeholder="Tên hoặc mã...." />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-sm-right">Bộ/Tỉnh:</label>
+                <div class="col-sm-4">
+                    <nop-select asp-filter="true" asp-for="DonViBoTinhId" asp-items="Model.ddlDonViBoTinh" />
+                </div>
+                <label class="col-form-label col-sm-2 text-sm-right">Đơn vị trực thuộc:</label>
+                <div class="col-sm-4">
+                    <nop-select asp-filter="true" asp-for="DonViQuanHuyenId" asp-items="Model.ddlDonViQuanHuyen" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="NguoiDung-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function SearchData() {
+                                var _data = {
+                                    KeySearch: $('#@Html.IdFor(model => model.KeySearch)').val(),
+                                    Tendaydu: $('#@Html.IdFor(model => model.Tendaydu)').val(),
+                                    Macanbo: $('#@Html.IdFor(model => model.Macanbo)').val(),
+									DonViBoTinhId: $('#@Html.IdFor(model => model.DonViBoTinhId)').val(),
+									DonViQuanHuyenId: $('#@Html.IdFor(model => model.DonViQuanHuyenId)').val(),
+                                };
+                                addAntiForgeryToken(_data);
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#NguoiDung-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                            $("#@Html.IdFor(model => model.KeySearch)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#NguoiDung-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "NguoiDung"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: SearchData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "TEN_DANG_NHAP",
+                                        title: "Tên đăng nhập"
+                                    },
+                                    {
+                                        field: "TEN_DAY_DU",
+                                        title: "Tên đầy đủ"
+                                    }, {
+                                        field: "MA_CAN_BO",
+                                        title: "Mã cán bộ   "
+                                    }, {
+                                        field: "EMAIL",
+                                        title: "Email"
+                                    }, {
+                                        field: "MOBILE",
+                                        title: "Số điện thoại"
+                                    }, {
+                                        field: "Ten_TRANG_THAI",
+                                        title: "Trạng thái",
+                                        template: function (dataItem) {
+                                            if (dataItem.TRANG_THAI_ID == @((int)GS.Core.Domain.HeThong.NguoiDungStatusID.Lock)) {
+                                                return "<span style='color: red;'>" + dataItem.Ten_TRANG_THAI + "</span>";
+                                            } else {
+                                                return dataItem.Ten_TRANG_THAI;
+                                            }
+                                        }
+                                    }, {
+                                        field: "ID",
+                                        title: "Thao tác",
+                                        //width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: function (item) {
+                                            var btnSua = `<a class="btn btn-sm btn-outline-secondary" href="Edit?guid=${item.GUID}" style="${(item.NGUOI_TAO == @(currentCustomer.ID)||@(currentCustomer.IS_QUAN_TRI?"true":"false"))?"":"display:none"}"><i class="fas fa-pencil-alt d-block"></i>Sửa</a>`;
+                                    var btnDoiMatKhau = `<button onclick='OpenModalManual("Đặt lại mật khẩu","/NguoiDung/_ChangeMatKhauByKhoCSDL?IDNguoiDung=${item.ID}&isResetPassword=true",50)'  class= "btn btn-sm btn-outline-info"  ><i class="fas fa-key d-block"></i>Đặt lại mật khẩu</button>`;
+                                            return btnSua + '&nbsp' + btnDoiMatKhau;
+                                        }
+                                    }
+                                ]
+                            });
+                        });
+						$(function () {
+                            let ddlDonViBoTinh = $("#DonViBoTinhId").data("kendoDropDownList");
+							ddlDonViBoTinh?.bind("change", ddlDonViBoTinh_change);
+                        })
+						function ddlDonViBoTinh_change() {
+                            let value = this.value();
+                            let _data= {
+								donViChaId: value
+							}
+                            let _url = '@Url.Action("GetDonViConFromDonViCha","DonVi")'
+							ajaxPost(_data, _url).done(function (res) {
+								if (res.Code=="00") {
+                                    let ddlDonViQuanHuyen = $("#DonViQuanHuyenId").data("kendoDropDownList");
+                                    ddlDonViQuanHuyen?.setDataSource(res.ObjectInfo);
+                                    ddlDonViQuanHuyen?.select(0);
+								}
+							});
+						}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*/*&nbsp <a IDNguoiDung ="#=ID#" data-toggle="modal" data-target="\\#globalModalIframe" data-src="/NguoiDung/_ResetMatKhau?IDNguoiDung=#=ID#" class= "btn btn-sm btn-outline-info" data-title="Đặt lại mật khẩu" ><i class="fas fa-key d-block"></i>Đặt lại mật khẩu</a>*/*@

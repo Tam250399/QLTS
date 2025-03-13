@@ -1,0 +1,68 @@
+@model XacThucChungThuSomodel
+@{
+    //page title
+    ViewBag.Title = "Xác thực chứng thư số";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("XacThucChungThuSo");
+}
+<form asp-controller="CauHinh" asp-action="XacThucChungThuSo" method="post">
+    <div class="card mb-4">
+        <h5 class="card-header">
+            Sửa thông tin xác thực chứng thư số         
+            <button type="submit" name="save" class="btn btn-success" style="float:right; margin-right: 5px;">
+                <i class="fas fa-save"></i>
+                Lưu
+            </button>
+        </h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Kiểm tra xác thực chữ ký số:</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="XacThucChuKySo" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Kiểm tra xác thực khi thao tác nghiệp vụ:</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="XacThucThaoTacNghiepVu" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Các đơn vị được chọn không cần xác thực</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="DonViKhongCanXacThuc" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Định kỳ thay đổi mật khẩu:</label>
+                <div class="col-sm-4">
+                    <nop-editor asp-for="DinhKyDoiMatKhau" class="custom-control-input" />
+                </div>
+                <div class="col-sm-2">
+                    <label class="col-form-label text-sm-left" style="padding-left:0px !important;">(tháng)</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-5 text-sm-right">Đơn vị có chế độ hạch toán khấu hao nhập dư đầu kỳ</label>
+                <div class="col-sm-7">
+                    <label class="custom-control custom-checkbox">
+                        <nop-editor asp-for="CDHTKhauHaoNhapDuDauKy" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

@@ -1,0 +1,172 @@
+﻿@model MuaSamChiTietSearchModel
+<input asp-for="MUA_SAM_ID" type="hidden"/>
+<div id="list-mua-sam-chi-tiet"></div>
+<script>
+	var recordItemMSCT = 0;
+	$(document).ready(function () {
+		listMuaSamChiTietJS = new ListMuaSamChiTietJS();
+		$("#list-mua-sam-chi-tiet").kendoGrid({
+			dataSource: {
+				type: "json",
+				transport: {
+					read: {
+						url: "@Html.Raw(Url.Action("ListMuaSamChiTiet", "MuaSam"))",
+						type: "POST",
+						dataType: "json",
+						data: listMuaSamChiTietJS.addDataSearchMuaSamChiTiets,
+					}
+				},
+				schema: {
+					data: "Data",
+					total: "Total",
+					errors: "Errors"
+				},
+				error: function (e) {
+					display_kendoui_grid_error(e);
+					// Cancel the changes
+					this.cancelChanges();
+				},
+				pageSize: @(Model.PageSize),
+				serverPaging: true,
+				serverFiltering: true,
+				serverSorting: true
+			},
+			pageable: {
+				refresh: true,
+				pageSizes: [@(Model.AvailablePageSizes)],
+				@await Html.PartialAsync("_GridPagerMessages")
+			},
+			dataBinding: function () {
+				recordItemMSCT = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+			},
+			editable: {
+				confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+				mode: "inline"
+			},
+			scrollable: false,
+			columns: [
+				{
+					title: "STT",
+					template: "#=++recordItemMSCT#",
+					width: 50,
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+				},
+				{
+					field: 'LoaiTaiSanTen', title: 'Loại tài sản',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:left" },
+				},
+				{
+					field: 'TEN_TAI_SAN', title: 'Tên tài sản',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:left" },
+				},
+				{
+					field: 'TenHinhThucMuaSam', title: 'Hình thức mua sắm',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:left" },
+				},
+				{
+					field: 'strVNDonGia',
+					title: 'Đơn giá',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:right" },
+				},
+				{
+					field: 'strVNSoLuong',
+					title: 'Số lượng',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:right" },
+				},
+				{
+					field: 'strVNDuToanDuocDuyet',
+					title: 'Dự toán được duyệt',
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:right" },
+				},
+				{
+					field: "THOI_GIAN_DU_KIEN",
+					title: "Thời gian dự kiến",
+					type: "Date",
+					format: "{0:dd/MM/yyyy}",
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+				},
+				{
+					field: "ID",
+					title: "Thao tác",
+					width: 150,
+					headerAttributes: { style: "text-align:center" },
+					attributes: { style: "text-align:center" },
+					template: function (dataItem) {
+						return "<a class='btn btn-sm btn-outline-secondary' data-title='Thêm mới, sửa tài sản' data-toggle='modal' data-target='#globalModalIframe' href='javascript:listMuaSamChiTietJS.editMuaSamChiTiet(" + dataItem.ID + ")' title='Sửa' data-src='/MuaSam/_EditMuaSamChiTiet?taiSanMuaSamChiTietId=" + dataItem.ID + "'>Sửa</a>" + "&nbsp;"
+							+ "<a href='javascript:listMuaSamChiTietJS.xoaMuaSamChiTiet(" + dataItem.ID + ");' data-id='" + dataItem.ID + "' class='btn btn-sm btn-danger' title='Xóa'><span class='fas' style='color:white'>Xóa</span></a>";
+					}
+				}
+			]
+		});
+	})
+
+	//Function tài sản vừa nhập vào, tài sản trạng thái CHO_DUYET, tất cả yêu cầu trạng thái CHO_DUYET
+
+
+	class ListMuaSamChiTietJS{
+
+		constructor() {
+			this.initEvents();
+			this.initGridMuaSamChiTiets();
+		}
+
+		initEvents() {
+
+		}
+
+		initGridMuaSamChiTiets() {
+
+
+		}
+		addDataSearchMuaSamChiTiets() {
+			var data = {
+				MUA_SAM_ID:@Model.MUA_SAM_ID,
+			}
+			return data;
+		}
+		xoaMuaSamChiTiet(muaSamChiTietId) {
+			bootbox.confirm({
+				message: "Bạn có chắc chắn xóa tài sản này?",
+				className: 'bootbox-sm',
+				buttons: {
+					confirm: {
+						label: 'Đồng ý',
+					},
+					cancel: {
+						label: 'Hủy',
+					},
+				},
+				callback: function (result) {
+					if (result) {
+						var url = "/MuaSam/DeleteMuaSamChiTiet?muaSamChiTietId=" + muaSamChiTietId;
+						var mSCTDeleteRequest = ajaxDelete(url);
+						mSCTDeleteRequest.done(function (result) {
+							if (result.Code == '00') {
+								ShowSuccessMessage(result.Message);
+								$('#list-mua-sam-chi-tiet').data('kendoGrid').dataSource.page(1);
+							} else
+								ShowErrorMessage(result.Message);
+						}).fail(function (jqXHR, textStatus, errorThrow) {
+							console.log(textStatus + ': ' + errorThrow);
+						});
+					}
+				},
+			});
+
+		}
+
+		editMuaSamChiTiet(idTaiSanMuaSam) {
+			var _url = "@(Url.Action("_CreateMuaSamChiTiet", "MuaSam"))?&taiSanMuaSamChiTietId=" + idTaiSanMuaSam;
+            OpenModalManual("Thêm mới, sửa tài sản", _url, 80);
+		}
+	}
+
+</script>

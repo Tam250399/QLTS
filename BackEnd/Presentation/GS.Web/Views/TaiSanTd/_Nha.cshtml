@@ -1,0 +1,162 @@
+﻿@model TaiSanTdModel
+
+    <div class="gs-form-group">
+        <h6>Tài sản nhà</h6>
+        <input asp-for="GUID" type="hidden" />
+        <input asp-for="QUYET_DINH_TICH_THU_ID" type="hidden" />
+        <input asp-for="NGUON_GOC_TAI_SAN_ID" type="hidden" />
+        <input asp-for="LOAI_HINH_TAI_SAN_ID" type="hidden" />
+        <input asp-for="SO_LUONG" type="hidden" />
+        <input asp-for="DON_VI_TINH" type="hidden" />
+        <input asp-for="quyetdinh.is_vali" value="false" hidden />
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Tên nhà:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="TEN" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TEN"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Loại: </label>
+            <div class="col-sm-4">
+                <div class="custom-controls-stacked row" style="margin-top: 7px;margin-left: 0px;">
+                    <label class="custom-control custom-radio col-sm-5" style="margin-left:7px;">
+                        @Html.RadioButtonFor(c => c.is_dat, true, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"><small>Có đất</small></span>
+                    </label>
+                    <label class="custom-control custom-radio col-sm-5">
+                        @Html.RadioButtonFor(c => c.is_dat, false, new { @class = "custom-control-input" })
+                        <span class="custom-control-label"><small>Không có đất</small></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="div_DiaChi" class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Địa chỉ:</label>
+            <div class="col-sm-10">
+                <nop-editor asp-for="DIA_CHI" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="DIA_CHI"></span>
+            </div>
+        </div>
+        <div id="div_ChonDat" class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left">Thuộc khuôn viên đất:</label>
+            <div class="col-sm-10">
+                <nop-select asp-for="TAI_SAN_DAT_ID" asp-items="Model.DDLDat" asp-filter="true" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="TAI_SAN_DAT_ID"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Cấp nhà:</label>
+            <div class="col-sm-4">
+                <nop-select asp-for="LOAI_TAI_SAN_ID" asp-items="Model.DDLLoaiTaiSan" asp-filter="true" asp-disabled="@Model.is_detail" />
+                <span asp-validation-for="LOAI_TAI_SAN_ID"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Diện tích sàn sử dụng:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_TINH" asp-disabled="@Model.is_detail" asp-dvt="m2" />
+                <span asp-validation-for="GIA_TRI_TINH"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            @*<label class="col-form-label col-sm-2 text-sm-left text-required">Năm đưa vào sử dụng:</label>
+        <div class="col-sm-4">
+            <nop-editor asp-for="NGAY_SU_DUNG" asp-disabled="@Model.is_detail" />
+            <span asp-validation-for="NGAY_SU_DUNG"></span>
+        </div>*@
+            <label class="col-form-label col-sm-2 text-sm-left text-required">Năm đưa vào sử dụng:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="NamSuDung" asp-disabled="@Model.is_detail"  asp-min-number="0" />
+                <span asp-validation-for="NamSuDung"></span>
+            </div>
+            <label class="col-form-label col-sm-2 text-sm-left">Giá trị tịch thu/ xác lập:</label>
+            <div class="col-sm-4">
+                <nop-editor asp-for="GIA_TRI_XAC_LAP" asp-amount="true" asp-disabled="@Model.is_detail" asp-dvt="đồng"/>
+                <span asp-validation-for="GIA_TRI_XAC_LAP"></span>
+            </div>
+        </div>
+        @if (Model.is_detail == false)
+        {
+            <div class="form-group row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2 text-right">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary " id="btnSave">
+                        <i class="fa fa-save"></i>
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+<script>
+    var _url = "/TaiSanTd/CreateTSTD";
+    @if (Model.ID > 0)
+    {
+        <text>
+        _url = "/TaiSanTd/EditTSTD";
+        </text>
+    }
+    $(document).ready(function () {
+        if (@Model.is_dat.ToString().ToLower() === true) {
+             $("#div_DiaChi").hide();
+        }
+        else {
+           
+             $("#div_ChonDat").hide();
+        }
+        if (@Model.is_detail.ToString().ToLower() === true) {
+            $("input[name='@(Html.IdFor(c=>c.is_dat))']").each(function (i) {
+                $(this).attr('disabled', 'disabled');
+            });
+        };
+    })
+    $('input[type=radio][name=@(Html.IdFor(c=>c.is_dat))]').on('change', function () {
+        if ($('input[type=radio][name=@(Html.IdFor(c=>c.is_dat))]:checked').val() == "True") {
+            $("#div_ChonDat").show();
+            $("#div_DiaChi").hide();
+            $("#TAI_SAN_DAT_ID").data("kendoDropDownList").value(0);
+
+        }
+        else {
+            $("#div_ChonDat").hide();
+            $("#div_DiaChi").show();
+            $("#DIA_CHI").val('');
+        }
+    });
+    $("#btnSave").click(function () {
+        var _data = {
+            GUID: $("#@Html.IdFor(c=>c.GUID)").val(),
+            QUYET_DINH_TICH_THU_ID: $("#@Html.IdFor(c=>c.QUYET_DINH_TICH_THU_ID)").val(),
+            LOAI_HINH_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_HINH_TAI_SAN_ID)").val(),
+            TEN: $("#@Html.IdFor(c=>c.TEN)").val(),
+            NGUON_GOC_TAI_SAN_ID: $("#@Html.IdFor(c=>c.NGUON_GOC_TAI_SAN_ID)").val(),
+            LOAI_TAI_SAN_ID: $("#@Html.IdFor(c=>c.LOAI_TAI_SAN_ID)").val(),
+            GIA_TRI_TINH: $("#@Html.IdFor(c=>c.GIA_TRI_TINH)").val(),
+            @*NGAY_SU_DUNG: $("#@Html.IdFor(c=>c.NGAY_SU_DUNG)").val(),*@
+            NamSuDung: $("#@Html.IdFor(c=>c.NamSuDung)").val(),
+            DON_VI_TINH: $("#@Html.IdFor(c=>c.DON_VI_TINH)").val(),
+            @*NGUYEN_GIA: $("#@Html.IdFor(c=>c.NGUYEN_GIA)").val(),*@
+            GIA_TRI_XAC_LAP: $("#@Html.IdFor(c=>c.GIA_TRI_XAC_LAP)").val(),
+            TAI_SAN_DAT_ID: $("#@Html.IdFor(c=>c.TAI_SAN_DAT_ID)").val(),
+            SO_LUONG: $("#@Html.IdFor(c=>c.SO_LUONG)").val(),
+            DIA_CHI: $("#@Html.IdFor(c=>c.DIA_CHI)").val(),
+            quyetdinh: { is_vali:$("#quyetdinh_is_vali").val() }
+        }
+        $.ajax({
+            type: "POST",
+            data: _data,
+            url: _url,
+            success: function (result) {
+                if (CheckValidMessageReturn(result)) {
+                    ShowSuccessMessage(result.Message);
+                    HideModalManual();
+                    $("#btnSearchDetail").click();
+                    $("#btnSearch").click();
+                }
+                else {
+                    ShowErrorMessage(result.Message);
+                }
+            }
+        })
+    })
+</script>
+

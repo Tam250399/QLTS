@@ -1,0 +1,86 @@
+﻿@model DiaBanModel
+
+<input asp-for="ID" type="hidden" />
+<input asp-for="pageIndex" type="hidden" />
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right text-required">Mã </label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="MA" />
+        <span asp-validation-for="MA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right text-required">Tên</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="TEN" />
+        <span asp-validation-for="TEN"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Mô tả</label>
+    <div class="col-sm-6">
+        <nop-editor asp-for="MO_TA" />
+        <span asp-validation-for="MO_TA"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Địa Bàn Cha</label>
+    <div class="col-sm-6">
+        <input id="DiaBanChaInput" class="form-control" style="width: 100%" value="@Model.TenDiaBanCha" />
+        @Html.HiddenFor(m => m.PARENT_ID)
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Trạng thái</label>
+    <div class="col-sm-4">
+        <app-select asp-for="TRANG_THAI_ID" asp-items="Model.TrangThaiAvaliable" />
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Loại địa bàn</label>
+    <div class="col-sm-4">
+        <app-select asp-for="LOAI_DIA_BAN_ID" asp-items="Model.LoaiDiaBanAvaliable" />
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-form-label col-sm-3 text-sm-right">Quốc gia</label>
+    <div class="col-sm-4">
+        <nop-select asp-for="QUOC_GIA_ID" asp-items="Model.QuocGiaAvaliable" asp-filter="true" />
+    </div>
+</div>
+<script>
+    // input DiaBanCha
+    function SearchDiaBanChaData() {
+        var _data = { TenDiaBan: $("#DiaBanChaInput").data("kendoComboBox").text() };
+        return _data;
+
+    }
+    function onDiaBanChaEditChange() {
+        var value = this.value();
+        $("#PARENT_ID").val(value);
+    }
+    $(document).ready(function () {
+
+        $("#DiaBanChaInput").kendoComboBox({
+            placeholder: "Nhập địa bàn cha...",
+            dataTextField: "TEN",
+            dataValueField: "ID",
+            filter: "contains",
+            autoBind: true,
+            minLength: 3,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/DiaBan/SearchDiaBan",
+                        data: SearchDiaBanChaData
+                    },
+                },
+            },
+            change: onDiaBanChaEditChange
+        });
+    });
+</script>
+

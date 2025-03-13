@@ -1,0 +1,52 @@
+﻿@model TrangThaiNamModel
+@{
+	//page title
+	ViewBag.Title = "Cập nhật sổ tài sản năm " + Model.Nam;
+	//active menu item (system name)
+	Html.SetActiveMenuItemSystemName("CauHinhSoTaiSan");
+}
+<form method="post" action='@Url.Action("EditTrangThaiNamTaiSan","CauHinh")'>
+	<div class="card mb-4">
+		<h6 class="card-header">
+			@ViewBag.Title
+
+		</h6>
+
+		<div class="card-body">
+			<div class="gs-form-group  ">
+
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2   text-required">Năm</label>
+					<div class="col-md-10">
+						<nop-editor asp-for="Nam" asp-readonly="true" />
+						<span asp-validation-for="Nam"></span>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2 text-required">Trạng thái</label>
+					<div class="col-sm-4">
+						<nop-select asp-for="TrangThai" asp-items="Model.ddlTrangThai" />
+						<span asp-validation-for="TrangThai"></span>
+					</div>
+					<label class="col-form-label col-sm-2 text-required">Ngày khóa sổ</label>
+					<div class="col-sm-4">
+						<nop-editor asp-for="NgayKhoaSo" /><br />
+						<span asp-validation-for="NgayKhoaSo"></span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="card-footer">
+			<a class="btn btn-sm btn-default" href='@Url.Action("CauHinhSoTaiSan","CauHinh")' style="float:right; margin-right: 5px;">
+				<i class="ion ion-ios-close-circle-outline"></i>
+				Đóng
+			</a>
+			<button type="submit" class="btn btn-sm btn-outline-primary " id="btnAddTangNguyenGia_2" style="float:right;margin-right:5px;">
+				<i class="fas fa-save" style="margin-right:5px;"></i>
+				Lưu
+			</button>
+		</div>
+
+	</div>
+</form>

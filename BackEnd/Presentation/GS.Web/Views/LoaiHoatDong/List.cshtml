@@ -1,0 +1,168 @@
+﻿@model LoaiHoatDongSearchModel
+@{
+    //page title
+    ViewBag.Title = "Loại hoạt động";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("HeThongLoaiHoatDong");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h5 class="pull-left">
+        Loại hoạt động
+    </h5>
+</div>
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-3 text-sm-right">Từ khóa:</label>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="TU_KHOA_HE_THONG" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-3 text-sm-right">Tên:</label>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="TEN" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary btn-block" id="btnSearch">Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="items-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            function searchData() {
+                                var _data = {
+                                    TU_KHOA_HE_THONG:$('#@Html.IdFor(model => model.TU_KHOA_HE_THONG)').val(),
+                                    TEN:$('#@Html.IdFor(model => model.TEN)').val()
+                                };
+                                addAntiForgeryToken(_data);
+
+                                return _data;
+                            }
+                            $("#btnSearch").click(function () {
+                                var grid = $('#items-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                return false;
+                            });
+                             $("#@Html.IdFor(model => model.TU_KHOA_HE_THONG)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                             $("#@Html.IdFor(model => model.TEN)").keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#btnSearch").click();
+                                    return false;
+                                }
+                            });
+                            $("#items-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "LoaiHoatDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: searchData,
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("Update", "LoaiHoatDong"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                        },
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ID",
+                                            fields: {
+                                                TU_KHOA_HE_THONG: { editable: false, type: "string" },
+                                                TEN: { editable: true, type: "string" },
+                                                TINH_KHA_DUNG:{editable: true,type: "boolean" },
+                                                ID: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Bạn có chắc chắn xóa không ?")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "TU_KHOA_HE_THONG",
+                                        title: "Từ khóa hệ thống"
+                                    }, {
+                                        field: "TEN",
+                                        title: "Tên"
+                                    }, {
+                                        field: "TINH_KHA_DUNG",
+                                        title: "Tính khả dụng",
+                                        //template: "#=(TINH_KHA_DUNG == true) ? 'Có':'Không'#"
+                                        template: "#=TINH_KHA_DUNG? 'Có':'Không'#"
+                                    }, {
+                                        command: [
+                                        {
+                                            name: "edit",
+                                            text: {
+                                                edit: "@T("Admin.Common.Edit")",
+                                                update: "@T("Admin.Common.Update")",
+                                                cancel: "@T("Admin.Common.Cancel")"
+                                            }
+                                        }
+                                    ],
+                                        width: 200,
+                                        headerAttributes: { style: "text-align:center" },
+                                    }
+                                ]
+                            });
+                        });
+
+
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function UpdateLoaiHoatDong() {
+
+    }
+</script>
