@@ -1,0 +1,20 @@
+﻿using GS.Core.Domain.Common;
+using GS.Core.Domain.HeThong;
+using GS.NewAPI.Models.DanhMuc;
+using System.Collections.Generic;
+
+namespace GS.NewAPI.Factories
+{
+    public partial interface IDanhMucModelFactory
+    {
+        #region quốc gia
+
+        IList<QuocGiaModel> GetAllQuocGias();
+
+        //MessageReturn UpdateQuocGia(QuocGiaModel model, NguoiDung currentUser);
+
+        //MessageReturn UpDateListQuocGia(List<QuocGiaModel> ListQuocGiaModel, NguoiDung currentUser);
+        MessageReturn DeleteQuocGia(decimal ID = 0);
+        #endregion
+    }
+}
