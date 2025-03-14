@@ -1,4 +1,5 @@
-import React from 'react'
+import React  from 'react'
+
 import {
     TextField,
     Select,
@@ -8,15 +9,35 @@ import {
     Box,
     Grid,
     Typography,
+    Button,
   } from "@mui/material";
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-
+  type Inputs = {
+    diachi: string
+    password: string
+  }
 
 function Home() {
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>()
+
+
+
+  const loginHandler: SubmitHandler<Inputs> = async (data) =>{
+    // const logger =  await Data(data);
+    console.log(data);
+    
+  } 
+  
   return (
     <div>
-       <Box sx={{ border: 1, borderRadius: 2, p: 3, bgcolor: "white", boxShadow: 2 }}>
-      <Typography variant="h6" gutterBottom >
+      <Box sx={{ border: 1, borderRadius: 2, p: 3, bgcolor: "white", boxShadow: 2 }}>
+      <Typography variant="h6" gutterBottom>
         Thông tin tài sản đất
       </Typography>
       <Grid container spacing={2}>
@@ -31,7 +52,12 @@ function Home() {
           </FormControl>
 
           <FormControl fullWidth margin="dense">
-            <TextField label="Địa chỉ *" placeholder="Nhập số nhà, đường phố, tổ/thôn/xóm" />
+            <TextField
+              label="Địa chỉ *"
+              placeholder="Nhập số nhà, đường phố, tổ/thôn/xóm"
+              {...register("diachi", { required: true })}
+            />
+             {errors.diachi && <span className='text-red-500 text-xs'>Bạn phải nhập địa chỉ</span>}
           </FormControl>
 
           <FormControl fullWidth margin="dense">
@@ -40,27 +66,9 @@ function Home() {
               <MenuItem value="Việt Nam">Việt Nam</MenuItem>
             </Select>
           </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Quận/Huyện *</InputLabel>
-            <Select>
-              <MenuItem value="">-- Chọn quận/huyện --</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Lý do tặng đất *</InputLabel>
-            <Select>
-              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <TextField type="date" label="Ngày tặng *" InputLabelProps={{ shrink: true }} defaultValue="2017-12-31" />
-          </FormControl>
         </Grid>
 
-        {/* Cột Phải */}
+
         <Grid item xs={12} md={6}>
           <FormControl fullWidth margin="dense">
             <InputLabel>Tỉnh/Thành phố *</InputLabel>
@@ -68,22 +76,14 @@ function Home() {
               <MenuItem value="">-- Chọn tỉnh/thành phố --</MenuItem>
             </Select>
           </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Xã/Phường *</InputLabel>
-            <Select>
-              <MenuItem value="">-- Chọn xã/phường --</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Mục đích sử dụng *</InputLabel>
-            <Select>
-              <MenuItem value="">-- Chọn mục đích sử dụng --</MenuItem>
-            </Select>
-          </FormControl>
         </Grid>
       </Grid>
+
+      <Box sx={{ mt: 3, textAlign: "right" }}>
+      <Button variant="contained" color="primary" onClick={handleSubmit(loginHandler)}>
+          Gửi
+        </Button>
+      </Box>
     </Box>
    
          </div>
