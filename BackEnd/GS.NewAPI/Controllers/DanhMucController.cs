@@ -18,7 +18,7 @@ namespace GS.WebApi.Controllers
         #region method
         #region quốc gia
 
-        [HttpGet("danhmucquocgias")]
+        [HttpGet("quocGia")]
         public IActionResult GetAllQuocGias(string tenQuocGia)
         {
             #region check token
@@ -30,6 +30,20 @@ namespace GS.WebApi.Controllers
                 : _danhMucModelFactory.SearchQuocGiasByName(tenQuocGia);
             return Ok(result);
         }
+
+        [HttpGet("diaBan")]
+        public IActionResult GetAllDiaBans(string tenDiaBan)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var result = string.IsNullOrWhiteSpace(tenDiaBan)
+                ? _danhMucModelFactory.GetAllQuocGias()
+                : _danhMucModelFactory.SearchQuocGiasByName(tenDiaBan);
+            return Ok(result);
+        }
+
         //[HttpPost]
         //public IActionResult UpdateQuocGia([FromBody] QuocGiaModel model)
         //{
@@ -52,6 +66,6 @@ namespace GS.WebApi.Controllers
 
         #endregion
         #endregion
-    
+
     }
 }
