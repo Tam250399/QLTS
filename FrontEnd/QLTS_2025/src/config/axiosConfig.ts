@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IBaseRequest } from "./Interfaces";
+import { IBaseRequest } from "../interfaces/axios";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE,
