@@ -148,7 +148,7 @@ export default function Layout() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {['Nhập số dư đầu kỳ', 'Tăng giảm tài sản', 'Khai thác tài sản', 'Sử dụng chung '].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[
@@ -200,7 +200,7 @@ export default function Layout() {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {['Tài sản xác lập', 'Tăng tài sản', 'Phương án xử lý'].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[

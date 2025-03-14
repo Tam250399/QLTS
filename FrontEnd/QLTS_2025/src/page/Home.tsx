@@ -4,17 +4,27 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   Box,
   Grid,
   Typography,
   Button,
+  Autocomplete,
 } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm  } from "react-hook-form";
 type Inputs = {
   diachi: string;
-  password: string;
+  quocgia: string;
 };
+const countries = [
+  'Việt Nam',
+  'Nhật Bản',
+  'Hàn Quốc',
+  'Trung Quốc',
+  'Mỹ',
+  // Thêm các quốc gia khác
+];
+
+
 function Home() {
   const {
     register,
@@ -26,6 +36,8 @@ function Home() {
     // const logger =  await Data(data);
     console.log(data);
   };
+
+
   return (
     <Box
       sx={{
@@ -88,15 +100,37 @@ function Home() {
         {/* Cột Trái */}
         <Grid item xs={12} md={6}>
 
-          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+          <Typography variant="subtitle2" sx={{ fontSize: "14px" }} >
             Quốc gia <span style={{ color: "red" }}>*</span>
           </Typography>
-          <FormControl fullWidth margin="dense" size="small">
-            <Select value="Việt Nam" sx={{ fontSize: "14px" }}>
+          <FormControl fullWidth margin="dense"  >
+          <Autocomplete className="pt-[1px]"
+            options={countries}
+            getOptionLabel={(option) => option}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                placeholder="-- Chọn Quốc Gia --"
+                {...register('quocgia', { required: true })}
+                sx={{ fontSize: '14px' ,
+              '& .MuiInputBase-root': {
+                height: '36px'
+              },
 
-              <MenuItem value="Việt Nam">Việt Nam</MenuItem>
-            </Select>
-          </FormControl>
+                }}
+              />
+            )}
+            noOptionsText="Không tìm thấy quốc gia"
+            renderOption={(props, option) => (
+              <li {...props} style={{ fontSize: '14px' }}>
+                {option}
+              </li>
+            )}
+          />
+      {errors.quocgia && (
+        <span className="text-red-500 text-xs">Bạn phải chọn Quốc gia</span>
+      )}
+    </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Quận/Huyện <span style={{ color: "red" }}>*</span>
