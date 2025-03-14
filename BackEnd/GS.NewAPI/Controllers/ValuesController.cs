@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using GS.Services.DanhMuc;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GS.NewAPI.Controllers
 {
@@ -10,10 +8,21 @@ namespace GS.NewAPI.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IDoiTacService _doiTacService;
+        private readonly IQuocGiaService _quocGiaService;
+        public ValuesController(IDoiTacService doiTacService, IQuocGiaService quocGiaService)
+        {
+            _doiTacService = doiTacService;
+            _quocGiaService = quocGiaService;
+        }
         // GET api/values
         [HttpGet]
+ 
         public ActionResult<IEnumerable<string>> Get()
         {
+            //test thử dữ liệu xem đã nhận gọi được chưa
+            var a = _doiTacService.GetAllDoiTacs();
+            var b = _quocGiaService.GetAllQuocGias();
             return new string[] { "value1", "value2" };
         }
 
