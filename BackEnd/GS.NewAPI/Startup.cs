@@ -1,8 +1,12 @@
-﻿using GS.Core.Caching;
+﻿using AutoMapper;
+using GS.Core.Caching;
 using GS.Core.Data;
 using GS.Core.Domain.CauHinh;
 using GS.Core.Domain.Security;
+using GS.Core.Infrastructure.Mapper;
 using GS.Data;
+using GS.NewAPI.Factories;
+using GS.NewAPI.Infrastructure.Mapper;
 using GS.Services;
 using GS.Services.DanhMuc;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Linq;
 
 namespace GS.NewAPI
 {
@@ -28,7 +33,6 @@ namespace GS.NewAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //var iSvc = services.ConfigureApplicationServices(Configuration);
             services.AddDbContext<GSObjectContext>(opt =>
             {
                 opt.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.6)(PORT=1521)))(CONNECT_DATA=(SID=gs19c)));User ID=QLDKTS_CORE;Password=GS_QLDKTS_51", oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
@@ -43,12 +47,26 @@ namespace GS.NewAPI
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, SqlServerDataProvider>();
             services.AddScoped<IDataProvider, OracleDataProvider>();
+            services.AddScoped<IDanhMucModelFactory, DanhMucModelFactory>();
             services.AddSingleton<SecuritySettings>();
             services.AddSingleton<CauHinhChung>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             //auto add scoped service and repository 
             Extensions.RegisterAssemblyServices(services);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            AddAutoMapper();
+            // fix erorr devexpress hidden swagger
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .ConfigureApplicationPartManager(x => {
+                    var parts = x.ApplicationParts;
+                    var aspNetCoreReportingAssemblyName = typeof(DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerController).Assembly.GetName().Name;
+                    var reportingPart = parts.FirstOrDefault(part => part.Name == aspNetCoreReportingAssemblyName);
+                    if (reportingPart != null)
+                    {
+                        parts.Remove(reportingPart);
+                    }
+            });
+            //services.AddDevExpressControls();
+
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -86,7 +104,16 @@ namespace GS.NewAPI
         //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        
+        private  void AddAutoMapper()
+        {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AdminMapperConfiguration>(); // Ensure your profile is added here
+            });
+            //register
+            AutoMapperConfiguration.Init(configuration);
+        }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
