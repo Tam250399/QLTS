@@ -10,6 +10,7 @@ namespace GS.NewAPI.Factories
         #region quốc gia
 
         IList<QuocGiaModel> GetAllQuocGias();
+        IList<QuocGiaModel> SearchQuocGiasByName(string tenQuocGia);
 
         //MessageReturn UpdateQuocGia(QuocGiaModel model, NguoiDung currentUser);
 

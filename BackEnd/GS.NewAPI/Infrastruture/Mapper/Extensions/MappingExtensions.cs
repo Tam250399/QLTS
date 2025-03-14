@@ -5,7 +5,7 @@ using GS.Core.Plugins;
 using GS.Web.Framework.Models;
 using System;
 
-namespace GS.WebApi.Infrastructure.Mapper.Extensions
+namespace GS.NewAPI.Infrastructure.Mapper.Extensions
 {
     /// <summary>
     /// Represents the extensions to map entity to model and vise versa
@@ -22,6 +22,10 @@ namespace GS.WebApi.Infrastructure.Mapper.Extensions
         /// <returns>Mapped destination object</returns>
         private static TDestination Map<TDestination>(this object source)
         {
+            if (AutoMapperConfiguration.Mapper == null)
+            {
+                throw new InvalidOperationException("AutoMapper has not been initialized.");
+            }
             //use AutoMapper for mapping objects
             return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
         }
