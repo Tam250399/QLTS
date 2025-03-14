@@ -6,17 +6,31 @@ import {RouterProvider,createBrowserRouter}from "react-router-dom";
 import Home from "./page/Home.tsx"
 import { Provider } from 'react-redux';
 import { store } from './redux/store.tsx';
+import Layout from './components/layout.tsx';
+
 const router = createBrowserRouter ([
   // {
   //   path: "/",
   //   element: <Login />,
   //   errorElement: <NotFound />, // Xử lý lỗi
   // },
-  {
-    path:"/home",
-    element :<Home />,
-  },
+  // {
+  //   path:"/layout",
+  //   element :<Layout />,
+  // },
  
+  {
+    path:"/",
+    element : (
+    <Layout/>
+    ),
+    children:[
+      {
+        path:"/home",
+        element:<Home/>
+      }
+    ]
+  }
   
 ])
 createRoot(document.getElementById('root')!).render(

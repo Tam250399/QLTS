@@ -16,7 +16,7 @@ function Home() {
   return (
     <div>
        <Box sx={{ border: 1, borderRadius: 2, p: 3, bgcolor: "white", boxShadow: 2 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom >
         Thông tin tài sản đất
       </Typography>
       <Grid container spacing={2}>
