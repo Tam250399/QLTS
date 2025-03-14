@@ -66,6 +66,12 @@ namespace GS.NewAPI.Factories
             var query = _diaBanService.GetDiaBans(CapDiaban:1, QuocGiaId: quocGiaId);
             return query.Select(m => m.ToModel<DiaBanModel>()).ToList();
         }
+
+        public IList<DiaBanModel> GetDiaBansByMaCha(string maCha)
+        {
+            var query = _diaBanService.GetDiaBansByMaCha(maCha);
+            return query.Select(m => m.ToModel<DiaBanModel>()).ToList();
+        }
         #endregion
     }
 }

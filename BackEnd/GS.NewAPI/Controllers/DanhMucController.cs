@@ -78,7 +78,7 @@ namespace GS.WebApi.Controllers
         #region địa bàn
 
         [HttpGet("tinhthanhpho")]
-        public IActionResult GetAllQTinhTPs(int quocGiaId)
+        public IActionResult GetAllTinhTPs(int quocGiaId)
         {
             #region check token
             //if (!CheckCurrentUser())
@@ -88,6 +88,23 @@ namespace GS.WebApi.Controllers
                 success: false
             );
             var result = _danhMucModelFactory.GetTinhThanhPhosByQuocGiaId(quocGiaId);
+            response.Success = true;
+            response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
+
+        [HttpGet("diaBanDuoiTinhTP")]
+        public IActionResult GetAllDiaBanDuoiTinhTPs(string maCha)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<DiaBanModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetDiaBansByMaCha(maCha);
             response.Success = true;
             response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
             response.StatusCode = 200;

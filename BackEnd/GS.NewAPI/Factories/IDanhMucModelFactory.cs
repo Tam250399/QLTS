@@ -12,6 +12,7 @@ namespace GS.NewAPI.Factories
 
         IList<QuocGiaModel> GetAllQuocGias();
         IList<DiaBanModel> GetTinhThanhPhosByQuocGiaId(int quocGiaId);
+        IList<DiaBanModel> GetDiaBansByMaCha(string maCha);
         IList<QuocGiaModel> SearchQuocGiasByName(string tenQuocGia);
 
         //MessageReturn UpdateQuocGia(QuocGiaModel model, NguoiDung currentUser);
