@@ -22,7 +22,7 @@ namespace GS.WebApi.Controllers
         #region quốc gia
 
         [HttpGet("quocGia")]
-        public IActionResult GetAllQuocGias(string tenQuocGia)
+        public IActionResult GetAllQuocGias()
         {
             #region check token
             //if (!CheckCurrentUser())
@@ -31,9 +31,7 @@ namespace GS.WebApi.Controllers
             var response = new BaseResponse<ListResponse<QuocGiaModel>>(
                 success: false
             );
-            var result = string.IsNullOrWhiteSpace(tenQuocGia) 
-                ? _danhMucModelFactory.GetAllQuocGias() 
-                : _danhMucModelFactory.SearchQuocGiasByName(tenQuocGia);
+            var result =  _danhMucModelFactory.GetAllQuocGias();
             response.Success = true;
             response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
             response.StatusCode = 200;
@@ -53,24 +51,30 @@ namespace GS.WebApi.Controllers
             return Ok(result);
         }
 
-        //[HttpPost]
-        //public IActionResult UpdateQuocGia([FromBody] QuocGiaModel model)
-        //{
-        //    #region check token
-        //    //if (!CheckCurrentUser())
-        //    //    return OkErrorMessage("Token hết hạn");
-        //    #endregion
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var ListError = ModelState.SerializeErrors();
-        //        return OkErrorMessage("Error", ListError);
-        //    }
-        //    if (model == null)
-        //        return this.NullModel();
-        //    _hoatDongService.InsertHoatDong(currentUser, enumHoatDong.CapNhat, "Cập nhật quốc gia", 0, "QuocGia", model);
-        //    var result = _danhMucModelFactory.UpdateQuocGia(model, currentUser);
-        //    return Ok(result);
-        //}
+        [HttpGet("mucDichSuDung")]
+        public IActionResult GetAllMucDichSuDungs()
+        {
+            var response = new BaseResponse<ListResponse<QuocGiaModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetAllQuocGias();
+            response.Success = true;
+            response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
+        [HttpGet("lyDoTangGiam")]
+        public IActionResult GetLyDoTangGiams(string tenDiaBan)
+        {
+            var response = new BaseResponse<ListResponse<QuocGiaModel>>(
+               success: false
+           );
+            var result = _danhMucModelFactory.GetAllQuocGias();
+            response.Success = true;
+            response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
 
 
         #endregion

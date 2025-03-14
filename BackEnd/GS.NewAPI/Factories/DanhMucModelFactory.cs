@@ -14,13 +14,18 @@ namespace GS.NewAPI.Factories
     {
         #region Ctor
         private readonly IQuocGiaService _quocGiaService;
+        private readonly ILyDoBienDongService _lyDoBienDongService;
+        private readonly IMucDichSuDungService _mucDichSuDungService;
        
         public DanhMucModelFactory(
-            IQuocGiaService quocGiaService           
+            IQuocGiaService quocGiaService,
+            ILyDoBienDongService lyDoBienDongService,
+            IMucDichSuDungService mucDichSuDungService
             )
         {
             this._quocGiaService = quocGiaService;
-           
+            this._lyDoBienDongService = lyDoBienDongService;
+            this._mucDichSuDungService = mucDichSuDungService;
         }
         #endregion
         #region quốc gia
@@ -58,5 +63,12 @@ namespace GS.NewAPI.Factories
         #region Địa bàn
 
         #endregion
+
+        //public IList<QuocGiaModel> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false)
+        //{
+
+        //    //var query = _lyDoBienDongService.GetLyDoTangGiams();
+        //    return query.Select(m => m.ToModel<QuocGiaModel>()).ToList();
+        //}
     }
 }
