@@ -38,7 +38,12 @@ namespace GS.NewAPI
                 opt.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.6)(PORT=1521)))(CONNECT_DATA=(SID=gs19c)));User ID=QLDKTS_CORE;Password=GS_QLDKTS_51", oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
             });
             //soat service
-            services.AddCors();
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin());
+            });
             //config depency inject 
             services.AddScoped<GS.Core.Domain.CauHinh.CauHinhNguoiDung>();
             services.AddSingleton<IDbContext, GSObjectContext>();
@@ -94,6 +99,7 @@ namespace GS.NewAPI
                     }
                 });
             });
+
             return services.BuildServiceProvider();
         }
         //code cũ
@@ -127,7 +133,7 @@ namespace GS.NewAPI
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            app.UseCors("AllowAllOrigins");
             app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
 

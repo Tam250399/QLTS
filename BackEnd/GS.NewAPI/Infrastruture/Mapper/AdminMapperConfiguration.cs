@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GS.Core.Domain.DanhMuc;
 using GS.Core.Infrastructure.Mapper;
+using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 
 namespace GS.NewAPI.Infrastructure.Mapper
@@ -31,7 +32,8 @@ namespace GS.NewAPI.Infrastructure.Mapper
             #region Automap for DanhMuc
             CreateMap<QuocGia, QuocGiaModel>();
             CreateMap<QuocGiaModel, QuocGia>();
-
+            CreateMap<DiaBan, DiaBanModel>();
+            CreateMap<DiaBanModel, DiaBan>();
             #endregion
         }
         #endregion

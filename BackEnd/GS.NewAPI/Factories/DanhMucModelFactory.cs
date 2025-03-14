@@ -2,6 +2,7 @@
 using GS.Core.Domain.Common;
 using GS.Core.Domain.DanhMuc;
 using GS.NewAPI.Infrastructure.Mapper.Extensions;
+using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 using GS.Services.DanhMuc;
 using System;
@@ -10,16 +11,18 @@ using System.Linq;
 
 namespace GS.NewAPI.Factories
 {
-    public class DanhMucModelFactory: IDanhMucModelFactory
+    public class DanhMucModelFactory : IDanhMucModelFactory
     {
         #region Ctor
         private readonly IQuocGiaService _quocGiaService;
-       
+        private readonly IDiaBanService _diaBanService;
         public DanhMucModelFactory(
-            IQuocGiaService quocGiaService           
+            IQuocGiaService quocGiaService,
+            IDiaBanService diaBanService
             )
         {
             this._quocGiaService = quocGiaService;
+            this._diaBanService = diaBanService;
            
         }
         #endregion
@@ -53,10 +56,16 @@ namespace GS.NewAPI.Factories
             }
 
         }
+
+
         #endregion
 
         #region Địa bàn
-
+        public IList<DiaBanModel> GetTinhThanhPhosByQuocGiaId(int quocGiaId)
+        {
+            var query = _diaBanService.GetDiaBans(CapDiaban:1, QuocGiaId: quocGiaId);
+            return query.Select(m => m.ToModel<DiaBanModel>()).ToList();
+        }
         #endregion
     }
 }
