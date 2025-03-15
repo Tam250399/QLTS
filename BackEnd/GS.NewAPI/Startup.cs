@@ -23,19 +23,18 @@ namespace GS.NewAPI
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; set; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<GSObjectContext>(opt =>
             {
-                opt.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.6)(PORT=1521)))(CONNECT_DATA=(SID=gs19c)));User ID=QLDKTS_CORE;Password=GS_QLDKTS_51", oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
+                opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
             });
             //soat service
             //services.AddCors();
