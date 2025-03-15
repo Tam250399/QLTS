@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Select,
@@ -11,6 +11,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { SubmitHandler, useForm  } from "react-hook-form";
+import ApiService from "../service/ApiService";
 type Inputs = {
   diachi: string;
   quocgia: string;
@@ -26,6 +27,10 @@ const countries = [
 
 
 function Home() {
+
+  const [loading ,setLoading]= useState<boolean>(false)
+
+  
   const {
     register,
     handleSubmit,
@@ -36,6 +41,21 @@ function Home() {
     // const logger =  await Data(data);
     console.log(data);
   };
+
+
+  const fetchUsers = async () => {
+    
+      setLoading(true);
+      // Gọi API GET
+      const response = await ApiService.get<[]>('/v3.1/all');
+      console.log("test" , response);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+
 
 
   return (
