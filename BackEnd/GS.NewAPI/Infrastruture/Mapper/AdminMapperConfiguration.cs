@@ -34,6 +34,9 @@ namespace GS.NewAPI.Infrastructure.Mapper
             CreateMap<QuocGiaModel, QuocGia>();
             CreateMap<DiaBan, DiaBanModel>();
             CreateMap<DiaBanModel, DiaBan>();
+            //Mục đích sử dụng
+            CreateMap<MucDichSuDung, MucDichSuDungModel>();
+            CreateMap<MucDichSuDungModel, MucDichSuDung>();
             #endregion
         }
         #endregion

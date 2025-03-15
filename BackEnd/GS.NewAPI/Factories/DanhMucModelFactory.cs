@@ -16,14 +16,17 @@ namespace GS.NewAPI.Factories
         #region Ctor
         private readonly IQuocGiaService _quocGiaService;
         private readonly IDiaBanService _diaBanService;
+        private readonly IMucDichSuDungService _mucdichSuDungService;
+
         public DanhMucModelFactory(
             IQuocGiaService quocGiaService,
-            IDiaBanService diaBanService
+            IDiaBanService diaBanService,
+            IMucDichSuDungService mucdichSuDungService
             )
         {
             this._quocGiaService = quocGiaService;
             this._diaBanService = diaBanService;
-           
+            _mucdichSuDungService = mucdichSuDungService;
         }
         #endregion
         #region quốc gia
@@ -71,6 +74,11 @@ namespace GS.NewAPI.Factories
         {
             var query = _diaBanService.GetDiaBansByMaCha(maCha);
             return query.Select(m => m.ToModel<DiaBanModel>()).ToList();
+        }
+        public IList<MucDichSuDungModel> GetMucDichSuDungsByLoaiHinhTSId(decimal? loaiHinhTaiSanId)
+        {
+            var query = _mucdichSuDungService.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
+            return query.Select(m => m.ToModel<MucDichSuDungModel>()).ToList();
         }
         #endregion
     }

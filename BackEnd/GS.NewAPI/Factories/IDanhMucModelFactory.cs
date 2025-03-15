@@ -19,6 +19,7 @@ namespace GS.NewAPI.Factories
 
         //MessageReturn UpDateListQuocGia(List<QuocGiaModel> ListQuocGiaModel, NguoiDung currentUser);
         MessageReturn DeleteQuocGia(decimal ID = 0);
+        IList<MucDichSuDungModel> GetMucDichSuDungsByLoaiHinhTSId(decimal? loaiHinhTaiSanId);
         #endregion
     }
 }

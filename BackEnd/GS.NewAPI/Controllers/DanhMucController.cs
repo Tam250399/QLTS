@@ -112,6 +112,26 @@ namespace GS.WebApi.Controllers
         }
 
         #endregion
+
+        #region mục đích sử dụng
+
+        [HttpGet("mucDichSuDung")]
+        public IActionResult GetMucDichSuDungs(decimal? loaiHinhTaiSanId)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<MucDichSuDungModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
+            response.Success = true;
+            response.Data = new ListResponse<MucDichSuDungModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
+        #endregion
         #endregion
 
     }
