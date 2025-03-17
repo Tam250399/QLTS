@@ -1,10 +1,19 @@
 export interface Thongtinchung {
-    diachi: string;
-    quocgia: string;
-    tinhthanhpho: string;
-    quanhuyen:string;
-    xaphuong:string;
-    lydotang:string;
-    mucdich:string;
+    diachi: string | null;
+    quocgia: string | null;
+    tinhthanhpho: string | null;
+    quanhuyen:string | null;
+    xaphuong:string | null;
+    lydotang:string | null;
+    mucdich:string | null;
     ngaytang: Date;
+}
+
+export interface DientichHientrang {
+    Dientich: number;
+}
+
+export interface GiatriSD {
+    GiatriQSDdat: number;
+    Nguyengia: number;
 }
