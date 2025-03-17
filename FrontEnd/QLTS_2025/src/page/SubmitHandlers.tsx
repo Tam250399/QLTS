@@ -4,14 +4,25 @@ import { Box, Button,Typography } from '@mui/material'
 import Dientichhientrang from './Dientichhientrang';
 import Giatrisd from './Giatrisd';
 import Hosogiayto from './Hosogiayto';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Thongtinchung } from "../validateform/thongtinchung";
 
-function SubmitHandlers() {
+const SubmitHandlers = ()=> {
 
- 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
 
-  };
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm<Thongtinchung>({
+      defaultValues: {
+        diachi: '',
+      },
+    });
+
+    const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
+      console.log('Dữ liệu form:', data);
+    };
 
 
   return (
@@ -19,16 +30,16 @@ function SubmitHandlers() {
         <Typography variant="h5" gutterBottom className='pb-10'>
         Nhập số dư tài sản đất
         </Typography>
-        <form   >
-          <Thongtintaisan />
+        <form     onSubmit={handleSubmit(onSubmit)}>
+          <Thongtintaisan register={register} errors={errors}/>
           <Dientichhientrang />
           <Giatrisd />
           <Hosogiayto />
         <Box sx={{ mt: 3, textAlign: "right" }}>
-        <Button
+        <Button 
           variant="contained"
           color="primary"
-          onSubmit={handleSubmit}
+          type="submit"
         >
           Gửi
         </Button>

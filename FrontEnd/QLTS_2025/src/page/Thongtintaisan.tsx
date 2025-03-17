@@ -12,7 +12,7 @@ import {
 
   Autocomplete,
 } from "@mui/material";
-import { useForm  } from "react-hook-form";
+import { FieldErrors, useForm, UseFormRegister  } from "react-hook-form";
 import ApiService from "../service/ApiService";
 // type Inputs = {
 //   diachi: string;
@@ -32,18 +32,17 @@ interface Country {
   name: string;
   email: string;
 }
+interface ThongtintaisanProps {
+  register: UseFormRegister<Thongtinchung>;
+  errors: FieldErrors<Thongtinchung>;
+}
 
-function Thongtintaisan() {
-
+const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
+  
   const [loading ,setLoading]= useState<boolean>(false)
   const [countries, setCountries] = useState<Country[]>([]);
   
-  const {
-    register,
-    formState: { errors },
-  } = useForm<Thongtinchung>();
-
-
+ 
 
   const fetchUsers = async () => {
     
@@ -94,6 +93,7 @@ function Thongtintaisan() {
           </Typography>
           <TextField
             fullWidth
+            name="diachi"
             size="small"
             margin="dense"
             value="Chi cục Thuế khu vực Thạch Hà - Lộc Hà"
