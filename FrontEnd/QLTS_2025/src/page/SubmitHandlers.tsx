@@ -35,13 +35,12 @@ const SubmitHandlers = ()=> {
           <div className='pb-10'>
           <Thongtintaisan register={register} errors={errors}/>
           </div>
-          <div>
+          <div className='pb-10'>
           <Dientichhientrang  register={register} errors={errors}/>
           </div>
-          <div>
+          <div className='pb-10'>
           <Giatrisd />
           </div>
- 
           <Hosogiayto />
        
         <Box sx={{ mt: 3, textAlign: "right" }}>

@@ -208,7 +208,8 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               sx={{ fontSize: "14px" }}
               {...register('lydotang', { required: true })}
             >
-              <MenuItem value="">Đăng ký lần đầu</MenuItem>
+              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
+              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
             </Select>
             {errors.lydotang && (
              <span className="text-red-500 text-xs">Bạn phải chọn lý do tăng</span>
@@ -317,6 +318,8 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               sx={{ fontSize: "14px" }}
               {...register('mucdich', { required: true })}
             >
+              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
+              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
             </Select>
             {errors.mucdich && (
         <span className="text-red-500 text-xs">Bạn phải chọn mục đích sử dụng</span>

@@ -8,19 +8,19 @@ export interface Thongtinchung {
     mucdich:string | null;
     ngaytang: Date;
     //Diện tích khuôn viên
-    dienTich: string; // Diện tích (m²) - Bắt buộc
+    dienTich: number; // Diện tích (m²) - Bắt buộc
     hienTrangSuDung: {
-      truSoLamViec: string; // Trụ sở làm việc (m²)
-      hdSnKhongKd: string; // HDSN-Không KD (m²)
-      hdSnKinhDoanh: string; // HDSN-Kinh doanh (m²)
-      hdSnChoThue: string; // HDSN-Cho thuê (m²)
-      hdSnLdLk: string; // HDSN-LDLK (m²)
-      deO: string; // Để ở (m²)
-      boTrong: string; // Bỏ trống (m²)
-      biLanChiem: string; // Bị lấn chiếm (m²)
-      suDungHonHop: string; // Sử dụng hỗn hợp (m²)
-      suDungKhac: string; // Sử dụng khác (m²)
+      truSoLamViec: number; // Trụ sở làm việc (m²)
+      hdSnKhongKd: number; // HDSN-Không KD (m²)
+      hdSnKinhDoanh: number; // HDSN-Kinh doanh (m²)
+      hdSnChoThue: number; // HDSN-Cho thuê (m²)
+      hdSnLdLk: number; // HDSN-LDLK (m²)
+      deO: number; // Để ở (m²)
+      boTrong: number; // Bỏ trống (m²)
+      biLanChiem: number; // Bị lấn chiếm (m²)
+      suDungHonHop: number; // Sử dụng hỗn hợp (m²)
+      suDungKhac: number; // Sử dụng khác (m²)
     }
     //Gía trị sd 
-    
+
 }
