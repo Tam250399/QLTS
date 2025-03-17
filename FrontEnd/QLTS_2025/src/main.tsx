@@ -1,9 +1,9 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+// import App from './App.tsx'
 import {RouterProvider,createBrowserRouter}from "react-router-dom";
-import Home from "./page/Home.tsx"
+import SubmitHandlers from './page/SubmitHandlers.tsx';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.tsx';
 import Layout from './components/layout.tsx';
@@ -27,7 +27,7 @@ const router = createBrowserRouter ([
     children:[
       {
         path:"/home",
-        element:<Home/>
+        element:<SubmitHandlers/>
       }
     ]
   }

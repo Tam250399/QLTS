@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Thongtinchung } from "../validateform/thongtinchung";
+
 import {
   TextField,
   Select,
@@ -7,16 +9,16 @@ import {
   Box,
   Grid,
   Typography,
-  Button,
+
   Autocomplete,
 } from "@mui/material";
-import { SubmitHandler, useForm  } from "react-hook-form";
+import { useForm  } from "react-hook-form";
 import ApiService from "../service/ApiService";
-type Inputs = {
-  diachi: string;
-  quocgia: string;
-};
-const countries = [
+// type Inputs = {
+//   diachi: string;
+//   quocgia: string;
+// };
+const countriess = [
   'Việt Nam',
   'Nhật Bản',
   'Hàn Quốc',
@@ -25,30 +27,31 @@ const countries = [
   // Thêm các quốc gia khác
 ];
 
+interface Country {
+  id: number;
+  name: string;
+  email: string;
+}
 
-function Home() {
+function Thongtintaisan() {
 
   const [loading ,setLoading]= useState<boolean>(false)
-
+  const [countries, setCountries] = useState<Country[]>([]);
   
   const {
     register,
-    handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Thongtinchung>();
 
-  const loginHandler: SubmitHandler<Inputs> = async (data) => {
-    // const logger =  await Data(data);
-    console.log(data);
-  };
 
 
   const fetchUsers = async () => {
     
       setLoading(true);
       // Gọi API GET
-      const response = await ApiService.get<[]>('/v3.1/all');
-      console.log("test" , response);
+      const response = await ApiService.get<[]>('/DanhMuc/quocGia');
+      setCountries(response.data);
+      console.log("test" , response.data);
   };
 
   useEffect(() => {
@@ -125,7 +128,7 @@ function Home() {
           </Typography>
           <FormControl fullWidth margin="dense"  >
           <Autocomplete className="pt-[1px]"
-            options={countries}
+           options={countriess}
             getOptionLabel={(option) => option}
             renderInput={(params) => (
               <TextField 
@@ -157,25 +160,37 @@ function Home() {
             Quận/Huyện <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-            <Select
-              displayEmpty
-              renderValue={(selected) =>
-                selected && typeof selected === "string" ? (
-                  selected
-                ) : (
-                  <Typography sx={{ color: "grey.500", fontSize: "14px" }}>
-                    -- Chọn quận/huyện --
-                  </Typography>
-                )
-              }
-              sx={{ fontSize: "14px" }}
-            >
-              <MenuItem value="">-- Chọn quận/huyện --</MenuItem>
-            </Select>
+          <Autocomplete className="pt-[1px]"
+           options={countriess}
+            getOptionLabel={(option) => option}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                placeholder="-- Chọn Quận/Huyện--"
+                {...register('quanhuyen', { required: true })}
+                sx={{ fontSize: '14px' ,
+              '& .MuiInputBase-root': {
+                height: '36px'
+              },
+
+                }}
+                
+              />
+            )}
+            noOptionsText="Không tìm thấy quận huyện"
+            renderOption={(props, option) => (
+              <li {...props} style={{ fontSize: '14px' }}>
+                {option}
+              </li>
+            )}
+          />
+            {errors.quanhuyen && (
+        <span className="text-red-500 text-xs">Bạn phải chọn quận huyện</span>
+      )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-            Lý do tặng đất <span style={{ color: "red" }}>*</span>
+            Lý do tăng đất <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
             <Select
@@ -188,11 +203,16 @@ function Home() {
                     -- Đăng ký lần đầu --
                   </Typography>
                 )
+                
               }
               sx={{ fontSize: "14px" }}
+              {...register('lydotang', { required: true })}
             >
               <MenuItem value="">Đăng ký lần đầu</MenuItem>
             </Select>
+            {errors.lydotang && (
+             <span className="text-red-500 text-xs">Bạn phải chọn lý do tăng</span>
+             )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -206,49 +226,77 @@ function Home() {
             InputLabelProps={{ shrink: true }}
             defaultValue="2017-12-31"
             InputProps={{ sx: { fontSize: "14px" } }}
+            {...register('ngaytang', { required: true })}
           />
+             {errors.ngaytang && (
+             <span className="text-red-500 text-xs">Bạn phải chọn ngày tăng</span>
+             )}
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Tỉnh/Thành phố <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-            <Select
-              displayEmpty
-              renderValue={(selected) =>
-                selected && typeof selected === "string" ? (
-                  selected
-                ) : (
-                  <Typography sx={{ color: "grey.500", fontSize: "14px" }}>
-                    -- Chọn tỉnh/thành phố --
-                  </Typography>
-                )
-              }
-              sx={{ fontSize: "14px" }}
-            >
-              <MenuItem value="">-- Chọn tỉnh/thành phố --</MenuItem>
-            </Select>
+          <Autocomplete className="pt-[1px]"
+           options={countriess}
+            getOptionLabel={(option) => option}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                placeholder="-- Chọn Tỉnh/Thành phố--"
+                {...register('tinhthanhpho', { required: true })}
+                sx={{ fontSize: '14px' ,
+              '& .MuiInputBase-root': {
+                height: '36px'
+              },
+
+                }}
+                
+              />
+            )}
+            noOptionsText="Không tìm thấy Tỉnh/Thành phố"
+            renderOption={(props, option) => (
+              <li {...props} style={{ fontSize: '14px' }}>
+                {option}
+              </li>
+            )}
+          />
+            {errors.tinhthanhpho && (
+        <span className="text-red-500 text-xs">Bạn phải chọn Tỉnh/Thành phố</span>
+      )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Xã/Phường <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-            <Select
-              displayEmpty
-              renderValue={(selected) =>
-                selected && typeof selected === "string" ? (
-                  selected
-                ) : (
-                  <Typography sx={{ color: "grey.500", fontSize: "14px" }}>
-                    -- Chọn xã/phường --
-                  </Typography>
-                )
-              }
-              sx={{ fontSize: "14px" }}
-            >
-              <MenuItem value="">-- Chọn xã/phường --</MenuItem>
-            </Select>
+          <Autocomplete className="pt-[1px]"
+           options={countriess}
+            getOptionLabel={(option) => option}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                placeholder="-- Chọn Xã/Phường--"
+                {...register('xaphuong', { required: true })}
+                sx={{ fontSize: '14px' ,
+              '& .MuiInputBase-root': {
+                height: '36px'
+              },
+
+                }}
+                
+              />
+            )}
+            noOptionsText="Không tìm thấy Xã/Phường"
+            renderOption={(props, option) => (
+              <li {...props} style={{ fontSize: '14px' }}>
+                {option}
+              </li>
+            )}
+          />
+            {errors.xaphuong && (
+        <span className="text-red-500 text-xs">Bạn phải chọn Xã/Phường</span>
+      )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -267,23 +315,18 @@ function Home() {
                 )
               }
               sx={{ fontSize: "14px" }}
+              {...register('mucdich', { required: true })}
             >
-              <MenuItem value="">-- Chọn mục đích sử dụng --</MenuItem>
             </Select>
+            {errors.mucdich && (
+        <span className="text-red-500 text-xs">Bạn phải chọn mục đích sử dụng</span>
+      )}
           </FormControl>
         </Grid>
       </Grid>
-      <Box sx={{ mt: 3, textAlign: "right" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit(loginHandler)}
-        >
-          Gửi
-        </Button>
-      </Box>
+    
     </Box>
   );
 }
 
-export default Home;
+export default Thongtintaisan;
