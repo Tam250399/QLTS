@@ -17,13 +17,11 @@ namespace GS.NewAPI.Factories
         private readonly IQuocGiaService _quocGiaService;
         private readonly ILyDoBienDongService _lyDoBienDongService;
         private readonly IMucDichSuDungService _mucDichSuDungService;
-       
         private readonly IDiaBanService _diaBanService;
         public DanhMucModelFactory(
             IQuocGiaService quocGiaService,
             ILyDoBienDongService lyDoBienDongService,
-            IMucDichSuDungService mucDichSuDungService
-            IQuocGiaService quocGiaService,
+            IMucDichSuDungService mucDichSuDungService,
             IDiaBanService diaBanService
             )
         {
@@ -76,11 +74,11 @@ namespace GS.NewAPI.Factories
         }
         #endregion
 
-        //public IList<QuocGiaModel> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false)
-        //{
+        public IList<LyDoBienDongModel> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false)
+        {
 
-        //    //var query = _lyDoBienDongService.GetLyDoTangGiams();
-        //    return query.Select(m => m.ToModel<QuocGiaModel>()).ToList();
-        //}
+            var query = _lyDoBienDongService.GetLyDoTangGiams(loaiLyDoBienDongId: loaiLyDoBienDongId, loaiHinhTaiSanId: loaiHinhTaiSanId, isTangMoi: isTangMoi);
+            return query.Select(m => m.ToModel<LyDoBienDongModel>()).ToList();
+        }
     }
 }

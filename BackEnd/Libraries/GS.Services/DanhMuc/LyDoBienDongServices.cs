@@ -110,6 +110,34 @@ namespace GS.Services.DanhMuc
 
             return query.ToList();
         }
+        public virtual IList<LyDoBienDong> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false)
+        {
+            var query = GetTable().AsQueryable<LyDoBienDong>();
+
+            if (loaiHinhTaiSanId > 0)
+            {
+                //var strloai_hinh_tai_san = LoaiHinhTaiSanId.ToString();
+                //query = query.Where(c => c.LOAI_HINH_TAI_SAN_AP_DUNG_ID == null || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloai_hinh_tai_san)).OrderByDescending(c => c.LOAI_HINH_TAI_SAN_ID);
+
+
+                var strloaiHinhTSId = "," + loaiHinhTaiSanId + ",";
+                var strloaiHinhTSId1 = "[" + loaiHinhTaiSanId;
+                var strloaiHinhTSId2 = loaiHinhTaiSanId + "]";
+                query = query.Where(c => c.LOAI_HINH_TAI_SAN_AP_DUNG_ID == null || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId.ToString())
+                                                                                || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId1.ToString())
+                                                                                || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId2.ToString()));
+            }
+            if (loaiLyDoBienDongId > 0 && loaiLyDoBienDongId != 12)
+            {
+                query = query.Where(c => c.LOAI_LY_DO_ID == loaiLyDoBienDongId);
+            }
+            if (isTangMoi == true)
+            {
+                query = query.Where(c => c.MA != "001");
+            }
+
+            return query.ToList();
+        }
         public bool CheckMaLyDoBienDong(decimal id = 0, string ma = null)
         {
             return _itemRepository.Table.Any(c => c.MA == ma && c.ID != id);

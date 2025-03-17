@@ -2,6 +2,7 @@
 using GS.Core.Domain.HeThong;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
+using System;
 using System.Collections.Generic;
 
 namespace GS.NewAPI.Factories
@@ -13,6 +14,7 @@ namespace GS.NewAPI.Factories
         IList<QuocGiaModel> GetAllQuocGias();
         IList<DiaBanModel> GetTinhThanhPhosByQuocGiaId(int quocGiaId);
         IList<QuocGiaModel> SearchQuocGiasByName(string tenQuocGia);
+        IList<LyDoBienDongModel> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false);
 
         //MessageReturn UpdateQuocGia(QuocGiaModel model, NguoiDung currentUser);
 
