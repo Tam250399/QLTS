@@ -1,4 +1,3 @@
-import React from 'react'
 import Thongtintaisan from './Thongtintaisan'
 import { Box, Button,Typography } from '@mui/material'
 import Dientichhientrang from './Dientichhientrang';

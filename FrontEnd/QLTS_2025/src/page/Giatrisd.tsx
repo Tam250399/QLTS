@@ -1,5 +1,5 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
-import { FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
 import { useState } from "react";
 
@@ -93,8 +93,13 @@ const Giatrisd = ({ register, errors }: GiaTriSuDungDatProps) => {
             InputProps={{ sx: { fontSize: "14px" } }}
           />
 
+          {/* Nguyên giá */}
+          <Typography variant="subtitle2" sx={{ fontSize: "14px", fontWeight: "bold", margin:"15px 0" }}>
+            Trong đó:
+          </Typography>
+
           {/* Nguồn ngân sách */}
-          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+          <Typography variant="subtitle2" sx={{ fontSize: "14px", fontStyle:"italic" }}>
             Nguồn ngân sách
           </Typography>
           <TextField
@@ -112,7 +117,7 @@ const Giatrisd = ({ register, errors }: GiaTriSuDungDatProps) => {
           />
 
           {/* Nguồn khác */}
-          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+          <Typography variant="subtitle2" sx={{ fontSize: "14px", fontStyle:"italic" }}>
             Nguồn khác
           </Typography>
           <TextField
