@@ -12,6 +12,7 @@ namespace GS.Services.DanhMuc
     public partial interface IDiaBanService
     {
         #region DiaBan
+        IList<DiaBan> GetDiaBansByMaCha(string maCha);
         IList<DiaBan> GetDiaBans(decimal? CapDiaban = 0, decimal? ParentId = 0, decimal? QuocGiaId = 0);
         IList<DiaBan> GetDiaBansChuaDb();
         IPagedList<DiaBan> SearchDiaBans(int pageIndex = 0, int pageSize = int.MaxValue, string Keysearch = null, decimal? ParentId = 0);

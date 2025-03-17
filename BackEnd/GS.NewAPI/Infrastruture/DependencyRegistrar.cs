@@ -23,18 +23,32 @@ using GS.Services.SHTD;
 using GS.Services.TaiSans;
 using GS.Services.ThuocTinhs;
 using GS.NewAPI.Factories;
+using GS.Data;
+using GS.Core.Domain.Security;
+using GS.Core;
+using GS.Services.Helpers;
+using GS.Web.Framework;
 
-namespace GS.WebApi.Infrastructure
+namespace GS.NewAPI.Infrastructure
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+    public static class DependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GSConfig config)
+        public static void Register(ContainerBuilder builder)
         {
             //factories danh muc
             #region factories danh muc
             builder.RegisterType<DanhMucModelFactory>().As<IDanhMucModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<GSObjectContext>().As<IDbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<SecuritySettings>().AsSelf().As<SecuritySettings>();
+            // Register IGSFileProvider
+            builder.RegisterType<GSFileProvider>().As<IGSFileProvider>().InstancePerLifetimeScope();
+
+            // Register GSConfig (assuming GSConfig is a configuration or settings class)
+            builder.RegisterType<GSConfig>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
+            //work context
+            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
             #endregion
         }
-        public int Order => 3;
     }
 }

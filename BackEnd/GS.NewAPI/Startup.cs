@@ -1,11 +1,17 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using GS.Core.Caching;
+using GS.Core.Configuration;
 using GS.Core.Data;
 using GS.Core.Domain.CauHinh;
 using GS.Core.Domain.Security;
+using GS.Core.Infrastructure.DependencyManagement;
+using GS.Core.Infrastructure;
 using GS.Core.Infrastructure.Mapper;
 using GS.Data;
 using GS.NewAPI.Factories;
+using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
 using GS.Services;
 using GS.Services.DanhMuc;
@@ -23,26 +29,25 @@ namespace GS.NewAPI
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; set; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<GSObjectContext>(opt =>
             {
-                opt.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.6)(PORT=1521)))(CONNECT_DATA=(SID=gs19c)));User ID=QLDKTS_CORE;Password=GS_QLDKTS_51", oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
+                opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
             });
             //soat service
             services.AddCors();
             //config depency inject 
             services.AddScoped<GS.Core.Domain.CauHinh.CauHinhNguoiDung>();
-            services.AddSingleton<IDbContext, GSObjectContext>();
-            services.AddScoped<IDonViService, DonViService>();
+            //services.AddSingleton<IDbContext, GSObjectContext>();
+            //services.AddScoped<IDonViService, DonViService>();
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, SqlServerDataProvider>();
@@ -53,6 +58,7 @@ namespace GS.NewAPI
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             //auto add scoped service and repository 
             Extensions.RegisterAssemblyServices(services);
+            //Add auto mapper         
             AddAutoMapper();
             // fix erorr devexpress hidden swagger
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -65,8 +71,6 @@ namespace GS.NewAPI
                         parts.Remove(reportingPart);
                     }
             });
-            //services.AddDevExpressControls();
-
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -94,7 +98,20 @@ namespace GS.NewAPI
                     }
                 });
             });
-            return services.BuildServiceProvider();
+            // return type IServiceProvider  Autofac
+            return RegisterDependencies(services);
+            //return services.BuildServiceProvider();
+        }
+
+        private IServiceProvider RegisterDependencies(IServiceCollection services)
+        {
+            var containerBuilder = new ContainerBuilder();
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
+
+            DependencyRegistrar.Register(containerBuilder);
+            //create service provider
+            return new AutofacServiceProvider(containerBuilder.Build());
         }
         //code cũ
         //public void ConfigureServices(IServiceCollection services)
@@ -104,7 +121,7 @@ namespace GS.NewAPI
         //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        private  void AddAutoMapper()
+        private void AddAutoMapper()
         {
             var configuration = new MapperConfiguration(cfg =>
             {

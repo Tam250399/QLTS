@@ -83,7 +83,7 @@ namespace GS.WebApi.Controllers
         #region địa bàn
 
         [HttpGet("tinhthanhpho")]
-        public IActionResult GetAllQTinhTPs(int quocGiaId)
+        public IActionResult GetAllTinhTPs(int quocGiaId)
         {
             #region check token
             //if (!CheckCurrentUser())
@@ -99,6 +99,43 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("diaBanDuoiTinhTP")]
+        public IActionResult GetAllDiaBanDuoiTinhTPs(string maCha)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<DiaBanModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetDiaBansByMaCha(maCha);
+            response.Success = true;
+            response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
+
+        #endregion
+
+        #region mục đích sử dụng
+
+        [HttpGet("mucDichSuDung")]
+        public IActionResult GetMucDichSuDungs(decimal? loaiHinhTaiSanId)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<MucDichSuDungModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
+            response.Success = true;
+            response.Data = new ListResponse<MucDichSuDungModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
         #endregion
         #endregion
 
