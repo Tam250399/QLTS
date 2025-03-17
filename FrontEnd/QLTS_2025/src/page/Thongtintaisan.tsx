@@ -12,7 +12,7 @@ import {
 
   Autocomplete,
 } from "@mui/material";
-import { FieldErrors, useForm, UseFormRegister  } from "react-hook-form";
+import { FieldErrors, UseFormRegister  } from "react-hook-form";
 import ApiService from "../service/ApiService";
 // type Inputs = {
 //   diachi: string;

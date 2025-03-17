@@ -19,6 +19,7 @@ const SubmitHandlers = ()=> {
         diachi: '',
       },
     });
+    
 
     const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
       console.log('Dữ liệu form:', data);
@@ -30,18 +31,26 @@ const SubmitHandlers = ()=> {
         <Typography variant="h5" gutterBottom className='pb-10'>
         Nhập số dư tài sản đất
         </Typography>
-        <form     onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}> 
+          <div className='pb-10'>
           <Thongtintaisan register={register} errors={errors}/>
-          <Dientichhientrang />
+          </div>
+          <div>
+          <Dientichhientrang  register={register} errors={errors}/>
+          </div>
+          <div>
           <Giatrisd />
+          </div>
+ 
           <Hosogiayto />
+       
         <Box sx={{ mt: 3, textAlign: "right" }}>
         <Button 
           variant="contained"
           color="primary"
           type="submit"
         >
-          Gửi
+          Lưu
         </Button>
       </Box>
         </form>
