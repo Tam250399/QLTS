@@ -40,19 +40,6 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("diaBan")]
-        public IActionResult GetAllDiaBans(string tenDiaBan)
-        {
-            #region check token
-            //if (!CheckCurrentUser())
-            //    return OkErrorMessage("Token hết hạn");
-            #endregion
-            var result = string.IsNullOrWhiteSpace(tenDiaBan)
-                ? _danhMucModelFactory.GetAllQuocGias()
-                : _danhMucModelFactory.SearchQuocGiasByName(tenDiaBan);
-            return Ok(result);
-        }
-
         
         [HttpGet("lyDoTangGiam")]
         public IActionResult GetLyDoTangGiams(decimal? loaiLyDoBienDongId, decimal? loaiHinhTaiSanId, Boolean isTangMoi)
