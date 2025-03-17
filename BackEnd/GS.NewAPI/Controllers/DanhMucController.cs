@@ -2,9 +2,10 @@
 using GS.NewAPI.Infrastruture.Response;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
-using GS.Web.Areas.Admin.Controllers;
+//using GS.Web.Models.DanhMuc;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using System;
 namespace GS.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -65,14 +66,14 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
         [HttpGet("lyDoTangGiam")]
-        public IActionResult GetLyDoTangGiams(string tenDiaBan)
+        public IActionResult GetLyDoTangGiams(decimal? loaiLyDoBienDongId, decimal? loaiHinhTaiSanId, Boolean isTangMoi)
         {
-            var response = new BaseResponse<ListResponse<QuocGiaModel>>(
+            var response = new BaseResponse<ListResponse<LyDoBienDongModel>>(
                success: false
            );
-            var result = _danhMucModelFactory.GetAllQuocGias();
+            var result = _danhMucModelFactory.GetLyDoTangGiams(loaiLyDoBienDongId, loaiHinhTaiSanId, isTangMoi);
             response.Success = true;
-            response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
+            response.Data = new ListResponse<LyDoBienDongModel>(data: result, count: result.Count);
             response.StatusCode = 200;
             return Ok(response);
         }

@@ -78,6 +78,7 @@ namespace GS.NewAPI.Factories
         {
 
             var query = _lyDoBienDongService.GetLyDoTangGiams(loaiLyDoBienDongId: loaiLyDoBienDongId, loaiHinhTaiSanId: loaiHinhTaiSanId, isTangMoi: isTangMoi);
+            Boolean a = false;
             return query.Select(m => m.ToModel<LyDoBienDongModel>()).ToList();
         }
     }
