@@ -35,11 +35,11 @@ const SubmitHandlers = ()=> {
           <div className='pb-10'>
           <Thongtintaisan register={register} errors={errors}/>
           </div>
-          <div>
+          <div className='pb-10'>
           <Dientichhientrang  register={register} errors={errors}/>
           </div>
-          <div>
-          <Giatrisd />
+          <div className='pb-10'>
+          <Giatrisd register={register} errors={errors}/>
           </div>
  
           <Hosogiayto />
