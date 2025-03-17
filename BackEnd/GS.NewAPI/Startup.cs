@@ -24,6 +24,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using GS.Services.Authentication;
 
 namespace GS.NewAPI
 {
@@ -46,13 +48,12 @@ namespace GS.NewAPI
             services.AddCors();
             //config depency inject 
             services.AddScoped<GS.Core.Domain.CauHinh.CauHinhNguoiDung>();
-            //services.AddSingleton<IDbContext, GSObjectContext>();
-            //services.AddScoped<IDonViService, DonViService>();
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, SqlServerDataProvider>();
             services.AddScoped<IDataProvider, OracleDataProvider>();
-            services.AddScoped<IDanhMucModelFactory, DanhMucModelFactory>();
+            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
             services.AddSingleton<SecuritySettings>();
             services.AddSingleton<CauHinhChung>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

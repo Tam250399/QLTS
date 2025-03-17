@@ -21,14 +21,14 @@ namespace GS.Services.DanhMuc
     public partial class LyDoBienDongService : ILyDoBienDongService
     {
         #region Fields
-        private readonly CauHinhChung _cauhinhChung;
-        private readonly ICacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
+        //private readonly CauHinhChung _cauhinhChung;
+        //private readonly ICacheManager _cacheManager;
+        //private readonly IDataProvider _dataProvider;
+        //private readonly IDbContext _dbContext;
         private readonly IWorkContext _workContext;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IRepository<LyDoBienDong> _itemRepository;
-        private readonly IRepository<LoaiDonVi> _loaiDonViRepository;
+        ///private readonly IRepository<LoaiDonVi> _loaiDonViRepository;
         private readonly IRepository<DonVi> _donViRepository;
         private readonly ILoaiLyDoBienDongService _loaiLyDoBienDongService;
         #endregion
@@ -36,25 +36,25 @@ namespace GS.Services.DanhMuc
         #region Ctor
 
         public LyDoBienDongService(CauHinhChung cauhinhChung,
-            ICacheManager cacheManager,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
+            //ICacheManager cacheManager,
+            //IDataProvider dataProvider,
+            //IDbContext dbContext,
             IStaticCacheManager staticCacheManager,
             IRepository<LyDoBienDong> itemRepository,
             IWorkContext workContext,
-            IRepository<LoaiDonVi> loaiDonViRepository,
+           // IRepository<LoaiDonVi> loaiDonViRepository,
             IRepository<DonVi> donViRepository,
             ILoaiLyDoBienDongService loaiLyDoBienDongService
             )
         {
-            this._cauhinhChung = cauhinhChung;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
+            //this._cauhinhChung = cauhinhChung;
+            //this._cacheManager = cacheManager;
+            //this._dataProvider = dataProvider;
+            //this._dbContext = dbContext;
             this._staticCacheManager = staticCacheManager;
             this._itemRepository = itemRepository;
             this._workContext = workContext;
-            this._loaiDonViRepository = loaiDonViRepository;
+            //this._loaiDonViRepository = loaiDonViRepository;
             this._donViRepository = donViRepository;
             this._loaiLyDoBienDongService = loaiLyDoBienDongService;
         }
