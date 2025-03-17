@@ -42,7 +42,7 @@ const SubmitHandlers = ()=> {
           <Giatrisd register={register} errors={errors}/>
           </div>
  
-          <Hosogiayto />
+          <Hosogiayto register={register} errors={errors}/>
        
         <Box sx={{ mt: 3, textAlign: "right" }}>
         <Button 

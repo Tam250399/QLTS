@@ -27,4 +27,20 @@ export interface Thongtinchung {
     nguyenGia: number;
     nguonKhac: number;
   };
+
+  //Hồ sơ giấy tờ
+  hoSoGiayTo:{
+    CNQSD?: string;
+    quyetDinhGiaoDat?: string;
+    quyetDinhChoThueDat?: string;
+    hopDongChoThueDat?: string;
+    giayToKhac?: string;
+    ngayCap?: {
+      CNQSD?: string;
+      quyetDinhGiaoDat?: string;
+      quyetDinhChoThueDat?: string;
+      hopDongChoThueDat?: string;
+      giayToKhac?: string;
+    };
+  }
 }
