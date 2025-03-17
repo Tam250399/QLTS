@@ -23,18 +23,20 @@ using GS.Services.SHTD;
 using GS.Services.TaiSans;
 using GS.Services.ThuocTinhs;
 using GS.NewAPI.Factories;
+using GS.Data;
 
-namespace GS.WebApi.Infrastructure
+namespace GS.NewAPI.Infrastructure
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+    public static class DependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GSConfig config)
+        public static void Register(ContainerBuilder builder)
         {
             //factories danh muc
             #region factories danh muc
             builder.RegisterType<DanhMucModelFactory>().As<IDanhMucModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<GSObjectContext>().As<IDbContext>().InstancePerLifetimeScope();
+
             #endregion
         }
-        public int Order => 3;
     }
 }

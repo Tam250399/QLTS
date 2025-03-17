@@ -1,11 +1,17 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using GS.Core.Caching;
+using GS.Core.Configuration;
 using GS.Core.Data;
 using GS.Core.Domain.CauHinh;
 using GS.Core.Domain.Security;
+using GS.Core.Infrastructure.DependencyManagement;
+using GS.Core.Infrastructure;
 using GS.Core.Infrastructure.Mapper;
 using GS.Data;
 using GS.NewAPI.Factories;
+using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
 using GS.Services;
 using GS.Services.DanhMuc;
@@ -45,8 +51,8 @@ namespace GS.NewAPI
             });
             //config depency inject 
             services.AddScoped<GS.Core.Domain.CauHinh.CauHinhNguoiDung>();
-            services.AddSingleton<IDbContext, GSObjectContext>();
-            services.AddScoped<IDonViService, DonViService>();
+            //services.AddSingleton<IDbContext, GSObjectContext>();
+            //services.AddScoped<IDonViService, DonViService>();
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, SqlServerDataProvider>();
@@ -57,6 +63,7 @@ namespace GS.NewAPI
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             //auto add scoped service and repository 
             Extensions.RegisterAssemblyServices(services);
+            //Add auto mapper         
             AddAutoMapper();
             // fix erorr devexpress hidden swagger
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -69,8 +76,6 @@ namespace GS.NewAPI
                         parts.Remove(reportingPart);
                     }
             });
-            //services.AddDevExpressControls();
-
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -98,8 +103,20 @@ namespace GS.NewAPI
                     }
                 });
             });
+            // return type IServiceProvider  Autofac
+            return RegisterDependencies(services);
+            //return services.BuildServiceProvider();
+        }
 
-            return services.BuildServiceProvider();
+        private IServiceProvider RegisterDependencies(IServiceCollection services)
+        {
+            var containerBuilder = new ContainerBuilder();
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
+
+            DependencyRegistrar.Register(containerBuilder);
+            //create service provider
+            return new AutofacServiceProvider(containerBuilder.Build());
         }
         //code cũ
         //public void ConfigureServices(IServiceCollection services)
@@ -109,7 +126,7 @@ namespace GS.NewAPI
         //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        private  void AddAutoMapper()
+        private void AddAutoMapper()
         {
             var configuration = new MapperConfiguration(cfg =>
             {
