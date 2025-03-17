@@ -1,5 +1,6 @@
 ﻿using GS.Core.Domain.Common;
 using GS.Core.Domain.HeThong;
+using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ namespace GS.NewAPI.Factories
         #region quốc gia
 
         IList<QuocGiaModel> GetAllQuocGias();
+        IList<DiaBanModel> GetTinhThanhPhosByQuocGiaId(int quocGiaId);
         IList<QuocGiaModel> SearchQuocGiasByName(string tenQuocGia);
 
         //MessageReturn UpdateQuocGia(QuocGiaModel model, NguoiDung currentUser);

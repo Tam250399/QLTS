@@ -1,5 +1,6 @@
 ﻿using GS.NewAPI.Factories;
 using GS.NewAPI.Infrastruture.Response;
+using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 using GS.Web.Areas.Admin.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -76,6 +77,26 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
 
+
+        #endregion
+        #region địa bàn
+
+        [HttpGet("tinhthanhpho")]
+        public IActionResult GetAllQTinhTPs(int quocGiaId)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<DiaBanModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetTinhThanhPhosByQuocGiaId(quocGiaId);
+            response.Success = true;
+            response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
 
         #endregion
         #endregion
