@@ -5,6 +5,7 @@ using GS.NewAPI.Infrastructure.Mapper.Extensions;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 using GS.Services.DanhMuc;
+///using GS.Web.Models.DanhMuc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,16 @@ namespace GS.NewAPI.Factories
         #region Ctor
         private readonly IQuocGiaService _quocGiaService;
         private readonly ILyDoBienDongService _lyDoBienDongService;
+        /// <summary>
         private readonly IMucDichSuDungService _mucDichSuDungService;
+        private readonly IDonViBoPhanService _donViBoPhanService;
+        /// </summary>
         private readonly IDiaBanService _diaBanService;
-        private readonly IMucDichSuDungService _mucdichSuDungService;
 
         public DanhMucModelFactory(
             IQuocGiaService quocGiaService,
             ILyDoBienDongService lyDoBienDongService,
+            IDonViBoPhanService donViBoPhanService,
             IMucDichSuDungService mucDichSuDungService,
             IDiaBanService diaBanService
             )
@@ -30,8 +34,8 @@ namespace GS.NewAPI.Factories
             this._quocGiaService = quocGiaService;
             this._lyDoBienDongService = lyDoBienDongService;
             this._mucDichSuDungService = mucDichSuDungService;
+            this._donViBoPhanService = donViBoPhanService;
             this._diaBanService = diaBanService;
-            _mucdichSuDungService = mucdichSuDungService;
         }
         #endregion
         #region quốc gia
@@ -82,7 +86,7 @@ namespace GS.NewAPI.Factories
         }
         public IList<MucDichSuDungModel> GetMucDichSuDungsByLoaiHinhTSId(decimal? loaiHinhTaiSanId)
         {
-            var query = _mucdichSuDungService.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
+            var query = _mucDichSuDungService.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
             return query.Select(m => m.ToModel<MucDichSuDungModel>()).ToList();
         }
         #endregion
@@ -93,6 +97,14 @@ namespace GS.NewAPI.Factories
             var query = _lyDoBienDongService.GetLyDoTangGiams(loaiLyDoBienDongId: loaiLyDoBienDongId, loaiHinhTaiSanId: loaiHinhTaiSanId, isTangMoi: isTangMoi);
             Boolean a = false;
             return query.Select(m => m.ToModel<LyDoBienDongModel>()).ToList();
+        }
+
+        public IList<DonViBoPhanModel> GetDonViBoPhans(decimal donViId)
+        {
+
+            var query = _donViBoPhanService.GetDonViBoPhans(donViId);
+            Boolean a = false;
+            return query.Select(m => m.ToModel<DonViBoPhanModel>()).ToList();
         }
     }
 }

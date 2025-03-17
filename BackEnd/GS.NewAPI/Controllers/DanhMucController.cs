@@ -53,18 +53,7 @@ namespace GS.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("mucDichSuDung")]
-        public IActionResult GetAllMucDichSuDungs()
-        {
-            var response = new BaseResponse<ListResponse<QuocGiaModel>>(
-                success: false
-            );
-            var result = _danhMucModelFactory.GetAllQuocGias();
-            response.Success = true;
-            response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
-        }
+        
         [HttpGet("lyDoTangGiam")]
         public IActionResult GetLyDoTangGiams(decimal? loaiLyDoBienDongId, decimal? loaiHinhTaiSanId, Boolean isTangMoi)
         {
@@ -137,6 +126,23 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
         #endregion
+
+        [HttpGet("donViBoPhan")]
+        public IActionResult GetDonViBoPhans(decimal donViId)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<DonViBoPhanModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetDonViBoPhans(donViId);
+            response.Success = true;
+            response.Data = new ListResponse<DonViBoPhanModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
         #endregion
 
     }
