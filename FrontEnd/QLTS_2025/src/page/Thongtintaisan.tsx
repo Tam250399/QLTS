@@ -9,21 +9,21 @@ import {
   Box,
   Grid,
   Typography,
-
   Autocomplete,
 } from "@mui/material";
-import { FieldErrors, UseFormRegister  } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import ApiService from "../service/ApiService";
+import GetDMQuocGia from "../service/ServiceDat";
 // type Inputs = {
 //   diachi: string;
 //   quocgia: string;
 // };
 const countriess = [
-  'Việt Nam',
-  'Nhật Bản',
-  'Hàn Quốc',
-  'Trung Quốc',
-  'Mỹ',
+  "Việt Nam",
+  "Nhật Bản",
+  "Hàn Quốc",
+  "Trung Quốc",
+  "Mỹ",
   // Thêm các quốc gia khác
 ];
 
@@ -32,33 +32,39 @@ interface Country {
   name: string;
   email: string;
 }
+
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
 }
 
 const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
-  
-  const [loading ,setLoading]= useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   const [countries, setCountries] = useState<Country[]>([]);
-  
- 
 
-  const fetchUsers = async () => {
-    
-      setLoading(true);
-      // Gọi API GET
-      const response = await ApiService.get<[]>('/DanhMuc/quocGia');
-      setCountries(response.data);
-      console.log("test" , response.data);
-  };
+  // const fetchUsers = async () => {
+
+  //     setLoading(true);
+  //     // Gọi API GET
+  //     const response = await ApiService.get<[]>('/DanhMuc/quocGia');
+  //     setCountries(response.data);
+  //     console.log("test" , response.data);
+  // };
+
+  // useEffect(() => {
+  //   // fetchUsers();
+  //   GetDMQuocGia();
+  // }, []);
+
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetchUsers();
+    const fetchCategories = async () => {
+      const data = await GetDMQuocGia();
+      setCategories(data);
+    };
+    fetchCategories();
   }, []);
-
-
-
 
   return (
     <Box
@@ -122,71 +128,74 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
 
         {/* Cột Trái */}
         <Grid item xs={12} md={6}>
-
-          <Typography variant="subtitle2" sx={{ fontSize: "14px" }} >
+          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Quốc gia <span style={{ color: "red" }}>*</span>
           </Typography>
-          <FormControl fullWidth margin="dense"  >
-          <Autocomplete className="pt-[1px]"
-           options={countriess}
-            getOptionLabel={(option) => option}
-            renderInput={(params) => (
-              <TextField 
-                {...params}
-                placeholder="-- Chọn Quốc Gia --"
-                {...register('quocgia', { required: true })}
-                sx={{ fontSize: '14px' ,
-              '& .MuiInputBase-root': {
-                height: '36px'
-              },
-
-                }}
-                
-              />
+          <FormControl fullWidth margin="dense">
+            <Autocomplete
+              className="pt-[1px]"
+              options={categories.map((category) => category.ten)}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn Quốc Gia --"
+                  {...register("quocgia", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy quốc gia"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
+            {errors.quocgia && (
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn Quốc gia
+              </span>
             )}
-            noOptionsText="Không tìm thấy quốc gia"
-            renderOption={(props, option) => (
-              <li {...props} style={{ fontSize: '14px' }}>
-                {option}
-              </li>
-            )}
-          />
-      {errors.quocgia && (
-        <span className="text-red-500 text-xs">Bạn phải chọn Quốc gia</span>
-      )}
-    </FormControl>
+          </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Quận/Huyện <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-          <Autocomplete className="pt-[1px]"
-           options={countriess}
-            getOptionLabel={(option) => option}
-            renderInput={(params) => (
-              <TextField 
-                {...params}
-                placeholder="-- Chọn Quận/Huyện--"
-                {...register('quanhuyen', { required: true })}
-                sx={{ fontSize: '14px' ,
-              '& .MuiInputBase-root': {
-                height: '36px'
-              },
-
-                }}
-                
-              />
-            )}
-            noOptionsText="Không tìm thấy quận huyện"
-            renderOption={(props, option) => (
-              <li {...props} style={{ fontSize: '14px' }}>
-                {option}
-              </li>
-            )}
-          />
+            <Autocomplete
+              className="pt-[1px]"
+              options={countriess}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn Quận/Huyện--"
+                  {...register("quanhuyen", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy quận huyện"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
             {errors.quanhuyen && (
-        <span className="text-red-500 text-xs">Bạn phải chọn quận huyện</span>
-      )}
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn quận huyện
+              </span>
+            )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -203,17 +212,18 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                     -- Đăng ký lần đầu --
                   </Typography>
                 )
-                
               }
               sx={{ fontSize: "14px" }}
-              {...register('lydotang', { required: true })}
+              {...register("lydotang", { required: true })}
             >
               <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
               <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
             </Select>
             {errors.lydotang && (
-             <span className="text-red-500 text-xs">Bạn phải chọn lý do tăng</span>
-             )}
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn lý do tăng
+              </span>
+            )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -227,77 +237,83 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
             InputLabelProps={{ shrink: true }}
             defaultValue="2017-12-31"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register('ngaytang', { required: true })}
+            {...register("ngaytang", { required: true })}
           />
-             {errors.ngaytang && (
-             <span className="text-red-500 text-xs">Bạn phải chọn ngày tăng</span>
-             )}
+          {errors.ngaytang && (
+            <span className="text-red-500 text-xs">
+              Bạn phải chọn ngày tăng
+            </span>
+          )}
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Tỉnh/Thành phố <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-          <Autocomplete className="pt-[1px]"
-           options={countriess}
-            getOptionLabel={(option) => option}
-            renderInput={(params) => (
-              <TextField 
-                {...params}
-                placeholder="-- Chọn Tỉnh/Thành phố--"
-                {...register('tinhthanhpho', { required: true })}
-                sx={{ fontSize: '14px' ,
-              '& .MuiInputBase-root': {
-                height: '36px'
-              },
-
-                }}
-                
-              />
-            )}
-            noOptionsText="Không tìm thấy Tỉnh/Thành phố"
-            renderOption={(props, option) => (
-              <li {...props} style={{ fontSize: '14px' }}>
-                {option}
-              </li>
-            )}
-          />
+            <Autocomplete
+              className="pt-[1px]"
+              options={countriess}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn Tỉnh/Thành phố--"
+                  {...register("tinhthanhpho", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy Tỉnh/Thành phố"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
             {errors.tinhthanhpho && (
-        <span className="text-red-500 text-xs">Bạn phải chọn Tỉnh/Thành phố</span>
-      )}
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn Tỉnh/Thành phố
+              </span>
+            )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Xã/Phường <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-          <Autocomplete className="pt-[1px]"
-           options={countriess}
-            getOptionLabel={(option) => option}
-            renderInput={(params) => (
-              <TextField 
-                {...params}
-                placeholder="-- Chọn Xã/Phường--"
-                {...register('xaphuong', { required: true })}
-                sx={{ fontSize: '14px' ,
-              '& .MuiInputBase-root': {
-                height: '36px'
-              },
-
-                }}
-                
-              />
-            )}
-            noOptionsText="Không tìm thấy Xã/Phường"
-            renderOption={(props, option) => (
-              <li {...props} style={{ fontSize: '14px' }}>
-                {option}
-              </li>
-            )}
-          />
+            <Autocomplete
+              className="pt-[1px]"
+              getOptionLabel={(option) => option}
+              options={countriess}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn Xã/Phường--"
+                  {...register("xaphuong", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy Xã/Phường"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
             {errors.xaphuong && (
-        <span className="text-red-500 text-xs">Bạn phải chọn Xã/Phường</span>
-      )}
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn Xã/Phường
+              </span>
+            )}
           </FormControl>
 
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -316,20 +332,18 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 )
               }
               sx={{ fontSize: "14px" }}
-              {...register('mucdich', { required: true })}
-            >
-              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
-              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
-            </Select>
+              {...register("mucdich", { required: true })}
+            ></Select>
             {errors.mucdich && (
-        <span className="text-red-500 text-xs">Bạn phải chọn mục đích sử dụng</span>
-      )}
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn mục đích sử dụng
+              </span>
+            )}
           </FormControl>
         </Grid>
       </Grid>
-    
     </Box>
   );
-}
+};
 
 export default Thongtintaisan;
