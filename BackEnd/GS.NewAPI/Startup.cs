@@ -34,7 +34,14 @@ namespace GS.NewAPI
                 opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
             });
             //add Cors
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
             //config depency inject 
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
@@ -116,7 +123,7 @@ namespace GS.NewAPI
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
 
