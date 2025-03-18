@@ -10,7 +10,7 @@ export async function GetDMQuocGia(): Promise<quocgia[]> {
     console.log("response", response.data.data.results);
     return response.data.data.results;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Không lấy được dữ liệu:", error);
     throw error;
   }
 }
@@ -24,7 +24,7 @@ export async function GetDMTinhTP(quocGiaId: number): Promise<Tinh[]> {
     console.log("response", response.data.data.results);
     return response.data.data.results;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Không lấy được dữ liệu:", error);
     throw error;
   }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Thongtinchung, Tinh } from "../validateform/thongtinchung";
+import { quocgia, Thongtinchung, Tinh } from "../validateform/thongtinchung";
 
 import {
   TextField,
@@ -27,12 +27,6 @@ const countriess = [
   // Thêm các quốc gia khác
 ];
 
-// interface Country {
-//   id: number;
-//   name: string;
-//   email: string;
-// }
-
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
@@ -41,7 +35,7 @@ interface ThongtintaisanProps {
 const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
   const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
-  const [quocGia, setQuocGia] = useState([]);
+  const [quocGia, setQuocGia] = useState<quocgia[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
