@@ -26,6 +26,7 @@ export interface Thongtinchung {
     giaTriQSD: number;
     nguyenGia: number;
     nguonKhac: number;
+    nguonNganSach: number;
   };
 
   //Hồ sơ giấy tờ
