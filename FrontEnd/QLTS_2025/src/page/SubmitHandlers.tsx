@@ -1,61 +1,53 @@
-import Thongtintaisan from './Thongtintaisan'
-import { Box, Button,Typography } from '@mui/material'
-import Dientichhientrang from './Dientichhientrang';
-import Giatrisd from './Giatrisd';
-import Hosogiayto from './Hosogiayto';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React from "react";
+import Thongtintaisan from "./Thongtintaisan";
+import { Box, Button, Typography } from "@mui/material";
+import Dientichhientrang from "./Dientichhientrang";
+import Giatrisd from "./Giatrisd";
+import Hosogiayto from "./Hosogiayto";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
 
-const SubmitHandlers = ()=> {
+const SubmitHandlers = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Thongtinchung>({
+    defaultValues: {
+      diachi: "",
+    },
+  });
 
-
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm<Thongtinchung>({
-      defaultValues: {
-        diachi: '',
-      },
-    });
-    
-
-    const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
-      console.log('Dữ liệu form:', data);
-    };
-
+  const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
+    console.log("Dữ liệu form:", data);
+  };
 
   return (
-   <>
-        <Typography variant="h5" gutterBottom className='pb-10'>
+    <>
+      <Typography variant="h5" gutterBottom className="pb-10">
         Nhập số dư tài sản đất
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}> 
-          <div className='pb-10'>
-          <Thongtintaisan register={register} errors={errors}/>
-          </div>
-          <div className='pb-10'>
-          <Dientichhientrang  register={register} errors={errors}/>
-          </div>
-          <div className='pb-10'>
-          <Giatrisd register={register} errors={errors}/>
-          </div>
- 
-          <Hosogiayto register={register} errors={errors}/>
-       
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="pb-10">
+          <Thongtintaisan register={register} errors={errors} />
+        </div>
+        <div className="pb-10">
+          <Dientichhientrang register={register} errors={errors} />
+        </div>
+
+        <div className="pb-10">
+          <Giatrisd register={register} errors={errors} />
+        </div>
+        <Hosogiayto register={register} errors={errors}/>
+
         <Box sx={{ mt: 3, textAlign: "right" }}>
-        <Button 
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Lưu
-        </Button>
-      </Box>
-        </form>
+          <Button variant="contained" color="primary" type="submit">
+            Lưu
+          </Button>
+        </Box>
+      </form>
+    </>
+  );
+};
 
-   </>
-  )
-}
-
-export default SubmitHandlers
+export default SubmitHandlers;

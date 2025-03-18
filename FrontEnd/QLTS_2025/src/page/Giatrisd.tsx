@@ -89,7 +89,7 @@ const Giatrisd = ({ register, errors }: GiaTriSuDungDatProps) => {
             margin="dense"
             type="number"
             placeholder="đ̲"
-            value={nguyenGia || ""}
+            value={giaTriQSD || ""}
             InputProps={{ sx: { fontSize: "14px" } }}
           />
 
