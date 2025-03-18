@@ -57,3 +57,17 @@ export interface Tinh {
   ten: string;
   id: number;
 }
+
+export interface Huyen {
+  ma: string;
+  ten: string;
+  id: number;
+  mA_CHA: string;
+}
+
+export interface Phuong {
+  ma: string;
+  ten: string;
+  id: number;
+  mA_CHA: string;
+}

@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { quocgia, Thongtinchung, Tinh } from "../validateform/thongtinchung";
+import {
+  Huyen,
+  quocgia,
+  Thongtinchung,
+  Tinh,
+} from "../validateform/thongtinchung";
 
 import {
   TextField,
@@ -12,7 +17,11 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { GetDMQuocGia, GetDMTinhTP } from "../service/ServiceDat";
+import {
+  GetDMDuoiTinh,
+  GetDMQuocGia,
+  GetDMTinhTP,
+} from "../service/ServiceDat";
 
 // type Inputs = {
 //   diachi: string;
@@ -34,8 +43,12 @@ interface ThongtintaisanProps {
 
 const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
+  const [selectedTinh, setselectedTinh] = useState<string | null>(null);
   const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
   const [quocGia, setQuocGia] = useState<quocgia[]>([]);
+  const [quans, setQuans] = useState<Huyen[]>([]);
+  const [selectedQuan, setselectedQuan] = useState<string | null>(null);
+  const [phuongs, setPhuongs] = useState<Huyen[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -60,6 +73,38 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
     };
     fetchTinhTP();
   }, [selectedQuocGia]);
+
+  useEffect(() => {
+    const fetchQuanHuyen = async () => {
+      if (selectedTinh) {
+        try {
+          const data = await GetDMDuoiTinh(selectedTinh);
+          setQuans(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+        }
+      } else {
+        setQuans([]);
+      }
+    };
+    fetchQuanHuyen();
+  }, [selectedTinh]);
+
+  useEffect(() => {
+    const fetchPhuongXa = async () => {
+      if (selectedQuan) {
+        try {
+          const data = await GetDMDuoiTinh(selectedQuan);
+          setPhuongs(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+        }
+      } else {
+        setPhuongs([]);
+      }
+    };
+    fetchPhuongXa();
+  }, [selectedQuan]);
 
   return (
     <Box
@@ -168,8 +213,13 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={countriess}
+              options={quans.map((quan) => quan.ten)}
               getOptionLabel={(option) => option}
+              disabled={!selectedTinh}
+              onChange={(_, value) => {
+                const selected = quans.find((quan) => quan.ten === value);
+                setselectedQuan(selected?.ma || null);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -255,6 +305,10 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               getOptionLabel={(option) => option}
               disabled={!selectedQuocGia}
               // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
+              onChange={(_, value) => {
+                const selected = tinhTPs.find((tinh) => tinh.ten === value);
+                setselectedTinh(selected?.ma || null);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -288,8 +342,9 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
+              options={phuongs.map((phuong) => phuong.ten)}
               getOptionLabel={(option) => option}
-              options={countriess}
+              disabled={!selectedQuan}
               renderInput={(params) => (
                 <TextField
                   {...params}
