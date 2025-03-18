@@ -36,23 +36,27 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
 
   // Khi mất focus, chỉ cập nhật nếu giá trị chưa có
   const handleGiaTriQSDBlur = () => {
-    setNguyenGia((prev) => {
-      if (prev === 0) {
-        setValue("giaTriSdDat.nguyenGia", giaTriQSD);
-        return giaTriQSD;
-      }
-      return prev;
-    });
+    if (giaTriQSD > 0) {
+      setNguyenGia((prev) => {
+        if (prev === 0) {
+          setValue("giaTriSdDat.nguyenGia", giaTriQSD);
+          return giaTriQSD;
+        }
+        return prev;
+      });
+    }
   };
 
   const handleNguyenGiaBlur = () => {
-    setGiaTriQSD((prev) => {
-      if (prev === 0) {
-        setValue("giaTriSdDat.giaTriQSD", nguyenGia);
-        return nguyenGia;
-      }
-      return prev;
-    });
+    if (nguyenGia > 0) {
+      setGiaTriQSD((prev) => {
+        if (prev === 0) {
+          setValue("giaTriSdDat.giaTriQSD", nguyenGia);
+          return nguyenGia;
+        }
+        return prev;
+      });
+    }
   };
 
   // Khi nhập Nguồn khác, cập nhật Nguồn ngân sách ngay
