@@ -1,6 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
-import { environment } from '../environments/environment';
-
+import axios, { AxiosResponse } from "axios";
+import { environment } from "../environments/environment";
 
 const API_URL = `${environment.apiUrl}`;
 // Cấu hình axios
@@ -8,7 +7,7 @@ const apiClient = axios.create({
   baseURL: API_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -19,12 +18,14 @@ interface ApiResponse<T> {
   message?: string;
 }
 
-// API 
+// API
 class ApiService {
-  // GET 
+  // GET
   async get<T>(endpoint: string, params?: object): Promise<ApiResponse<T>> {
     try {
-      const response: AxiosResponse<T> = await apiClient.get(endpoint, { params });
+      const response: AxiosResponse<T> = await apiClient.get(endpoint, {
+        params,
+      });
       return {
         data: response.data,
         status: response.status,
@@ -34,7 +35,7 @@ class ApiService {
     }
   }
 
-  // POST 
+  // POST
   async post<T>(endpoint: string, data: object): Promise<ApiResponse<T>> {
     try {
       const response: AxiosResponse<T> = await apiClient.post(endpoint, data);
@@ -47,7 +48,7 @@ class ApiService {
     }
   }
 
-  // PUT 
+  // PUT
   async put<T>(endpoint: string, data: object): Promise<ApiResponse<T>> {
     try {
       const response: AxiosResponse<T> = await apiClient.put(endpoint, data);
@@ -60,7 +61,7 @@ class ApiService {
     }
   }
 
-  // DELETE 
+  // DELETE
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     try {
       const response: AxiosResponse<T> = await apiClient.delete(endpoint);
@@ -76,9 +77,9 @@ class ApiService {
   // Xử lý lỗi
   private handleError(error: any) {
     if (axios.isAxiosError(error)) {
-      return new Error(error.response?.data?.message || 'API request failed');
+      return new Error(error.response?.data?.message || "API request failed");
     }
-    return new Error('An unexpected error occurred');
+    return new Error("An unexpected error occurred");
   }
 }
 
