@@ -20,6 +20,7 @@ import {
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import {
   GetDMDuoiTinh,
+  GetDMLyDoTangDat,
   GetDMMucDichTS,
   GetDMQuocGia,
   GetDMTinhTP,
@@ -52,6 +53,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
   const [selectedQuan, setselectedQuan] = useState<string | null>(null);
   const [phuongs, setPhuongs] = useState<Huyen[]>([]);
   const [mucDichTS, setMucDichTSs] = useState<MucDichTS[]>([]);
+  const [lyDoTangDat, setLyDoTangDats] = useState<MucDichTS[]>([]);
 
   useEffect(() => {
     // const fetchCategories = async () => {
@@ -61,13 +63,14 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
     // fetchCategories();
     const fetchData = async () => {
       try {
-        const [quocGiaData, mucDichTS] = await Promise.all([
+        const [quocGiaData, mucDichTS, lyDoTangDat] = await Promise.all([
           GetDMQuocGia(),
           GetDMMucDichTS(1),
-          // GetDMLyDoTangDat(),
+          GetDMLyDoTangDat(1),
         ]);
         setQuocGia(quocGiaData);
         setMucDichTSs(mucDichTS);
+        setLyDoTangDats(lyDoTangDat);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);
       }
@@ -269,23 +272,30 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
             Lý do tăng đất <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-            <Select
-              displayEmpty
-              renderValue={(selected) =>
-                selected && typeof selected === "string" ? (
-                  selected
-                ) : (
-                  <Typography sx={{ color: "grey.500", fontSize: "14px" }}>
-                    -- Đăng ký lần đầu --
-                  </Typography>
-                )
-              }
-              sx={{ fontSize: "14px" }}
-              {...register("lydotang", { required: true })}
-            >
-              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
-              <MenuItem value="Đăng ký lần đầu">Đăng ký lần đầu</MenuItem>
-            </Select>
+            <Autocomplete
+              className="pt-[1px]"
+              options={lyDoTangDat.map((lydo) => lydo.ten)}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn lý do tăng đất --"
+                  {...register("lydotang", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy quận huyện"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
             {errors.lydotang && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn lý do tăng
@@ -396,8 +406,8 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={mucDichTS.map((mucdich) => mucdich.ten)}
-              getOptionLabel={(option) => option}
+              options={mucDichTS}
+              getOptionLabel={(option) => `${option.ma} - ${option.ten}`}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -414,7 +424,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               noOptionsText="Không tìm thấy mục đích sử dụng"
               renderOption={(props, option) => (
                 <li {...props} style={{ fontSize: "14px" }}>
-                  {option}
+                  {option.ma} - {option.ten}
                 </li>
               )}
             />

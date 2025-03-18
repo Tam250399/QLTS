@@ -77,3 +77,12 @@ export interface MucDichTS {
   ten: string;
   id: number;
 }
+
+export interface LyDoTangDat {
+  ma: string;
+  ten: string;
+  id: number;
+  loaI_HINH_TAI_SAN_ID: number;
+  loaI_LY_DO_ID: number;
+  loaI_LY_DO_BIEN_DONG_ID: number;
+}
