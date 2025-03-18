@@ -33,7 +33,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
         position: "relative",
       }}
     >
-      {/* Tiêu đề "Thông tin tài sản đất" */}
+      {/* Tiêu đề "Hồ sơ,giấy tờ" */}
       <Typography
         sx={{
           position: "absolute",
@@ -88,7 +88,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -153,7 +153,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -218,7 +218,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -283,7 +283,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -325,7 +325,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               style={{
                 width: "100%", // Đảm bảo full-width theo cha
                 fontSize: "14px",
-                backgroundColor: "#fff",
+                backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                 padding: "8px",
                 borderRadius: "4px",
                 border: "1px solid #ccc",
