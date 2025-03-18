@@ -71,3 +71,9 @@ export interface Phuong {
   id: number;
   mA_CHA: string;
 }
+
+export interface MucDichTS {
+  ma: string;
+  ten: string;
+  id: number;
+}

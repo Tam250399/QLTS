@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Huyen,
+  MucDichTS,
   quocgia,
   Thongtinchung,
   Tinh,
@@ -19,6 +20,7 @@ import {
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import {
   GetDMDuoiTinh,
+  GetDMMucDichTS,
   GetDMQuocGia,
   GetDMTinhTP,
 } from "../service/ServiceDat";
@@ -49,13 +51,29 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
   const [quans, setQuans] = useState<Huyen[]>([]);
   const [selectedQuan, setselectedQuan] = useState<string | null>(null);
   const [phuongs, setPhuongs] = useState<Huyen[]>([]);
+  const [mucDichTS, setMucDichTSs] = useState<MucDichTS[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await GetDMQuocGia();
-      setQuocGia(data);
+    // const fetchCategories = async () => {
+    //   const data = await GetDMQuocGia();
+    //   setQuocGia(data);
+    // };
+    // fetchCategories();
+    const fetchData = async () => {
+      try {
+        const [quocGiaData, mucDichTS] = await Promise.all([
+          GetDMQuocGia(),
+          GetDMMucDichTS(1),
+          // GetDMLyDoTangDat(),
+        ]);
+        setQuocGia(quocGiaData);
+        setMucDichTSs(mucDichTS);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+      }
     };
-    fetchCategories();
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -376,23 +394,33 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
             Mục đích sử dụng <span style={{ color: "red" }}>*</span>
           </Typography>
           <FormControl fullWidth margin="dense" size="small">
-            <Select
-              displayEmpty
-              renderValue={(selected) =>
-                selected && typeof selected === "string" ? (
-                  selected
-                ) : (
-                  <Typography sx={{ color: "grey.500", fontSize: "14px" }}>
-                    -- Chọn mục đích sử dụng --
-                  </Typography>
-                )
-              }
-              sx={{ fontSize: "14px" }}
-              {...register("mucdich", { required: true })}
-            ></Select>
+            <Autocomplete
+              className="pt-[1px]"
+              options={mucDichTS.map((mucdich) => mucdich.ten)}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn mục đích sử dụng --"
+                  {...register("mucdich", { required: true })}
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy mục đích sử dụng"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option}
+                </li>
+              )}
+            />
             {errors.mucdich && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn mục đích sử dụng
+                Bạn phải mục đích sử dụng
               </span>
             )}
           </FormControl>
