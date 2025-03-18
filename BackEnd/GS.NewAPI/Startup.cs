@@ -128,13 +128,7 @@ namespace GS.NewAPI
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
 
             // Thêm UseMvc để cấu hình các API
-            app.UseMvc(routes =>
-            {
-                // Cấu hình tuyến đường mặc định cho API
-                routes.MapRoute(
-                    name: "default",
-                    template: "api/{controller}/{action}/{id?}");
-            });
+            app.UseMvc();
         }
 
 

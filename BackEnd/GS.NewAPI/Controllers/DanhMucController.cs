@@ -4,7 +4,7 @@ using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
 using Microsoft.AspNetCore.Mvc;
 using System;
-namespace GS.WebApi.Controllers
+namespace GS.NewAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
