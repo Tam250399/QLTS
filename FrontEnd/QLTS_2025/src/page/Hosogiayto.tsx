@@ -3,6 +3,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  TextareaAutosize,
   TextField,
   Typography,
 } from "@mui/material";
@@ -47,7 +48,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
       >
         Hồ sơ,giấy tờ
       </Typography>
-      <Grid container spacing={1} sx={{ justifyContent: "space-between" }}>
+      <Grid container sx={{ justifyContent: "space-between" }}>
         {/* Các trường hiện trạng sử dụng */}
         <Grid item xs={2} sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -55,7 +56,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           </Typography>
         </Grid>
 
-        <Grid container xs={6} spacing={0}>
+        <Grid container xs={6}>
           <Grid item xs={0.8}>
             <TextField
               fullWidth
@@ -64,7 +65,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#e3e3e3",
                   textAlign: "center",
                   borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
                   borderBottomRightRadius: 0,
@@ -81,6 +82,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           <Grid item xs={11}>
             <TextField
               fullWidth
+              disabled={disableInputs}
               size="small"
               margin="dense"
               InputProps={{
@@ -103,6 +105,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
         <Grid item xs={3}>
           <TextField
             fullWidth
+            disabled={disableInputs}
             type="date"
             size="small"
             margin="dense"
@@ -127,7 +130,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#e3e3e3",
                   textAlign: "center",
                   borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
                   borderBottomRightRadius: 0,
@@ -144,6 +147,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           <Grid item xs={11}>
             <TextField
               fullWidth
+              disabled={disableInputs}
               size="small"
               margin="dense"
               InputProps={{
@@ -166,6 +170,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
         <Grid item xs={3}>
           <TextField
             fullWidth
+            disabled={disableInputs}
             type="date"
             size="small"
             margin="dense"
@@ -190,7 +195,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#e3e3e3",
                   textAlign: "center",
                   borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
                   borderBottomRightRadius: 0,
@@ -207,6 +212,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           <Grid item xs={11}>
             <TextField
               fullWidth
+              disabled={disableInputs}
               size="small"
               margin="dense"
               InputProps={{
@@ -229,6 +235,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
         <Grid item xs={3}>
           <TextField
             fullWidth
+            disabled={disableInputs}
             type="date"
             size="small"
             margin="dense"
@@ -253,7 +260,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#e3e3e3",
                   textAlign: "center",
                   borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
                   borderBottomRightRadius: 0,
@@ -270,6 +277,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           <Grid item xs={11}>
             <TextField
               fullWidth
+              disabled={disableInputs}
               size="small"
               margin="dense"
               InputProps={{
@@ -292,6 +300,7 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
         <Grid item xs={3}>
           <TextField
             fullWidth
+            disabled={disableInputs}
             type="date"
             size="small"
             margin="dense"
@@ -307,45 +316,55 @@ const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
           </Typography>
         </Grid>
 
-        <Grid container xs={6}>
-          <TextField
-            fullWidth
-            size="small"
-            margin="dense"
-            InputProps={{
-              sx: {
+        <Grid container xs={6} spacing={0}>
+          <Grid item xs={11.8} sx={{ mt: 1 }}>
+            <TextareaAutosize
+              {...register("hoSoGiayTo.giayToKhac")}
+              disabled={disableInputs}
+              minRows={1} // Số dòng tối thiểu
+              style={{
+                width: "100%", // Đảm bảo full-width theo cha
                 fontSize: "14px",
                 backgroundColor: "#fff",
-              },
-            }}
-            {...register("hoSoGiayTo.giayToKhac")}
-          />
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                resize: "vertical", // Giới hạn resize theo chiều dọc
+                boxSizing: "border-box", // Đảm bảo kích thước đúng
+              }}
+              onFocus={(e) => {
+                e.target.style.border = "1px solid #1976d2";
+                e.target.style.outline = "none"; // Bỏ viền mặc định của trình duyệt
+              }}
+              onBlur={(e) => (e.target.style.border = "1px solid #ccc")} // Trở về màu cũ khi mất focus
+            />
+          </Grid>
         </Grid>
 
         <Grid item xs={3}></Grid>
         {/* Checkbox "Không có giấy tờ" */}
-        <Grid container spacing={1} alignItems="center" sx={{ mt: 1 }}>
-          <Grid item xs={2}></Grid>
+        <Grid container justifyContent="center" sx={{ mt: 1 }}>
           <Grid item xs={7}>
             <FormControlLabel
-              control={<Checkbox onChange={handleCheckboxChange} />}
+              control={
+                <Checkbox onChange={handleCheckboxChange} sx={{ p: 0.5 }} />
+              }
               label={
                 <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
                   Không có giấy tờ
                 </Typography>
               }
+              sx={{ display: "flex", alignItems: "center", width: "100%" }}
             />
           </Grid>
+          {!disableInputs && (
+            <Grid item xs={7}>
+              <Typography sx={{ color: "red", fontSize: "14px" }}>
+                Cần phải nhập ít nhất 1 loại giấy tờ
+              </Typography>
+            </Grid>
+          )}
         </Grid>
-
-        {/* Cảnh báo nếu chưa nhập giấy tờ */}
-        {!disableInputs && errors.hoSoGiayTo && (
-          <Typography
-            sx={{ color: "red", fontSize: "14px", mt: 1, textAlign: "center" }}
-          >
-            Cần phải nhập ít nhất 1 loại giấy tờ
-          </Typography>
-        )}
       </Grid>
     </Box>
   );
