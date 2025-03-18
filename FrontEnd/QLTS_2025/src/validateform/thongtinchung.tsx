@@ -28,3 +28,15 @@ export interface Thongtinchung {
     nguonKhac: number;
   };
 }
+
+export interface quocgia {
+  ma: string;
+  ten: string;
+  id: number;
+}
+
+export interface Tinh {
+  ma: string;
+  ten: string;
+  id: number;
+}

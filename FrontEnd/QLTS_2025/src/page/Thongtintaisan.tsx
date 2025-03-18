@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Thongtinchung } from "../validateform/thongtinchung";
+import { Thongtinchung, Tinh } from "../validateform/thongtinchung";
 
 import {
   TextField,
@@ -12,8 +12,8 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import ApiService from "../service/ApiService";
-import GetDMQuocGia from "../service/ServiceDat";
+import { GetDMQuocGia, GetDMTinhTP } from "../service/ServiceDat";
+
 // type Inputs = {
 //   diachi: string;
 //   quocgia: string;
@@ -27,11 +27,11 @@ const countriess = [
   // Thêm các quốc gia khác
 ];
 
-interface Country {
-  id: number;
-  name: string;
-  email: string;
-}
+// interface Country {
+//   id: number;
+//   name: string;
+//   email: string;
+// }
 
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
@@ -39,32 +39,33 @@ interface ThongtintaisanProps {
 }
 
 const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [countries, setCountries] = useState<Country[]>([]);
-
-  // const fetchUsers = async () => {
-
-  //     setLoading(true);
-  //     // Gọi API GET
-  //     const response = await ApiService.get<[]>('/DanhMuc/quocGia');
-  //     setCountries(response.data);
-  //     console.log("test" , response.data);
-  // };
-
-  // useEffect(() => {
-  //   // fetchUsers();
-  //   GetDMQuocGia();
-  // }, []);
-
-  const [categories, setCategories] = useState([]);
+  const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
+  const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
+  const [quocGia, setQuocGia] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await GetDMQuocGia();
-      setCategories(data);
+      setQuocGia(data);
     };
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const fetchTinhTP = async () => {
+      if (selectedQuocGia) {
+        try {
+          const data = await GetDMTinhTP(selectedQuocGia);
+          setTinhTPs(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+        }
+      } else {
+        setTinhTPs([]);
+      }
+    };
+    fetchTinhTP();
+  }, [selectedQuocGia]);
 
   return (
     <Box
@@ -134,8 +135,12 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense">
             <Autocomplete
               className="pt-[1px]"
-              options={categories.map((category) => category.ten)}
+              options={quocGia.map((quocGias) => quocGias.ten)}
               getOptionLabel={(option) => option}
+              onChange={(_, value) => {
+                const selected = quocGia.find((qg) => qg.ten === value);
+                setSelectedQuocGia(selected?.id || null);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -252,8 +257,10 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={countriess}
+              options={tinhTPs.map((tinh) => tinh.ten)}
               getOptionLabel={(option) => option}
+              disabled={!selectedQuocGia}
+              // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
               renderInput={(params) => (
                 <TextField
                   {...params}
