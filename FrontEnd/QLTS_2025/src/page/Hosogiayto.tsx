@@ -8,19 +8,40 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+} from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
 
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
+  setValue: UseFormSetValue<Thongtinchung>;
 }
-const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
+const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
   const [disableInputs, setDisableInputs] = useState(false);
 
   // Xử lý sự kiện khi chọn checkbox
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisableInputs(event.target.checked);
+    console.log(disableInputs);
+    if (!disableInputs) {
+      const fields = [
+        "CNQSD",
+        "quyetDinhGiaoDat",
+        "quyetDinhChoThueDat",
+        "hopDongChoThueDat",
+        "giayToKhac",
+      ] as const;
+
+      fields.forEach((field) => {
+        setValue(`hoSoGiayTo.${field}` as keyof Thongtinchung, ""); 
+        setValue(`hoSoGiayTo.ngayCap.${field}` as keyof Thongtinchung, "");
+      });
+    }
   };
   return (
     <Box
