@@ -15,7 +15,7 @@ interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
 }
-const Hosogiayto = ({ register, errors }: ThongtintaisanProps) => {
+const Hosogiayto = ({ register }: ThongtintaisanProps) => {
   const [disableInputs, setDisableInputs] = useState(false);
 
   // Xử lý sự kiện khi chọn checkbox

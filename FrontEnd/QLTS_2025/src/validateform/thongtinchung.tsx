@@ -8,18 +8,18 @@ export interface Thongtinchung {
   mucdich: string | null;
   ngaytang: Date;
   //Diện tích khuôn viên
-  dienTich: number; // Diện tích (m²) - Bắt buộc
+  dienTich: string | null; // Diện tích (m²) - Bắt buộc
   hienTrangSuDung: {
-    truSoLamViec: number; // Trụ sở làm việc (m²)
-    hdSnKhongKd: number; // HDSN-Không KD (m²)
-    hdSnKinhDoanh: number; // HDSN-Kinh doanh (m²)
-    hdSnChoThue: number; // HDSN-Cho thuê (m²)
-    hdSnLdLk: number; // HDSN-LDLK (m²)
-    deO: number; // Để ở (m²)
-    boTrong: number; // Bỏ trống (m²)
-    biLanChiem: number; // Bị lấn chiếm (m²)
-    suDungHonHop: number; // Sử dụng hỗn hợp (m²)
-    suDungKhac: number; // Sử dụng khác (m²)
+    truSoLamViec: string | null; // Trụ sở làm việc (m²)
+    hdSnKhongKd: string | null; // HDSN-Không KD (m²)
+    hdSnKinhDoanh: string | null; // HDSN-Kinh doanh (m²)
+    hdSnChoThue: string | null; // HDSN-Cho thuê (m²)
+    hdSnLdLk: string | null; // HDSN-LDLK (m²)
+    deO: string | null; // Để ở (m²)
+    boTrong: string | null; // Bỏ trống (m²)
+    biLanChiem: string | null; // Bị lấn chiếm (m²)
+    suDungHonHop: string | null; // Sử dụng hỗn hợp (m²)
+    suDungKhac: string | null; // Sử dụng khác (m²)
   };
   //Gía trị sd
   giaTriSdDat: {
@@ -30,7 +30,7 @@ export interface Thongtinchung {
   };
 
   //Hồ sơ giấy tờ
-  hoSoGiayTo:{
+  hoSoGiayTo: {
     CNQSD?: string;
     quyetDinhGiaoDat?: string;
     quyetDinhChoThueDat?: string;
@@ -43,7 +43,7 @@ export interface Thongtinchung {
       hopDongChoThueDat?: string;
       giayToKhac?: string;
     };
-  }
+  };
 }
 
 export interface quocgia {
