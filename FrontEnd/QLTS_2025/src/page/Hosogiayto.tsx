@@ -8,19 +8,35 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
 
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
-  errors: FieldErrors<Thongtinchung>;
+  setValue: UseFormSetValue<Thongtinchung>;
 }
-const Hosogiayto = ({ register }: ThongtintaisanProps) => {
+
+const Hosogiayto = ({ register, setValue }: ThongtintaisanProps) => {
   const [disableInputs, setDisableInputs] = useState(false);
 
   // Xử lý sự kiện khi chọn checkbox
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisableInputs(event.target.checked);
+    console.log(disableInputs);
+    if (!disableInputs) {
+      const fields = [
+        "CNQSD",
+        "quyetDinhGiaoDat",
+        "quyetDinhChoThueDat",
+        "hopDongChoThueDat",
+        "giayToKhac",
+      ] as const;
+
+      fields.forEach((field) => {
+        setValue(`hoSoGiayTo.${field}` as keyof Thongtinchung, "");
+        setValue(`hoSoGiayTo.ngayCap.${field}` as keyof Thongtinchung, "");
+      });
+    }
   };
   return (
     <Box
@@ -33,7 +49,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
         position: "relative",
       }}
     >
-      {/* Tiêu đề "Thông tin tài sản đất" */}
+      {/* Tiêu đề "Hồ sơ,giấy tờ" */}
       <Typography
         sx={{
           position: "absolute",
@@ -88,7 +104,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -153,7 +169,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -218,7 +234,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -283,7 +299,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
               InputProps={{
                 sx: {
                   fontSize: "14px",
-                  backgroundColor: "#fff",
+                  backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                   borderTopLeftRadius: 0, // Bỏ góc bo tròn bên trái
                   borderBottomLeftRadius: 0,
                   "& fieldset": {
@@ -325,7 +341,7 @@ const Hosogiayto = ({ register }: ThongtintaisanProps) => {
               style={{
                 width: "100%", // Đảm bảo full-width theo cha
                 fontSize: "14px",
-                backgroundColor: "#fff",
+                backgroundColor: disableInputs ? "#e3e3e3" : "#fff",
                 padding: "8px",
                 borderRadius: "4px",
                 border: "1px solid #ccc",

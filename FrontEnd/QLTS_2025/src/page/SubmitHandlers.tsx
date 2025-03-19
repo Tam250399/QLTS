@@ -84,7 +84,7 @@ const SubmitHandlers = () => {
         <div className="pb-10">
           <Giatrisd register={register} errors={errors} setValue={setValue} />
         </div>
-        <Hosogiayto register={register} errors={errors} />
+        <Hosogiayto register={register} setValue={setValue} />
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button variant="contained" color="primary" type="submit">
