@@ -24,70 +24,88 @@ const Giatrisd = ({
   setError,
   clearErrors,
 }: GiaTriSuDungDatProps) => {
-  const [giaTriQSD, setGiaTriQSD] = useState<number>(0);
-  const [nguonKhac, setNguonKhac] = useState<number>(0);
-  const [nguyenGia, setNguyenGia] = useState<number>(0);
-  const [nguonNganSach, setNguonNganSach] = useState<number>(0);
+  const [GIA_TRI_QUYEN_SD_DAT, setGIA_TRI_QUYEN_SD_DAT] = useState<number>(0);
+  const [NGUON_KHAC, setNGUON_KHAC] = useState<number>(0);
+  const [NGUYEN_GIA, setNGUYEN_GIA] = useState<number>(0);
+  const [NGUON_NGAN_SACH, setNGUON_NGAN_SACH] = useState<number>(0);
 
-  const handleGiaTriQSDChange = (
+  const handleGIA_TRI_QUYEN_SD_DATChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let value = parseFloat(event.target.value) || 0;
+    setGIA_TRI_QUYEN_SD_DAT(value);
+    setValue("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", Number(value), {
+      shouldValidate: true,
+    });
+    console.log("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
+  };
+
+  const handleNGUYEN_GIAChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     let value = parseFloat(event.target.value) || 0;
 
-    if (value > 0 && nguyenGia > 0 && value > nguyenGia) {
-      setError("giaTriSdDat.giaTriQSD", {
+    setNGUYEN_GIA(value);
+    setValue("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", value, { shouldValidate: true });
+    const updatedNGUON_NGAN_SACH = Math.max(0, value - NGUON_KHAC);
+    setNGUON_NGAN_SACH(updatedNGUON_NGAN_SACH);
+    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
+  };
+
+  const handleNGUYEN_GIABlur = () => {
+    if (
+      NGUYEN_GIA > 0 &&
+      GIA_TRI_QUYEN_SD_DAT > 0 &&
+      GIA_TRI_QUYEN_SD_DAT > NGUYEN_GIA
+    ) {
+      setError("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
         type: "manual",
         message:
           "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
       });
     } else {
-      setGiaTriQSD(value);
-      setValue("giaTriSdDat.giaTriQSD", value, { shouldValidate: true });
+      clearErrors("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
     }
   };
 
-  const handleNguyenGiaChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    let value = parseFloat(event.target.value) || 0;
-
-    setNguyenGia(value);
-    setValue("giaTriSdDat.nguyenGia", value, { shouldValidate: true });
-    const updatedNguonNganSach = Math.max(0, value - nguonKhac);
-    setNguonNganSach(updatedNguonNganSach);
-    setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
-  };
-
-  const handleNguyenGiaBlur = () => {
-    if (nguyenGia > 0 && giaTriQSD > 0 && giaTriQSD > nguyenGia) {
-      setError("giaTriSdDat.giaTriQSD", {
+  const handleGIA_TRI_QUYEN_SD_DATBlur = () => {
+    if (
+      NGUYEN_GIA > 0 &&
+      GIA_TRI_QUYEN_SD_DAT > 0 &&
+      GIA_TRI_QUYEN_SD_DAT > NGUYEN_GIA
+    ) {
+      setError("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
         type: "manual",
         message:
           "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
       });
     } else {
-      clearErrors("giaTriSdDat.giaTriQSD");
+      clearErrors("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
     }
   };
 
   // Khi nhập Nguồn khác, cập nhật Nguồn ngân sách ngay
-  const handleNguonKhacChange = (
+  const handleNGUON_KHACChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     let value = parseFloat(event.target.value) || 0;
 
     // Cập nhật nguồn ngân sách
-    const updatedNguonNganSach = Math.max(-1, nguyenGia - value);
-    if (updatedNguonNganSach < 0) {
-      setError("giaTriSdDat.nguonKhac", {
+    const updatedNGUON_NGAN_SACH = Math.max(-1, NGUYEN_GIA - value);
+    setNGUON_KHAC(value);
+    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC", Number(value));
+    setNGUON_NGAN_SACH(updatedNGUON_NGAN_SACH);
+    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
+  };
+
+  const handleNGUON_KHACBlur = () => {
+    if (NGUON_NGAN_SACH < 0) {
+      setError("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC", {
         type: "manual",
         message: "Tổng các nguồn vốn phải bằng nguyên giá!",
       });
     } else {
-      setNguonKhac(value);
-      setValue("giaTriSdDat.nguonKhac", value);
-      setNguonNganSach(updatedNguonNganSach);
-      setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
+      clearErrors("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC");
     }
   };
 
@@ -129,15 +147,16 @@ const Giatrisd = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.giaTriQSD", {
+            {...register("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
               required: "Bạn phải nhập giá trị quyền sử dụng đất",
             })}
-            value={giaTriQSD || ""}
-            onChange={handleGiaTriQSDChange}
+            value={GIA_TRI_QUYEN_SD_DAT || ""}
+            onChange={handleGIA_TRI_QUYEN_SD_DATChange}
+            onBlur={handleGIA_TRI_QUYEN_SD_DATBlur}
           />
-          {errors.giaTriSdDat?.giaTriQSD && (
+          {errors.GIA_TRI_SU_DUNG_DAT?.GIA_TRI_QUYEN_SD_DAT && (
             <span className="text-red-500 text-xs">
-              {errors.giaTriSdDat.giaTriQSD.message}
+              {errors.GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT.message}
             </span>
           )}
 
@@ -151,16 +170,16 @@ const Giatrisd = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.nguyenGia", {
+            {...register("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", {
               required: "Bạn phải nhập giá trị nguyên giá",
             })}
-            value={nguyenGia || ""}
-            onChange={handleNguyenGiaChange}
-            onBlur={handleNguyenGiaBlur}
+            value={NGUYEN_GIA || ""}
+            onChange={handleNGUYEN_GIAChange}
+            onBlur={handleNGUYEN_GIABlur}
           />
-          {errors?.giaTriSdDat?.nguyenGia && (
+          {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA && (
             <span className="text-red-500 text-xs">
-              {errors?.giaTriSdDat?.nguyenGia.message}
+              {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA.message}
             </span>
           )}
 
@@ -184,8 +203,8 @@ const Giatrisd = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.nguonNganSach")}
-            value={nguonNganSach || ""}
+            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH")}
+            value={NGUON_NGAN_SACH || ""}
             InputProps={{
               readOnly: true,
               sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
@@ -206,13 +225,14 @@ const Giatrisd = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.nguonKhac")}
-            value={nguonKhac || ""}
-            onChange={handleNguonKhacChange}
+            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC")}
+            value={NGUON_KHAC || ""}
+            onChange={handleNGUON_KHACChange}
+            onBlur={handleNGUON_KHACBlur}
           />
-          {errors?.giaTriSdDat?.nguonKhac && (
+          {errors?.GIA_TRI_SU_DUNG_DAT?.NGUON_KHAC && (
             <span className="text-red-500 text-xs">
-              {errors?.giaTriSdDat?.nguonKhac.message}
+              {errors?.GIA_TRI_SU_DUNG_DAT?.NGUON_KHAC.message}
             </span>
           )}
         </Grid>

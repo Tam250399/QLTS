@@ -72,7 +72,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.truSoLamViec")}
+            {...register("HIEN_TRANG_SU_DUNG.TRU_SO_LAM_VIEC")}
           />
         </Grid>
 
@@ -89,7 +89,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.hdSnKhongKd")}
+            {...register("HIEN_TRANG_SU_DUNG.hdSnKhongKd")}
           />
         </Grid>
 
@@ -106,7 +106,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.hdSnKinhDoanh")}
+            {...register("HIEN_TRANG_SU_DUNG.HD_SD_KINH_DOANH")}
           />
         </Grid>
 
@@ -123,7 +123,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.hdSnChoThue")}
+            {...register("HIEN_TRANG_SU_DUNG.HD_SD_CHO_THUE")}
           />
         </Grid>
 
@@ -140,7 +140,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.hdSnLdLk")}
+            {...register("HIEN_TRANG_SU_DUNG.HD_SD_KINH_DOANH_LK")}
           />
         </Grid>
 
@@ -155,7 +155,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.deO")}
+            {...register("HIEN_TRANG_SU_DUNG.deO")}
           />
         </Grid>
 
@@ -170,7 +170,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             type="number"
             placeholder="m²"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.boTrong")}
+            {...register("HIEN_TRANG_SU_DUNG.BO_TRONG")}
           />
         </Grid>
 
@@ -185,7 +185,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.biLanChiem")}
+            {...register("HIEN_TRANG_SU_DUNG.BI_LAN_CHIEM")}
           />
         </Grid>
 
@@ -200,7 +200,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.suDungHonHop")}
+            {...register("HIEN_TRANG_SU_DUNG.SU_DUNG_HON_HOP")}
           />
         </Grid>
 
@@ -215,7 +215,7 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hienTrangSuDung.suDungKhac")}
+            {...register("HIEN_TRANG_SU_DUNG.SU_DUNG_KHAC")}
           />
         </Grid>
       </Grid>

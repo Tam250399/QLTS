@@ -1,49 +1,60 @@
 export interface Thongtinchung {
-  diachi: string | null;
-  quocgia: string | null;
-  tinhthanhpho: string | null;
-  quanhuyen: string | null;
-  xaphuong: string | null;
-  lydotang: string | null;
-  mucdich: string | null;
-  ngaytang: Date;
+  TEN: string,
+  LOAI_TAI_SAN_ID: number,
+  LOAI_HINH_TAI_SAN_ID: number,
+  DIEN_TICH_ID: number,
+  LOAI_TAI_SAN_DON_VI_ID: number,
+  DON_VI_ID: number,
+  DU_AN_ID: number,
+  TRANG_THAI_ID: number,
+  NGAY_TAO: string,
+  NGAY_TANG: string,
+  DON_VI_BO_PHAN_ID: number,
+  NGAY_SU_DUNG: string,
+  LY_DO_TANG_ID: number,
+  MUC_DICH_ID: number,
+  DIA_CHI: string,
+  QUOC_GIA_ID: number,
+  TINH_THANH_PHO_ID: number,
+  QUAN_HUYEN_ID: number,
+  XA_PHUONG_ID: number,
   //Diện tích khuôn viên
   dienTich: number; // Diện tích (m²) - Bắt buộc
-  hienTrangSuDung: {
-    truSoLamViec: number; // Trụ sở làm việc (m²)
+  HIEN_TRANG_SU_DUNG: {
+    TRU_SO_LAM_VIEC: number; // Trụ sở làm việc (m²)
     hdSnKhongKd: number; // HDSN-Không KD (m²)
-    hdSnKinhDoanh: number; // HDSN-Kinh doanh (m²)
-    hdSnChoThue: number; // HDSN-Cho thuê (m²)
-    hdSnLdLk: number; // HDSN-LDLK (m²)
+    HD_SD_KINH_DOANH: number; // HDSN-Kinh doanh (m²)
+    HD_SD_CHO_THUE: number; // HDSN-Cho thuê (m²)
+    HD_SD_KINH_DOANH_LK: number; // HDSN-LDLK (m²)
     deO: number; // Để ở (m²)
-    boTrong: number; // Bỏ trống (m²)
-    biLanChiem: number; // Bị lấn chiếm (m²)
-    suDungHonHop: number; // Sử dụng hỗn hợp (m²)
-    suDungKhac: number; // Sử dụng khác (m²)
+    BO_TRONG: number; // Bỏ trống (m²)
+    BI_LAN_CHIEM: number; // Bị lấn chiếm (m²)
+    SU_DUNG_HON_HOP: number; // Sử dụng hỗn hợp (m²)
+    SU_DUNG_KHAC: number; // Sử dụng khác (m²)
   };
   //Gía trị sd
-  giaTriSdDat: {
-    giaTriQSD: number;
-    nguyenGia: number;
-    nguonKhac: number;
-    nguonNganSach: number;
+  GIA_TRI_SU_DUNG_DAT: {
+    GIA_TRI_QUYEN_SD_DAT: number;
+    NGUYEN_GIA: number;
+    NGUON_KHAC: number;
+    NGUON_NGAN_SACH: number;
   };
 
   //Hồ sơ giấy tờ
-  hoSoGiayTo:{
-    CNQSD?: string;
-    quyetDinhGiaoDat?: string;
-    quyetDinhChoThueDat?: string;
-    hopDongChoThueDat?: string;
-    giayToKhac?: string;
-    ngayCap?: {
-      CNQSD?: string;
-      quyetDinhGiaoDat?: string;
-      quyetDinhChoThueDat?: string;
-      hopDongChoThueDat?: string;
-      giayToKhac?: string;
+  HO_SO_GIAY_TO: {
+    CHUNG_NHAN_QUYEN_SD_DAT?: string;
+    QD_GIAO_DAT?: string;
+    QD_CHO_THUE_DAT?: string;
+    HOP_DONG_CHO_THUE_DAT?: string;
+    GIAY_TO_KHAC?: string;
+    NGAY_CAP?: {
+      CHUNG_NHAN_QUYEN_SD_DAT?: string;
+      QD_GIAO_DAT?: string;
+      QD_CHO_THUE_DAT?: string;
+      HOP_DONG_CHO_THUE_DAT?: string;
+      GIAY_TO_KHAC?: string;
     };
-  }
+  };
 }
 
 export interface quocgia {

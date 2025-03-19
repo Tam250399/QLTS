@@ -17,7 +17,7 @@ const SubmitHandlers = () => {
     clearErrors
   } = useForm<Thongtinchung>({
     defaultValues: {
-      diachi: "",
+      DIA_CHI: "",
     },
   });
 

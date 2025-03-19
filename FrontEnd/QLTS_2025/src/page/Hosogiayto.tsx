@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import {
   FieldErrors,
   UseFormRegister,
-  UseFormReset,
   UseFormSetValue,
 } from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
@@ -21,7 +20,7 @@ interface ThongtintaisanProps {
   errors: FieldErrors<Thongtinchung>;
   setValue: UseFormSetValue<Thongtinchung>;
 }
-const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
+const HO_SO_GIAY_TO = ({ register, errors, setValue }: ThongtintaisanProps) => {
   const [disableInputs, setDisableInputs] = useState(false);
 
   // Xử lý sự kiện khi chọn checkbox
@@ -30,16 +29,16 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
     console.log(disableInputs);
     if (!disableInputs) {
       const fields = [
-        "CNQSD",
-        "quyetDinhGiaoDat",
-        "quyetDinhChoThueDat",
-        "hopDongChoThueDat",
-        "giayToKhac",
+        "CHUNG_NHAN_QUYEN_SD_DAT",
+        "QD_GIAO_DAT",
+        "QD_CHO_THUE_DAT",
+        "HOP_DONG_CHO_THUE_DAT",
+        "GIAY_TO_KHAC",
       ] as const;
 
       fields.forEach((field) => {
-        setValue(`hoSoGiayTo.${field}` as keyof Thongtinchung, ""); 
-        setValue(`hoSoGiayTo.ngayCap.${field}` as keyof Thongtinchung, "");
+        setValue(`HO_SO_GIAY_TO.${field}` as keyof Thongtinchung, ""); 
+        setValue(`HO_SO_GIAY_TO.NGAY_CAP.${field}` as keyof Thongtinchung, "");
       });
     }
   };
@@ -73,7 +72,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
         {/* Các trường hiện trạng sử dụng */}
         <Grid item xs={2} sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-            Giấy CNQSD đất
+            Giấy CHUNG_NHAN_QUYEN_SD_DAT đất
           </Typography>
         </Grid>
 
@@ -118,7 +117,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
                   },
                 },
               }}
-              {...register("hoSoGiayTo.CNQSD")}
+              {...register("HO_SO_GIAY_TO.CHUNG_NHAN_QUYEN_SD_DAT")}
             />
           </Grid>
         </Grid>
@@ -132,7 +131,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
             margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hoSoGiayTo.ngayCap.CNQSD")}
+            {...register("HO_SO_GIAY_TO.NGAY_CAP.CHUNG_NHAN_QUYEN_SD_DAT")}
           />
         </Grid>
 
@@ -183,7 +182,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
                   },
                 },
               }}
-              {...register("hoSoGiayTo.quyetDinhGiaoDat")}
+              {...register("HO_SO_GIAY_TO.QD_GIAO_DAT")}
             />
           </Grid>
         </Grid>
@@ -197,7 +196,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
             margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hoSoGiayTo.ngayCap.quyetDinhGiaoDat")}
+            {...register("HO_SO_GIAY_TO.NGAY_CAP.QD_GIAO_DAT")}
           />
         </Grid>
 
@@ -248,7 +247,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
                   },
                 },
               }}
-              {...register("hoSoGiayTo.quyetDinhChoThueDat")}
+              {...register("HO_SO_GIAY_TO.QD_CHO_THUE_DAT")}
             />
           </Grid>
         </Grid>
@@ -262,7 +261,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
             margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hoSoGiayTo.ngayCap.quyetDinhChoThueDat")}
+            {...register("HO_SO_GIAY_TO.NGAY_CAP.QD_CHO_THUE_DAT")}
           />
         </Grid>
 
@@ -313,7 +312,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
                   },
                 },
               }}
-              {...register("hoSoGiayTo.hopDongChoThueDat")}
+              {...register("HO_SO_GIAY_TO.HOP_DONG_CHO_THUE_DAT")}
             />
           </Grid>
         </Grid>
@@ -327,7 +326,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
             margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("hoSoGiayTo.ngayCap.hopDongChoThueDat")}
+            {...register("HO_SO_GIAY_TO.NGAY_CAP.HOP_DONG_CHO_THUE_DAT")}
           />
         </Grid>
 
@@ -340,7 +339,7 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
         <Grid container xs={6} spacing={0}>
           <Grid item xs={11.8} sx={{ mt: 1 }}>
             <TextareaAutosize
-              {...register("hoSoGiayTo.giayToKhac")}
+              {...register("HO_SO_GIAY_TO.GIAY_TO_KHAC")}
               disabled={disableInputs}
               minRows={1} // Số dòng tối thiểu
               style={{
@@ -391,4 +390,4 @@ const Hosogiayto = ({ register, errors, setValue }: ThongtintaisanProps) => {
   );
 };
 
-export default Hosogiayto;
+export default HO_SO_GIAY_TO;
