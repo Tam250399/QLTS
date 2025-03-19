@@ -64,7 +64,7 @@ const Trangchu = () => {
                 backgroundColor: "#fff",
                 border: "1px solid #ddd",
                 "&:hover": {
-                  backgroundColor: "#F5F5F5",
+                  backgroundColor: "#b3b3b3",
                 },
               }}
               onClick={() => handleCardClick(item.title)}
@@ -79,7 +79,9 @@ const Trangchu = () => {
                 {item.icon}
               </Box>
               <CardContent sx={{ padding: 0 }}>
-                <Typography variant="body1">{item.title}</Typography>
+                <Typography variant="body1" className="pt-6">
+                  {item.title}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
