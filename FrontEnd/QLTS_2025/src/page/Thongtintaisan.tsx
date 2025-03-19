@@ -9,8 +9,6 @@ import {
 
 import {
   TextField,
-  Select,
-  MenuItem,
   FormControl,
   Box,
   Grid,
@@ -25,19 +23,6 @@ import {
   GetDMQuocGia,
   GetDMTinhTP,
 } from "../service/ServiceDat";
-
-// type Inputs = {
-//   diachi: string;
-//   quocgia: string;
-// };
-const countriess = [
-  "Việt Nam",
-  "Nhật Bản",
-  "Hàn Quốc",
-  "Trung Quốc",
-  "Mỹ",
-  // Thêm các quốc gia khác
-];
 
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
@@ -56,11 +41,6 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
   const [lyDoTangDat, setLyDoTangDats] = useState<MucDichTS[]>([]);
 
   useEffect(() => {
-    // const fetchCategories = async () => {
-    //   const data = await GetDMQuocGia();
-    //   setQuocGia(data);
-    // };
-    // fetchCategories();
     const fetchData = async () => {
       try {
         const [quocGiaData, mucDichTS, lyDoTangDat] = await Promise.all([
@@ -87,15 +67,13 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           setTinhTPs(data || []);
         } catch (error) {
           console.error("Lỗi khi ", error);
+          setTinhTPs([]);
         }
       } else {
         setTinhTPs([]);
       }
     };
-    fetchTinhTP();
-  }, [selectedQuocGia]);
 
-  useEffect(() => {
     const fetchQuanHuyen = async () => {
       if (selectedTinh) {
         try {
@@ -103,15 +81,13 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           setQuans(data || []);
         } catch (error) {
           console.error("Lỗi khi ", error);
+          setQuans([]);
         }
       } else {
         setQuans([]);
       }
     };
-    fetchQuanHuyen();
-  }, [selectedTinh]);
 
-  useEffect(() => {
     const fetchPhuongXa = async () => {
       if (selectedQuan) {
         try {
@@ -124,8 +100,9 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
         setPhuongs([]);
       }
     };
-    fetchPhuongXa();
-  }, [selectedQuan]);
+
+    Promise.all([fetchTinhTP(), fetchQuanHuyen(), fetchPhuongXa()]);
+  }, [selectedQuocGia, selectedTinh, selectedQuan]);
 
   return (
     <Box

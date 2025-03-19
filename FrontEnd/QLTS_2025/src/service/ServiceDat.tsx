@@ -1,10 +1,15 @@
 import axios from "axios";
 import { environment } from "../environments/environment";
-import { Huyen, LyDoTangDat, MucDichTS, Phuong, quocgia, Tinh } from "../validateform/thongtinchung";
+import {
+  LyDoTangDat,
+  MucDichTS,
+  Phuong,
+  quocgia,
+  Tinh,
+} from "../validateform/thongtinchung";
 const API_URL = `${environment.apiUrl}`;
 
 export async function GetDMQuocGia(): Promise<quocgia[]> {
-  // const httpOptions = getNewAccessToken();
   try {
     const response = await axios.get(`${API_URL}/DanhMuc/quocGia`);
     console.log("response", response.data.data.results);
@@ -16,7 +21,6 @@ export async function GetDMQuocGia(): Promise<quocgia[]> {
 }
 
 export async function GetDMTinhTP(quocGiaId: number): Promise<Tinh[]> {
-  // const httpOptions = getNewAccessToken();
   try {
     const response = await axios.get(
       `${API_URL}/DanhMuc/tinhthanhpho?quocGiaId=${quocGiaId}`
@@ -30,7 +34,6 @@ export async function GetDMTinhTP(quocGiaId: number): Promise<Tinh[]> {
 }
 
 export async function GetDMDuoiTinh(maTinh: string): Promise<Phuong[]> {
-  // const httpOptions = getNewAccessToken();
   try {
     const response = await axios.get(
       `${API_URL}/DanhMuc/diaBanDuoiTinhTP?maCha=${maTinh}`
@@ -43,8 +46,9 @@ export async function GetDMDuoiTinh(maTinh: string): Promise<Phuong[]> {
   }
 }
 
-export async function GetDMMucDichTS(loaiHinhTaiSanId: number): Promise<MucDichTS[]> {
-  // const httpOptions = getNewAccessToken();
+export async function GetDMMucDichTS(
+  loaiHinhTaiSanId: number
+): Promise<MucDichTS[]> {
   try {
     const response = await axios.get(
       `${API_URL}/DanhMuc/mucDichSuDung?loaiHinhTaiSanId=${loaiHinhTaiSanId}`
@@ -57,8 +61,9 @@ export async function GetDMMucDichTS(loaiHinhTaiSanId: number): Promise<MucDichT
   }
 }
 
-export async function GetDMLyDoTangDat(loaiHinhTaiSanId: number): Promise<LyDoTangDat[]> {
-  // const httpOptions = getNewAccessToken();
+export async function GetDMLyDoTangDat(
+  loaiHinhTaiSanId: number
+): Promise<LyDoTangDat[]> {
   try {
     const response = await axios.get(
       `${API_URL}/DanhMuc/lyDoTangGiam?loaiHinhTaiSanId=${loaiHinhTaiSanId}`
