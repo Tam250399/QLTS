@@ -14,7 +14,7 @@ const SubmitHandlers = () => {
     formState: { errors },
     setValue,
     setError,
-    clearErrors
+    clearErrors,
   } = useForm<Thongtinchung>({
     defaultValues: {
       DIA_CHI: "",
@@ -39,13 +39,16 @@ const SubmitHandlers = () => {
         </div>
 
         <div className="pb-10">
-          <Giatrisd register={register} errors={errors} setValue={setValue} setError= {setError} clearErrors={clearErrors}/>
+          <Giatrisd
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            setError={setError}
+            clearErrors={clearErrors}
+          />
         </div>
-<<<<<<< HEAD
+
         <Hosogiayto register={register} setValue={setValue} />
-=======
-        <Hosogiayto register={register} errors={errors} setValue={setValue}/>
->>>>>>> remotes/origin/duong
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button variant="contained" color="primary" type="submit">

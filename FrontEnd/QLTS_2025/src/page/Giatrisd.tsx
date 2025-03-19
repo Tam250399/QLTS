@@ -32,7 +32,7 @@ const Giatrisd = ({
   const handleGIA_TRI_QUYEN_SD_DATChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let value = parseFloat(event.target.value) || 0;
+    const value = parseFloat(event.target.value) || 0;
     setGIA_TRI_QUYEN_SD_DAT(value);
     setValue("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", Number(value), {
       shouldValidate: true,
@@ -43,7 +43,7 @@ const Giatrisd = ({
   const handleNGUYEN_GIAChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let value = parseFloat(event.target.value) || 0;
+    const value = parseFloat(event.target.value) || 0;
 
     setNGUYEN_GIA(value);
     setValue("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", value, { shouldValidate: true });
@@ -88,7 +88,7 @@ const Giatrisd = ({
   const handleNGUON_KHACChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let value = parseFloat(event.target.value) || 0;
+    const value = parseFloat(event.target.value) || 0;
 
     // Cập nhật nguồn ngân sách
     const updatedNGUON_NGAN_SACH = Math.max(-1, NGUYEN_GIA - value);
