@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GS.NewAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 
@@ -24,8 +25,10 @@ namespace GS.NewAPI.Controllers
 
         // POST api/<TaiSanController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
+        public IActionResult Post([FromBody] TaiSanModel model)
+        { 
+
+            return Ok();
         }
 
         // PUT api/<TaiSanController>/5
