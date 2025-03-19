@@ -4,6 +4,7 @@ using GS.Core.Domain.TaiSans;
 using GS.Core.Infrastructure.Mapper;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
+using System.Collections.Generic;
 
 namespace GS.NewAPI.Infrastructure.Mapper
 {
@@ -17,6 +18,7 @@ namespace GS.NewAPI.Infrastructure.Mapper
         public AdminMapperConfiguration()
         {
             CreateDanhMucMaps();
+            CreateTaiSan();
         }
         #endregion
         #region Properties
@@ -44,12 +46,16 @@ namespace GS.NewAPI.Infrastructure.Mapper
             CreateMap<DonViBoPhan, DonViBoPhanModel>();
             #endregion
 
-            CreateMap<TaiSanLichSuModel, TaiSanLichSu>();
-            CreateMap<TaiSanLichSu, TaiSanLichSuModel>();
         }
         #endregion
-        
-        
+
+        protected virtual void CreateTaiSan()
+        {
+            CreateMap<TaiSanModel, TaiSan>().ReverseMap();
+            CreateMap<List<TaiSanModel>, List<TaiSan>>().ReverseMap();
+            CreateMap<TaiSan, TaiSanModel>();
+        }
+
 
     }
 }

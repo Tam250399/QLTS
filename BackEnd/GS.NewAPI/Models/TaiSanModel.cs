@@ -85,7 +85,7 @@ namespace GS.NewAPI.Models
         //public String QUYET_DINH_SO { get; set; }
         //[UIHint("DateNullable")]
         //public DateTime? QUYET_DINH_NGAY { get; set; }
-        //public Decimal? QUYET_DINH_NGUOI_ID { get; set; }
+        public Decimal? QUYET_DINH_NGUOI_ID { get; set; }
         //public Decimal? NUOC_SAN_XUAT_ID { get; set; }
         //public Decimal? LY_DO_BIEN_DONG_ID { get; set; }
         //public Decimal? DOI_TAC_ID { get; set; }
@@ -118,7 +118,7 @@ namespace GS.NewAPI.Models
         //public bool? IS_DUYET { get; set; }
         //public String MA_DB { get; set; }//mã đồng bộ
         //public decimal? PHAN_LOAI_TAI_SAN { get; set; }
-#endregion
+        #endregion
     }
 
 

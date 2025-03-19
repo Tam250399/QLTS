@@ -20,6 +20,7 @@ namespace GS.NewAPI.Infrastructure
             //factories danh muc
             #region factories register
             builder.RegisterType<DanhMucModelFactory>().As<IDanhMucModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanModelFactory>().As<ITaiSanModelFactory>().InstancePerLifetimeScope();
             #endregion
             #region application common
             builder.RegisterType<CauHinhNguoiDung>().SingleInstance();
@@ -31,7 +32,8 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
             builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
-            
+            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
+            builder.RegisterType<HostingConfig>().AsSelf().SingleInstance();
             #endregion
             //repositories
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

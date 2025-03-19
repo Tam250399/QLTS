@@ -1,13 +1,16 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using GS.Core;
 using GS.Core.Caching;
 using GS.Core.Data;
 using GS.Core.Infrastructure.Mapper;
 using GS.Data;
+using GS.NewAPI.Factories;
 using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
 using GS.Services;
+using GS.Services.HeThong;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +31,7 @@ namespace GS.NewAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
+        {  
             services.AddDbContext<GSObjectContext>(opt =>
             {
                 opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
@@ -46,14 +49,15 @@ namespace GS.NewAPI
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, OracleDataProvider>();
-
+            services.AddScoped<IHoatDongService, HoatDongServices>();
+            services.AddScoped<IWebHelper, WebHelper>();
             // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
             services.AddHttpContextAccessor();
             //auto add scoped service and repository 
             Extensions.RegisterAssemblyServices(services);
             //Add auto mapper         
             AddAutoMapper();
-            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // add swagger
             services.AddSwaggerGen(option =>
             {
