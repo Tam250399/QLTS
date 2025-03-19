@@ -32,7 +32,7 @@ const SubmitHandlers = () => {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pb-10">
-          <Thongtintaisan register={register} errors={errors} />
+          <Thongtintaisan register={register} errors={errors} setValue={setValue} />
         </div>
         <div className="pb-10">
           <Dientichhientrang register={register} errors={errors} />

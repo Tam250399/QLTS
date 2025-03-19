@@ -24,7 +24,6 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
   // Xử lý sự kiện khi chọn checkbox
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisableInputs(event.target.checked);
-    console.log(disableInputs);
     if (!disableInputs) {
       const fields = [
         "CHUNG_NHAN_QUYEN_SD_DAT",

@@ -15,7 +15,7 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import {
   GetDMDuoiTinh,
   GetDMLyDoTangDat,
@@ -27,9 +27,14 @@ import {
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
+  setValue: UseFormSetValue<Thongtinchung>;
 }
 
-const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
+const Thongtintaisan = ({
+  register,
+  errors,
+  setValue,
+}: ThongtintaisanProps) => {
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
   const [selectedTinh, setselectedTinh] = useState<string | null>(null);
   const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
@@ -175,14 +180,14 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               options={quocGia.map((quocGias) => quocGias.ten)}
               getOptionLabel={(option) => option}
               onChange={(_, value) => {
-                const selected = quocGia.find((qg) => qg.ten === value);
+                const selected = quocGia.find((quocGia) => quocGia.ten === value);
                 setSelectedQuocGia(selected?.id || null);
+                setValue("QUOC_GIA_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn Quốc Gia --"
-                  {...register("QUOC_GIA_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -217,12 +222,12 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               onChange={(_, value) => {
                 const selected = quans.find((quan) => quan.ten === value);
                 setselectedQuan(selected?.ma || null);
+                setValue("QUAN_HUYEN_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn Quận/Huyện--"
-                  {...register("QUAN_HUYEN_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -251,13 +256,16 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={lyDoTangDat.map((lydo) => lydo.ten)}
-              getOptionLabel={(option) => option}
+              options={lyDoTangDat}
+              getOptionLabel={(option) => option.ten}
+              onChange={(_, value) => {
+                const selected = lyDoTangDat.find((lydo) => lydo.id === value?.id);
+                setValue("LY_DO_TANG_ID", selected?.id || -1);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn lý do tăng đất --"
-                  {...register("LY_DO_TANG_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -269,7 +277,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               noOptionsText="Không tìm thấy quận huyện"
               renderOption={(props, option) => (
                 <li {...props} style={{ fontSize: "14px" }}>
-                  {option}
+                  {option.ten}
                 </li>
               )}
             />
@@ -313,12 +321,12 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               onChange={(_, value) => {
                 const selected = tinhTPs.find((tinh) => tinh.ten === value);
                 setselectedTinh(selected?.ma || null);
+                setValue("TINH_THANH_PHO_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn Tỉnh/Thành phố--"
-                  {...register("TINH_THANH_PHO_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -350,11 +358,14 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               options={phuongs.map((phuong) => phuong.ten)}
               getOptionLabel={(option) => option}
               disabled={!selectedQuan}
+              onChange={(_, value) => {
+                const selected = phuongs.find((phuong) => phuong.ten === value);
+                setValue("XA_PHUONG_ID", selected?.id || -1);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn Xã/Phường--"
-                  {...register("XA_PHUONG_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -385,11 +396,14 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
               className="pt-[1px]"
               options={mucDichTS}
               getOptionLabel={(option) => `${option.ma} - ${option.ten}`}
+              onChange={(_, value) => {
+                const selected = mucDichTS.find((mucdich) => mucdich.id === value?.id);
+                setValue("MUC_DICH_ID", selected?.id || -1);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="-- Chọn mục đích sử dụng --"
-                  {...register("MUC_DICH_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
