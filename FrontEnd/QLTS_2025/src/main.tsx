@@ -7,6 +7,7 @@ import SubmitHandlers from "./page/Dat/SubmitHandlers.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.tsx";
 import Layout from "./components/layout.tsx";
+import SubmitHandlerHouses from "./page/Nha/SubmitHandlers.tsx";
 
 const router = createBrowserRouter([
   // {
@@ -26,6 +27,16 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <SubmitHandlers />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/house",
+        element: <SubmitHandlerHouses />,
       },
     ],
   },
