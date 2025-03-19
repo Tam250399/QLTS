@@ -15,7 +15,7 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import {
   GetDMDuoiTinh,
   GetDMLyDoTangDat,
@@ -180,7 +180,9 @@ const Thongtintaisan = ({
               options={quocGia.map((quocGias) => quocGias.ten)}
               getOptionLabel={(option) => option}
               onChange={(_, value) => {
-                const selected = quocGia.find((quocGia) => quocGia.ten === value);
+                const selected = quocGia.find(
+                  (quocGia) => quocGia.ten === value
+                );
                 setSelectedQuocGia(selected?.id || null);
                 setValue("QUOC_GIA_ID", selected?.id || -1);
               }}
@@ -259,7 +261,9 @@ const Thongtintaisan = ({
               options={lyDoTangDat}
               getOptionLabel={(option) => option.ten}
               onChange={(_, value) => {
-                const selected = lyDoTangDat.find((lydo) => lydo.id === value?.id);
+                const selected = lyDoTangDat.find(
+                  (lydo) => lydo.id === value?.id
+                );
                 setValue("LY_DO_TANG_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
@@ -397,7 +401,9 @@ const Thongtintaisan = ({
               options={mucDichTS}
               getOptionLabel={(option) => `${option.ma} - ${option.ten}`}
               onChange={(_, value) => {
-                const selected = mucDichTS.find((mucdich) => mucdich.id === value?.id);
+                const selected = mucDichTS.find(
+                  (mucdich) => mucdich.id === value?.id
+                );
                 setValue("MUC_DICH_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
