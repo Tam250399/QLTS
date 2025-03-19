@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
           {
-            path: "/house",
+            path: "/nha",
             element: <SubmitHandlerHouses />,
           },
         ],
