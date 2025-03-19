@@ -157,9 +157,9 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
             margin="dense"
             placeholder="Nhập số nhà, đường phố, tổ/thôn/xóm"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("diachi", { required: true })}
+            {...register("DIA_CHI", { required: true })}
           />
-          {errors.diachi && (
+          {errors.DIA_CHI && (
             <span className="text-red-500 text-xs">Bạn phải nhập địa chỉ</span>
           )}
         </Grid>
@@ -182,7 +182,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn Quốc Gia --"
-                  {...register("quocgia", { required: true })}
+                  {...register("QUOC_GIA_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -198,7 +198,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.quocgia && (
+            {errors.QUOC_GIA_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn Quốc gia
               </span>
@@ -222,7 +222,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn Quận/Huyện--"
-                  {...register("quanhuyen", { required: true })}
+                  {...register("QUAN_HUYEN_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -238,7 +238,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.quanhuyen && (
+            {errors.QUAN_HUYEN_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn quận huyện
               </span>
@@ -257,7 +257,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn lý do tăng đất --"
-                  {...register("lydotang", { required: true })}
+                  {...register("LY_DO_TANG_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -273,7 +273,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.lydotang && (
+            {errors.LY_DO_TANG_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn lý do tăng
               </span>
@@ -290,13 +290,10 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
             margin="dense"
             InputLabelProps={{ shrink: true }}
             defaultValue="2017-12-31"
-            inputProps={{
-              sx: { fontSize: "14px" },
-              pattern: "[0-1][0-9]/[0-3][0-9]/[0-9]{4}", // Định dạng mm/dd/yyyy
-            }}
-            {...register("ngaytang", { required: true })}
+            InputProps={{ sx: { fontSize: "14px" } }}
+            {...register("NGAY_TANG", { required: true })}
           />
-          {errors.ngaytang && (
+          {errors.NGAY_TANG && (
             <span className="text-red-500 text-xs">
               Bạn phải chọn ngày tăng
             </span>
@@ -321,7 +318,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn Tỉnh/Thành phố--"
-                  {...register("tinhthanhpho", { required: true })}
+                  {...register("TINH_THANH_PHO_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -337,7 +334,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.tinhthanhpho && (
+            {errors.TINH_THANH_PHO_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn Tỉnh/Thành phố
               </span>
@@ -357,7 +354,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn Xã/Phường--"
-                  {...register("xaphuong", { required: true })}
+                  {...register("XA_PHUONG_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -373,7 +370,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.xaphuong && (
+            {errors.XA_PHUONG_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải chọn Xã/Phường
               </span>
@@ -392,7 +389,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 <TextField
                   {...params}
                   placeholder="-- Chọn mục đích sử dụng --"
-                  {...register("mucdich", { required: true })}
+                  {...register("MUC_DICH_ID", { required: true })}
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -408,7 +405,7 @@ const Thongtintaisan = ({ register, errors }: ThongtintaisanProps) => {
                 </li>
               )}
             />
-            {errors.mucdich && (
+            {errors.MUC_DICH_ID && (
               <span className="text-red-500 text-xs">
                 Bạn phải mục đích sử dụng
               </span>
