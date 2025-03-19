@@ -22,7 +22,7 @@ namespace GS.NewAPI.Factories
 
         public void UpdateTaiSan(TaiSanModel entity)
         {
-            
+
             var taiSan = _mapper.Map<TaiSanModel, TaiSan>(entity);
             _taiSanService.UpdateTaiSan(taiSan);
 
@@ -33,6 +33,14 @@ namespace GS.NewAPI.Factories
             var taiSanList = _mapper.Map<List<TaiSanModel>, List<TaiSan>>(entities);
             _taiSanService.UpdateTaiSan(taiSanList);
 
+        }
+
+        public bool CheckTenTaiSan(string ten, decimal? id = 0, decimal? donViId = 0)
+        {
+            var taisan = _taiSanService.GetTaiSanByTen(TenTS: ten, donViId: donViId);
+            if (taisan != null && taisan.ID != id)
+                return false;
+            else return true;
         }
     }
 }

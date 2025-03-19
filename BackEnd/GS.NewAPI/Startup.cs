@@ -9,7 +9,9 @@ using GS.Data;
 using GS.NewAPI.Factories;
 using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
+using GS.NewAPI.Middleware;
 using GS.Services;
+using GS.Services.Common;
 using GS.Services.HeThong;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,6 +53,9 @@ namespace GS.NewAPI
             services.AddScoped<IDataProvider, OracleDataProvider>();
             services.AddScoped<IHoatDongService, HoatDongServices>();
             services.AddScoped<IWebHelper, WebHelper>();
+            services.AddScoped<IGSAPIService, GSAPIService>();
+         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
+
             // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
             services.AddHttpContextAccessor();
             //auto add scoped service and repository 
@@ -116,6 +121,7 @@ namespace GS.NewAPI
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -127,6 +133,7 @@ namespace GS.NewAPI
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseMiddleware<ValidationExceptionMiddleware>();
             app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng

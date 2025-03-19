@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System;
+﻿using GS.Core.Domain.TaiSans;
 using GS.Web.Framework.Models;
-using GS.Core.Domain.TaiSans;
+using System;
 
 namespace GS.NewAPI.Models
 {
@@ -76,6 +75,7 @@ namespace GS.NewAPI.Models
         public Decimal? TINH_THANH_PHO_ID { get; set; }
         public Decimal? QUAN_HUYEN_ID { get; set; }
         public Decimal? XA_PHUONG_ID { get; set; }
+        public decimal? NGUYEN_GIA { get; set; }
         public GiaTriSuDungDatModel GIA_TRI_SU_DUNG_DAT { get; set; }
 
         public HienTrangSuDungModel HIEN_TRANG_SU_DUNG { get; set; }
@@ -128,7 +128,6 @@ namespace GS.NewAPI.Models
         public decimal? GIA_TRI_QUYEN_SD_DAT { get; set; }
         public decimal? NGUON_KHAC { get; set; }
         public decimal? NGUON_NGAN_SACH { get; set; }
-        public decimal? NGUYEN_GIA { get; set; }
 
     }
 

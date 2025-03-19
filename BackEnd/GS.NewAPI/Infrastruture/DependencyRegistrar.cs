@@ -21,12 +21,14 @@ namespace GS.NewAPI.Infrastructure
             #region factories register
             builder.RegisterType<DanhMucModelFactory>().As<IDanhMucModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanModelFactory>().As<ITaiSanModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<LoaiTaiSanModelFactory>().As<ILoaiTaiSanModelFactory>().InstancePerLifetimeScope();
             #endregion
             #region application common
             builder.RegisterType<CauHinhNguoiDung>().SingleInstance();
             builder.RegisterType<CauHinhChung>().SingleInstance();
             builder.RegisterType<SecuritySettings>().SingleInstance();
             builder.RegisterType<GSConfig>().SingleInstance();
+            builder.RegisterType<HostingConfig>().SingleInstance();
             builder.RegisterType<GSObjectContext>().As<IDbContext>().InstancePerLifetimeScope();
             builder.RegisterType<GSFileProvider>().As<IGSFileProvider>().InstancePerLifetimeScope();
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
