@@ -37,7 +37,6 @@ const Giatrisd = ({
     setValue("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", Number(value), {
       shouldValidate: true,
     });
-    console.log("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
   };
 
   const handleNGUYEN_GIAChange = (
