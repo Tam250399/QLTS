@@ -1,4 +1,7 @@
-﻿using GS.NewAPI.Models;
+﻿using FluentValidation;
+using GS.NewAPI.Factories;
+using GS.NewAPI.Models;
+using GS.NewAPI.Validators.TaiSanValidator;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -9,6 +12,13 @@ namespace GS.NewAPI.Controllers
     [ApiController]
     public class TaiSanController : ControllerBase
     {
+        private readonly ITaiSanModelFactory _taiSanModelFactory;
+        private readonly ILoaiTaiSanModelFactory _loaiTaiSanModelFactory;
+        public TaiSanController(ITaiSanModelFactory taiSanModelFactory, ILoaiTaiSanModelFactory loaiTaiSanModelFactory) 
+        {
+            _taiSanModelFactory = taiSanModelFactory;
+            _loaiTaiSanModelFactory = loaiTaiSanModelFactory;
+        }
         // GET: api/<TaiSanController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -26,12 +36,20 @@ namespace GS.NewAPI.Controllers
         // POST api/<TaiSanController>
         [HttpPost]
         public IActionResult Post([FromBody] TaiSanModel model)
-        { 
+        {
+            var validator = new TaiSanValidator(_taiSanModelFactory, _loaiTaiSanModelFactory);
+            var validationResult =  validator.Validate(model);
+
+            if (validationResult.Errors.Count > 0)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
 
             return Ok();
         }
 
-        // PUT api/<TaiSanController>/5
+        // PUT api/<TaiSanController>/5: 'Error in the application.'
+
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {

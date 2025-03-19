@@ -1,13 +1,17 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using GS.Core;
 using GS.Core.Caching;
 using GS.Core.Data;
 using GS.Core.Infrastructure.Mapper;
 using GS.Data;
 using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
+using GS.NewAPI.Middleware;
 using GS.Services;
+using GS.Services.Common;
+using GS.Services.HeThong;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +50,10 @@ namespace GS.NewAPI
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IDataProvider, OracleDataProvider>();
+            services.AddScoped<IHoatDongService, HoatDongServices>();
+            services.AddScoped<IWebHelper, WebHelper>();
+            services.AddScoped<IGSAPIService, GSAPIService>();
+         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
 
             // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
             services.AddHttpContextAccessor();
@@ -112,6 +120,7 @@ namespace GS.NewAPI
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -123,6 +132,7 @@ namespace GS.NewAPI
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseMiddleware<ValidationExceptionMiddleware>();
             app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
