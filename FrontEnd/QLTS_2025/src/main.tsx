@@ -7,19 +7,10 @@ import SubmitHandlers from "./page/Dat/SubmitHandlers.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.tsx";
 import Layout from "./components/layout.tsx";
-import SubmitHandlerHouses from "./page/Nha/SubmitHandlers.tsx";
+import Trangchu from "./page/Trangchu.tsx";
+import SubmitHandlerHouses from "./page/Nha/SubmitHandlersNha.tsx";
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: <Login />,
-  //   errorElement: <NotFound />, // Xử lý lỗi
-  // },
-  // {
-  //   path:"/layout",
-  //   element :<Layout />,
-  // },
-
   {
     path: "/",
     element: <Layout />,
@@ -28,15 +19,20 @@ const router = createBrowserRouter([
         path: "/home",
         element: <SubmitHandlers />,
       },
-    ],
-  },
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
       {
-        path: "/house",
-        element: <SubmitHandlerHouses />,
+        path: "/",
+        element: <Layout />,
+        children: [
+          {
+            path: "/house",
+            element: <SubmitHandlerHouses />,
+          },
+        ],
+      },
+
+      {
+        path: "/trangchu",
+        element: <Trangchu />,
       },
     ],
   },
