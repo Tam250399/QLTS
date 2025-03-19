@@ -12,7 +12,9 @@ const SubmitHandlers = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    setError,
+    clearErrors
   } = useForm<Thongtinchung>({
     defaultValues: {
       diachi: "",
@@ -37,7 +39,7 @@ const SubmitHandlers = () => {
         </div>
 
         <div className="pb-10">
-          <Giatrisd register={register} errors={errors} setValue={setValue}/>
+          <Giatrisd register={register} errors={errors} setValue={setValue} setError= {setError} clearErrors={clearErrors}/>
         </div>
         <Hosogiayto register={register} errors={errors} setValue={setValue}/>
 

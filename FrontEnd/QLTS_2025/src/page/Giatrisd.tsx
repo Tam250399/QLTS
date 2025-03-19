@@ -1,5 +1,11 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetError,
+  UseFormSetValue,
+} from "react-hook-form";
 import { Thongtinchung } from "../validateform/thongtinchung";
 import { useState } from "react";
 
@@ -7,8 +13,17 @@ interface GiaTriSuDungDatProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
   setValue: UseFormSetValue<Thongtinchung>;
+  setError: UseFormSetError<Thongtinchung>;
+  clearErrors: UseFormClearErrors<Thongtinchung>;
 }
-const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
+
+const Giatrisd = ({
+  register,
+  errors,
+  setValue,
+  setError,
+  clearErrors,
+}: GiaTriSuDungDatProps) => {
   const [giaTriQSD, setGiaTriQSD] = useState<number>(0);
   const [nguonKhac, setNguonKhac] = useState<number>(0);
   const [nguyenGia, setNguyenGia] = useState<number>(0);
@@ -17,45 +32,41 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
   const handleGiaTriQSDChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = parseFloat(event.target.value) || 0;
-    setGiaTriQSD(value);
-    setValue("giaTriSdDat.giaTriQSD", value);
+    let value = parseFloat(event.target.value) || 0;
 
-    const updatedNguonNganSach = value - nguonKhac;
-    setNguonNganSach(updatedNguonNganSach);
-    setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
+    if (value > 0 && nguyenGia > 0 && value > nguyenGia) {
+      setError("giaTriSdDat.giaTriQSD", {
+        type: "manual",
+        message:
+          "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
+      });
+    } else {
+      setGiaTriQSD(value);
+      setValue("giaTriSdDat.giaTriQSD", value, { shouldValidate: true });
+    }
   };
 
   const handleNguyenGiaChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = parseFloat(event.target.value) || 0;
-    setNguyenGia(value);
-    setValue("giaTriSdDat.nguyenGia", value);
-  };
+    let value = parseFloat(event.target.value) || 0;
 
-  // Khi mất focus, chỉ cập nhật nếu giá trị chưa có
-  const handleGiaTriQSDBlur = () => {
-    if (giaTriQSD > 0) {
-      setNguyenGia((prev) => {
-        if (prev === 0) {
-          setValue("giaTriSdDat.nguyenGia", giaTriQSD);
-          return giaTriQSD;
-        }
-        return prev;
-      });
-    }
+    setNguyenGia(value);
+    setValue("giaTriSdDat.nguyenGia", value, { shouldValidate: true });
+    const updatedNguonNganSach = Math.max(0, value - nguonKhac);
+    setNguonNganSach(updatedNguonNganSach);
+    setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
   };
 
   const handleNguyenGiaBlur = () => {
-    if (nguyenGia > 0) {
-      setGiaTriQSD((prev) => {
-        if (prev === 0) {
-          setValue("giaTriSdDat.giaTriQSD", nguyenGia);
-          return nguyenGia;
-        }
-        return prev;
+    if (nguyenGia > 0 && giaTriQSD > 0 && giaTriQSD > nguyenGia) {
+      setError("giaTriSdDat.giaTriQSD", {
+        type: "manual",
+        message:
+          "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
       });
+    } else {
+      clearErrors("giaTriSdDat.giaTriQSD");
     }
   };
 
@@ -63,13 +74,21 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
   const handleNguonKhacChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = parseFloat(event.target.value) || 0;
-    setNguonKhac(value);
+    let value = parseFloat(event.target.value) || 0;
 
-    const updatedNguonNganSach = giaTriQSD - value > 0 ? giaTriQSD - value : 0;
-    setNguonNganSach(updatedNguonNganSach);
-    setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
-    setValue("giaTriSdDat.nguonKhac", value);
+    // Cập nhật nguồn ngân sách
+    const updatedNguonNganSach = Math.max(-1, nguyenGia - value);
+    if (updatedNguonNganSach < 0) {
+      setError("giaTriSdDat.nguonKhac", {
+        type: "manual",
+        message: "Tổng các nguồn vốn phải bằng nguyên giá!",
+      });
+    } else {
+      setNguonKhac(value);
+      setValue("giaTriSdDat.nguonKhac", value);
+      setNguonNganSach(updatedNguonNganSach);
+      setValue("giaTriSdDat.nguonNganSach", updatedNguonNganSach);
+    }
   };
 
   return (
@@ -110,14 +129,15 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.giaTriQSD", { required: true })}
+            {...register("giaTriSdDat.giaTriQSD", {
+              required: "Bạn phải nhập giá trị quyền sử dụng đất",
+            })}
             value={giaTriQSD || ""}
             onChange={handleGiaTriQSDChange}
-            onBlur={handleGiaTriQSDBlur}
           />
           {errors.giaTriSdDat?.giaTriQSD && (
             <span className="text-red-500 text-xs">
-              Bạn phải nhập giá trị quyền sử dụng đất
+              {errors.giaTriSdDat.giaTriQSD.message}
             </span>
           )}
 
@@ -131,14 +151,16 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("giaTriSdDat.nguyenGia", { required: true })}
+            {...register("giaTriSdDat.nguyenGia", {
+              required: "Bạn phải nhập giá trị nguyên giá",
+            })}
             value={nguyenGia || ""}
             onChange={handleNguyenGiaChange}
             onBlur={handleNguyenGiaBlur}
           />
-          {errors.giaTriSdDat?.giaTriQSD && (
+          {errors?.giaTriSdDat?.nguyenGia && (
             <span className="text-red-500 text-xs">
-              Bạn phải nhập nguyên giá
+              {errors?.giaTriSdDat?.nguyenGia.message}
             </span>
           )}
 
@@ -188,6 +210,11 @@ const Giatrisd = ({ register, errors, setValue }: GiaTriSuDungDatProps) => {
             value={nguonKhac || ""}
             onChange={handleNguonKhacChange}
           />
+          {errors?.giaTriSdDat?.nguonKhac && (
+            <span className="text-red-500 text-xs">
+              {errors?.giaTriSdDat?.nguonKhac.message}
+            </span>
+          )}
         </Grid>
       </Grid>
     </Box>
