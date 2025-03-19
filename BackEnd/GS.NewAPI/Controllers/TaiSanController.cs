@@ -58,7 +58,7 @@ namespace GS.NewAPI.Controllers
            return Ok();
            
         }
-        [HttpPut]
+        [HttpPut("SuaDanhSachTaiSan")]
         public async Task<IActionResult> SuaDanhSachTaiSan([FromBody] List<TaiSanModel> value)
         {
             _taiSanModelFactory.UpdateTaiSan(value);
