@@ -2,10 +2,9 @@
 using GS.NewAPI.Infrastruture.Response;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
-using GS.Web.Areas.Admin.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
-namespace GS.WebApi.Controllers
+using System;
+namespace GS.NewAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +22,7 @@ namespace GS.WebApi.Controllers
         #region quốc gia
 
         [HttpGet("quocGia")]
-        public IActionResult GetAllQuocGias(string tenQuocGia)
+        public IActionResult GetAllQuocGias()
         {
             #region check token
             //if (!CheckCurrentUser())
@@ -32,46 +31,26 @@ namespace GS.WebApi.Controllers
             var response = new BaseResponse<ListResponse<QuocGiaModel>>(
                 success: false
             );
-            var result = string.IsNullOrWhiteSpace(tenQuocGia) 
-                ? _danhMucModelFactory.GetAllQuocGias() 
-                : _danhMucModelFactory.SearchQuocGiasByName(tenQuocGia);
+            var result =  _danhMucModelFactory.GetAllQuocGias();
             response.Success = true;
             response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
             response.StatusCode = 200;
             return Ok(response);
         }
 
-        [HttpGet("diaBan")]
-        public IActionResult GetAllDiaBans(string tenDiaBan)
+        
+        [HttpGet("lyDoTangGiam")]
+        public IActionResult GetLyDoTangGiams(decimal? loaiLyDoBienDongId, decimal? loaiHinhTaiSanId, Boolean isTangMoi)
         {
-            #region check token
-            //if (!CheckCurrentUser())
-            //    return OkErrorMessage("Token hết hạn");
-            #endregion
-            var result = string.IsNullOrWhiteSpace(tenDiaBan)
-                ? _danhMucModelFactory.GetAllQuocGias()
-                : _danhMucModelFactory.SearchQuocGiasByName(tenDiaBan);
-            return Ok(result);
+            var response = new BaseResponse<ListResponse<LyDoBienDongModel>>(
+               success: false
+           );
+            var result = _danhMucModelFactory.GetLyDoTangGiams(loaiLyDoBienDongId, loaiHinhTaiSanId, isTangMoi);
+            response.Success = true;
+            response.Data = new ListResponse<LyDoBienDongModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
         }
-
-        //[HttpPost]
-        //public IActionResult UpdateQuocGia([FromBody] QuocGiaModel model)
-        //{
-        //    #region check token
-        //    //if (!CheckCurrentUser())
-        //    //    return OkErrorMessage("Token hết hạn");
-        //    #endregion
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var ListError = ModelState.SerializeErrors();
-        //        return OkErrorMessage("Error", ListError);
-        //    }
-        //    if (model == null)
-        //        return this.NullModel();
-        //    _hoatDongService.InsertHoatDong(currentUser, enumHoatDong.CapNhat, "Cập nhật quốc gia", 0, "QuocGia", model);
-        //    var result = _danhMucModelFactory.UpdateQuocGia(model, currentUser);
-        //    return Ok(result);
-        //}
 
 
         #endregion
@@ -132,6 +111,23 @@ namespace GS.WebApi.Controllers
             return Ok(response);
         }
         #endregion
+
+        [HttpGet("donViBoPhan")]
+        public IActionResult GetDonViBoPhans(decimal donViId)
+        {
+            #region check token
+            //if (!CheckCurrentUser())
+            //    return OkErrorMessage("Token hết hạn");
+            #endregion
+            var response = new BaseResponse<ListResponse<DonViBoPhanModel>>(
+                success: false
+            );
+            var result = _danhMucModelFactory.GetDonViBoPhans(donViId);
+            response.Success = true;
+            response.Data = new ListResponse<DonViBoPhanModel>(data: result, count: result.Count);
+            response.StatusCode = 200;
+            return Ok(response);
+        }
         #endregion
 
     }

@@ -1,23 +1,24 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using GS.Core;
 using GS.Core.Caching;
 using GS.Core.Data;
-using GS.Core.Domain.CauHinh;
-using GS.Core.Domain.Security;
 using GS.Core.Infrastructure.Mapper;
 using GS.Data;
-using GS.NewAPI.Factories;
+using GS.NewAPI.Infrastructure;
 using GS.NewAPI.Infrastructure.Mapper;
+using GS.NewAPI.Middleware;
 using GS.Services;
-using GS.Services.DanhMuc;
+using GS.Services.Common;
+using GS.Services.HeThong;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Linq;
 
 namespace GS.NewAPI
 {
@@ -36,41 +37,32 @@ namespace GS.NewAPI
             {
                 opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
             });
-            //soat service
-            //services.AddCors();
+            //add Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigins",
-                    builder => builder.AllowAnyOrigin());
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
             });
             //config depency inject 
-            services.AddScoped<GS.Core.Domain.CauHinh.CauHinhNguoiDung>();
-            services.AddSingleton<IDbContext, GSObjectContext>();
-            services.AddScoped<IDonViService, DonViService>();
             services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
             services.AddScoped<ICacheManager, MemoryCacheManager>();
-            services.AddScoped<IDataProvider, SqlServerDataProvider>();
             services.AddScoped<IDataProvider, OracleDataProvider>();
-            services.AddScoped<IDanhMucModelFactory, DanhMucModelFactory>();
-            services.AddSingleton<SecuritySettings>();
-            services.AddSingleton<CauHinhChung>();
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IHoatDongService, HoatDongServices>();
+            services.AddScoped<IWebHelper, WebHelper>();
+            services.AddScoped<IGSAPIService, GSAPIService>();
+         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
+
+            // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
+            services.AddHttpContextAccessor();
             //auto add scoped service and repository 
             Extensions.RegisterAssemblyServices(services);
+            //Add auto mapper         
             AddAutoMapper();
-            // fix erorr devexpress hidden swagger
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .ConfigureApplicationPartManager(x => {
-                    var parts = x.ApplicationParts;
-                    var aspNetCoreReportingAssemblyName = typeof(DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerController).Assembly.GetName().Name;
-                    var reportingPart = parts.FirstOrDefault(part => part.Name == aspNetCoreReportingAssemblyName);
-                    if (reportingPart != null)
-                    {
-                        parts.Remove(reportingPart);
-                    }
-            });
-            //services.AddDevExpressControls();
-
+            
+            // add swagger
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -98,29 +90,37 @@ namespace GS.NewAPI
                     }
                 });
             });
+            services.AddHealthChecks();
+            services.AddMvc();
 
-            return services.BuildServiceProvider();
+            // return type IServiceProvider  Autofac
+            return RegisterDependencies(services);
         }
-        //code cũ
-        //public void ConfigureServices(IServiceCollection services)
-        //{
 
-        //    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-        //}
+        private IServiceProvider RegisterDependencies(IServiceCollection services)
+        {
+            var containerBuilder = new ContainerBuilder();
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        private  void AddAutoMapper()
+            DependencyRegistrar.Register(containerBuilder);
+            //create service provider
+            return new AutofacServiceProvider(containerBuilder.Build());
+        }
+
+        private void AddAutoMapper()
         {
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AdminMapperConfiguration>(); // Ensure your profile is added here
             });
-            //register
+            //register automap
             AutoMapperConfiguration.Init(configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -132,18 +132,13 @@ namespace GS.NewAPI
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            app.UseCors("AllowAllOrigins");
+            app.UseMiddleware<ValidationExceptionMiddleware>();
+            app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
             app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
 
             // Thêm UseMvc để cấu hình các API
-            app.UseMvc(routes =>
-            {
-                // Cấu hình tuyến đường mặc định cho API
-                routes.MapRoute(
-                    name: "default",
-                    template: "api/{controller}/{action}/{id?}");
-            });
+            app.UseMvc();
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GS.Core.Domain.DanhMuc;
+using GS.Core.Domain.TaiSans;
 using GS.Core.Infrastructure.Mapper;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.DanhMuc;
@@ -37,7 +38,14 @@ namespace GS.NewAPI.Infrastructure.Mapper
             //Mục đích sử dụng
             CreateMap<MucDichSuDung, MucDichSuDungModel>();
             CreateMap<MucDichSuDungModel, MucDichSuDung>();
+            CreateMap<LyDoBienDong, LyDoBienDongModel>();
+            CreateMap<LyDoBienDongModel, LyDoBienDong>();
+            CreateMap<DonViBoPhanModel, DonViBoPhan>();
+            CreateMap<DonViBoPhan, DonViBoPhanModel>();
             #endregion
+
+            CreateMap<TaiSanLichSuModel, TaiSanLichSu>();
+            CreateMap<TaiSanLichSu, TaiSanLichSuModel>();
         }
         #endregion
         
