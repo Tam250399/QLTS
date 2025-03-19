@@ -25,6 +25,7 @@ namespace GS.Services.DanhMuc
         void InsertListMucDichSuDung(List<MucDichSuDung> entity);
         void UpdateListMucDichSuDung(List<MucDichSuDung> entity);
         MucDichSuDung GetMucDichSuDungByID_DB(int ID_DB=0);
+        IList<MucDichSuDung> GetMucDichSuDungsByLoaiHinhTSId(decimal? loaiHinhTaiSanId);
         #endregion
     }
 }
