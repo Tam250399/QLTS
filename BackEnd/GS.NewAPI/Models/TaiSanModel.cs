@@ -54,7 +54,7 @@ namespace GS.NewAPI.Models
     //    public decimal? PHAN_LOAI_TAI_SAN { get; set; }
     //}
 
-    public class TaiSanModel : BaseGSEntityModel
+    public class TaiSanModel : BaseGSApiModel
     {
         public String TEN { get; set; }
         public Decimal? LOAI_TAI_SAN_ID { get; set; }
