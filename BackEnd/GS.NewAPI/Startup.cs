@@ -52,8 +52,8 @@ namespace GS.NewAPI
             services.AddScoped<IDataProvider, OracleDataProvider>();
             services.AddScoped<IHoatDongService, HoatDongServices>();
             services.AddScoped<IWebHelper, WebHelper>();
-            services.AddScoped<IGSAPIService, GSAPIService>();
-         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
+            services.AddScoped<IGSAPIService, GSAPIService>();           
+            /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
 
             // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
             services.AddHttpContextAccessor();

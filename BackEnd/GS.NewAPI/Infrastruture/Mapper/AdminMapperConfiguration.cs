@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using GS.Core.Domain.BienDongs;
 using GS.Core.Domain.DanhMuc;
 using GS.Core.Domain.TaiSans;
 using GS.Core.Infrastructure.Mapper;
 using GS.NewAPI.Models;
+using GS.NewAPI.Models.BienDongs;
 using GS.NewAPI.Models.DanhMuc;
 
 namespace GS.NewAPI.Infrastructure.Mapper
@@ -43,9 +45,16 @@ namespace GS.NewAPI.Infrastructure.Mapper
             CreateMap<DonViBoPhanModel, DonViBoPhan>();
             CreateMap<DonViBoPhan, DonViBoPhanModel>();
             #endregion
-
+            CreateMap<TaiSanModel, TaiSan>();
+            CreateMap<TaiSan, TaiSanModel>();
             CreateMap<TaiSanLichSuModel, TaiSanLichSu>();
             CreateMap<TaiSanLichSu, TaiSanLichSuModel>();
+            CreateMap<TaiSanModel, TaiSanDat>();
+            CreateMap<TaiSanDat, TaiSanModel>();
+            CreateMap<BienDongModel, BienDong>();
+            CreateMap<BienDong, BienDongModel>();
+            CreateMap<BienDongChiTietModel, BienDongChiTiet>();
+            CreateMap<BienDongChiTiet, BienDongChiTietModel>();
         }
         #endregion
         
