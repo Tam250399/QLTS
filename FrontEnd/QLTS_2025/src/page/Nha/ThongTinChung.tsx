@@ -40,6 +40,7 @@ interface ThongtinnhaProps {
 const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
   const [lyDoTangDat, setLyDoTangDats] = useState<LyDoTangDat[]>([]);
   const [quanLyDat, setQuanLyDat] = useState("co");
+  const [khuonVienDat, setKhuonVienDat] = useState("");
   const [openChonDat, setOpenChonDat] = useState(false);
   const [openThemBP, setOpenThemBP] = useState(false);
   const handleThemBoPhan = () => {
@@ -99,6 +100,18 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
       status: "Chờ duyệt",
     },
   ];
+  const handleChonKhuonVienDat = (diachi: string) => {
+    setKhuonVienDat(diachi);
+    setOpenChonDat(false);
+    setValue("KHUON_VIEN_DAT", diachi);
+  };
+
+  const handleBoChonKhuonVienDat = (diachi: string) => {
+    setKhuonVienDat("");
+    setOpenChonDat(false);
+    setValue("KHUON_VIEN_DAT", "");
+  };
+
   const handleChangePage = (_: any, newPage: any) => setPage(newPage);
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -202,9 +215,10 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <TextField
                     fullWidth
-                    name="diachi"
                     size="small"
                     margin="dense"
+                    {...register("KHUON_VIEN_DAT")}
+                    value={khuonVienDat}
                     InputProps={{
                       readOnly: true,
                       sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
@@ -227,29 +241,31 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                     >
                       + Chọn đất
                     </Button>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        height: "26px", // Tăng chiều cao để cân đối với icon
-                        marginLeft: "8px", // Tạo khoảng cách với Autocomplete
-                        fontSize: "14px",
-                        whiteSpace: "nowrap", // Giữ chữ trên cùng một dòng
-                        textTransform: "none",
-                        fontWeight: 400, // Giảm độ đậm của chữ (mặc định là 500-600)
-                        color: "#d32f2f", // Màu chữ đỏ (giống ảnh)
-                        borderColor: "#d32f2f", // Màu viền đỏ
-                        "&:hover": {
-                          backgroundColor: "#ffebee", // Màu nền khi hover (nhạt hơn)
-                          borderColor: "#c62828", // Viền đậm hơn khi hover
-                        },
-                      }}
-                      onClick={handleChonDat} // Gọi hàm khi bấm
-                      startIcon={
-                        <DeleteOutlineIcon sx={{ color: "#d32f2f" }} />
-                      } // Icon thùng rác
-                    >
-                      Bỏ chọn đất
-                    </Button>
+                    {khuonVienDat !== "" && (
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          height: "26px", // Tăng chiều cao để cân đối với icon
+                          marginLeft: "8px", // Tạo khoảng cách với Autocomplete
+                          fontSize: "14px",
+                          whiteSpace: "nowrap", // Giữ chữ trên cùng một dòng
+                          textTransform: "none",
+                          fontWeight: 400, // Giảm độ đậm của chữ (mặc định là 500-600)
+                          color: "#d32f2f", // Màu chữ đỏ (giống ảnh)
+                          borderColor: "#d32f2f", // Màu viền đỏ
+                          "&:hover": {
+                            backgroundColor: "#ffebee", // Màu nền khi hover (nhạt hơn)
+                            borderColor: "#c62828", // Viền đậm hơn khi hover
+                          },
+                        }}
+                        onClick={handleBoChonKhuonVienDat} // Gọi hàm khi bấm
+                        startIcon={
+                          <DeleteOutlineIcon sx={{ color: "#d32f2f" }} />
+                        } // Icon thùng rác
+                      >
+                        Bỏ chọn đất
+                      </Button>
+                    )}
                   </div>
                 </Box>
               </>
@@ -536,6 +552,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
             borderBottom: "1px solid #ccc",
             alignItems: "center",
             margin: "0 0 30px 10px",
+            fontSize: "30px",
           }}
         >
           Thêm mới bộ phận của đơn vị
@@ -722,6 +739,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
             borderBottom: "1px solid #ccc",
             alignItems: "center",
             margin: "0 0 30px 10px",
+            fontSize: "30px",
           }}
         >
           Chọn khuôn viên đất
@@ -734,17 +752,27 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
             style={{
               display: "flex",
               alignItems: "center",
-              marginBottom: 10,
+              marginBottom: 30,
               justifyContent: "center",
             }}
           >
             <span style={{ marginRight: "20px" }}>Từ khóa</span>
             <TextField
-              sx={{ minWidth: "400px" }}
+              sx={{
+                minWidth: "400px",
+                "& .MuiInputBase-root": {
+                  height: "30px", // Điều chỉnh chiều cao tổng thể
+                },
+                "& .MuiInputBase-input": {
+                  padding: "5px 10px", // Điều chỉnh khoảng cách nội dung bên trong
+                  fontSize: "14px", // Giữ chữ không bị quá lớn
+                },
+              }}
               size="small"
               placeholder="Nhập tên hoặc mã..."
               variant="outlined"
             />
+
             <Button
               variant="contained"
               sx={{
@@ -811,7 +839,20 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                   .map((row, index) => (
                     <TableRow key={row.id}>
                       <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
-                      <TableCell>{row.address}</TableCell>
+                      <TableCell>
+                        <Typography
+                          sx={{
+                            cursor: "pointer",
+                            color: "black",
+                            "&:hover": {
+                              color: "blue",
+                            },
+                          }}
+                          onClick={() => handleChonKhuonVienDat(row.address)}
+                        >
+                          {row.address}
+                        </Typography>
+                      </TableCell>
                       <TableCell>{row.type}</TableCell>
                       <TableCell>{row.status}</TableCell>
                     </TableRow>
