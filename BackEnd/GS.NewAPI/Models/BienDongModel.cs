@@ -3,7 +3,6 @@
 // Template create : GS
 // Create date     : 13/12/2019
 //----------------------------------------------------------------------------------------------------------------------
-using FluentValidation.Attributes;
 using GS.Core.Domain.DanhMuc;
 using GS.Core.Domain.NghiepVu;
 using GS.Web.Framework.Models;
@@ -12,14 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace GS.Web.Models.BienDongs
+namespace GS.NewAPI.Models.BienDongs
 {
-    public class BienDongModel : BaseGSEntityModel
+    public class BienDongModel : BaseGSApiModel
     {
-        public BienDongModel()
-        {
-
-        }
+        public new decimal? ID { get; set; }
         public Decimal TAI_SAN_ID { get; set; }
         public String TAI_SAN_MA { get; set; }
         public String TAI_SAN_TEN { get; set; }
@@ -55,6 +51,10 @@ namespace GS.Web.Models.BienDongs
         public String TenLyDoBienDong { get; set; }
         public String TenBoPhanSuDung { get; set; }
         public String TenLoaiTaiSan { get; set; }
+        public String MA_BO { get; set; }
+        public Decimal? TINH_ID { get; set; }
+        public Decimal? HUYEN_ID { get; set; }
+        public Decimal? XA_ID { get; set; }
     }
     public partial class BienDongSearchModel : BaseSearchModel
     {
@@ -104,10 +104,6 @@ namespace GS.Web.Models.BienDongs
 
         public decimal? taisanId { get; set; }
         public int? pageIndex { get; set; }
-    }
-    public partial class BienDongListModel : BasePagedListModel<BienDongModel>
-    {
-
     }
 }
 
