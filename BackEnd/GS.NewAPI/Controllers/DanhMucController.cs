@@ -8,7 +8,7 @@ namespace GS.NewAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DanhMucController : ControllerBase
+    public class DanhMucController : BaseApiController
     {
         #region Ctor
 
@@ -101,14 +101,15 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            var response = new BaseResponse<ListResponse<MucDichSuDungModel>>(
-                success: false
-            );
+            //var response = new BaseResponse<ListResponse<MucDichSuDungModel>>(
+            //    success: false
+            //);
             var result = _danhMucModelFactory.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
-            response.Success = true;
-            response.Data = new ListResponse<MucDichSuDungModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            //response.Success = true;
+            //response.Data = new ListResponse<MucDichSuDungModel>(data: result, count: result.Count);
+            //response.StatusCode = 200;
+            //return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<MucDichSuDungModel>(result));
         }
         #endregion
 

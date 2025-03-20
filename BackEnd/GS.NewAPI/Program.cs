@@ -7,11 +7,17 @@ namespace GS.NewAPI
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            //CreateWebHostBuilder(args).Build().Run();
+            var host = WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(options => options.AddServerHeader = false)
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //    WebHost.CreateDefaultBuilder(args)
+        //        .UseStartup<Startup>();
     }
 }
