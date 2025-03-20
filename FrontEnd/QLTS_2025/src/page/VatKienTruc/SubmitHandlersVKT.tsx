@@ -27,6 +27,7 @@ const SubmitHandlersVKT = () => {
         <div className="pb-10">
           <ThongtinTSKT register={register} errors={errors} />
         </div>
+
         <div className="pb-10">
           <HienTrangSD control={control} />
         </div>
