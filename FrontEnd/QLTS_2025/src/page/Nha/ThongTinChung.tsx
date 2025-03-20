@@ -1,7 +1,36 @@
-import { Thongtinchung } from "../../validateform/thongtinchung";
+import {
+  Huyen,
+  LyDoTangDat,
+  MucDichTS,
+  quocgia,
+  Thongtinchung,
+  Tinh,
+} from "../../validateform/thongtinchung";
 
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  GetDMDuoiTinh,
+  GetDMLyDoTangDat,
+  GetDMMucDichTS,
+  GetDMQuocGia,
+  GetDMTinhTP,
+} from "../../service/ServiceDat";
+import AddIcon from "@mui/icons-material/Add";
 
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
@@ -9,7 +38,81 @@ interface ThongtintaisanProps {
   setValue: UseFormSetValue<Thongtinchung>;
 }
 
-const ThongTinChung = ({}: ThongtintaisanProps) => {
+const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
+  const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
+  const [selectedTinh, setselectedTinh] = useState<string | null>(null);
+  const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
+  const [quocGia, setQuocGia] = useState<quocgia[]>([]);
+  const [quans, setQuans] = useState<Huyen[]>([]);
+  const [selectedQuan, setselectedQuan] = useState<string | null>(null);
+  const [phuongs, setPhuongs] = useState<Huyen[]>([]);
+  const [lyDoTangDat, setLyDoTangDats] = useState<LyDoTangDat[]>([]);
+  const [quanLyDat, setQuanLyDat] = useState("co");
+  const [selectedValue, setSelectedValue] = useState(null);
+  const handleAdd = () => {
+    alert("Bạn đã nhấn nút +!");
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [quocGiaData, lyDoTangDat] = await Promise.all([
+          GetDMQuocGia(),
+          GetDMLyDoTangDat(1),
+        ]);
+        setQuocGia(quocGiaData);
+        setLyDoTangDats(lyDoTangDat);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchTinhTP = async () => {
+      if (selectedQuocGia) {
+        try {
+          const data = await GetDMTinhTP(selectedQuocGia);
+          setTinhTPs(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+          setTinhTPs([]);
+        }
+      } else {
+        setTinhTPs([]);
+      }
+    };
+
+    const fetchQuanHuyen = async () => {
+      if (selectedTinh) {
+        try {
+          const data = await GetDMDuoiTinh(selectedTinh);
+          setQuans(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+          setQuans([]);
+        }
+      } else {
+        setQuans([]);
+      }
+    };
+
+    const fetchPhuongXa = async () => {
+      if (selectedQuan) {
+        try {
+          const data = await GetDMDuoiTinh(selectedQuan);
+          setPhuongs(data || []);
+        } catch (error) {
+          console.error("Lỗi khi ", error);
+        }
+      } else {
+        setPhuongs([]);
+      }
+    };
+
+    Promise.all([fetchTinhTP(), fetchQuanHuyen(), fetchPhuongXa()]);
+  }, [selectedQuocGia, selectedTinh, selectedQuan]);
   return (
     <Box
       sx={{
@@ -53,7 +156,10 @@ const ThongTinChung = ({}: ThongtintaisanProps) => {
             disabled={true}
           />
 
-          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+          <Typography
+            variant="subtitle2"
+            sx={{ fontSize: "14px", marginTop: "8px" }}
+          >
             Tên ngôi nhà <span style={{ color: "red" }}>*</span>
           </Typography>
           <TextField
@@ -62,6 +168,440 @@ const ThongTinChung = ({}: ThongtintaisanProps) => {
             margin="dense"
             InputProps={{ sx: { fontSize: "14px" } }}
           />
+
+          {/* Radio Button */}
+          <FormControl component="fieldset" sx={{ marginTop: "8px" }}>
+            <RadioGroup
+              row
+              value={quanLyDat}
+              onChange={(e) => setQuanLyDat(e.target.value)} // Cập nhật state khi thay đổi
+            >
+              <FormControlLabel
+                value="co"
+                control={<Radio size="small" />}
+                label="Có quản lý đất"
+              />
+              <FormControlLabel
+                value="khong"
+                control={<Radio size="small" />}
+                label="Không quản lý đất"
+              />
+            </RadioGroup>
+          </FormControl>
+
+          {/* Nếu chọn "Có quản lý đất", hiển thị ô nhập "Thuộc khuôn viên đất" */}
+          {quanLyDat === "co" && (
+            <>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontSize: "14px", marginTop: "8px" }}
+              >
+                Thuộc khuôn viên đất <span style={{ color: "red" }}>*</span>
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <TextField
+                  fullWidth
+                  name="diachi"
+                  size="small"
+                  margin="dense"
+                  InputProps={{
+                    readOnly: true,
+                    sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
+                  }}
+                  disabled={true}
+                />
+                <Button
+                  variant="outlined"
+                  sx={{
+                    height: "38px",
+                    marginLeft: "8px", // Tạo khoảng cách với Autocomplete
+                    fontSize: "14px",
+                    whiteSpace: "nowrap", // Giữ chữ trên cùng một dòng
+                    textTransform: "none",
+                    fontWeight: 400, // Giảm độ đậm của chữ (mặc định là 500-600)
+                  }}
+                  onClick={handleAdd} // Gọi hàm khi bấm "+"
+                >
+                  + Chọn đất
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {/* Nếu chọn "Không quản lý đất", hiển thị ô nhập "Địa chỉ nhà" */}
+          {quanLyDat === "khong" && (
+            <>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontSize: "14px", marginTop: "8px" }}
+              >
+                Địa chỉ nhà <span style={{ color: "red" }}>*</span>
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                margin="dense"
+                placeholder="Nhập số nhà, đường phố, tổ / thôn / xóm"
+                InputProps={{ sx: { fontSize: "14px" } }}
+              />
+            </>
+          )}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1}>
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Quốc gia <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControl fullWidth margin="dense">
+              <Autocomplete
+                className="pt-[1px]"
+                options={quocGia.map((quocGias) => quocGias.ten)}
+                getOptionLabel={(option) => option}
+                onChange={(_, value) => {
+                  const selected = quocGia.find(
+                    (quocGia) => quocGia.ten === value
+                  );
+                  setSelectedQuocGia(selected?.id || null);
+                  setValue("QUOC_GIA_ID", selected?.id || -1);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn Quốc Gia --"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy quốc gia"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option}
+                  </li>
+                )}
+              />
+              {errors.QUOC_GIA_ID && (
+                <span className="text-red-500 text-xs">
+                  Bạn phải chọn Quốc gia
+                </span>
+              )}
+            </FormControl>
+
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Quận/Huyện <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControl fullWidth margin="dense" size="small">
+              <Autocomplete
+                className="pt-[1px]"
+                options={quans.map((quan) => quan.ten)}
+                getOptionLabel={(option) => option}
+                disabled={!selectedTinh}
+                onChange={(_, value) => {
+                  const selected = quans.find((quan) => quan.ten === value);
+                  setselectedQuan(selected?.ma || null);
+                  setValue("QUAN_HUYEN_ID", selected?.id || -1);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn Quận/Huyện--"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy quận huyện"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option}
+                  </li>
+                )}
+              />
+              {errors.QUAN_HUYEN_ID && (
+                <span className="text-red-500 text-xs">
+                  Bạn phải chọn quận huyện
+                </span>
+              )}
+            </FormControl>
+
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Lý do tăng đất <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControl fullWidth margin="dense" size="small">
+              <Autocomplete
+                className="pt-[1px]"
+                options={lyDoTangDat}
+                getOptionLabel={(option) => option.ten}
+                onChange={(_, value) => {
+                  const selected = lyDoTangDat.find(
+                    (lydo) => lydo.id === value?.id
+                  );
+                  setValue("LY_DO_TANG_ID", selected?.id || -1);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn lý do tăng đất --"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy quận huyện"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option.ten}
+                  </li>
+                )}
+              />
+              {errors.LY_DO_TANG_ID && (
+                <span className="text-red-500 text-xs">
+                  Bạn phải chọn lý do tăng
+                </span>
+              )}
+            </FormControl>
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Cấp nhà <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <Autocomplete
+              className="pt-[1px]"
+              options={lyDoTangDat}
+              getOptionLabel={(option) => option.ten}
+              onChange={(_, value) => {
+                const selected = lyDoTangDat.find(
+                  (lydo) => lydo.id === value?.id
+                );
+                setValue("LY_DO_TANG_ID", selected?.id || -1);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn cấp nhà --"
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
+              )}
+              noOptionsText="Không tìm thấy quận huyện"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option.ten}
+                </li>
+              )}
+            />
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Diện tích XD
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              placeholder="m²"
+              type="number"
+              InputProps={{ sx: { fontSize: "14px" } }}
+            />
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Năm xây dựng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              type="number"
+              InputProps={{ sx: { fontSize: "14px" } }}
+            />
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Bộ phận sử dụng
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Autocomplete
+                options={lyDoTangDat}
+                getOptionLabel={(option) => option.ten}
+                value={selectedValue}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn bộ phận sử dụng --"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy quận huyện"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option.ten}
+                  </li>
+                )}
+                sx={{ flex: 1 }} // Để Autocomplete chiếm hết khoảng trống còn lại
+              />
+
+              {/* Button "+" */}
+              <Button
+                variant="outlined"
+                sx={{
+                  minWidth: "36px",
+                  height: "36px",
+                  marginLeft: "8px", // Tạo khoảng cách với Autocomplete
+                }}
+                onClick={handleAdd} // Gọi hàm khi bấm "+"
+              >
+                <AddIcon />
+              </Button>
+            </Box>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1}>
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Tỉnh/Thành phố <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControl fullWidth margin="dense" size="small">
+              <Autocomplete
+                className="pt-[1px]"
+                options={tinhTPs.map((tinh) => tinh.ten)}
+                getOptionLabel={(option) => option}
+                disabled={!selectedQuocGia}
+                // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
+                onChange={(_, value) => {
+                  const selected = tinhTPs.find((tinh) => tinh.ten === value);
+                  setselectedTinh(selected?.ma || null);
+                  setValue("TINH_THANH_PHO_ID", selected?.id || -1);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn Tỉnh/Thành phố--"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy Tỉnh/Thành phố"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option}
+                  </li>
+                )}
+              />
+              {errors.TINH_THANH_PHO_ID && (
+                <span className="text-red-500 text-xs">
+                  Bạn phải chọn Tỉnh/Thành phố
+                </span>
+              )}
+            </FormControl>
+
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Xã/Phường <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControl fullWidth margin="dense" size="small">
+              <Autocomplete
+                className="pt-[1px]"
+                options={phuongs.map((phuong) => phuong.ten)}
+                getOptionLabel={(option) => option}
+                disabled={!selectedQuan}
+                onChange={(_, value) => {
+                  const selected = phuongs.find(
+                    (phuong) => phuong.ten === value
+                  );
+                  setValue("XA_PHUONG_ID", selected?.id || -1);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="-- Chọn Xã/Phường--"
+                    sx={{
+                      fontSize: "14px",
+                      "& .MuiInputBase-root": {
+                        height: "36px",
+                      },
+                    }}
+                  />
+                )}
+                noOptionsText="Không tìm thấy Xã/Phường"
+                renderOption={(props, option) => (
+                  <li {...props} style={{ fontSize: "14px" }}>
+                    {option}
+                  </li>
+                )}
+              />
+              {errors.XA_PHUONG_ID && (
+                <span className="text-red-500 text-xs">
+                  Bạn phải chọn Xã/Phường
+                </span>
+              )}
+            </FormControl>
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Ngày tăng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              fullWidth
+              type="date"
+              size="small"
+              margin="dense"
+              InputLabelProps={{ shrink: true }}
+              defaultValue="2017-12-31"
+              InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("NGAY_TANG", { required: true })}
+            />
+            {errors.NGAY_TANG && (
+              <span className="text-red-500 text-xs">
+                Bạn phải chọn ngày tăng
+              </span>
+            )}
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Số tầng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              type="number"
+              InputProps={{ sx: { fontSize: "14px" } }}
+            />
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              DT sàn sử dụng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              type="number"
+              placeholder="m²"
+              InputProps={{ sx: { fontSize: "14px" } }}
+            />
+            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+              Ngày đưa vào sử dụng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              fullWidth
+              type="date"
+              size="small"
+              margin="dense"
+              InputLabelProps={{ shrink: true }}
+              defaultValue="2017-12-31"
+              InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("NGAY_TANG", { required: true })}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </Box>

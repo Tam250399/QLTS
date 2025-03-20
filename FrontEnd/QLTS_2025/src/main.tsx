@@ -20,14 +20,8 @@ const router = createBrowserRouter([
         element: <SubmitHandlers />,
       },
       {
-        path: "/",
-        element: <Layout />,
-        children: [
-          {
-            path: "/nha",
-            element: <SubmitHandlerHouses />,
-          },
-        ],
+        path: "/nha",
+        element: <SubmitHandlerHouses />,
       },
 
       {
