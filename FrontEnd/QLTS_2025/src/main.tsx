@@ -9,6 +9,7 @@ import { store } from "./redux/store.tsx";
 import Layout from "./components/layout.tsx";
 import Trangchu from "./page/Trangchu.tsx";
 import SubmitHandlersNha from "./page/Nha/SubmitHandlersNha.tsx";
+import SubmitHandlersVKT from "./page/VatKienTruc/SubmitHandlersVKT.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/nha",
         element: <SubmitHandlersNha />,
+      },
+      {
+        path: "/taisanvkt",
+        element: <SubmitHandlersVKT />,
       },
 
       {

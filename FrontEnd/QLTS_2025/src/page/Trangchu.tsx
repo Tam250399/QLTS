@@ -6,7 +6,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import ComputerIcon from "@mui/icons-material/Computer";
 import ParkIcon from "@mui/icons-material/Park";
-import CubeIcon from "@mui/icons-material/Park"; // Không có icon Cube trực tiếp, bạn có thể dùng icon khác hoặc tự tạo
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import LinkIcon from "@mui/icons-material/Link";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const Trangchu = () => {
     { title: "Cây lâu năm, svlv", icon: <ParkIcon /> },
     {
       title: "TSCĐ hữu hình khác",
-      icon: <CubeIcon />,
+      icon: <AccountTreeIcon />,
       link: "/tscd-huu-hinh-khac",
     },
     { title: "TSCĐ vô hình", icon: <LinkIcon /> },
@@ -45,6 +45,9 @@ const Trangchu = () => {
         break;
       case "Nhà":
         navigate("/nha");
+        break;
+      case "Vật kiến trúc":
+        navigate("/taisanvkt");
         break;
       default:
         navigate("/layout");
