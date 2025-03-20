@@ -18,7 +18,7 @@ const HienTrangSuDung = ({ register, errors }: HienTrangSuDungProps) => {
         position: "relative",
       }}
     >
-      {/* Tiêu đề "Thông tin tài sản đất" */}
+      {/* Tiêu đề "Thông tin tài sản nhà" */}
       <Typography
         sx={{
           position: "absolute",

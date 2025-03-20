@@ -1,4 +1,12 @@
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import {
   FieldErrors,
   UseFormClearErrors,
@@ -24,87 +32,56 @@ const GiaTriHaoMon = ({
   setError,
   clearErrors,
 }: GiaTriHaoMonProps) => {
-  const [GIA_TRI_QUYEN_SD_DAT, setGIA_TRI_QUYEN_SD_DAT] = useState<number>(0);
-  const [NGUON_KHAC, setNGUON_KHAC] = useState<number>(0);
-  const [NGUYEN_GIA, setNGUYEN_GIA] = useState<number>(0);
-  const [NGUON_NGAN_SACH, setNGUON_NGAN_SACH] = useState<number>(0);
+  const [nguonKhac, setNguonKhac] = useState<number>(0);
+  const [nguyenGia, setNguyenGia] = useState<number>(0);
+  const [nguonNganSach, setNguonNganSach] = useState<number>(0);
+  const [isCalculateKH, setIsCalculateKH] = useState(false);
 
-  const handleGIA_TRI_QUYEN_SD_DATChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = parseFloat(event.target.value) || 0;
-    setGIA_TRI_QUYEN_SD_DAT(value);
-    setValue("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", Number(value), {
-      shouldValidate: true,
-    });
-  };
-
-  const handleNGUYEN_GIAChange = (
+  const handleNguyenGiaChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseFloat(event.target.value) || 0;
 
-    setNGUYEN_GIA(value);
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", value, { shouldValidate: true });
-    const updatedNGUON_NGAN_SACH = Math.max(0, value - NGUON_KHAC);
-    setNGUON_NGAN_SACH(updatedNGUON_NGAN_SACH);
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
+    setNguyenGia(value);
+    setValue("GIA_TRI_HAO_MON.NGUYEN_GIA", value, { shouldValidate: true });
+    const updatedNGUON_NGAN_SACH = Math.max(0, value - nguonKhac);
+    setNguonNganSach(updatedNGUON_NGAN_SACH);
+    setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
   };
 
-  const handleNGUYEN_GIABlur = () => {
-    if (
-      NGUYEN_GIA > 0 &&
-      GIA_TRI_QUYEN_SD_DAT > 0 &&
-      GIA_TRI_QUYEN_SD_DAT > NGUYEN_GIA
-    ) {
-      setError("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
+  const handleNguyenGiaBlur = () => {
+    if (nguonNganSach < 0) {
+      setError("GIA_TRI_HAO_MON.NGUON_KHAC", {
         type: "manual",
-        message:
-          "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
+        message: "Tổng các nguồn vốn phải bằng nguyên giá!",
       });
     } else {
-      clearErrors("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
-    }
-  };
-
-  const handleGIA_TRI_QUYEN_SD_DATBlur = () => {
-    if (
-      NGUYEN_GIA > 0 &&
-      GIA_TRI_QUYEN_SD_DAT > 0 &&
-      GIA_TRI_QUYEN_SD_DAT > NGUYEN_GIA
-    ) {
-      setError("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
-        type: "manual",
-        message:
-          "Giá trị quyền sử dụng đất không được lớn hơn nguyên giá, đề nghị kiểm tra lại!",
-      });
-    } else {
-      clearErrors("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT");
+      clearErrors("GIA_TRI_HAO_MON.NGUON_KHAC");
     }
   };
 
   // Khi nhập Nguồn khác, cập nhật Nguồn ngân sách ngay
-  const handleNGUON_KHACChange = (
+  const handleNguonKhacChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseFloat(event.target.value) || 0;
 
     // Cập nhật nguồn ngân sách
-    const updatedNGUON_NGAN_SACH = Math.max(-1, NGUYEN_GIA - value);
-    setNGUON_KHAC(value);
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC", Number(value));
-    setNGUON_NGAN_SACH(updatedNGUON_NGAN_SACH);
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
+    const updatedNGUON_NGAN_SACH = Math.max(-1, nguyenGia - value);
+    setNguonKhac(value);
+    setValue("GIA_TRI_HAO_MON.NGUON_KHAC", Number(value));
+    setNguonNganSach(updatedNGUON_NGAN_SACH);
+    setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
   };
 
-  const handleNGUON_KHACBlur = () => {
-    if (NGUON_NGAN_SACH < 0) {
-      setError("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC", {
+  const handleNguonKhacBlur = () => {
+    if (nguonNganSach < 0) {
+      setError("GIA_TRI_HAO_MON.NGUON_KHAC", {
         type: "manual",
         message: "Tổng các nguồn vốn phải bằng nguyên giá!",
       });
     } else {
-      clearErrors("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC");
+      clearErrors("GIA_TRI_HAO_MON.NGUON_KHAC");
     }
   };
 
@@ -146,16 +123,16 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", {
+            {...register("GIA_TRI_HAO_MON.NGUYEN_GIA", {
               required: "Bạn phải nhập giá trị nguyên giá",
             })}
-            value={NGUYEN_GIA || ""}
-            onChange={handleNGUYEN_GIAChange}
-            onBlur={handleNGUYEN_GIABlur}
+            value={nguyenGia || ""}
+            onChange={handleNguyenGiaChange}
+            onBlur={handleNguyenGiaBlur}
           />
-          {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA && (
+          {errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA && (
             <span className="text-red-500 text-xs">
-              {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA.message}
+              {errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA.message}
             </span>
           )}
 
@@ -179,8 +156,8 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH")}
-            value={NGUON_NGAN_SACH || ""}
+            {...register("GIA_TRI_HAO_MON.NGUON_NGAN_SACH")}
+            value={nguonNganSach || ""}
             InputProps={{
               readOnly: true,
               sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
@@ -201,14 +178,14 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC")}
-            value={NGUON_KHAC || ""}
-            onChange={handleNGUON_KHACChange}
-            onBlur={handleNGUON_KHACBlur}
+            {...register("GIA_TRI_HAO_MON.NGUON_KHAC")}
+            value={nguonKhac || ""}
+            onChange={handleNguonKhacChange}
+            onBlur={handleNguonKhacBlur}
           />
-          {errors?.GIA_TRI_SU_DUNG_DAT?.NGUON_KHAC && (
+          {errors?.GIA_TRI_HAO_MON?.NGUON_KHAC && (
             <span className="text-red-500 text-xs">
-              {errors?.GIA_TRI_SU_DUNG_DAT?.NGUON_KHAC.message}
+              {errors?.GIA_TRI_HAO_MON?.NGUON_KHAC.message}
             </span>
           )}
 
@@ -222,11 +199,13 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC")}
-            value={NGUON_KHAC || ""}
-            onChange={handleNGUON_KHACChange}
-            onBlur={handleNGUON_KHACBlur}
+            {...register("GIA_TRI_HAO_MON.GIA_TRI_CON_LAI")}
           />
+          {errors?.GIA_TRI_HAO_MON?.GIA_TRI_CON_LAI && (
+            <span className="text-red-500 text-xs">
+              {errors?.GIA_TRI_HAO_MON?.GIA_TRI_CON_LAI.message}
+            </span>
+          )}
         </Grid>
         <Grid item xs={12} md={6}>
           {/* Giá trị QSD đất */}
@@ -239,20 +218,68 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT")}
-            value={GIA_TRI_QUYEN_SD_DAT || ""}
-            onChange={handleGIA_TRI_QUYEN_SD_DATChange}
-            onBlur={handleGIA_TRI_QUYEN_SD_DATBlur}
+            {...register("GIA_TRI_HAO_MON.TY_LE_HAO_MON")}
             InputProps={{
               readOnly: true,
               sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
             }}
             disabled
           />
-          {errors.GIA_TRI_SU_DUNG_DAT?.GIA_TRI_QUYEN_SD_DAT && (
+          {errors.GIA_TRI_HAO_MON?.TY_LE_HAO_MON && (
             <span className="text-red-500 text-xs">
-              {errors.GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT.message}
+              {errors.GIA_TRI_HAO_MON?.TY_LE_HAO_MON?.message}
             </span>
+          )}
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isCalculateKH}
+                  onChange={(e) => setIsCalculateKH(e.target.checked)}
+                />
+              }
+              label={
+                <Typography sx={{ fontWeight: 600 }}>Tính khấu hao</Typography>
+              }
+            />
+          </FormGroup>
+
+          {isCalculateKH && (
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+                  Tỷ lệ KH theo QĐ (%) <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField fullWidth size="small" margin="dense" type="number" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+                  KH tháng theo QĐ <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField fullWidth size="small" margin="dense" type="number"/>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+                  Tỷ lệ % NG tính KH <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField fullWidth size="small" margin="dense" type="number"/>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+                  Ngày bắt đầu tính KH <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+            </Grid>
           )}
         </Grid>
       </Grid>

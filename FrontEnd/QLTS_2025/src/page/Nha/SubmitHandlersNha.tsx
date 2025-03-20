@@ -34,7 +34,7 @@ const SubmitHandlerHouses = () => {
             setValue={setValue}
           />
         </div>
-        {/* <div className="pb-10">
+        <div className="pb-10">
           <GiaTriHaoMon
             register={register}
             errors={errors}
@@ -43,9 +43,10 @@ const SubmitHandlerHouses = () => {
             clearErrors={clearErrors}
           />
         </div>
+
         <div className="pb-10">
           <HienTrangSuDung register={register} errors={errors} />
-        </div> */}
+        </div>
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button variant="contained" color="primary" type="submit">
             Lưu
