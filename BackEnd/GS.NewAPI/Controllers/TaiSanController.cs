@@ -8,9 +8,7 @@ using GS.NewAPI.Infrastruture.Response;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.BienDongs;
 using GS.NewAPI.Validators.TaiSanValidator;
-using GS.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 
 
@@ -18,8 +16,8 @@ namespace GS.NewAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaiSanController : BaseApiController
-    {
+    public class TaiSanController : ControllerBase
+    { 
         private readonly ITaiSanModelFactory _taiSanModelFactory;
         private readonly ILoaiTaiSanModelFactory _loaiTaiSanModelFactory;
         private readonly ITaiSanDatModelFactory _taiSanDatModelFactory;
@@ -94,7 +92,7 @@ namespace GS.NewAPI.Controllers
             var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
             _taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
             _taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
-            return OkSuccessMessage("Tạo mới tài sản thành công", new BaseResponse<TaiSan>() 
+            return Ok(new BaseResponse<TaiSan>() 
             { 
                 Data = taiSanEntity,
                 Message = "Tạo mới tài sản thành công",
