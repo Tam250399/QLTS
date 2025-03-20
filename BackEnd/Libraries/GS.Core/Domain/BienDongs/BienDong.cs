@@ -87,6 +87,9 @@ namespace GS.Core.Domain.BienDongs
         public Decimal? NHA_TONG_DIEN_TICH_XD { get; set; }
         public Decimal? VKT_DIEN_TICH { get; set; }
         public String MA_BO { get; set; }
+        public Decimal? TINH_ID { get; set; }
+        public Decimal? HUYEN_ID { get; set; }
+        public Decimal? XA_ID { get; set; }
     }
     public class GiaTriTaiSan : BaseViewEntity {
         public decimal? TAI_SAN_ID { get; set; }

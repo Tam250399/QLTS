@@ -1,24 +1,26 @@
 ﻿using Autofac;
-using GS.Core;
 using GS.Core.Configuration;
-using GS.Core.Data;
-using GS.Core.Domain.CauHinh;
-using GS.Core.Domain.Security;
 using GS.Core.Infrastructure;
 using GS.Core.Infrastructure.DependencyManagement;
-using GS.Data;
 using GS.NewAPI.Factories;
-using GS.Services.Authentication;
 using GS.Services.DanhMuc;
-using GS.Services.DB;
 using GS.Services.DM;
 using GS.Services.DMDC;
-using GS.Services.Helpers;
 using GS.Services.HeThong;
 using GS.Services.Logging;
 using GS.Services.TaiSans;
-using GS.Web.Framework;
-
+using GS.Services;
+using GS.Services.NghiepVu;
+using GS.Services.Common;
+using GS.Services.DB;
+using GS.Services.BienDongs;
+using GS.Services.CCDC;
+using GS.Services.ThuocTinhs;
+using GS.Services.SHTD;
+using GS.Services.BaoCaoDienTus;
+using GS.Services.BaoCaoDoiChieus;
+using GS.Services.BaoCaos;
+using GS.Services.KT;
 namespace GS.NewAPI.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
@@ -89,6 +91,83 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<TaiSanHienTrangSuDungService>().As<ITaiSanHienTrangSuDungService>().InstancePerLifetimeScope();
             builder.RegisterType<KhaiThacService>().As<IKhaiThacService>().InstancePerLifetimeScope();
             builder.RegisterType<KhaiThacTaiSanService>().As<IKhaiThacTaiSanService>().InstancePerLifetimeScope();
+
+            #endregion
+            #region Register Service for NghiepVu
+            builder.RegisterType<YeuCauService>().As<IYeuCauService>().InstancePerLifetimeScope();
+            builder.RegisterType<YeuCauChiTietService>().As<IYeuCauChiTietService>().InstancePerLifetimeScope();
+            builder.RegisterType<YeuCauNhatKyService>().As<IYeuCauNhatKyService>().InstancePerLifetimeScope();
+            builder.RegisterType<KiemKeTaiSanServices>().As<IKiemKeTaiSanServices>().InstancePerLifetimeScope();
+            #endregion
+
+            #region Register Service for DongBo
+            builder.RegisterType<DBTaiSanService>().As<IDBTaiSanService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanNhatKyService>().As<ITaiSanNhatKyService>().InstancePerLifetimeScope();
+            builder.RegisterType<GSAPIService>().As<IGSAPIService>().InstancePerLifetimeScope();
+            builder.RegisterType<DB_QueueProcessService>().As<IDB_QueueProcessService>().InstancePerLifetimeScope();
+            builder.RegisterType<DB_QueueProcessHistoryService>().As<IDB_QueueProcessHistoryService>().InstancePerLifetimeScope();
+            builder.RegisterType<DBTempTaiSanCuService>().As<IDBTempTaiSanCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<LogsDongBoCsdlqgService>().As<ILogsDongBoCsdlqgService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service for BienDongs
+            builder.RegisterType<BienDongService>().As<IBienDongService>().InstancePerLifetimeScope();
+            builder.RegisterType<BienDongChiTietService>().As<IBienDongChiTietService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service for TrungGianBDYC
+            builder.RegisterType<TrungGianBDYCService>().As<ITrungGianBDYCService>().InstancePerLifetimeScope();
+            //builder.RegisterType<BienDongChiTietService>().As<IBienDongChiTietService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service for CCDC
+            builder.RegisterType<CongCuService>().As<ICongCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<CongCuDonViService>().As<ICongCuDonViService>().InstancePerLifetimeScope();
+            builder.RegisterType<NhapXuatCongCuService>().As<INhapXuatCongCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<XuatNhapService>().As<IXuatNhapService>().InstancePerLifetimeScope();
+            builder.RegisterType<SuaChuaBaoDuongService>().As<ISuaChuaBaoDuongService>().InstancePerLifetimeScope();
+            builder.RegisterType<ChoThueService>().As<IChoThueService>().InstancePerLifetimeScope();
+            builder.RegisterType<KiemKeService>().As<IKiemKeService>().InstancePerLifetimeScope();
+            builder.RegisterType<KiemKeCongCuService>().As<IKiemKeCongCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<KiemKeHoiDongService>().As<IKiemKeHoiDongService>().InstancePerLifetimeScope();
+            builder.RegisterType<GiamHongmatService>().As<IGiamHongmatService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service for ThuocTinh
+            builder.RegisterType<ThuocTinhService>().As<IThuocTinhService>().InstancePerLifetimeScope();
+            builder.RegisterType<ThuocTinhDataService>().As<IThuocTinhDataService>().InstancePerLifetimeScope();
+            builder.RegisterType<ThuocTinhTaiSanService>().As<IThuocTinhTaiSanService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service for SHTD
+            builder.RegisterType<TaiSanTdService>().As<ITaiSanTdService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanTdXuLyService>().As<ITaiSanTdXuLyService>().InstancePerLifetimeScope();
+            builder.RegisterType<QuyetDinhTichThuService>().As<IQuyetDinhTichThuService>().InstancePerLifetimeScope();
+            builder.RegisterType<XuLyService>().As<IXuLyService>().InstancePerLifetimeScope();
+            builder.RegisterType<XuLyKetQuaServices>().As<IXuLyKetQuaServices>().InstancePerLifetimeScope();
+            builder.RegisterType<KetQuaTaiSanServices>().As<IKetQuaTaiSanServices>().InstancePerLifetimeScope();
+            builder.RegisterType<KetQuaService>().As<IKetQuaService>().InstancePerLifetimeScope();
+            builder.RegisterType<NhatKyTaiSanToanDanService>().As<INhatKyTaiSanToanDanService>().InstancePerLifetimeScope();
+            builder.RegisterType<ThuChiService>().As<IThuChiService>().InstancePerLifetimeScope();
+            #endregion
+            #region  Register Service Report
+            builder.RegisterType<CongCuDungCuService>().As<ICongCuDungCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<CheDoKeToanService>().As<ICheDoKeToanService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoChiTietTaiSanService>().As<IBaoCaoChiTietTaiSanService>().InstancePerLifetimeScope();
+            builder.RegisterType<CongCuDungCuService>().As<ICongCuDungCuService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanToanDanService>().As<ITaiSanToanDanService>().InstancePerLifetimeScope();
+            builder.RegisterType<QueueProcessService>().As<IQueueProcessService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoTongHopTaiSanService>().As<IBaoCaoTongHopTaiSanService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoCongKhaiService>().As<IBaoCaoCongKhaiService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoTraCuuService>().As<IBaoCaoTraCuuService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoQuocHoiService>().As<IBaoCaoQuocHoiService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoKeKhaiServices>().As<IBaoCaoKeKhaiServices>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoDuAnService>().As<IBaoCaoDuAnService>().InstancePerLifetimeScope();
+            builder.RegisterType<InTheTaiSanServices>().As<IInTheTaiSanServices>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoDoiChieuDuLieuService>().As<IBaoCaoDoiChieuDuLieuService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoDoiChieuService>().As<IBaoCaoDoiChieuService>().InstancePerLifetimeScope();
+            builder.RegisterType<BaoCaoDienTuService>().As<IBaoCaoDienTuService>().InstancePerLifetimeScope();
+            builder.RegisterType<LogQueueProcessService>().As<ILogQueueProcessService>().InstancePerLifetimeScope();
+            #endregion
+            #region Register Service KeToan (KT)
+            builder.RegisterType<HaoMonTaiSanService>().As<IHaoMonTaiSanService>().InstancePerLifetimeScope();
+            builder.RegisterType<HaoMonTaiSanLogService>().As<IHaoMonTaiSanLogService>().InstancePerLifetimeScope();
+            builder.RegisterType<KhauHaoTaiSanService>().As<IKhauHaoTaiSanService>().InstancePerLifetimeScope();
             #endregion
             //factories danh muc
             #region factories register

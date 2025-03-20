@@ -16,7 +16,7 @@ namespace GS.NewAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaiSanController : ControllerBase
+    public class TaiSanController : BaseApiController
     { 
         private readonly ITaiSanModelFactory _taiSanModelFactory;
         private readonly ILoaiTaiSanModelFactory _loaiTaiSanModelFactory;
@@ -87,18 +87,12 @@ namespace GS.NewAPI.Controllers
             }
             // lưu biến động
             var taiSanEntity = _taiSanModelFactory.GetTaiSanById(taiSanModel.ID ?? 0);
-            _bienDongModelFactory.InsertToBienDong(taiSanEntity, taiSanModel, new BienDongModel());
+            _bienDongModelFactory.InsertToBienDong(taiSanEntity, model, new BienDongModel());
             var biendong = _bienDongModelFactory.GetBienDongCuoiByTaiSanId(taiSanEntity.ID).ToModel<BienDongModel>();
             var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
             _taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
             _taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
-            return Ok(new BaseResponse<TaiSan>() 
-            { 
-                Data = taiSanEntity,
-                Message = "Tạo mới tài sản thành công",
-                StatusCode = 201,
-                Success = true
-            });
+            return OkSuccessMessage("Tạo mới tài sản thành công", model);
 
 
             //var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);

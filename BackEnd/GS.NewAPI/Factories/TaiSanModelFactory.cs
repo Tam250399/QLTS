@@ -45,6 +45,7 @@ namespace GS.NewAPI.Factories
         {
             // check đơn vị có tồn tại không
             //var donViId = _workContext.CurrentCustomer.CURRENT_DON_VI_ID;
+            // gắn trực tiếp đơn vị bằng 3 sau khi có token thì sẽ lấy từ token
             var donViId = 3;
             if (donViId == null)
             {
