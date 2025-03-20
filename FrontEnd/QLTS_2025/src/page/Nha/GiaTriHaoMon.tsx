@@ -96,7 +96,7 @@ const GiaTriHaoMon = ({
         position: "relative",
       }}
     >
-      <Grid container spacing={1}>
+      <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Typography
             sx={{
@@ -207,7 +207,7 @@ const GiaTriHaoMon = ({
             </span>
           )}
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={3}>
           {/* Giá trị QSD đất */}
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Tỷ lệ hao mòn (%)
@@ -250,21 +250,36 @@ const GiaTriHaoMon = ({
                 <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                   Tỷ lệ KH theo QĐ (%) <span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField fullWidth size="small" margin="dense" type="number" />
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  type="number"
+                />
               </Grid>
 
               <Grid item xs={12}>
                 <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                   KH tháng theo QĐ <span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField fullWidth size="small" margin="dense" type="number"/>
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  type="number"
+                />
               </Grid>
 
               <Grid item xs={12}>
                 <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                   Tỷ lệ % NG tính KH <span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField fullWidth size="small" margin="dense" type="number"/>
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  type="number"
+                />
               </Grid>
 
               <Grid item xs={12}>
