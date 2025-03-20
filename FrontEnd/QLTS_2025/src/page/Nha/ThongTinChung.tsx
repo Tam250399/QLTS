@@ -106,7 +106,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
     setValue("KHUON_VIEN_DAT", diachi);
   };
 
-  const handleBoChonKhuonVienDat = (diachi: string) => {
+  const handleBoChonKhuonVienDat = () => {
     setKhuonVienDat("");
     setOpenChonDat(false);
     setValue("KHUON_VIEN_DAT", "");
