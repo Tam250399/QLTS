@@ -28,28 +28,16 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            var response = new BaseResponse<ListResponse<QuocGiaModel>>(
-                success: false
-            );
             var result =  _danhMucModelFactory.GetAllQuocGias();
-            response.Success = true;
-            response.Data = new ListResponse<QuocGiaModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<QuocGiaModel>(result));
         }
 
         
         [HttpGet("lyDoTangGiam")]
         public IActionResult GetLyDoTangGiams(decimal? loaiLyDoBienDongId, decimal? loaiHinhTaiSanId, Boolean isTangMoi)
         {
-            var response = new BaseResponse<ListResponse<LyDoBienDongModel>>(
-               success: false
-           );
             var result = _danhMucModelFactory.GetLyDoTangGiams(loaiLyDoBienDongId, loaiHinhTaiSanId, isTangMoi);
-            response.Success = true;
-            response.Data = new ListResponse<LyDoBienDongModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<LyDoBienDongModel>(result));
         }
 
 
@@ -63,14 +51,8 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            var response = new BaseResponse<ListResponse<DiaBanModel>>(
-                success: false
-            );
             var result = _danhMucModelFactory.GetTinhThanhPhosByQuocGiaId(quocGiaId);
-            response.Success = true;
-            response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<DiaBanModel>(result));
         }
 
         [HttpGet("diaBanDuoiTinhTP")]
@@ -80,14 +62,8 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            var response = new BaseResponse<ListResponse<DiaBanModel>>(
-                success: false
-            );
             var result = _danhMucModelFactory.GetDiaBansByMaCha(maCha);
-            response.Success = true;
-            response.Data = new ListResponse<DiaBanModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<DiaBanModel>(result));
         }
 
         #endregion
@@ -101,14 +77,7 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            //var response = new BaseResponse<ListResponse<MucDichSuDungModel>>(
-            //    success: false
-            //);
             var result = _danhMucModelFactory.GetMucDichSuDungsByLoaiHinhTSId(loaiHinhTaiSanId);
-            //response.Success = true;
-            //response.Data = new ListResponse<MucDichSuDungModel>(data: result, count: result.Count);
-            //response.StatusCode = 200;
-            //return Ok(response);
             return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<MucDichSuDungModel>(result));
         }
         #endregion
@@ -120,14 +89,8 @@ namespace GS.NewAPI.Controllers
             //if (!CheckCurrentUser())
             //    return OkErrorMessage("Token hết hạn");
             #endregion
-            var response = new BaseResponse<ListResponse<DonViBoPhanModel>>(
-                success: false
-            );
             var result = _danhMucModelFactory.GetDonViBoPhans(donViId);
-            response.Success = true;
-            response.Data = new ListResponse<DonViBoPhanModel>(data: result, count: result.Count);
-            response.StatusCode = 200;
-            return Ok(response);
+            return OkSuccessMessage("Lấy dữ liệu thành công", new ListResponse<DonViBoPhanModel>(result));
         }
         #endregion
 
