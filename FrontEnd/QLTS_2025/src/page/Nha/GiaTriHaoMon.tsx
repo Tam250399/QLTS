@@ -6,15 +6,15 @@ import {
   UseFormSetError,
   UseFormSetValue,
 } from "react-hook-form";
-import { Thongtinchung } from "../../validateform/thongtinchung";
 import { useState } from "react";
+import { ThongTinNha } from "../../validateform/thongtinnha";
 
-interface GiaTriSuDungDatProps {
-  register: UseFormRegister<Thongtinchung>;
-  errors: FieldErrors<Thongtinchung>;
-  setValue: UseFormSetValue<Thongtinchung>;
-  setError: UseFormSetError<Thongtinchung>;
-  clearErrors: UseFormClearErrors<Thongtinchung>;
+interface GiaTriHaoMonProps {
+  register: UseFormRegister<ThongTinNha>;
+  errors: FieldErrors<ThongTinNha>;
+  setValue: UseFormSetValue<ThongTinNha>;
+  setError: UseFormSetError<ThongTinNha>;
+  clearErrors: UseFormClearErrors<ThongTinNha>;
 }
 
 const GiaTriHaoMon = ({
@@ -23,7 +23,7 @@ const GiaTriHaoMon = ({
   setValue,
   setError,
   clearErrors,
-}: GiaTriSuDungDatProps) => {
+}: GiaTriHaoMonProps) => {
   const [GIA_TRI_QUYEN_SD_DAT, setGIA_TRI_QUYEN_SD_DAT] = useState<number>(0);
   const [NGUON_KHAC, setNGUON_KHAC] = useState<number>(0);
   const [NGUYEN_GIA, setNGUYEN_GIA] = useState<number>(0);
@@ -239,9 +239,7 @@ const GiaTriHaoMon = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
-              required: "Bạn phải nhập giá trị quyền sử dụng đất",
-            })}
+            {...register("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT")}
             value={GIA_TRI_QUYEN_SD_DAT || ""}
             onChange={handleGIA_TRI_QUYEN_SD_DATChange}
             onBlur={handleGIA_TRI_QUYEN_SD_DATBlur}

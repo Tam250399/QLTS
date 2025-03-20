@@ -1,10 +1,9 @@
-import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ThongTinChung from "./ThongTinChung";
-import { Thongtinchung } from "../../validateform/thongtinchung";
 import GiaTriHaoMon from "./GiaTriHaoMon";
 import HienTrangSuDung from "./HienTrangSuDung";
+import { ThongTinNha } from "../../validateform/thongtinnha";
 
 const SubmitHandlerHouses = () => {
   const {
@@ -14,13 +13,11 @@ const SubmitHandlerHouses = () => {
     setValue,
     setError,
     clearErrors,
-  } = useForm<Thongtinchung>({
-    defaultValues: {
-      DIA_CHI: "",
-    },
+  } = useForm<ThongTinNha>({
+    defaultValues: {},
   });
 
-  const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
+  const onSubmit: SubmitHandler<ThongTinNha> = (data) => {
     console.log("Dữ liệu form:", data);
   };
 
@@ -37,7 +34,7 @@ const SubmitHandlerHouses = () => {
             setValue={setValue}
           />
         </div>
-        <div className="pb-10">
+        {/* <div className="pb-10">
           <GiaTriHaoMon
             register={register}
             errors={errors}
@@ -48,7 +45,7 @@ const SubmitHandlerHouses = () => {
         </div>
         <div className="pb-10">
           <HienTrangSuDung register={register} errors={errors} />
-        </div>
+        </div> */}
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button variant="contained" color="primary" type="submit">
             Lưu

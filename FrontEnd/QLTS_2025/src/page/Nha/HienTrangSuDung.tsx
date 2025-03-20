@@ -1,12 +1,12 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
 
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Thongtinchung } from "../../validateform/thongtinchung";
-interface ThongtintaisanProps {
-  register: UseFormRegister<Thongtinchung>;
-  errors: FieldErrors<Thongtinchung>;
+import { ThongTinNha } from "../../validateform/thongtinnha";
+interface HienTrangSuDungProps {
+  register: UseFormRegister<ThongTinNha>;
+  errors: FieldErrors<ThongTinNha>;
 }
-const HienTrangSuDung = ({ register, errors }: ThongtintaisanProps) => {
+const HienTrangSuDung = ({ register, errors }: HienTrangSuDungProps) => {
   return (
     <Box
       sx={{
@@ -34,7 +34,6 @@ const HienTrangSuDung = ({ register, errors }: ThongtintaisanProps) => {
         Hiện trạng sử dụng
       </Typography>
       <Grid container spacing={2}>
-
         {/* Các trường hiện trạng sử dụng */}
         <Grid item xs={12} sm={6} md={3}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>

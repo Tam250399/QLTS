@@ -1,9 +1,7 @@
 import {
   Huyen,
   LyDoTangDat,
-  MucDichTS,
   quocgia,
-  Thongtinchung,
   Tinh,
 } from "../../validateform/thongtinchung";
 
@@ -13,7 +11,6 @@ import {
   Button,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Grid,
   Radio,
   RadioGroup,
@@ -26,19 +23,19 @@ import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import {
   GetDMDuoiTinh,
   GetDMLyDoTangDat,
-  GetDMMucDichTS,
   GetDMQuocGia,
   GetDMTinhTP,
 } from "../../service/ServiceDat";
 import AddIcon from "@mui/icons-material/Add";
+import { ThongTinNha } from "../../validateform/thongtinnha";
 
-interface ThongtintaisanProps {
-  register: UseFormRegister<Thongtinchung>;
-  errors: FieldErrors<Thongtinchung>;
-  setValue: UseFormSetValue<Thongtinchung>;
+interface ThongtinnhaProps {
+  register: UseFormRegister<ThongTinNha>;
+  errors: FieldErrors<ThongTinNha>;
+  setValue: UseFormSetValue<ThongTinNha>;
 }
 
-const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
+const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
   const [selectedTinh, setselectedTinh] = useState<string | null>(null);
   const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
@@ -166,9 +163,16 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
             fullWidth
             size="small"
             margin="dense"
+            {...register("TEN_NGOI_NHA", {
+              required: "Bạn phải nhập tên ngôi nhà",
+            })}
             InputProps={{ sx: { fontSize: "14px" } }}
           />
-
+          {errors?.TEN_NGOI_NHA && (
+            <span className="text-red-500 text-xs">
+              {errors?.TEN_NGOI_NHA?.message}
+            </span>
+          )}
           {/* Radio Button */}
           <FormControl component="fieldset" sx={{ marginTop: "8px" }}>
             <RadioGroup
@@ -243,7 +247,15 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
                 margin="dense"
                 placeholder="Nhập số nhà, đường phố, tổ / thôn / xóm"
                 InputProps={{ sx: { fontSize: "14px" } }}
+                {...register("DIA_CHI_NHA", {
+                  required: "Bạn phải nhập địa chỉ nhà",
+                })}
               />
+              {errors?.DIA_CHI_NHA && (
+                <span className="text-red-500 text-xs">
+                  {errors?.DIA_CHI_NHA?.message}
+                </span>
+              )}
             </>
           )}
         </Grid>
@@ -380,7 +392,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
                 const selected = lyDoTangDat.find(
                   (lydo) => lydo.id === value?.id
                 );
-                setValue("LY_DO_TANG_ID", selected?.id || -1);
+                setValue("CAP_NHA_ID", selected?.id || -1);
               }}
               renderInput={(params) => (
                 <TextField
@@ -411,6 +423,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
               placeholder="m²"
               type="number"
               InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("DIEN_TICH_XD", { required: true })}
             />
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Năm xây dựng <span style={{ color: "red" }}>*</span>
@@ -421,19 +434,26 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
               margin="dense"
               type="number"
               InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("NAM_XAY_DUNG", { required: true })}
             />
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Bộ phận sử dụng
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Autocomplete
+                className="pt-[1px]"
                 options={lyDoTangDat}
                 getOptionLabel={(option) => option.ten}
-                value={selectedValue}
+                onChange={(_, value) => {
+                  const selected = lyDoTangDat.find(
+                    (lydo) => lydo.id === value?.id
+                  );
+                  setValue("BO_PHAN_SD_ID", selected?.id || -1);
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="-- Chọn bộ phận sử dụng --"
+                    placeholder="-- Chọn cấp nhà --"
                     sx={{
                       fontSize: "14px",
                       "& .MuiInputBase-root": {
@@ -576,6 +596,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
               margin="dense"
               type="number"
               InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("SO_TANG", { required: true })}
             />
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               DT sàn sử dụng <span style={{ color: "red" }}>*</span>
@@ -587,6 +608,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
               type="number"
               placeholder="m²"
               InputProps={{ sx: { fontSize: "14px" } }}
+              {...register("DT_SAN_SU_DUNG", { required: true })}
             />
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Ngày đưa vào sử dụng <span style={{ color: "red" }}>*</span>
@@ -599,7 +621,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtintaisanProps) => {
               InputLabelProps={{ shrink: true }}
               defaultValue="2017-12-31"
               InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("NGAY_TANG", { required: true })}
+              {...register("NGAY_DUA_VAO_SD", { required: true })}
             />
           </Stack>
         </Grid>
