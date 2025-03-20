@@ -226,7 +226,7 @@ namespace GS.NewAPI.Factories
             //yeuCau_json.HTSD_JSON = hientrangList.toStringJson();
             bdct.HTSD_JSON = hientrangList.toStringJson();
             //model.BIEN_DONG_ID = bd.ID;
-            _bienDongChiTietService.InsertToBienDongChiTiet(bdct = null);
+            _bienDongChiTietService.InsertToBienDongChiTiet(bdct);
 
             return bdct.ToModel<BienDongChiTietModel>();
         }

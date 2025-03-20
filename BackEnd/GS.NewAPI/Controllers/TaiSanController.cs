@@ -4,6 +4,7 @@ using GS.Core.Domain.TaiSans;
 using GS.Data;
 using GS.NewAPI.Factories;
 using GS.NewAPI.Infrastructure.Mapper.Extensions;
+using GS.NewAPI.Infrastruture.Response;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.BienDongs;
 using GS.NewAPI.Validators.TaiSanValidator;
@@ -72,39 +73,36 @@ namespace GS.NewAPI.Controllers
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            using (var dbContextTransaction = _context.Database.BeginTransaction())
-            {              
-                try
-                {
-
-                    var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);
-                    //save tsdat
-                    switch (taiSanModel.LOAI_HINH_TAI_SAN_ID)
-                    {
-                        case (int)enumLOAI_HINH_TAI_SAN.DAT:
-                            var TsDat = model.ToEntity<TaiSanDat>();
-                            TsDat.TAI_SAN_ID = (decimal)taiSanModel.ID;
-                            TsDat.TINH_ID = model.TINH_THANH_PHO_ID;
-                            TsDat.HUYEN_ID = model.QUAN_HUYEN_ID;
-                            TsDat.XA_ID = model.XA_PHUONG_ID;
-                            TsDat.DIA_BAN_ID = model.XA_PHUONG_ID;
-                            _taiSanDatModelFactory.InsertTaiSanDat(TsDat);
-                            break;
-                    }
-                    // lưu biến động
-                    var taiSanEntity = _taiSanModelFactory.GetTaiSanById(taiSanModel.ID ?? 0);
-                    _bienDongModelFactory.InsertToBienDong(taiSanEntity, taiSanModel, new BienDongModel());
-                    var biendong = _bienDongModelFactory.GetBienDongCuoiByTaiSanId(taiSanEntity.ID).ToModel<BienDongModel>();
-                    var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
-                    _taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
-                    _taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
-                    dbContextTransaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    dbContextTransaction.Rollback();
-                }
+            var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);
+            //save tsdat
+            switch (taiSanModel.LOAI_HINH_TAI_SAN_ID)
+            {
+                case (int)enumLOAI_HINH_TAI_SAN.DAT:
+                    var TsDat = model.ToEntity<TaiSanDat>();
+                    TsDat.TAI_SAN_ID = (decimal)taiSanModel.ID;
+                    TsDat.TINH_ID = model.TINH_THANH_PHO_ID;
+                    TsDat.HUYEN_ID = model.QUAN_HUYEN_ID;
+                    TsDat.XA_ID = model.XA_PHUONG_ID;
+                    TsDat.DIA_BAN_ID = model.XA_PHUONG_ID;
+                    _taiSanDatModelFactory.InsertTaiSanDat(TsDat);
+                    break;
             }
+            // lưu biến động
+            var taiSanEntity = _taiSanModelFactory.GetTaiSanById(taiSanModel.ID ?? 0);
+            _bienDongModelFactory.InsertToBienDong(taiSanEntity, taiSanModel, new BienDongModel());
+            var biendong = _bienDongModelFactory.GetBienDongCuoiByTaiSanId(taiSanEntity.ID).ToModel<BienDongModel>();
+            var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
+            _taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
+            _taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
+            return OkSuccessMessage("Tạo mới tài sản thành công", new BaseResponse<TaiSan>() 
+            { 
+                Data = taiSanEntity,
+                Message = "Tạo mới tài sản thành công",
+                StatusCode = 201,
+                Success = true
+            });
+
+
             //var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);
             ////save tsdat
             //switch (taiSanModel.LOAI_HINH_TAI_SAN_ID)
@@ -125,7 +123,6 @@ namespace GS.NewAPI.Controllers
             //var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
             //_taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
             //_taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
-            return OkSuccessMessage("Tạo mới tài sản thành công", "");
         }
 
         // PUT api/<TaiSanController>/5: 'Error in the application.'
