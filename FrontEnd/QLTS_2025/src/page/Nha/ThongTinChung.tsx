@@ -1,9 +1,4 @@
-import {
-  Huyen,
-  LyDoTangDat,
-  quocgia,
-  Tinh,
-} from "../../validateform/thongtinchung";
+import { LyDoTangDat } from "../../validateform/thongtinchung";
 
 import {
   Autocomplete,
@@ -20,12 +15,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import {
-  GetDMDuoiTinh,
-  GetDMLyDoTangDat,
-  GetDMQuocGia,
-  GetDMTinhTP,
-} from "../../service/ServiceDat";
 import AddIcon from "@mui/icons-material/Add";
 import { ThongTinNha } from "../../validateform/thongtinnha";
 
@@ -36,80 +25,12 @@ interface ThongtinnhaProps {
 }
 
 const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
-  const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
-  const [selectedTinh, setselectedTinh] = useState<string | null>(null);
-  const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
-  const [quocGia, setQuocGia] = useState<quocgia[]>([]);
-  const [quans, setQuans] = useState<Huyen[]>([]);
-  const [selectedQuan, setselectedQuan] = useState<string | null>(null);
-  const [phuongs, setPhuongs] = useState<Huyen[]>([]);
   const [lyDoTangDat, setLyDoTangDats] = useState<LyDoTangDat[]>([]);
   const [quanLyDat, setQuanLyDat] = useState("co");
-  const [selectedValue, setSelectedValue] = useState(null);
   const handleAdd = () => {
     alert("Bạn đã nhấn nút +!");
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [quocGiaData, lyDoTangDat] = await Promise.all([
-          GetDMQuocGia(),
-          GetDMLyDoTangDat(1),
-        ]);
-        setQuocGia(quocGiaData);
-        setLyDoTangDats(lyDoTangDat);
-      } catch (error) {
-        console.error("Lỗi khi tải dữ liệu:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchTinhTP = async () => {
-      if (selectedQuocGia) {
-        try {
-          const data = await GetDMTinhTP(selectedQuocGia);
-          setTinhTPs(data || []);
-        } catch (error) {
-          console.error("Lỗi khi ", error);
-          setTinhTPs([]);
-        }
-      } else {
-        setTinhTPs([]);
-      }
-    };
-
-    const fetchQuanHuyen = async () => {
-      if (selectedTinh) {
-        try {
-          const data = await GetDMDuoiTinh(selectedTinh);
-          setQuans(data || []);
-        } catch (error) {
-          console.error("Lỗi khi ", error);
-          setQuans([]);
-        }
-      } else {
-        setQuans([]);
-      }
-    };
-
-    const fetchPhuongXa = async () => {
-      if (selectedQuan) {
-        try {
-          const data = await GetDMDuoiTinh(selectedQuan);
-          setPhuongs(data || []);
-        } catch (error) {
-          console.error("Lỗi khi ", error);
-        }
-      } else {
-        setPhuongs([]);
-      }
-    };
-
-    Promise.all([fetchTinhTP(), fetchQuanHuyen(), fetchPhuongXa()]);
-  }, [selectedQuocGia, selectedTinh, selectedQuan]);
   return (
     <Box
       sx={{
@@ -262,87 +183,6 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
         <Grid item xs={12} md={6}>
           <Stack spacing={1}>
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Quốc gia <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControl fullWidth margin="dense">
-              <Autocomplete
-                className="pt-[1px]"
-                options={quocGia.map((quocGias) => quocGias.ten)}
-                getOptionLabel={(option) => option}
-                onChange={(_, value) => {
-                  const selected = quocGia.find(
-                    (quocGia) => quocGia.ten === value
-                  );
-                  setSelectedQuocGia(selected?.id || null);
-                  setValue("QUOC_GIA_ID", selected?.id || -1);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="-- Chọn Quốc Gia --"
-                    sx={{
-                      fontSize: "14px",
-                      "& .MuiInputBase-root": {
-                        height: "36px",
-                      },
-                    }}
-                  />
-                )}
-                noOptionsText="Không tìm thấy quốc gia"
-                renderOption={(props, option) => (
-                  <li {...props} style={{ fontSize: "14px" }}>
-                    {option}
-                  </li>
-                )}
-              />
-              {errors.QUOC_GIA_ID && (
-                <span className="text-red-500 text-xs">
-                  Bạn phải chọn Quốc gia
-                </span>
-              )}
-            </FormControl>
-
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Quận/Huyện <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControl fullWidth margin="dense" size="small">
-              <Autocomplete
-                className="pt-[1px]"
-                options={quans.map((quan) => quan.ten)}
-                getOptionLabel={(option) => option}
-                disabled={!selectedTinh}
-                onChange={(_, value) => {
-                  const selected = quans.find((quan) => quan.ten === value);
-                  setselectedQuan(selected?.ma || null);
-                  setValue("QUAN_HUYEN_ID", selected?.id || -1);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="-- Chọn Quận/Huyện--"
-                    sx={{
-                      fontSize: "14px",
-                      "& .MuiInputBase-root": {
-                        height: "36px",
-                      },
-                    }}
-                  />
-                )}
-                noOptionsText="Không tìm thấy quận huyện"
-                renderOption={(props, option) => (
-                  <li {...props} style={{ fontSize: "14px" }}>
-                    {option}
-                  </li>
-                )}
-              />
-              {errors.QUAN_HUYEN_ID && (
-                <span className="text-red-500 text-xs">
-                  Bạn phải chọn quận huyện
-                </span>
-              )}
-            </FormControl>
-
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Lý do tăng đất <span style={{ color: "red" }}>*</span>
             </Typography>
             <FormControl fullWidth margin="dense" size="small">
@@ -453,7 +293,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="-- Chọn cấp nhà --"
+                    placeholder="-- Chọn bộ phận sử dụng --"
                     sx={{
                       fontSize: "14px",
                       "& .MuiInputBase-root": {
@@ -488,87 +328,6 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack spacing={1}>
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Tỉnh/Thành phố <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControl fullWidth margin="dense" size="small">
-              <Autocomplete
-                className="pt-[1px]"
-                options={tinhTPs.map((tinh) => tinh.ten)}
-                getOptionLabel={(option) => option}
-                disabled={!selectedQuocGia}
-                // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
-                onChange={(_, value) => {
-                  const selected = tinhTPs.find((tinh) => tinh.ten === value);
-                  setselectedTinh(selected?.ma || null);
-                  setValue("TINH_THANH_PHO_ID", selected?.id || -1);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="-- Chọn Tỉnh/Thành phố--"
-                    sx={{
-                      fontSize: "14px",
-                      "& .MuiInputBase-root": {
-                        height: "36px",
-                      },
-                    }}
-                  />
-                )}
-                noOptionsText="Không tìm thấy Tỉnh/Thành phố"
-                renderOption={(props, option) => (
-                  <li {...props} style={{ fontSize: "14px" }}>
-                    {option}
-                  </li>
-                )}
-              />
-              {errors.TINH_THANH_PHO_ID && (
-                <span className="text-red-500 text-xs">
-                  Bạn phải chọn Tỉnh/Thành phố
-                </span>
-              )}
-            </FormControl>
-
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Xã/Phường <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControl fullWidth margin="dense" size="small">
-              <Autocomplete
-                className="pt-[1px]"
-                options={phuongs.map((phuong) => phuong.ten)}
-                getOptionLabel={(option) => option}
-                disabled={!selectedQuan}
-                onChange={(_, value) => {
-                  const selected = phuongs.find(
-                    (phuong) => phuong.ten === value
-                  );
-                  setValue("XA_PHUONG_ID", selected?.id || -1);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="-- Chọn Xã/Phường--"
-                    sx={{
-                      fontSize: "14px",
-                      "& .MuiInputBase-root": {
-                        height: "36px",
-                      },
-                    }}
-                  />
-                )}
-                noOptionsText="Không tìm thấy Xã/Phường"
-                renderOption={(props, option) => (
-                  <li {...props} style={{ fontSize: "14px" }}>
-                    {option}
-                  </li>
-                )}
-              />
-              {errors.XA_PHUONG_ID && (
-                <span className="text-red-500 text-xs">
-                  Bạn phải chọn Xã/Phường
-                </span>
-              )}
-            </FormControl>
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Ngày tăng <span style={{ color: "red" }}>*</span>
             </Typography>
