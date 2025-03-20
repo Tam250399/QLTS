@@ -56,7 +56,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
       >
         Thông tin chung
       </Typography>
-      <Grid container spacing={1}>
+      <Grid container spacing={4}>
         <Grid item xs={12}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Đơn vị
@@ -94,6 +94,8 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               {errors?.TEN_NGOI_NHA?.message}
             </span>
           )}
+        </Grid>
+        <Grid item xs={12}>
           {/* Radio Button */}
           <FormControl component="fieldset" sx={{ marginTop: "8px" }}>
             <RadioGroup
@@ -138,7 +140,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 <Button
                   variant="outlined"
                   sx={{
-                    height: "38px",
+                    height: "26px",
                     marginLeft: "8px", // Tạo khoảng cách với Autocomplete
                     fontSize: "14px",
                     whiteSpace: "nowrap", // Giữ chữ trên cùng một dòng
@@ -185,42 +187,44 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Lý do tăng đất <span style={{ color: "red" }}>*</span>
             </Typography>
-            <FormControl fullWidth margin="dense" size="small">
-              <Autocomplete
-                className="pt-[1px]"
-                options={lyDoTangDat}
-                getOptionLabel={(option) => option.ten}
-                onChange={(_, value) => {
-                  const selected = lyDoTangDat.find(
-                    (lydo) => lydo.id === value?.id
-                  );
-                  setValue("LY_DO_TANG_ID", selected?.id || -1);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="-- Chọn lý do tăng đất --"
-                    sx={{
-                      fontSize: "14px",
-                      "& .MuiInputBase-root": {
-                        height: "36px",
-                      },
-                    }}
-                  />
-                )}
-                noOptionsText="Không tìm thấy lý do tăng đất"
-                renderOption={(props, option) => (
-                  <li {...props} style={{ fontSize: "14px" }}>
-                    {option.ten}
-                  </li>
-                )}
-              />
-              {errors.LY_DO_TANG_ID && (
-                <span className="text-red-500 text-xs">
-                  Bạn phải chọn lý do tăng
-                </span>
+            <Autocomplete
+              className="pt-[1px]"
+              options={lyDoTangDat}
+              getOptionLabel={(option) => option.ten}
+              {...register("LY_DO_TANG_ID", {
+                required: "Bạn phải chọn lý do tăng",
+              })}
+              onChange={(_, value) => {
+                const selected = lyDoTangDat.find(
+                  (lydo) => lydo.id === value?.id
+                );
+                setValue("LY_DO_TANG_ID", selected?.id || -1);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="-- Chọn lý do tăng đất --"
+                  sx={{
+                    fontSize: "14px",
+                    "& .MuiInputBase-root": {
+                      height: "36px",
+                    },
+                  }}
+                />
               )}
-            </FormControl>
+              noOptionsText="Không tìm thấy lý do tăng đất"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option.ten}
+                </li>
+              )}
+            />
+            {errors?.LY_DO_TANG_ID && (
+              <span className="text-red-500 text-xs">
+                {errors?.LY_DO_TANG_ID?.message}
+              </span>
+            )}
+
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Cấp nhà <span style={{ color: "red" }}>*</span>
             </Typography>
@@ -228,6 +232,9 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               className="pt-[1px]"
               options={lyDoTangDat}
               getOptionLabel={(option) => option.ten}
+              {...register("CAP_NHA_ID", {
+                required: "Bạn phải chọn cấp nhà",
+              })}
               onChange={(_, value) => {
                 const selected = lyDoTangDat.find(
                   (lydo) => lydo.id === value?.id
@@ -253,6 +260,11 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 </li>
               )}
             />
+            {errors?.CAP_NHA_ID && (
+              <span className="text-red-500 text-xs">
+                {errors?.CAP_NHA_ID?.message}
+              </span>
+            )}
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Diện tích XD
             </Typography>
@@ -269,13 +281,22 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               Năm xây dựng <span style={{ color: "red" }}>*</span>
             </Typography>
             <TextField
-              fullWidth
               size="small"
               margin="dense"
-              type="number"
-              InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("NAM_XAY_DUNG", { required: true })}
+              InputProps={{ sx: { fontSize: "14px", width: "65px" } }}
+              inputProps={{
+                maxLength: 4, // Giới hạn tối đa 4 ký tự
+                inputMode: "numeric", // Chỉ cho phép nhập số
+              }}
+              {...register("NAM_XAY_DUNG", {
+                required: "Bạn phải nhập năm xây dựng",
+              })}
             />
+            {errors?.NAM_XAY_DUNG && (
+              <span className="text-red-500 text-xs">
+                {errors?.NAM_XAY_DUNG?.message}
+              </span>
+            )}
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Bộ phận sử dụng
             </Typography>
@@ -298,6 +319,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                       fontSize: "14px",
                       "& .MuiInputBase-root": {
                         height: "36px",
+                        width: "250px",
                       },
                     }}
                   />
@@ -308,9 +330,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                     {option.ten}
                   </li>
                 )}
-                sx={{ flex: 1 }} // Để Autocomplete chiếm hết khoảng trống còn lại
               />
-
               {/* Button "+" */}
               <Button
                 variant="outlined"
@@ -326,7 +346,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
             </Box>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Ngày tăng <span style={{ color: "red" }}>*</span>
@@ -339,11 +359,13 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               InputLabelProps={{ shrink: true }}
               defaultValue="2017-12-31"
               InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("NGAY_TANG", { required: true })}
+              {...register("NGAY_TANG", {
+                required: "Bạn phải chọn ngày tăng",
+              })}
             />
-            {errors.NGAY_TANG && (
+            {errors?.NGAY_TANG && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn ngày tăng
+                {errors?.NGAY_TANG?.message}
               </span>
             )}
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -355,8 +377,13 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               margin="dense"
               type="number"
               InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("SO_TANG", { required: true })}
+              {...register("SO_TANG", { required: "Bạn phải nhập số tầng" })}
             />
+            {errors?.SO_TANG && (
+              <span className="text-red-500 text-xs">
+                {errors?.SO_TANG?.message}
+              </span>
+            )}
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               DT sàn sử dụng <span style={{ color: "red" }}>*</span>
             </Typography>
@@ -367,8 +394,15 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               type="number"
               placeholder="m²"
               InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("DT_SAN_SU_DUNG", { required: true })}
+              {...register("DT_SAN_SU_DUNG", {
+                required: "Bạn phải nhập diện tích sàn sử dụng",
+              })}
             />
+            {errors?.DT_SAN_SU_DUNG && (
+              <span className="text-red-500 text-xs">
+                {errors?.DT_SAN_SU_DUNG?.message}
+              </span>
+            )}
             <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
               Ngày đưa vào sử dụng <span style={{ color: "red" }}>*</span>
             </Typography>
@@ -380,8 +414,15 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
               InputLabelProps={{ shrink: true }}
               defaultValue="2017-12-31"
               InputProps={{ sx: { fontSize: "14px" } }}
-              {...register("NGAY_DUA_VAO_SD", { required: true })}
+              {...register("NGAY_DUA_VAO_SD", {
+                required: "Bạn phải chọn ngày đưa vào sử dụng",
+              })}
             />
+            {errors?.NGAY_DUA_VAO_SD && (
+              <span className="text-red-500 text-xs">
+                {errors?.NGAY_DUA_VAO_SD?.message}
+              </span>
+            )}
           </Stack>
         </Grid>
       </Grid>
