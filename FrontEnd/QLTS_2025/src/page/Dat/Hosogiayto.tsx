@@ -69,7 +69,7 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
         {/* Các trường hiện trạng sử dụng */}
         <Grid item xs={2} sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-            Giấy CHUNG_NHAN_QUYEN_SD_DAT đất
+            Giấy CNQSD đất
           </Typography>
         </Grid>
 

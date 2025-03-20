@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Thongtintaisan from "./Thongtintaisan";
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import Dientichhientrang from "./Dientichhientrang";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
@@ -15,13 +15,62 @@ const SubmitHandlers = () => {
     setValue,
     setError,
     clearErrors,
+    watch,
   } = useForm<Thongtinchung>({
     defaultValues: {
       DIA_CHI: "",
+      dienTich: 0,
+      HIEN_TRANG_SU_DUNG: {
+        TRU_SO_LAM_VIEC: 0,
+        deO: 0,
+        BO_TRONG: 0,
+        BI_LAN_CHIEM: 0,
+        SU_DUNG_HON_HOP: 0,
+        SU_DUNG_KHAC: 0,
+      },
     },
   });
 
+  const [areaError, setAreaError] = useState<string | null>(null);
+  const dienTich = watch("dienTich");
+  const {
+    TRU_SO_LAM_VIEC,
+    deO,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  } = watch("HIEN_TRANG_SU_DUNG");
+
+  const totalRelevantFields = [
+    TRU_SO_LAM_VIEC,
+    deO,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  ].reduce((sum, value) => sum + (Number(value) || 0), 0);
+
+  useEffect(() => {
+    if (dienTich && totalRelevantFields !== Number(dienTich)) {
+      setAreaError("Diện tích đất phải bằng tổng của Hiện trạng sử dụng.");
+    } else {
+      setAreaError(null);
+    }
+  }, [
+    TRU_SO_LAM_VIEC,
+    deO,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  ]);
+
   const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
+    if (dienTich && totalRelevantFields !== Number(dienTich)) {
+      setAreaError("Diện tích đất phải bằng tổng của Hiện trạng sử dụng.");
+      return;
+    }
     console.log("Dữ liệu form:", data);
   };
 
@@ -40,6 +89,11 @@ const SubmitHandlers = () => {
         </div>
         <div className="pb-10">
           <Dientichhientrang register={register} errors={errors} />
+          {areaError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {areaError}
+            </Alert>
+          )}
         </div>
 
         <div className="pb-10">
