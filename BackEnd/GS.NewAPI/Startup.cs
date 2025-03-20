@@ -1,43 +1,41 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
-using GS.Core;
-using GS.Core.Caching;
-using GS.Core.Data;
-using GS.Core.Infrastructure.Mapper;
-using GS.Data;
-using GS.NewAPI.Infrastructure;
-using GS.NewAPI.Infrastructure.Mapper;
-using GS.NewAPI.Middleware;
-using GS.Services;
-using GS.Services.Common;
-using GS.Services.HeThong;
+﻿using GS.NewAPI.Middleware;
+using GS.Web.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using NLog;
 using System;
 
 namespace GS.NewAPI
 {
     public class Startup
     {
-        public IConfiguration _configuration { get; set; }
-        public Startup(IConfiguration configuration)
+        #region Fields
+
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        #endregion Fields
+
+        #region Ctor
+
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
+            LogManager.LoadConfiguration(System.String.Concat(hostingEnvironment.ContentRootPath, "/nlog.config"));
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        #endregion Ctor
+
+        /// <summary>
+        /// Add services to the application and configure service provider
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<GSObjectContext>(opt =>
-            {
-                opt.UseOracle(_configuration.GetSection("DataConnectionString").Value, oracleOptionsAction => oracleOptionsAction.CommandTimeout(600));
-            });
-            //add Cors
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAnyOrigin",
@@ -46,22 +44,6 @@ namespace GS.NewAPI
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-            //config depency inject 
-            services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
-            services.AddScoped<ICacheManager, MemoryCacheManager>();
-            services.AddScoped<IDataProvider, OracleDataProvider>();
-            services.AddScoped<IHoatDongService, HoatDongServices>();
-            services.AddScoped<IWebHelper, WebHelper>();
-            services.AddScoped<IGSAPIService, GSAPIService>();
-         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
-
-            // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
-            services.AddHttpContextAccessor();
-            //auto add scoped service and repository 
-            Extensions.RegisterAssemblyServices(services);
-            //Add auto mapper         
-            AddAutoMapper();
-            
             // add swagger
             services.AddSwaggerGen(option =>
             {
@@ -76,71 +58,46 @@ namespace GS.NewAPI
                     Scheme = "Bearer"
                 });
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            }
-                        },
-                        new string[]{}
-                    }
-                });
+               {
+                   {
+                       new OpenApiSecurityScheme
+                       {
+                           Reference = new OpenApiReference
+                           {
+                               Type=ReferenceType.SecurityScheme,
+                               Id="Bearer"
+                           }
+                       },
+                       new string[]{}
+                   }
+               });
             });
-            services.AddHealthChecks();
-            services.AddMvc();
-
-            // return type IServiceProvider  Autofac
-            return RegisterDependencies(services);
+            return services.ConfigureApplicationServices(_configuration);
         }
 
-        private IServiceProvider RegisterDependencies(IServiceCollection services)
+        public void Configure(IApplicationBuilder application, IHostingEnvironment env)
         {
-            var containerBuilder = new ContainerBuilder();
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
-
-            DependencyRegistrar.Register(containerBuilder);
-            //create service provider
-            return new AutofacServiceProvider(containerBuilder.Build());
-        }
-
-        private void AddAutoMapper()
-        {
-            var configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<AdminMapperConfiguration>(); // Ensure your profile is added here
-            });
-            //register automap
-            AutoMapperConfiguration.Init(configuration);
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-
+            application.ConfigureRequestPipeline();
+            application.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                application.UseDeveloperExceptionPage();
+                application.UseSwagger();
+                application.UseSwaggerUI();
+                //application.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo API v1");
+                //    c.RoutePrefix = "swagger"; // Truy cập tại /swagger
+                //});
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                application.UseExceptionHandler("/Home/Error");
+                application.UseHsts();
             }
-            app.UseMiddleware<ValidationExceptionMiddleware>();
-            app.UseCors("AllowAnyOrigin");
-            app.UseHttpsRedirection(); // Điều hướng HTTP thành HTTPS nếu cần
-            app.UseStaticFiles(); // Nếu có tệp tĩnh, bạn có thể sử dụng
-
-            // Thêm UseMvc để cấu hình các API
-            app.UseMvc();
+            application.UseMiddleware<ValidationExceptionMiddleware>();
+            
+           
         }
-
-
     }
 }

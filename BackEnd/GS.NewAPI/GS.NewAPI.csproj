@@ -13,9 +13,51 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\Install\**" />
+    <Compile Remove="App_Data\Localization\**" />
+    <Compile Remove="App_Data\WorkFiles\**" />
+    <Content Remove="App_Data\Install\**" />
+    <Content Remove="App_Data\Localization\**" />
+    <Content Remove="App_Data\WorkFiles\**" />
+    <EmbeddedResource Remove="App_Data\Install\**" />
+    <EmbeddedResource Remove="App_Data\Localization\**" />
+    <EmbeddedResource Remove="App_Data\WorkFiles\**" />
+    <None Remove="App_Data\Install\**" />
+    <None Remove="App_Data\Localization\**" />
+    <None Remove="App_Data\WorkFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="App_Data\dataSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="App_Data\browscap.crawlersonly.xml" />
+    <None Remove="App_Data\DataProtectionKeys\Index.htm" />
+    <None Remove="App_Data\Pdf\FreeSerif.ttf" />
+    <None Remove="App_Data\TempUploads\Index.htm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Data\browscap.crawlersonly.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\DataProtectionKeys\Index.htm">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\Pdf\FreeSerif.ttf">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="App_Data\TempUploads\Index.htm">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +65,18 @@
     <ProjectReference Include="..\Libraries\GS.Data\GS.Data.csproj" />
     <ProjectReference Include="..\Libraries\GS.Services\GS.Services.csproj" />
     <ProjectReference Include="..\Presentation\GS.Web.Framework\GS.Web.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App_Data\dataSettings.json">
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="App_Data\plugins.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
