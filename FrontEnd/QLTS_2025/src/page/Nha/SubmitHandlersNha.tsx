@@ -14,6 +14,7 @@ import HienTrangSuDung from "./HienTrangSuDung";
 import { ThongTinNha } from "../../validateform/thongtinnha";
 import Giatrisd from "../Dat/Giatrisd";
 import { Thongtinchung } from "../../validateform/thongtinchung";
+import SaveIcon from "@mui/icons-material/Save";
 
 const SubmitHandlerHouses = () => {
   const {
@@ -36,7 +37,18 @@ const SubmitHandlerHouses = () => {
       <Typography variant="h5" gutterBottom className="pb-10">
         Nhập số dư tài sản nhà
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          startIcon={<SaveIcon />}
+        >
+          Lưu
+        </Button>
+      </Box>
+      <form>
         <div className="pb-10">
           <ThongTinChung
             register={register}
@@ -57,7 +69,7 @@ const SubmitHandlerHouses = () => {
         <div className="pb-10">
           <HienTrangSuDung register={register} errors={errors} />
         </div>
-        
+
         {/* Ép kiểu gọi component */}
         <Giatrisd
           register={register as unknown as UseFormRegister<Thongtinchung>}
@@ -67,8 +79,14 @@ const SubmitHandlerHouses = () => {
           clearErrors={clearErrors as UseFormClearErrors<Thongtinchung>}
         />
 
-        <Box sx={{ mt: 3, textAlign: "right" }}>
-          <Button variant="contained" color="primary" type="submit">
+        <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            startIcon={<SaveIcon />}
+          >
             Lưu
           </Button>
         </Box>

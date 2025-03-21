@@ -14,6 +14,7 @@ import HienTrangSD from "./HienTrangSD";
 
 import GiaTriHaoMon from "../Nha/GiaTriHaoMon";
 import { ThongTinNha } from "../../validateform/thongtinnha";
+import SaveIcon from "@mui/icons-material/Save";
 
 const SubmitHandlersVKT = () => {
   const {
@@ -37,7 +38,18 @@ const SubmitHandlersVKT = () => {
       <Typography variant="h5" gutterBottom className="pb-10">
         Nhập số dư tài sản vật kiến trúc
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          startIcon={<SaveIcon />}
+        >
+          Lưu
+        </Button>
+      </Box>
+      <form>
         <div className="pb-10">
           <ThongtinTSKT
             register={register}
@@ -57,8 +69,14 @@ const SubmitHandlersVKT = () => {
         <div className="pb-10">
           <HienTrangSD control={control} />
         </div>
-        <Box sx={{ mt: 3, textAlign: "right" }}>
-          <Button variant="contained" color="primary" type="submit">
+        <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit(onSubmit)}
+            type="submit"
+            startIcon={<SaveIcon />}
+          >
             Lưu
           </Button>
         </Box>
