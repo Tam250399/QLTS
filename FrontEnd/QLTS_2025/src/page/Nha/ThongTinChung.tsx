@@ -30,7 +30,7 @@ import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ThongTinNha } from "../../validateform/thongtinnha";
-import ThemMoiBoPhan from "../../components/ThemMoiBoPhan";
+import ThemMoiBoPhan from "../../components/form/ThemMoiBoPhan";
 
 interface ThongtinnhaProps {
   register: UseFormRegister<ThongTinNha>;
