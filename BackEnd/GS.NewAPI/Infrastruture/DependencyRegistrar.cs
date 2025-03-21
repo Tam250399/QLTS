@@ -91,6 +91,7 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<TaiSanHienTrangSuDungService>().As<ITaiSanHienTrangSuDungService>().InstancePerLifetimeScope();
             builder.RegisterType<KhaiThacService>().As<IKhaiThacService>().InstancePerLifetimeScope();
             builder.RegisterType<KhaiThacTaiSanService>().As<IKhaiThacTaiSanService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanLichSuService>().As<ITaiSanLichSuService>().InstancePerLifetimeScope();
 
             #endregion
             #region Register Service for NghiepVu
@@ -179,6 +180,7 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<BienDongChiTietModelFactory>().As<IBienDongChiTietModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanHienTrangSuDungModelFactory>().As<ITaiSanHienTrangSuDungModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanNguonVonModelFactory>().As<ITaiSanNguonVonModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanLichSuModelFactory>().As<ITaiSanLichSuModelFactory>().InstancePerLifetimeScope();
             #endregion
             #region application common
             //builder.RegisterType<CauHinhNguoiDung>().SingleInstance();
@@ -191,7 +193,7 @@ namespace GS.NewAPI.Infrastructure
             //builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
             //builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
             //builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
-          
+
 
             #endregion
             //repositories

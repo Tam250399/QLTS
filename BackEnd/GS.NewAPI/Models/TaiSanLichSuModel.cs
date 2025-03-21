@@ -3,11 +3,12 @@ using System;
 
 namespace GS.NewAPI.Models
 {
-    public class TaiSanLichSuModel : BaseGSEntityModel
+    public class TaiSanLichSuModel : BaseGSApiModel
     {
-        decimal TAI_SAN_ID  {get; set; }
-        decimal? NGUOI_TAO_ID { get; set; }
-        string HOAT_DONG { get; set; }
+        public new decimal? ID { get; set; }
+        public decimal TAI_SAN_ID { get; set; }
+        public decimal? NGUOI_TAO_ID { get; set; }
+        public string HOAT_DONG { get; set; }
         public DateTime? NGAY_TAO { get; set; }
 
     }

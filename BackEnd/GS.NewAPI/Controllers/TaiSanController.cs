@@ -25,6 +25,7 @@ namespace GS.NewAPI.Controllers
         private readonly IBienDongChiTietModelFactory _bienDongChiTietModelFactory;
         private readonly ITaiSanNguonVonModelFactory _taiSanNguonVonModelFactory;
         private readonly ITaiSanHienTrangSuDungModelFactory _taiSanHienTrangSuDungModelFactory;
+        private readonly ITaiSanLichSuModelFactory _taiSanLichSuModelFactory;
         private readonly GSObjectContext _context;
         public TaiSanController(
             ITaiSanModelFactory taiSanModelFactory, 
@@ -34,6 +35,7 @@ namespace GS.NewAPI.Controllers
             IBienDongChiTietModelFactory bienDongChiTietModelFactory,
             ITaiSanNguonVonModelFactory taiSanNguonVonModelFactory,
             ITaiSanHienTrangSuDungModelFactory taiSanHienTrangSuDungModelFactory,
+            ITaiSanLichSuModelFactory taiSanLichSuModelFactory,
             GSObjectContext context) 
         {
             _taiSanModelFactory = taiSanModelFactory;
@@ -43,6 +45,7 @@ namespace GS.NewAPI.Controllers
             _bienDongChiTietModelFactory = bienDongChiTietModelFactory;
             _taiSanNguonVonModelFactory = taiSanNguonVonModelFactory;
             _taiSanHienTrangSuDungModelFactory = taiSanHienTrangSuDungModelFactory;
+            _taiSanLichSuModelFactory = taiSanLichSuModelFactory;
             _context = context;
         }
         // GET: api/<TaiSanController>
@@ -71,6 +74,7 @@ namespace GS.NewAPI.Controllers
             {
                 throw new ValidationException(validationResult.Errors);
             }
+            _taiSanLichSuModelFactory.InsertTaiSanLichSu(1, null, "Tạo mới");
             var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);
             //save tsdat
             switch (taiSanModel.LOAI_HINH_TAI_SAN_ID)
@@ -92,6 +96,7 @@ namespace GS.NewAPI.Controllers
             var biendongchitiet = _bienDongChiTietModelFactory.InsertToBienDongChiTiet(model, new BienDongChiTietModel(), biendong);
             _taiSanNguonVonModelFactory.InsertTaiSanNguonVonFromBienDong(model, biendong);
             _taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
+            _taiSanLichSuModelFactory.InsertTaiSanLichSu(taiSanEntity.ID, null, "Tạo mới");
             return OkSuccessMessage("Tạo mới tài sản thành công", model);
 
 
