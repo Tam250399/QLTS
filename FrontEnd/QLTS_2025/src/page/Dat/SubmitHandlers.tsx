@@ -6,6 +6,7 @@ import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Thongtinchung } from "../../validateform/thongtinchung";
+import SaveIcon from "@mui/icons-material/Save";
 
 const SubmitHandlers = () => {
   const {
@@ -20,14 +21,14 @@ const SubmitHandlers = () => {
     defaultValues: {
       QUOC_GIA_ID: undefined,
       DIA_CHI: "",
-      dienTich: undefined,
+      dienTich: "",
       HIEN_TRANG_SU_DUNG: {
-        TRU_SO_LAM_VIEC: 0,
-        deO: 0,
-        BO_TRONG: 0,
-        BI_LAN_CHIEM: 0,
-        SU_DUNG_HON_HOP: 0,
-        SU_DUNG_KHAC: 0,
+        TRU_SO_LAM_VIEC: "",
+        deO: "",
+        BO_TRONG: "",
+        BI_LAN_CHIEM: "",
+        SU_DUNG_HON_HOP: "",
+        SU_DUNG_KHAC: "",
       },
     },
   });
@@ -50,7 +51,7 @@ const SubmitHandlers = () => {
     BI_LAN_CHIEM,
     SU_DUNG_HON_HOP,
     SU_DUNG_KHAC,
-  ].reduce((sum, value) => sum + (Number(value) || 0), 0);
+  ].reduce<number>((sum, value) => sum + (Number(value) || 0), 0);
 
   useEffect(() => {
     if (dienTich && totalRelevantFields !== Number(dienTich)) {
@@ -80,7 +81,8 @@ const SubmitHandlers = () => {
       <Typography variant="h5" gutterBottom className="pb-10">
         Nhập số dư tài sản đất
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="absolute">
         <div className="pb-10">
           <Thongtintaisan
             register={register}
@@ -110,7 +112,12 @@ const SubmitHandlers = () => {
         <Hosogiayto register={register} setValue={setValue} />
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
-          <Button variant="contained" color="primary" type="submit">
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            startIcon={<SaveIcon />}
+          >
             Lưu
           </Button>
         </Box>
