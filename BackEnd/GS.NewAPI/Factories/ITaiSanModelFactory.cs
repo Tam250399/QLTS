@@ -1,5 +1,7 @@
 ﻿using GS.Core.Domain.TaiSans;
 using GS.NewAPI.Models;
+using System.Collections.Generic;
+using static GS.NewAPI.Factories.TaiSanModelFactory;
 
 namespace GS.NewAPI.Factories
 {
@@ -8,5 +10,6 @@ namespace GS.NewAPI.Factories
         bool CheckTenTaiSan(string ten, decimal? id = 0, decimal? donViId = 0);
         TaiSanModel InsertTaiSan(TaiSanModel model);
         TaiSan GetTaiSanById(decimal Id);
+        UpdateTaiSanResult UpdateTaiSan(TaiSanModel models);
     }
 }

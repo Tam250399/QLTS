@@ -72,6 +72,12 @@ namespace GS.NewAPI
                    }
                });
             });
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             return services.ConfigureApplicationServices(_configuration);
         }
 
@@ -79,6 +85,7 @@ namespace GS.NewAPI
         {
             application.ConfigureRequestPipeline();
             application.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            application.UseSession();
             if (env.IsDevelopment())
             {
                 application.UseDeveloperExceptionPage();

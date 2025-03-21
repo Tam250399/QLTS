@@ -36,7 +36,7 @@ namespace GS.NewAPI.Models
     //    public Decimal? DON_VI_BO_PHAN_ID { get; set; }
     //    public Decimal? DON_VI_ID { get; set; }
     //    public DateTime? NGAY_TAO { get; set; }
-    //    public Decimal? NGUOI_TAO_ID { get; set; }
+      // public Decimal? NGUOI_TAO_ID { get; set; }
     //    public Guid GUID { get; set; }
     //    public String CHUNG_TU_SO { get; set; }
     //    [UIHint("DateNullable")]
@@ -59,6 +59,7 @@ namespace GS.NewAPI.Models
 
     public class TaiSanModel : BaseGSApiModel
     {
+        public String MA { get; set; }
         public new decimal? ID { get; set; } 
         public String TEN { get; set; }
         public Decimal? LOAI_TAI_SAN_ID { get; set; }
@@ -84,12 +85,12 @@ namespace GS.NewAPI.Models
 
         public HienTrangSuDungModel HIEN_TRANG_SU_DUNG { get; set; }
         public HoSoGiayToModel HO_SO_GIAY_TO { get; set; }
-
+        public TaiSanDatModel taisandatModel { get; set; }
         #region chu dung den
         //public String QUYET_DINH_SO { get; set; }
         //[UIHint("DateNullable")]
         //public DateTime? QUYET_DINH_NGAY { get; set; }
-        //public Decimal? QUYET_DINH_NGUOI_ID { get; set; }
+        public Decimal? QUYET_DINH_NGUOI_ID { get; set; }
         //public Decimal? NUOC_SAN_XUAT_ID { get; set; }
         //public Decimal? LY_DO_BIEN_DONG_ID { get; set; }
         //public Decimal? DOI_TAC_ID { get; set; }
@@ -103,7 +104,7 @@ namespace GS.NewAPI.Models
 
         //public String GHI_CHU { get; set; }
 
-        //public Decimal? NGUOI_TAO_ID { get; set; }
+        public Decimal? NGUOI_TAO_ID { get; set; }
         //public Guid GUID { get; set; }
         //public String CHUNG_TU_SO { get; set; }
         //[UIHint("DateNullable")]
@@ -122,7 +123,7 @@ namespace GS.NewAPI.Models
         //public bool? IS_DUYET { get; set; }
         //public String MA_DB { get; set; }//mã đồng bộ
         //public decimal? PHAN_LOAI_TAI_SAN { get; set; }
-#endregion
+        #endregion
     }
 
 

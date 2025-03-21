@@ -9,7 +9,9 @@ using GS.NewAPI.Models;
 using GS.NewAPI.Models.BienDongs;
 using GS.NewAPI.Validators.TaiSanValidator;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace GS.NewAPI.Controllers
@@ -121,13 +123,21 @@ namespace GS.NewAPI.Controllers
             //_taiSanHienTrangSuDungModelFactory.InsertHienTrangSuDungForBienDong((decimal)biendong.ID, taiSanEntity.ID, biendongchitiet.HTSD_JSON);
         }
 
-        // PUT api/<TaiSanController>/5: 'Error in the application.'
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<TaiSanController>/5
+        [HttpPut]
+        public async Task<IActionResult> SuaTaiSan([FromBody] TaiSanModel value)
         {
-        }
+            //var validator = new TaiSanValidator(_taiSanModelFactory, _loaiTaiSanModelFactory);
+            //var validationResult = validator.Validate(value);
 
+            //if (validationResult.Errors.Count > 0)
+            //{
+            //    throw new ValidationException(validationResult.Errors);
+            //}
+            _taiSanModelFactory.UpdateTaiSan(value);
+           return Ok();
+           
+        }
         // DELETE api/<TaiSanController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)

@@ -21,6 +21,7 @@ using GS.Services.BaoCaoDienTus;
 using GS.Services.BaoCaoDoiChieus;
 using GS.Services.BaoCaos;
 using GS.Services.KT;
+using GS.Core;
 namespace GS.NewAPI.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
@@ -193,7 +194,8 @@ namespace GS.NewAPI.Infrastructure
             //builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
             //builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
             //builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
-
+            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
+            builder.RegisterType<HostingConfig>().AsSelf().SingleInstance();
 
             #endregion
             //repositories

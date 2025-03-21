@@ -6,6 +6,7 @@ using GS.Core.Infrastructure.Mapper;
 using GS.NewAPI.Models;
 using GS.NewAPI.Models.BienDongs;
 using GS.NewAPI.Models.DanhMuc;
+using System.Collections.Generic;
 
 namespace GS.NewAPI.Infrastructure.Mapper
 {
@@ -19,6 +20,7 @@ namespace GS.NewAPI.Infrastructure.Mapper
         public AdminMapperConfiguration()
         {
             CreateDanhMucMaps();
+            CreateTaiSan();
         }
         #endregion
         #region Properties
@@ -57,8 +59,14 @@ namespace GS.NewAPI.Infrastructure.Mapper
             CreateMap<BienDongChiTiet, BienDongChiTietModel>();
         }
         #endregion
-        
-        
+
+        protected virtual void CreateTaiSan()
+        {
+            CreateMap<LoaiTaiSan, LoaiTaiSanModel>();
+            CreateMap<LoaiTaiSanModel, LoaiTaiSan>();
+
+        }
+
 
     }
 }
