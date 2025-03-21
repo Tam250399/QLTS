@@ -3,15 +3,14 @@
 // Template create : GS
 // Create date     : 13/12/2019
 //----------------------------------------------------------------------------------------------------------------------
-using FluentValidation.Attributes;
 using GS.Web.Framework.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace GS.Web.Models.BienDongs
+namespace GS.NewAPI.Models.BienDongs
 {
-    public class BienDongChiTietModel : BaseGSEntityModel
+    public class BienDongChiTietModel : BaseGSApiModel
     {
         public Decimal BIEN_DONG_ID { get; set; }
         public Decimal? HINH_THUC_MUA_SAM_ID { get; set; }
@@ -91,7 +90,10 @@ namespace GS.Web.Models.BienDongs
 		public String HS_QUYET_DINH_CHO_THUE_SO { get; set; }
 		[UIHint("DateNullable")]
 		public DateTime? HS_QUYET_DINH_CHO_THUE_NGAY { get; set; }
-		public String HS_KHAC { get; set; }
+        public String HS_HOP_DONG_CHO_THUE_SO { get; set; }
+        [UIHint("DateNullable")]
+        public DateTime? HS_HOP_DONG_CHO_THUE_NGAY { get; set; }
+        public String HS_KHAC { get; set; }
 		public String DIA_CHI { get; set; }
         public string NHA_DIA_CHI { get; set; }
         public Decimal? KH_TY_LE_NGUYEN_GIA_KHAU_HAO { get; set; }
@@ -105,9 +107,6 @@ namespace GS.Web.Models.BienDongs
         }
         public string KeySearch { get; set; }
     }
-    public partial class BienDongChiTietListModel : BasePagedListModel<BienDongChiTietModel>
-    {
-
-    }
+    
 }
 

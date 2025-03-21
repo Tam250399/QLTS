@@ -1,6 +1,9 @@
-﻿using GS.Core.Domain.TaiSans;
-using GS.Web.Framework.Models;
+﻿using System.ComponentModel.DataAnnotations;
 using System;
+using GS.Web.Framework.Models;
+using GS.Core.Domain.TaiSans;
+using GS.NewAPI.Validators.TaiSanValidator;
+using FluentValidation.Attributes;
 
 namespace GS.NewAPI.Models
 {
@@ -54,13 +57,14 @@ namespace GS.NewAPI.Models
     //    public decimal? PHAN_LOAI_TAI_SAN { get; set; }
     //}
 
-    public class TaiSanModel : BaseGSEntityModel
+    public class TaiSanModel : BaseGSApiModel
     {
         public String MA { get; set; }
+        public new decimal? ID { get; set; } 
         public String TEN { get; set; }
         public Decimal? LOAI_TAI_SAN_ID { get; set; }
         public Decimal? LOAI_HINH_TAI_SAN_ID { get; set; }
-        public Decimal? DIEN_TICH_ID { get; set; }
+        public Decimal? DIEN_TICH { get; set; } = 0;
         public Decimal? LOAI_TAI_SAN_DON_VI_ID { get; set; }
         public Decimal? DON_VI_ID { get; set; }
         public Decimal? DU_AN_ID { get; set; }

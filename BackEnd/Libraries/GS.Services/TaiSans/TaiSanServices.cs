@@ -45,7 +45,6 @@ namespace GS.Services.TaiSans
         private readonly IRepository<HaoMonTaiSan> _haoMonTaiSanRepository;
         private readonly IRepository<YeuCauChiTiet> _yeuCauChiTietRepository;
         private readonly IWorkContext _workContext;
-        private readonly IYeuCauService _yeuCauService;
         private readonly IDonViService _donViService;
         private readonly IDonViBoPhanService _donViBoPhanService;
         private readonly ICauHinhService _cauHinhService;
@@ -76,7 +75,6 @@ namespace GS.Services.TaiSans
             IRepository<DonVi> donviRepository,
             IRepository<BienDong> biendongRepository,
             IRepository<HaoMonTaiSan> _haoMonTaiSanRepository,
-            IYeuCauService yeuCauService,
             IDonViService donViService,
             IDonViBoPhanService donViBoPhanService,
             ICauHinhService cauHinhService,
@@ -104,7 +102,6 @@ namespace GS.Services.TaiSans
             this._yeucauRepository = yeucauRepository;
             this._donviRepository = donviRepository;
             this._biendongRepository = biendongRepository;
-            this._yeuCauService = yeuCauService;
             this._donViService = donViService;
             this._donViBoPhanService = donViBoPhanService;
             this._cauHinhService = cauHinhService;

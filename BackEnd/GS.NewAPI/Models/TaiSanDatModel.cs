@@ -3,19 +3,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System;
+using GS.Web.Framework.Models;
 
 namespace GS.NewAPI.Models
 {
     public class TaiSanDatModel : BaseGSApiModel
     {
-        public TaiSanDatModel()
-        {
-            AvailableQuocGia = new List<SelectListItem>();
-            AvailableTinh = new List<SelectListItem>();
-            AvailableHuyen = new List<SelectListItem>();
-            AvailableXa = new List<SelectListItem>();
-            //lstHienTrang = new List<ObjHienTrang>();
-        }
+        public new decimal? ID { get; set; }
         public Decimal TAI_SAN_ID { get; set; }
         public String DIA_CHI { get; set; }
         public Decimal? DIA_BAN_ID { get; set; }
