@@ -27,7 +27,7 @@ namespace GS.NewAPI.Factories
             //var taiSanLichSu = model.ToEntity<TaiSanLichSu>();
             var taiSanLichSu = new TaiSanLichSu()
             {
-                ID = 0,
+               // ID = 0,
                 TAI_SAN_ID = taiSanId,
                 NGUOI_TAO_ID = nguoiTaoId,
                 HOAT_DONG = hoatDong,

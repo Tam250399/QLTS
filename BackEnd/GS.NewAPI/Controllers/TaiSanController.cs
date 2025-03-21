@@ -74,7 +74,6 @@ namespace GS.NewAPI.Controllers
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            _taiSanLichSuModelFactory.InsertTaiSanLichSu(1, null, "Tạo mới");
             var taiSanModel = _taiSanModelFactory.InsertTaiSan(model);
             //save tsdat
             switch (taiSanModel.LOAI_HINH_TAI_SAN_ID)
