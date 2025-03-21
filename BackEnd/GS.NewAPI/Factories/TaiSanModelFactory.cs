@@ -23,8 +23,8 @@ namespace GS.NewAPI.Factories
         private readonly IMapper _mapper;
         private readonly IWorkContext _workContext;
         private readonly ILoaiTaiSanDonViServices _loaiTaiSanDonViServices;
-        private readonly ILoaiTaiSanService _loaitaisanService;
-        private readonly IDonViService _donviService;
+        private readonly ILoaiTaiSanService _loaiTaiSanService;
+        private readonly IDonViService _donViService;
         private readonly ITaiSanDatService _taisandatService;
         private readonly ITaiSanNhaService _taisannhaService;
         private readonly IBienDongService _bienDongService;
@@ -33,8 +33,8 @@ namespace GS.NewAPI.Factories
             IMapper mapper ,
             IWorkContext workContext,
             ILoaiTaiSanDonViServices loaiTaiSanDonViService,
-            ILoaiTaiSanService loaitaisanService,
-            IDonViService donviService,
+            ILoaiTaiSanService loaiTaiSanService,
+            IDonViService donViService,
             ITaiSanDatService taisandatService,
             ITaiSanNhaService taisannhaService,
              IBienDongService bienDongService)
@@ -43,8 +43,8 @@ namespace GS.NewAPI.Factories
             _mapper = mapper;
             _workContext = workContext;
             _loaiTaiSanDonViServices = loaiTaiSanDonViService;
-            _loaitaisanService = loaitaisanService;
-            _donviService = donviService;
+            _loaiTaiSanService = loaiTaiSanService;
+            _donViService = donViService;
             _taisandatService = taisandatService;
             _taisannhaService = taisannhaService;
             _bienDongService = bienDongService;
@@ -79,10 +79,10 @@ namespace GS.NewAPI.Factories
             //    entity.TEN = _taiSanOtoModelFactory.genTenTaiSanOto(entity.taisanOtoModel.NHAN_XE_ID, entity.taisanOtoModel.DONG_XE_ID, entity.taisanOtoModel.BIEN_KIEM_SOAT);
             //}
 
-            if (entity.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.VO_HINH || entity.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
-                entity.MA = LoadMaTaiSan(_workContext.CurrentDonVi.ID, entity.ID, entity.LOAI_TAI_SAN_DON_VI_ID, entity.LOAI_HINH_TAI_SAN_ID);
-            else
-                entity.MA = LoadMaTaiSan(0, entity.ID, entity.LOAI_TAI_SAN_ID, entity.LOAI_HINH_TAI_SAN_ID);
+            //if (entity.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.VO_HINH || entity.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
+            //    entity.MA = LoadMaTaiSan(_workContext.CurrentDonVi.ID, entity.ID, entity.LOAI_TAI_SAN_DON_VI_ID, entity.LOAI_HINH_TAI_SAN_ID);
+            //else
+            //    entity.MA = LoadMaTaiSan(0, entity.ID, entity.LOAI_TAI_SAN_ID, entity.LOAI_HINH_TAI_SAN_ID);
             _mapper.Map(entity, item);
 
             _taiSanService.UpdateTaiSan(item);
@@ -209,7 +209,7 @@ namespace GS.NewAPI.Factories
 
         public string LoadMaTaiSan(decimal? DonViId = 0, decimal? TaiSanId = 0, decimal? LoaiTaiSanId = 0, decimal? loaiHinhTaiSanId = 0)
         {
-            var donVi = _donviService.GetDonViById(DonViId ?? 0);
+            var donVi = _donViService.GetDonViById(DonViId ?? 0);
             var loaiTS = new LoaiTaiSanModel();
             if (loaiHinhTaiSanId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH || loaiHinhTaiSanId == (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
             {
@@ -229,7 +229,7 @@ namespace GS.NewAPI.Factories
                 loaiTS = taiSanDonVi.ToModel<LoaiTaiSanModel>();
             }
             else
-                loaiTS = _loaitaisanService.GetLoaiTaiSanById(LoaiTaiSanId ?? 0).ToModel<LoaiTaiSanModel>();
+                loaiTS = _loaiTaiSanService.GetLoaiTaiSanById(LoaiTaiSanId ?? 0).ToModel<LoaiTaiSanModel>();
             var MaTs = "";
 
             if (donVi != null && loaiTS != null)

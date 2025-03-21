@@ -21,6 +21,7 @@ using GS.Services.BaoCaoDienTus;
 using GS.Services.BaoCaoDoiChieus;
 using GS.Services.BaoCaos;
 using GS.Services.KT;
+using GS.Core;
 namespace GS.NewAPI.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar

@@ -96,7 +96,7 @@ namespace GS.NewAPI
         {
             application.ConfigureRequestPipeline();
             application.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            app.UseSession();
+            application.UseSession();
             if (env.IsDevelopment())
             {
                 application.UseDeveloperExceptionPage();
