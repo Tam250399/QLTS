@@ -30,6 +30,7 @@ import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ThongTinNha } from "../../validateform/thongtinnha";
+import ThemMoiBoPhan from "../../components/ThemMoiBoPhan";
 
 interface ThongtinnhaProps {
   register: UseFormRegister<ThongTinNha>;
@@ -555,187 +556,12 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
           </Grid>
         </Grid>
       </Box>
+
       {/* Popup thêm bộ phận */}
-      <Dialog open={openThemBP} onClose={() => setOpenThemBP(false)}>
-        <DialogTitle
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderBottom: "1px solid #ccc",
-            alignItems: "center",
-            margin: "0 0 30px 10px",
-            fontSize: "30px",
-          }}
-        >
-          Thêm mới bộ phận của đơn vị
-          <IconButton onClick={() => setOpenThemBP(false)} size="small">
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Box
-            sx={{
-              border: "1px solid #007bff",
-              borderRadius: 2,
-              p: 2,
-              bgcolor: "white",
-              boxShadow: 2,
-              position: "relative",
-            }}
-          >
-            <Grid container spacing={2}>
-              {/* Hàng 1 */}
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontSize: "14px", pr: 2, minWidth: "150px" }}
-                >
-                  Đơn vị:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  value="Chi cục Thuế khu vực Thạch Hà - Lộc Hà"
-                  InputProps={{
-                    readOnly: true,
-                    sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
-                  }}
-                  disabled
-                />
-              </Grid>
-
-              {/* Hàng 2 */}
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontSize: "14px", pr: 2, minWidth: "150px" }}
-                >
-                  Tên bộ phận:<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  InputProps={{
-                    sx: { fontSize: "14px" },
-                  }}
-                />
-              </Grid>
-
-              {/* Hàng 3 */}
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontSize: "14px", pr: 2, minWidth: "150px" }}
-                >
-                  Địa chỉ:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  InputProps={{
-                    sx: { fontSize: "14px" },
-                  }}
-                />
-              </Grid>
-
-              {/* Hàng 4 */}
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontSize: "14px", pr: 2, minWidth: "150px" }}
-                >
-                  Điện thoại:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  InputProps={{
-                    sx: { fontSize: "14px" },
-                  }}
-                />
-              </Grid>
-
-              {/* Hàng 5 */}
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontSize: "14px", pr: 2, minWidth: "150px" }}
-                >
-                  Thuộc/Trực thuộc:
-                </Typography>
-                <Autocomplete
-                  className="pt-[1px]"
-                  options={lyDoTangDat}
-                  getOptionLabel={(option) => option.ten}
-                  {...register("CAP_NHA_ID", {
-                    required: "Bạn phải chọn cấp nhà",
-                  })}
-                  onChange={(_, value) => {
-                    const selected = lyDoTangDat.find(
-                      (lydo) => lydo.id === value?.id
-                    );
-                    setValue("CAP_NHA_ID", selected?.id || -1);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder="-- Chọn đơn vị cấp trên của bộ phận --"
-                      sx={{
-                        fontSize: "8px",
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                        },
-                      }}
-                    />
-                  )}
-                  noOptionsText="Không tìm thấy đơn vị"
-                  renderOption={(props, option) => (
-                    <li {...props} style={{ fontSize: "8px" }}>
-                      {option.ten}
-                    </li>
-                  )}
-                  sx={{ height: "36px", width: "100%" }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            onClick={() => setOpenThemBP(false)}
-            color="success"
-            variant="contained"
-          >
-            Lưu
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ThemMoiBoPhan
+        open={openThemBP}
+        handleClose={() => setOpenThemBP(false)}
+      />
 
       {/* Popup chọn đất */}
       <Dialog
