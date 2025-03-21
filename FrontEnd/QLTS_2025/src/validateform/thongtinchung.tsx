@@ -1,36 +1,36 @@
 export interface Thongtinchung {
-  TEN: string,
-  LOAI_TAI_SAN_ID: number,
-  LOAI_HINH_TAI_SAN_ID: number,
-  DIEN_TICH_ID: number,
-  LOAI_TAI_SAN_DON_VI_ID: number,
-  DON_VI_ID: number,
-  DU_AN_ID: number,
-  TRANG_THAI_ID: number,
-  NGAY_TAO: string,
-  NGAY_TANG: string,
-  DON_VI_BO_PHAN_ID: number,
-  NGAY_SU_DUNG: string,
-  LY_DO_TANG_ID: number,
-  MUC_DICH_ID: number,
-  DIA_CHI: string,
-  QUOC_GIA_ID: number,
-  TINH_THANH_PHO_ID: number,
-  QUAN_HUYEN_ID: number,
-  XA_PHUONG_ID: number,
+  TEN: string;
+  LOAI_TAI_SAN_ID: number;
+  LOAI_HINH_TAI_SAN_ID: number;
+  DIEN_TICH_ID: number;
+  LOAI_TAI_SAN_DON_VI_ID: number;
+  DON_VI_ID: number;
+  DU_AN_ID: number;
+  TRANG_THAI_ID: number;
+  NGAY_TAO: string;
+  NGAY_TANG: string;
+  DON_VI_BO_PHAN_ID: number;
+  NGAY_SU_DUNG: string;
+  LY_DO_TANG_ID: number;
+  MUC_DICH_ID: number;
+  DIA_CHI: string;
+  QUOC_GIA_ID: number;
+  TINH_THANH_PHO_ID: number;
+  QUAN_HUYEN_ID: number;
+  XA_PHUONG_ID: number;
   //Diện tích khuôn viên
-  dienTich: number; // Diện tích (m²) - Bắt buộc
+  dienTich: number | string; // Diện tích (m²) - Bắt buộc
   HIEN_TRANG_SU_DUNG: {
-    TRU_SO_LAM_VIEC: number; // Trụ sở làm việc (m²)
-    hdSnKhongKd: number; // HDSN-Không KD (m²)
-    HD_SD_KINH_DOANH: number; // HDSN-Kinh doanh (m²)
-    HD_SD_CHO_THUE: number; // HDSN-Cho thuê (m²)
-    HD_SD_KINH_DOANH_LK: number; // HDSN-LDLK (m²)
-    deO: number; // Để ở (m²)
-    BO_TRONG: number; // Bỏ trống (m²)
-    BI_LAN_CHIEM: number; // Bị lấn chiếm (m²)
-    SU_DUNG_HON_HOP: number; // Sử dụng hỗn hợp (m²)
-    SU_DUNG_KHAC: number; // Sử dụng khác (m²)
+    TRU_SO_LAM_VIEC: number | string; // Trụ sở làm việc (m²)
+    hdSnKhongKd: number | string; // HDSN-Không KD (m²)
+    HD_SD_KINH_DOANH: number | string; // HDSN-Kinh doanh (m²)
+    HD_SD_CHO_THUE: number | string; // HDSN-Cho thuê (m²)
+    HD_SD_KINH_DOANH_LK: number | string; // HDSN-LDLK (m²)
+    deO: number | string; // Để ở (m²)
+    BO_TRONG: number | string; // Bỏ trống (m²)
+    BI_LAN_CHIEM: number | string; // Bị lấn chiếm (m²)
+    SU_DUNG_HON_HOP: number | string; // Sử dụng hỗn hợp (m²)
+    SU_DUNG_KHAC: number | string; // Sử dụng khác (m²)
   };
   //Gía trị sd
   GIA_TRI_SU_DUNG_DAT: {
