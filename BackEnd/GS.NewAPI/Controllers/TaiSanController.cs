@@ -54,7 +54,14 @@ namespace GS.NewAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> SuaTaiSan([FromBody] TaiSanModel value)
         {
-           _taiSanModelFactory.UpdateTaiSan(value);
+            //var validator = new TaiSanValidator(_taiSanModelFactory, _loaiTaiSanModelFactory);
+            //var validationResult = validator.Validate(value);
+
+            //if (validationResult.Errors.Count > 0)
+            //{
+            //    throw new ValidationException(validationResult.Errors);
+            //}
+            _taiSanModelFactory.UpdateTaiSan(value);
            return Ok();
            
         }

@@ -54,8 +54,7 @@ namespace GS.NewAPI
             services.AddScoped<IHoatDongService, HoatDongServices>();
             services.AddScoped<IWebHelper, WebHelper>();
             services.AddScoped<IGSAPIService, GSAPIService>();
-         /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
-
+            /*   services.AddTransient<IValidator<TaiSanModel>, TaiSanValidator>(); */// Example registration for TaiSanModel validator
             // register IHttpContextAccessor and HttpContextAccessor with type TryAddSingleton
             services.AddHttpContextAccessor();
             //auto add scoped service and repository 
@@ -93,7 +92,12 @@ namespace GS.NewAPI
             });
             services.AddHealthChecks();
             services.AddMvc();
-
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             // return type IServiceProvider  Autofac
             return RegisterDependencies(services);
         }
@@ -121,7 +125,7 @@ namespace GS.NewAPI
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
+            app.UseSession();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

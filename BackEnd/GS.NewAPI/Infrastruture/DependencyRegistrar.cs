@@ -8,6 +8,7 @@ using GS.Core.Infrastructure;
 using GS.Data;
 using GS.NewAPI.Factories;
 using GS.Services.Authentication;
+using GS.Services.DanhMuc;
 using GS.Services.Helpers;
 using GS.Web.Framework;
 
@@ -22,6 +23,7 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<DanhMucModelFactory>().As<IDanhMucModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanModelFactory>().As<ITaiSanModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<LoaiTaiSanModelFactory>().As<ILoaiTaiSanModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<LoaiTaiSanDonViServices>().As<ILoaiTaiSanDonViServices>().InstancePerLifetimeScope();
             #endregion
             #region application common
             builder.RegisterType<CauHinhNguoiDung>().SingleInstance();

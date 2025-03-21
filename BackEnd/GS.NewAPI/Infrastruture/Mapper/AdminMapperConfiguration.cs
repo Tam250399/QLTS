@@ -54,6 +54,9 @@ namespace GS.NewAPI.Infrastructure.Mapper
             CreateMap<TaiSanModel, TaiSan>().ReverseMap();
             CreateMap<List<TaiSanModel>, List<TaiSan>>().ReverseMap();
             CreateMap<TaiSan, TaiSanModel>();
+            CreateMap<LoaiTaiSan, LoaiTaiSanModel>();
+            CreateMap<LoaiTaiSanModel, LoaiTaiSan>();
+
         }
 
 
