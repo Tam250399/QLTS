@@ -1,10 +1,19 @@
 import { Box, Button, Typography } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  FieldErrors,
+  SubmitHandler,
+  useForm,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetError,
+  UseFormSetValue,
+} from "react-hook-form";
 import ThongtinTSKT from "./ThongtinTSKT";
 import { ThongtinchungVkt } from "../../validateform/thongtinVkt";
 import HienTrangSD from "./HienTrangSD";
 
-import GiaTriHaoMonVKT from "./GiaTriHaoMonVKT";
+import GiaTriHaoMon from "../Nha/GiaTriHaoMon";
+import { ThongTinNha } from "../../validateform/thongtinnha";
 
 const SubmitHandlersVKT = () => {
   const {
@@ -37,12 +46,12 @@ const SubmitHandlersVKT = () => {
           />
         </div>
         <div className="pb-10">
-          <GiaTriHaoMonVKT
-            register={register}
-            errors={errors}
-            setValue={setValue}
-            setError={setError}
-            clearErrors={clearErrors}
+          <GiaTriHaoMon
+            register={register as unknown as UseFormRegister<ThongTinNha>}
+            errors={errors as FieldErrors<ThongTinNha>}
+            setValue={setValue as unknown as UseFormSetValue<ThongTinNha>}
+            setError={setError as UseFormSetError<ThongTinNha>}
+            clearErrors={clearErrors as UseFormClearErrors<ThongTinNha>}
           />
         </div>
         <div className="pb-10">
