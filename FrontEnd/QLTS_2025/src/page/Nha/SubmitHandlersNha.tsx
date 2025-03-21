@@ -1,19 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
 import {
-  FieldErrors,
   SubmitHandler,
   useForm,
-  UseFormClearErrors,
-  UseFormRegister,
-  UseFormSetError,
-  UseFormSetValue,
 } from "react-hook-form";
 import ThongTinChung from "./ThongTinChung";
 import GiaTriHaoMon from "./GiaTriHaoMon";
 import HienTrangSuDung from "./HienTrangSuDung";
 import { ThongTinNha } from "../../validateform/thongtinnha";
-import Giatrisd from "../Dat/Giatrisd";
-import { Thongtinchung } from "../../validateform/thongtinchung";
 
 const SubmitHandlerHouses = () => {
   const {
@@ -42,6 +35,7 @@ const SubmitHandlerHouses = () => {
             register={register}
             errors={errors}
             setValue={setValue}
+            clearErrors={clearErrors}
           />
         </div>
         <div className="pb-10">
@@ -57,15 +51,6 @@ const SubmitHandlerHouses = () => {
         <div className="pb-10">
           <HienTrangSuDung register={register} errors={errors} />
         </div>
-        
-        {/* Ép kiểu gọi component */}
-        <Giatrisd
-          register={register as unknown as UseFormRegister<Thongtinchung>}
-          errors={errors as FieldErrors<Thongtinchung>}
-          setValue={setValue as unknown as UseFormSetValue<Thongtinchung>}
-          setError={setError as UseFormSetError<Thongtinchung>}
-          clearErrors={clearErrors as UseFormClearErrors<Thongtinchung>}
-        />
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button variant="contained" color="primary" type="submit">
