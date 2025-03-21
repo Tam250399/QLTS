@@ -8,5 +8,6 @@ namespace GS.NewAPI.Factories
         bool CheckTenTaiSan(string ten, decimal? id = 0, decimal? donViId = 0);
         TaiSanModel InsertTaiSan(TaiSanModel model);
         TaiSan GetTaiSanById(decimal Id);
+        void UpdateTaiSan(TaiSan entity);
     }
 }

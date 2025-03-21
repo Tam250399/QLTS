@@ -1,4 +1,5 @@
-﻿using GS.Core;
+﻿using DevExpress.DataAccess.Native;
+using GS.Core;
 using GS.Core.Domain.TaiSans;
 using GS.NewAPI.Infrastructure.Mapper.Extensions;
 using GS.NewAPI.Models;
@@ -88,5 +89,14 @@ namespace GS.NewAPI.Factories
             return taiSanEntity.ToModel<TaiSanModel>();
 
         }
+        public void UpdateTaiSan(TaiSan entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            _taiSanService.UpdateTaiSan(entity);
+            //event notification
+            //_eventPublisher.EntityUpdated(entity);
+        }
+
     }
 }

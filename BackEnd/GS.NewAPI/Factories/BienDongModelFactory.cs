@@ -7,6 +7,7 @@ using GS.NewAPI.Models;
 using GS.NewAPI.Models.BienDongs;
 using GS.Services.BienDongs;
 using System;
+using System.Collections.Generic;
 
 namespace GS.NewAPI.Factories
 {
@@ -21,6 +22,13 @@ namespace GS.NewAPI.Factories
         public BienDong GetBienDongCuoiByTaiSanId(decimal? taiSanId = 0)
         {
             return _bienDongService.GetBienDongCuoiByTaiSanId(taiSanId);
+        }
+        public IList<BienDong> GetBienDongsByTaiSanId(decimal? taiSanId = 0)
+        {
+            return _bienDongService.GetBienDongsByTaiSanId(taiSanId)
+                //.Where( x => x.TRANG_THAI_ID == (decimal)enumTRANG_THAI_YEU_CAU.CHO_DUYET)
+                //.ToList()
+                ;
         }
 
         public BienDongModel InsertToBienDong(TaiSan item, TaiSanModel tsModel, BienDongModel model)
@@ -50,6 +58,11 @@ namespace GS.NewAPI.Factories
             bd = model.ToEntity<BienDong>();
             _bienDongService.InsertBienDong(bd);
             return model;
+        }
+
+        public void UpdateBienDongs(IList<BienDong> entities)
+        {
+            _bienDongService.UpdateBienDong(entities);
         }
     }
 }

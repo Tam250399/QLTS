@@ -181,6 +181,7 @@ namespace GS.NewAPI.Infrastructure
             builder.RegisterType<TaiSanHienTrangSuDungModelFactory>().As<ITaiSanHienTrangSuDungModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanNguonVonModelFactory>().As<ITaiSanNguonVonModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TaiSanLichSuModelFactory>().As<ITaiSanLichSuModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<TaiSanNhaModelFactory>().As<ITaiSanNhaModelFactory>().InstancePerLifetimeScope();
             #endregion
             #region application common
             //builder.RegisterType<CauHinhNguoiDung>().SingleInstance();
