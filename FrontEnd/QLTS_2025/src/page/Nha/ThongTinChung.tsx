@@ -112,6 +112,18 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
     setValue("KHUON_VIEN_DAT", "");
   };
 
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
+  const handleSearch = () => {
+    console.log("click tìm kiếm");
+    const results = data.filter((item) =>
+      item.address.toLowerCase().includes(searchText.toLowerCase())
+    );
+    console.log("searchText: ", searchText);
+    setFilteredData(results);
+    setPage(0); // Reset về trang đầu
+  };
+
   const handleChangePage = (_: any, newPage: any) => setPage(newPage);
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -769,8 +781,9 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 },
               }}
               size="small"
-              placeholder="Nhập tên hoặc mã..."
               variant="outlined"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
             />
 
             <Button
@@ -781,6 +794,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 fontWeight: "200",
                 textTransform: "none",
               }}
+              onClick={handleSearch}
             >
               Tìm kiếm
             </Button>
@@ -834,7 +848,7 @@ const ThongTinChung = ({ register, errors, setValue }: ThongtinnhaProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data
+                {filteredData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
                     <TableRow key={row.id}>
