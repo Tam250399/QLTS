@@ -82,7 +82,18 @@ const SubmitHandlers = () => {
         Nhập số dư tài sản đất
       </Typography>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="absolute">
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          startIcon={<SaveIcon />}
+        >
+          Lưu
+        </Button>
+      </Box>
+      <form>
         <div className="pb-10">
           <Thongtintaisan
             register={register}
@@ -117,6 +128,7 @@ const SubmitHandlers = () => {
             variant="contained"
             color="primary"
             type="submit"
+            onClick={handleSubmit(onSubmit)}
             startIcon={<SaveIcon />}
           >
             Lưu

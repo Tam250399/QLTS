@@ -7,6 +7,7 @@ import ThongTinChung from "./ThongTinChung";
 import GiaTriHaoMon from "./GiaTriHaoMon";
 import HienTrangSuDung from "./HienTrangSuDung";
 import { ThongTinNha } from "../../validateform/thongtinnha";
+import SaveIcon from "@mui/icons-material/Save";
 
 const SubmitHandlerHouses = () => {
   const {
@@ -29,7 +30,18 @@ const SubmitHandlerHouses = () => {
       <Typography variant="h5" gutterBottom className="pb-10">
         Nhập số dư tài sản nhà
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          startIcon={<SaveIcon />}
+        >
+          Lưu
+        </Button>
+      </Box>
+      <form>
         <div className="pb-10">
           <ThongTinChung
             register={register}
@@ -52,8 +64,14 @@ const SubmitHandlerHouses = () => {
           <HienTrangSuDung register={register} errors={errors} />
         </div>
 
-        <Box sx={{ mt: 3, textAlign: "right" }}>
-          <Button variant="contained" color="primary" type="submit">
+        <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            startIcon={<SaveIcon />}
+          >
             Lưu
           </Button>
         </Box>
