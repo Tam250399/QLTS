@@ -4,11 +4,16 @@ import ThongtinTSKT from "./ThongtinTSKT";
 import { ThongtinchungVkt } from "../../validateform/thongtinVkt";
 import HienTrangSD from "./HienTrangSD";
 
+import GiaTriHaoMonVKT from "./GiaTriHaoMonVKT";
+
 const SubmitHandlersVKT = () => {
   const {
     register,
     handleSubmit,
     control,
+    setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ThongtinchungVkt>({
     defaultValues: {},
@@ -27,7 +32,15 @@ const SubmitHandlersVKT = () => {
         <div className="pb-10">
           <ThongtinTSKT register={register} errors={errors} />
         </div>
-
+        <div className="pb-10">
+          <GiaTriHaoMonVKT
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            setError={setError}
+            clearErrors={clearErrors}
+          />
+        </div>
         <div className="pb-10">
           <HienTrangSD control={control} />
         </div>

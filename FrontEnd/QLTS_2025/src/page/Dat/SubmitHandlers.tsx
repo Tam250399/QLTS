@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Thongtintaisan from "./Thongtintaisan";
 import { Alert, Box, Button, Typography } from "@mui/material";
 import Dientichhientrang from "./Dientichhientrang";
@@ -18,8 +18,9 @@ const SubmitHandlers = () => {
     watch,
   } = useForm<Thongtinchung>({
     defaultValues: {
+      QUOC_GIA_ID: undefined,
       DIA_CHI: "",
-      dienTich: 0,
+      dienTich: undefined,
       HIEN_TRANG_SU_DUNG: {
         TRU_SO_LAM_VIEC: 0,
         deO: 0,
