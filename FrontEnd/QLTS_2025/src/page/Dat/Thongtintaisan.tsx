@@ -15,7 +15,12 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import {
   GetDMDuoiTinh,
   GetDMLyDoTangDat,
@@ -28,12 +33,14 @@ interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
   setValue: UseFormSetValue<Thongtinchung>;
+  clearErrors: UseFormClearErrors<Thongtinchung>;
 }
 
 const Thongtintaisan = ({
   register,
   errors,
   setValue,
+  clearErrors,
 }: ThongtintaisanProps) => {
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
   const [selectedTinh, setselectedTinh] = useState<string | null>(null);
@@ -179,12 +186,18 @@ const Thongtintaisan = ({
               className="pt-[1px]"
               options={quocGia.map((quocGias) => quocGias.ten)}
               getOptionLabel={(option) => option}
+              {...register("QUOC_GIA_ID", {
+                required: "Bạn phải chọn quốc gia",
+              })}
               onChange={(_, value) => {
-                const selected = quocGia.find(
-                  (quocGia) => quocGia.ten === value
-                );
-                setSelectedQuocGia(selected?.id || null);
-                setValue("QUOC_GIA_ID", selected?.id || -1);
+                if (value) {
+                  const selected = quocGia.find(
+                    (quocGia) => quocGia.ten === value
+                  );
+                  setSelectedQuocGia(selected?.id || null);
+                  setValue("QUOC_GIA_ID", selected?.id || -1);
+                  clearErrors("QUOC_GIA_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -205,9 +218,9 @@ const Thongtintaisan = ({
                 </li>
               )}
             />
-            {errors.QUOC_GIA_ID && (
+            {errors?.QUOC_GIA_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn Quốc gia
+                {errors?.QUOC_GIA_ID?.message}
               </span>
             )}
           </FormControl>
@@ -221,10 +234,16 @@ const Thongtintaisan = ({
               options={quans.map((quan) => quan.ten)}
               getOptionLabel={(option) => option}
               disabled={!selectedTinh}
+              {...register("QUAN_HUYEN_ID", {
+                required: "Bạn phải chọn Quận/Huyện",
+              })}
               onChange={(_, value) => {
-                const selected = quans.find((quan) => quan.ten === value);
-                setselectedQuan(selected?.ma || null);
-                setValue("QUAN_HUYEN_ID", selected?.id || -1);
+                if (value) {
+                  const selected = quans.find((quan) => quan.ten === value);
+                  setselectedQuan(selected?.ma || null);
+                  setValue("QUAN_HUYEN_ID", selected?.id || -1);
+                  clearErrors("QUAN_HUYEN_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -245,9 +264,9 @@ const Thongtintaisan = ({
                 </li>
               )}
             />
-            {errors.QUAN_HUYEN_ID && (
+            {errors?.QUAN_HUYEN_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn quận huyện
+                {errors?.QUAN_HUYEN_ID?.message}
               </span>
             )}
           </FormControl>
@@ -260,11 +279,17 @@ const Thongtintaisan = ({
               className="pt-[1px]"
               options={lyDoTangDat}
               getOptionLabel={(option) => option.ten}
+              {...register("LY_DO_TANG_ID", {
+                required: "Bạn phải chọn lý do tăng đất",
+              })}
               onChange={(_, value) => {
-                const selected = lyDoTangDat.find(
-                  (lydo) => lydo.id === value?.id
-                );
-                setValue("LY_DO_TANG_ID", selected?.id || -1);
+                if (value) {
+                  const selected = lyDoTangDat.find(
+                    (lydo) => lydo.id === value?.id
+                  );
+                  setValue("LY_DO_TANG_ID", selected?.id || -1);
+                  clearErrors("LY_DO_TANG_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -285,9 +310,9 @@ const Thongtintaisan = ({
                 </li>
               )}
             />
-            {errors.LY_DO_TANG_ID && (
+            {errors?.LY_DO_TANG_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn lý do tăng
+                {errors?.LY_DO_TANG_ID?.message}
               </span>
             )}
           </FormControl>
@@ -321,11 +346,17 @@ const Thongtintaisan = ({
               options={tinhTPs.map((tinh) => tinh.ten)}
               getOptionLabel={(option) => option}
               disabled={!selectedQuocGia}
+              {...register("TINH_THANH_PHO_ID", {
+                required: "Bạn phải chọn Tỉnh/Thành phố",
+              })}
               // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
               onChange={(_, value) => {
-                const selected = tinhTPs.find((tinh) => tinh.ten === value);
-                setselectedTinh(selected?.ma || null);
-                setValue("TINH_THANH_PHO_ID", selected?.id || -1);
+                if (value) {
+                  const selected = tinhTPs.find((tinh) => tinh.ten === value);
+                  setselectedTinh(selected?.ma || null);
+                  setValue("TINH_THANH_PHO_ID", selected?.id || -1);
+                  clearErrors("TINH_THANH_PHO_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -348,7 +379,7 @@ const Thongtintaisan = ({
             />
             {errors.TINH_THANH_PHO_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn Tỉnh/Thành phố
+                {errors?.TINH_THANH_PHO_ID?.message}
               </span>
             )}
           </FormControl>
@@ -362,9 +393,17 @@ const Thongtintaisan = ({
               options={phuongs.map((phuong) => phuong.ten)}
               getOptionLabel={(option) => option}
               disabled={!selectedQuan}
+              {...register("XA_PHUONG_ID", {
+                required: "Bạn phải chọn Xã/Phường",
+              })}
               onChange={(_, value) => {
-                const selected = phuongs.find((phuong) => phuong.ten === value);
-                setValue("XA_PHUONG_ID", selected?.id || -1);
+                if (value) {
+                  const selected = phuongs.find(
+                    (phuong) => phuong.ten === value
+                  );
+                  setValue("XA_PHUONG_ID", selected?.id || -1);
+                  clearErrors("XA_PHUONG_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -387,7 +426,7 @@ const Thongtintaisan = ({
             />
             {errors.XA_PHUONG_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn Xã/Phường
+                {errors?.XA_PHUONG_ID?.message}
               </span>
             )}
           </FormControl>
@@ -400,11 +439,17 @@ const Thongtintaisan = ({
               className="pt-[1px]"
               options={mucDichTS}
               getOptionLabel={(option) => `${option.ma} - ${option.ten}`}
+              {...register("MUC_DICH_ID", {
+                required: "Bạn phải chọn mục đích sử dụng",
+              })}
               onChange={(_, value) => {
-                const selected = mucDichTS.find(
-                  (mucdich) => mucdich.id === value?.id
-                );
-                setValue("MUC_DICH_ID", selected?.id || -1);
+                if (value) {
+                  const selected = mucDichTS.find(
+                    (mucdich) => mucdich.id === value?.id
+                  );
+                  setValue("MUC_DICH_ID", selected?.id || -1);
+                  clearErrors("MUC_DICH_ID");
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -425,9 +470,9 @@ const Thongtintaisan = ({
                 </li>
               )}
             />
-            {errors.MUC_DICH_ID && (
+            {errors?.MUC_DICH_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải mục đích sử dụng
+                {errors?.MUC_DICH_ID?.message}
               </span>
             )}
           </FormControl>

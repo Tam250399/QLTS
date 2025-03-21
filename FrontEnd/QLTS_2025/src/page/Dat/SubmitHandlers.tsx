@@ -99,6 +99,7 @@ const SubmitHandlers = () => {
             register={register}
             errors={errors}
             setValue={setValue}
+            clearErrors={clearErrors}
           />
         </div>
         <div className="pb-10">
