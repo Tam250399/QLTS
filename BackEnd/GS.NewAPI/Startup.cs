@@ -1,15 +1,4 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
-using GS.Core;
-using GS.Core.Caching;
-using GS.Core.Data;
-using GS.Core.Infrastructure.Mapper;
-using GS.Data;
-using GS.NewAPI.Factories;
-using GS.NewAPI.Infrastructure;
-using GS.NewAPI.Infrastructure.Mapper;
-using GS.NewAPI.Middleware;
+﻿using GS.NewAPI.Middleware;
 using GS.Web.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

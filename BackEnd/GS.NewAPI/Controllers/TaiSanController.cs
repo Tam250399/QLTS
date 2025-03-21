@@ -139,13 +139,6 @@ namespace GS.NewAPI.Controllers
            return Ok();
            
         }
-        [HttpPut("SuaDanhSachTaiSan")]
-        public async Task<IActionResult> SuaDanhSachTaiSan([FromBody] List<TaiSanModel> value)
-        {
-            _taiSanModelFactory.UpdateTaiSan(value);
-            return Ok();
-
-        }
         // DELETE api/<TaiSanController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)

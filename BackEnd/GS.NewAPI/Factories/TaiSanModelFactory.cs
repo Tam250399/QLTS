@@ -20,7 +20,6 @@ namespace GS.NewAPI.Factories
     public class TaiSanModelFactory : ITaiSanModelFactory
     {
         private readonly ITaiSanService _taiSanService;
-        private readonly IMapper _mapper;
         private readonly IWorkContext _workContext;
         private readonly ILoaiTaiSanDonViServices _loaiTaiSanDonViServices;
         private readonly ILoaiTaiSanService _loaiTaiSanService;
@@ -40,7 +39,6 @@ namespace GS.NewAPI.Factories
              IBienDongService bienDongService)
         {
             _taiSanService = taiSanService;
-            _mapper = mapper;
             _workContext = workContext;
             _loaiTaiSanDonViServices = loaiTaiSanDonViService;
             _loaiTaiSanService = loaiTaiSanService;
@@ -54,10 +52,10 @@ namespace GS.NewAPI.Factories
             public bool Success { get; set; }
             public string Message { get; set; }
         }
-        public UpdateTaiSanResult UpdateTaiSan(TaiSanModel entity)
+        public UpdateTaiSanResult UpdateTaiSan(TaiSanModel models)
         {
-            var item = _taiSanService.GetTaiSanById(entity.ID);
-            entity.NGUOI_TAO_ID = item.NGUOI_TAO_ID;
+            var item = _taiSanService.GetTaiSanById(models.ID ?? 0);
+            models.NGUOI_TAO_ID = item.NGUOI_TAO_ID;
             if (item == null)
                 return new UpdateTaiSanResult
                 {
@@ -83,14 +81,14 @@ namespace GS.NewAPI.Factories
             //    entity.MA = LoadMaTaiSan(_workContext.CurrentDonVi.ID, entity.ID, entity.LOAI_TAI_SAN_DON_VI_ID, entity.LOAI_HINH_TAI_SAN_ID);
             //else
             //    entity.MA = LoadMaTaiSan(0, entity.ID, entity.LOAI_TAI_SAN_ID, entity.LOAI_HINH_TAI_SAN_ID);
-            _mapper.Map(entity, item);
+            item = models.ToEntity<TaiSan>();
 
             _taiSanService.UpdateTaiSan(item);
             switch (item.LOAI_HINH_TAI_SAN_ID)
             {
                 case (int)enumLOAI_HINH_TAI_SAN.DAT:
-                    var TsDat = _taisandatService.GetTaiSanDatByTaiSanId(entity.ID);
-                    PrepareTaiSanDat(entity.taisandatModel, TsDat);
+                    var TsDat = _taisandatService.GetTaiSanDatByTaiSanId(models.ID ?? 0);
+                    PrepareTaiSanDat(models.taisandatModel, TsDat);
                     _taisandatService.UpdateTaiSanDat(TsDat);
                     var listNha = _taisannhaService.GetTaiSanNhaByDatId(TsDat.TAI_SAN_ID);
                     if (listNha != null)
@@ -99,7 +97,7 @@ namespace GS.NewAPI.Factories
                         foreach (var itemNha in listNha)
                         {
                             //itemNha.DIA_CHI = TsDat.DIA_CHI;
-                            itemNha.DIA_CHI = entity.TEN;
+                            itemNha.DIA_CHI = models.TEN;
                             _taisannhaService.UpdateTaiSanNha(itemNha);
                         }
                     }
@@ -166,11 +164,11 @@ namespace GS.NewAPI.Factories
                 //    break;
             }
             //update session
-            var bienDongTruoc = _bienDongService.GetBienDongCuoiByTaiSanId(entity.ID);
+            var bienDongTruoc = _bienDongService.GetBienDongCuoiByTaiSanId(models.ID);
             //insert biendong
 
             //khởi tạo biến động từ yêu cầu
-            var biendong = _bienDongService.GetBienDongById(entity.ID);
+            var biendong = _bienDongService.GetBienDongById(models.ID ?? 0);
             if (biendong != null)
             {
                 biendong.NGAY_DUYET = DateTime.Now;
@@ -251,12 +249,6 @@ namespace GS.NewAPI.Factories
                 item.XA_ID = model.XaId;
 
             }
-
-        }
-        public void UpdateTaiSan(List<TaiSanModel> entities)
-        {
-            var taiSanList = _mapper.Map<List<TaiSanModel>, List<TaiSan>>(entities);
-            _taiSanService.UpdateTaiSan(taiSanList);
 
         }
 
