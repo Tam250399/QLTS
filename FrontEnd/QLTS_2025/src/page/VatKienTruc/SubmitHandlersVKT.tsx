@@ -30,7 +30,11 @@ const SubmitHandlersVKT = () => {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pb-10">
-          <ThongtinTSKT register={register} errors={errors} />
+          <ThongtinTSKT
+            register={register}
+            errors={errors}
+            setValue={setValue}
+          />
         </div>
         <div className="pb-10">
           <GiaTriHaoMonVKT

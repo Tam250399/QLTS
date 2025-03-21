@@ -8,7 +8,7 @@ export interface ThongtinchungVkt {
   NGAY_DU_VAO_SD: string;
   NGAY_TANG: string;
   BO_PHAN_ID: number;
-  THE_TICH: number;
+  DIEN_TICH: number;
   NAM_SX: number;
   MO_TA: string;
 
@@ -20,4 +20,17 @@ export interface ThongtinchungVkt {
     GIA_TRI_CON_LAI: number;
     TY_LE_HAO_MON: number;
   };
+}
+export interface LyDoTangDat {
+  ma: string;
+  ten: string;
+  id: number;
+  loaI_HINH_TAI_SAN_ID: number;
+  loaI_LY_DO_ID: number;
+  loaI_LY_DO_BIEN_DONG_ID: number;
+}
+export interface quocgia {
+  ma: string;
+  ten: string;
+  id: number;
 }
