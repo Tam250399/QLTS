@@ -19,6 +19,7 @@ namespace GS.Services.TaiSans
         void InsertTaiSanHienTrangSuDung(TaiSanHienTrangSuDung entity);
         void InsertTaiSanHienTrangSuDungs(List<TaiSanHienTrangSuDung> entities);
         void UpdateTaiSanHienTrangSuDung(TaiSanHienTrangSuDung entity);
+        void UpDateTaiSanHienTrangSuDungs(List<TaiSanHienTrangSuDung> entities);
         void DeleteTaiSanHienTrangSuDung(TaiSanHienTrangSuDung entity);
         void DeleteTaiSanHienTrangSuDungs(IList<TaiSanHienTrangSuDung> entities);
         IList<TaiSanHienTrangSuDung> GetHienTrangSuDungs(decimal TaiSanId = 0, decimal BienDongId = 0);

@@ -98,6 +98,12 @@ namespace GS.Services.TaiSans
             //event notification
             //_eventPublisher.EntityUpdated(entity);            
         }
+        public virtual void UpDateTaiSanHienTrangSuDungs(List<TaiSanHienTrangSuDung> entities)
+        {
+            if (entities == null || (entities != null && entities.Count == 0))
+                throw new ArgumentNullException(nameof(entities));
+            _itemRepository.Update(entities);
+        }
         public virtual void DeleteTaiSanHienTrangSuDung(TaiSanHienTrangSuDung entity)
         {
             if (entity == null)

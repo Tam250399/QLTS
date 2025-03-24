@@ -10,6 +10,7 @@ namespace GS.NewAPI.Factories
         bool CheckTenTaiSan(string ten, decimal? id = 0, decimal? donViId = 0);
         TaiSanModel InsertTaiSan(TaiSanModel model);
         TaiSan GetTaiSanById(decimal Id);
-        UpdateTaiSanResult UpdateTaiSan(TaiSanModel models);
+        TaiSanModel UpdateTaiSan(TaiSanModel models);
+        void PrepareTaiSanDat(TaiSanModel model, TaiSanDat item);
     }
 }

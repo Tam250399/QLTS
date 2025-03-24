@@ -85,7 +85,7 @@ namespace GS.NewAPI.Models
 
         public HienTrangSuDungModel HIEN_TRANG_SU_DUNG { get; set; }
         public HoSoGiayToModel HO_SO_GIAY_TO { get; set; }
-        public TaiSanDatModel taisandatModel { get; set; }
+       // public TaiSanDatModel taisandatModel { get; set; }
         #region chu dung den
         //public String QUYET_DINH_SO { get; set; }
         //[UIHint("DateNullable")]

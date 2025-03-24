@@ -24,7 +24,6 @@ namespace GS.NewAPI.Factories
         }
         public void InsertTaiSanNguonVonFromBienDong(TaiSanModel model, BienDongModel bd)
         {
-
             var nguonVon = ((enumNguonVon[])Enum.GetValues(typeof(enumNguonVon))).Select(c => (int)c).ToList();
             var _listNV = _nguonVonService.GetNguonVonByIds(nguonVon.Select(c => (decimal)c).ToArray());
             var lstNguonVonModel = new List<NguonVonModel>();
@@ -67,8 +66,27 @@ namespace GS.NewAPI.Factories
                     }
                     tsnv.BIEN_DONG_ID = (decimal)bd.ID;
                     lst.Add(tsnv);
-                    _taiSanNguonVonService.InsertTaiSanNguonVon(tsnv);
+                        _taiSanNguonVonService.UpdateTaiSanNguonVon(tsnv);
                 }
+            }
+        }
+
+        public void UpDateTaiSanNguonVonFromBienDong(TaiSanModel model, List<TaiSanNguonVon> tsnv, BienDongModel bd)
+        {
+
+            foreach (var item in tsnv)
+            {
+                switch (item.NGUON_VON_ID)
+                {
+                    case 1:
+                        item.GIA_TRI = (decimal)model.GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH;
+                    break;
+                    case 3:
+                        item.GIA_TRI = (decimal)model.GIA_TRI_SU_DUNG_DAT.NGUON_KHAC;
+                    break;
+
+                }
+                _taiSanNguonVonService.UpdateTaiSanNguonVon(item);
             }
         }
     }

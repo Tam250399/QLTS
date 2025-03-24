@@ -8,6 +8,7 @@ namespace GS.NewAPI.Factories
     public interface IBienDongModelFactory
     {
         BienDongModel InsertToBienDong(TaiSan item, TaiSanModel tsModel, BienDongModel model);
+        BienDong UpDateBienDong(TaiSanModel tsModel, BienDong bienDong);
         BienDong GetBienDongCuoiByTaiSanId(decimal? taiSanId = 0);
     }
 }

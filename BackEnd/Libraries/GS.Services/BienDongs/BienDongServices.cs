@@ -394,8 +394,10 @@ namespace GS.Services.BienDongs
 
         public BienDong GetBienDongCuNhatByTaiSanId(decimal taiSanId)
         {
-            if (taiSanId > 0)
-                return _itemRepository.Table.Where(c => c.TAI_SAN_ID == taiSanId && c.TRANG_THAI_ID != (int)enumTRANG_THAI_YEU_CAU.XOA).OrderBy(c => c.NGAY_BIEN_DONG).FirstOrDefault();
+            if (taiSanId > 0){
+                var bd = _itemRepository.Table.Where(c => c.TAI_SAN_ID == taiSanId && c.TRANG_THAI_ID != (int)enumTRANG_THAI_YEU_CAU.XOA).OrderBy(c => c.NGAY_BIEN_DONG).FirstOrDefault();
+                return bd;
+            }
             else
                 return null;
         }

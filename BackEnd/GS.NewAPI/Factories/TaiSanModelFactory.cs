@@ -29,7 +29,6 @@ namespace GS.NewAPI.Factories
         private readonly IBienDongService _bienDongService;
         public TaiSanModelFactory(
             ITaiSanService taiSanService,
-            IMapper mapper ,
             IWorkContext workContext,
             ILoaiTaiSanDonViServices loaiTaiSanDonViService,
             ILoaiTaiSanService loaiTaiSanService,
@@ -52,26 +51,23 @@ namespace GS.NewAPI.Factories
             public bool Success { get; set; }
             public string Message { get; set; }
         }
-        public UpdateTaiSanResult UpdateTaiSan(TaiSanModel models)
+        public TaiSanModel UpdateTaiSan(TaiSanModel model)
         {
-            var item = _taiSanService.GetTaiSanById(models.ID ?? 0);
-            models.NGUOI_TAO_ID = item.NGUOI_TAO_ID;
+            var item = _taiSanService.GetTaiSanById(model.ID ?? 0);
             if (item == null)
-                return new UpdateTaiSanResult
-                {
-                    Success = false,
-                    Message = "Tài sản không tồn tại"
-                };
-
+            {
+                throw new Exception("Tài sản không tồn tại!");
+            }
+            model.NGUOI_TAO_ID = item.NGUOI_TAO_ID;
             if (item.TrangThaiTaiSan == enumTRANG_THAI_TAI_SAN.DA_DUYET ||
                 item.TrangThaiTaiSan == enumTRANG_THAI_TAI_SAN.DA_DUYET_GIAM_TOAN_BO)
             {
-                return new UpdateTaiSanResult
                 {
-                    Success = false,
-                    Message = "Tài sản đã được duyệt, không thể chỉnh sửa"
-                };
+                    throw new Exception("Tài sản đã duyệt không thể sửa!");
+
+                }
             }
+            model.NGAY_TAO = DateTime.Now;
             //if (entity.LOAI_HINH_TAI_SAN_ID == (int)enumLOAI_HINH_TAI_SAN.OTO)
             //{
             //    entity.TEN = _taiSanOtoModelFactory.genTenTaiSanOto(entity.taisanOtoModel.NHAN_XE_ID, entity.taisanOtoModel.DONG_XE_ID, entity.taisanOtoModel.BIEN_KIEM_SOAT);
@@ -81,128 +77,44 @@ namespace GS.NewAPI.Factories
             //    entity.MA = LoadMaTaiSan(_workContext.CurrentDonVi.ID, entity.ID, entity.LOAI_TAI_SAN_DON_VI_ID, entity.LOAI_HINH_TAI_SAN_ID);
             //else
             //    entity.MA = LoadMaTaiSan(0, entity.ID, entity.LOAI_TAI_SAN_ID, entity.LOAI_HINH_TAI_SAN_ID);
-            item = models.ToEntity<TaiSan>();
-
+            item.TEN= model.TEN;
+            //item = model.ToEntity<TaiSan>();
             _taiSanService.UpdateTaiSan(item);
-            switch (item.LOAI_HINH_TAI_SAN_ID)
-            {
-                case (int)enumLOAI_HINH_TAI_SAN.DAT:
-                    var TsDat = _taisandatService.GetTaiSanDatByTaiSanId(models.ID ?? 0);
-                    PrepareTaiSanDat(models.taisandatModel, TsDat);
-                    _taisandatService.UpdateTaiSanDat(TsDat);
-                    var listNha = _taisannhaService.GetTaiSanNhaByDatId(TsDat.TAI_SAN_ID);
-                    if (listNha != null)
-                    {
-                        //update lại địa chỉ của tài sản nhà được gắn trên đất
-                        foreach (var itemNha in listNha)
-                        {
-                            //itemNha.DIA_CHI = TsDat.DIA_CHI;
-                            itemNha.DIA_CHI = models.TEN;
-                            _taisannhaService.UpdateTaiSanNha(itemNha);
-                        }
-                    }
-                    //yeuCauChiTiet.DIA_CHI = model.TEN; //địa chỉ đẩy đủ cả tỉnh, huyện, xã
-                    //yeuCauChiTiet.DIA_CHI = TsDat.DIA_CHI;//địa chỉ nguyên bản chưa xử lý
-                    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.NHA:
-                //    var TsNha = _taisannhaService.GetTaiSanNhaByTaiSanId(model.ID);
-                //    _taiSanNhaModelFactory.PrepareTaiSanNha(model.taisannhaModel, TsNha);
-                //    TsNha.NGAY_SU_DUNG = model.NGAY_SU_DUNG;
-                //    _taisannhaService.UpdateTaiSanNha(TsNha);
-                //    yeuCauChiTiet.DIA_CHI = TsNha.DIA_CHI;
-                //    if ((model.taisannhaModel.TAI_SAN_DAT_ID ?? 0) <= 0)
-                //    {
-                //        // lưu địa chỉ đầy đủ của nhà không đất trên ycct.Dia_CHI
-                //        // địa chỉ nguyên bản lưu trên taisannha, ycct.NHA_DIA_CHI
-                //        yeuCauChiTiet.DIA_CHI = _taiSanNhaModelFactory.PrepareDiaChiNhaByDiaBan(TsNha.DIA_CHI.Trim(), model.taisannhaModel.DIA_BAN_ID);
-                //        yeuCauChiTiet.NHA_DIA_CHI = TsNha.DIA_CHI;
-                //    }
-                //    // thêm lưu địa chỉ nhà
-                //    yeuCauChiTiet.DIA_BAN_ID = model.taisannhaModel.DIA_BAN_ID;
-
-                //    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
-                //case (int)enumLOAI_HINH_TAI_SAN.OTO:
-                //    var TsOto = _taisanOtoService.GetTaiSanOtoById(model.ID);
-                //    _taiSanOtoModelFactory.PrepareTaiSanOto(model.taisanOtoModel, TsOto);
-                //    _taisanOtoService.UpdateTaiSanOto(TsOto);
-                //    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
-                //    model.taisanClnModel = new TaiSanClnModel();
-                //    model.taisanClnModel.TAI_SAN_ID = model.ID;
-                //    model.taisanClnModel.NAM_SINH = model.NAM_SAN_XUAT;
-                //    var TsCayLauNam = _taisanClnService.GetTaiSanClnByTaiSanId(model.ID);
-                //    _taiSanClnModelFactory.PrepareTaiSanCln(model.taisanClnModel, TsCayLauNam);
-                //    _taisanClnService.UpdateTaiSanCln(TsCayLauNam);
-                //    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
-                //case (int)enumLOAI_HINH_TAI_SAN.DAC_THU:
-                //case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
-                //    model.taisanmaymocModel.TAI_SAN_ID = model.ID;
-                //    model.taisanmaymocModel.PHU_KIEN_JSON = model.taisanmaymocModel.ListPhuKienHuuHinh.toStringJson();
-                //    var TsMayMoc = _taisanmaymocService.GetTaiSanMaymocByTaiSanId(model.ID);
-                //    _taiSanMayMocModelFactory.PrepareTaiSanMayMoc(model.taisanmaymocModel, TsMayMoc);
-                //    _taisanmaymocService.UpdateTaiSanMayMoc(TsMayMoc);
-                //    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
-                //    model.taisanVktModel.TAI_SAN_ID = model.ID;
-                //    var TsVatKienTruc = _taisanVKTService.GetTaiSanVktByTaiSanId(model.ID);
-                //    _taiSanVktModelFactory.PrepareTaiSanVkt(model.taisanVktModel, TsVatKienTruc);
-                //    _taisanVKTService.UpdateTaiSanVkt(TsVatKienTruc);
-                //    break;
-
-                //case (int)enumLOAI_HINH_TAI_SAN.VO_HINH:
-                //    model.taisanvohinhModel.TAI_SAN_ID = model.ID;
-                //    var taisanvohinh = _taiSanVoHinhService.GetTaiSanVoHinhByTaiSanId(model.ID);
-                //    _taiSanVoHinhModelFactory.PrepareTaiSanVoHinh(model.taisanvohinhModel, taisanvohinh);
-                //    _taiSanVoHinhService.UpdateTaiSanVoHinh(taisanvohinh);
-                //    break;
-            }
             //update session
-            var bienDongTruoc = _bienDongService.GetBienDongCuoiByTaiSanId(models.ID);
-            //insert biendong
+            //var bienDongTruoc = _bienDongService.GetBienDongCuoiByTaiSanId(model.ID);
+            ////insert biendong
 
-            //khởi tạo biến động từ yêu cầu
-            var biendong = _bienDongService.GetBienDongById(models.ID ?? 0);
-            if (biendong != null)
-            {
-                biendong.NGAY_DUYET = DateTime.Now;
-                biendong.NGUOI_DUYET_ID = _workContext.CurrentCustomer.ID;
-                biendong.TRANG_THAI_ID = (int)enumTRANG_THAI_YEU_CAU.DA_DUYET;
-            }
-            //gán lại giá trị mặc định
+            ////khởi tạo biến động từ yêu cầu
+            //var biendong = _bienDongService.GetBienDongById(model.ID ?? 0);
+            //if (biendong != null)
+            //{
+            //    biendong.NGAY_DUYET = DateTime.Now;
+            //    biendong.NGUOI_DUYET_ID = _workContext.CurrentCustomer.ID;
+            //    biendong.TRANG_THAI_ID = (int)enumTRANG_THAI_YEU_CAU.DA_DUYET;
+            //}
+            ////gán lại giá trị mặc định
         
 
-            //nếu có biến động trước là thay đổi thông tin
-            //gán lại giá trị đã thay đổi của biến động
-            //_bienDongModelFactory.PrepareBienDongFromBDTDTT(biendong, bienDongTruoc);
+            ////nếu có biến động trước là thay đổi thông tin
+            ////gán lại giá trị đã thay đổi của biến động
+            ////_bienDongModelFactory.PrepareBienDongFromBDTDTT(biendong, bienDongTruoc);
 
-            ////khởi tạo biến động chi tiết từ yêu cầu chi tiết
-            //var yeucauchitiet = _yeuCauChiTietService.GetYeuCauChiTietByYeuCauId(yeuCau.ID);
-            //var yeucauchitietModel = yeucauchitiet.ToModel<YeuCauChiTietModel>();
-            //var biendongchitiet = yeucauchitietModel.ToEntity<BienDongChiTiet>();
-            ////gán giá trị diện tích sang bảng biến động
-            //biendong.DAT_TONG_DIEN_TICH = biendongchitiet.DAT_TONG_DIEN_TICH;
-            //biendong.NHA_TONG_DIEN_TICH_XD = biendongchitiet.NHA_TONG_DIEN_TICH_XD;
-            //biendong.VKT_DIEN_TICH = biendongchitiet.VKT_DIEN_TICH;
+            //////khởi tạo biến động chi tiết từ yêu cầu chi tiết
+            ////var yeucauchitiet = _yeuCauChiTietService.GetYeuCauChiTietByYeuCauId(yeuCau.ID);
+            ////var yeucauchitietModel = yeucauchitiet.ToModel<YeuCauChiTietModel>();
+            ////var biendongchitiet = yeucauchitietModel.ToEntity<BienDongChiTiet>();
+            //////gán giá trị diện tích sang bảng biến động
+            ////biendong.DAT_TONG_DIEN_TICH = biendongchitiet.DAT_TONG_DIEN_TICH;
+            ////biendong.NHA_TONG_DIEN_TICH_XD = biendongchitiet.NHA_TONG_DIEN_TICH_XD;
+            ////biendong.VKT_DIEN_TICH = biendongchitiet.VKT_DIEN_TICH;
 
-            ////hiện trạng của biến động chi tiết
-            //if (biendongchitiet.HTSD_JSON == null) biendongchitiet.HTSD_JSON = _trungGianBDYCService.GetHTSD_JSON_of_TS(ts.ID);
+            //////hiện trạng của biến động chi tiết
+            ////if (biendongchitiet.HTSD_JSON == null) biendongchitiet.HTSD_JSON = _trungGianBDYCService.GetHTSD_JSON_of_TS(ts.ID);
 
-            ////tính lại giá trị còn lại của biến động
-            //_bienDongModelFactory.TinhGiaTriConLaiBienDong(biendong, biendongchitiet);
-            _bienDongService.UpdateBienDong(biendong);
-            return new UpdateTaiSanResult
-            {
-                Success = true,
-                Message = "Cập nhật tài sản thành công"
-            };
-
+            //////tính lại giá trị còn lại của biến động
+            ////_bienDongModelFactory.TinhGiaTriConLaiBienDong(biendong, biendongchitiet);
+            //_bienDongService.UpdateBienDong(biendong);
+            return item.ToModel<TaiSanModel>();
         }
 
         public string LoadMaTaiSan(decimal? DonViId = 0, decimal? TaiSanId = 0, decimal? LoaiTaiSanId = 0, decimal? loaiHinhTaiSanId = 0)
@@ -236,17 +148,17 @@ namespace GS.NewAPI.Factories
             }
             return MaTs;
         }
-        public void PrepareTaiSanDat(TaiSanDatModel model, TaiSanDat item)
+        public void PrepareTaiSanDat(TaiSanModel model, TaiSanDat item)
         {
             if (model != null && item != null)
             {
                 item.DIA_CHI = model.DIA_CHI;
-                item.DIA_BAN_ID = model.DIA_BAN_ID;
-                item.DIEN_TICH = model.DIEN_TICH;
-                item.DIEN_TICH_XAY_NHA = model.DIEN_TICH_XAY_NHA;
-                item.TINH_ID = model.TinhId;
-                item.HUYEN_ID = model.HuyenId;
-                item.XA_ID = model.XaId;
+                item.DIA_BAN_ID = model.XA_PHUONG_ID;
+                item.DIEN_TICH = model.DIEN_TICH ?? 0;
+                //item.DIEN_TICH_XAY_NHA = model.DIEN_TICH_XAY_NHA;
+                item.TINH_ID = model.TINH_THANH_PHO_ID;
+                item.HUYEN_ID = model.QUAN_HUYEN_ID;
+                item.XA_ID = model.XA_PHUONG_ID;
 
             }
 

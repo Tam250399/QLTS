@@ -51,5 +51,28 @@ namespace GS.NewAPI.Factories
             _bienDongService.InsertBienDong(bd);
             return model;
         }
+
+        public BienDong UpDateBienDong( TaiSanModel tsModel, BienDong bienDong)
+        {
+            if (tsModel != null)
+            {
+                bienDong.TAI_SAN_TEN = tsModel.TEN;
+                bienDong.NGUYEN_GIA = tsModel.NGUYEN_GIA;
+                bienDong.LY_DO_BIEN_DONG_ID = tsModel.LY_DO_TANG_ID;
+                bienDong.LOAI_TAI_SAN_ID = tsModel.LOAI_TAI_SAN_ID;
+                //set trạng thái biến động là chờ duyệt
+                bienDong.TRANG_THAI_ID = (decimal)enumTRANG_THAI_YEU_CAU.CHO_DUYET;
+                bienDong.DON_VI_ID = tsModel.DON_VI_ID;
+                bienDong.NGAY_SU_DUNG = tsModel.NGAY_SU_DUNG;
+                bienDong.NGAY_BIEN_DONG = Convert.ToDateTime(tsModel.NGAY_TANG);
+                bienDong.NGAY_TAO = DateTime.Now;
+                bienDong.LOAI_HINH_TAI_SAN_ID = tsModel.LOAI_HINH_TAI_SAN_ID;
+                bienDong.TINH_ID = tsModel.TINH_THANH_PHO_ID;
+                bienDong.HUYEN_ID = tsModel.QUAN_HUYEN_ID;
+                bienDong.XA_ID = tsModel.XA_PHUONG_ID;
+            }
+            _bienDongService.UpdateBienDong(bienDong);
+            return bienDong;
+        }
     }
 }
