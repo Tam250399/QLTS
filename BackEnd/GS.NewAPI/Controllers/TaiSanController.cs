@@ -59,7 +59,7 @@ namespace GS.NewAPI.Controllers
             IBienDongChiTietService bienDongChiTietService,
             ITaiSanNguonVonService taiSanNguonVonService,
             ITaiSanHienTrangSuDungService taiSanHienTrangSuDungService,
-            GSObjectContext context) 
+            GSObjectContext context, 
             ITaiSanNhaModelFactory taiSanNhaModelFactory) 
         {
             _taiSanModelFactory = taiSanModelFactory;

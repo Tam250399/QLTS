@@ -82,5 +82,10 @@ namespace GS.NewAPI.Factories
             _bienDongService.UpdateBienDong(bienDong);
             return bienDong;
         }
+
+        public void UpdateBienDongs(IList<BienDong> entities)
+        {
+            _bienDongService.UpdateBienDong(entities);
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace GS.NewAPI.Factories
         TaiSanModel InsertTaiSan(TaiSanModel model);
         TaiSan GetTaiSanById(decimal Id);
         TaiSanModel UpdateTaiSan(TaiSanModel models);
+        void UpdateTaiSan(TaiSan entity);
         void PrepareTaiSanDat(TaiSanModel model, TaiSanDat item);
     }
 }
