@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using DevExpress.DataAccess.Native;
+using AutoMapper;
 using GS.Core.Domain.DanhMuc;
 using GS.Core;
 using GS.Core.Domain.TaiSans;
@@ -224,5 +225,14 @@ namespace GS.NewAPI.Factories
             return taiSanEntity.ToModel<TaiSanModel>();
 
         }
+        public void UpdateTaiSan(TaiSan entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            _taiSanService.UpdateTaiSan(entity);
+            //event notification
+            //_eventPublisher.EntityUpdated(entity);
+        }
+
     }
 }
