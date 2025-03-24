@@ -57,6 +57,7 @@ const SubmitHandlers = () => {
           <Dientichhientrang
             register={register}
             errors={errors}
+            setValue={setValue}
             getValues={getValues}
           />
         </div>
