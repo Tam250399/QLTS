@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyProductAttribute("GS.WebApi")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10c937b2347c69925d08ee3eecb15f967c6b3ad1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5bcabc2c097453d30af263093ddbc58b5fad09be")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GS.WebApi.Views")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 

@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("GS.Web is also an MVC web application project, a presentation layer for public st" +
     "ore and admin area.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("4.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("4.1.0.0+106dd8b2f1cf4d8acaf99c8adac8656e5fb12442")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("4.1.0.0+5bcabc2c097453d30af263093ddbc58b5fad09be")]
 [assembly: System.Reflection.AssemblyProductAttribute("GS.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GS.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("4.1.0.0")]
