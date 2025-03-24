@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GS.WebTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10c937b2347c69925d08ee3eecb15f967c6b3ad1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8eb64140bb9dac0c4168329c1d559fc68e43d9d1")]
 [assembly: System.Reflection.AssemblyProductAttribute("GS.WebTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GS.WebTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
