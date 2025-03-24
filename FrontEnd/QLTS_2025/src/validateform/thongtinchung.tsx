@@ -26,7 +26,7 @@ export interface Thongtinchung {
     HD_SD_KINH_DOANH: number | string; // HDSN-Kinh doanh (m²)
     HD_SD_CHO_THUE: number | string; // HDSN-Cho thuê (m²)
     HD_SD_KINH_DOANH_LK: number | string; // HDSN-LDLK (m²)
-    deO: number | string; // Để ở (m²)
+    deO?: number | string; // Để ở (m²)
     BO_TRONG: number | string; // Bỏ trống (m²)
     BI_LAN_CHIEM: number | string; // Bị lấn chiếm (m²)
     SU_DUNG_HON_HOP: number | string; // Sử dụng hỗn hợp (m²)

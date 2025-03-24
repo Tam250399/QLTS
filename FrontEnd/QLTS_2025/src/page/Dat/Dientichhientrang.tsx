@@ -1,12 +1,47 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+} from "react-hook-form";
 import { Thongtinchung } from "../../validateform/thongtinchung";
+import { useEffect, useState } from "react";
 interface ThongtintaisanProps {
   register: UseFormRegister<Thongtinchung>;
   errors: FieldErrors<Thongtinchung>;
+  getValues: UseFormGetValues<Thongtinchung>;
 }
-const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
+const Dientichhientrang = ({ register, getValues }: ThongtintaisanProps) => {
+  const [areaError, setAreaError] = useState<string | undefined>(undefined);
+  const {
+    TRU_SO_LAM_VIEC,
+    deO,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  } = getValues("HIEN_TRANG_SU_DUNG") || {};
+
+  const totalRelevantFields = [
+    TRU_SO_LAM_VIEC,
+    deO,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  ].reduce<number>((sum, value) => sum + (Number(value) || 0), 0);
+
+  const dienTich = getValues("dienTich");
+
+  useEffect(() => {
+    if (dienTich && totalRelevantFields !== Number(dienTich)) {
+      setAreaError("Diện tích đất phải bằng tổng hiện trạng sử dụng.");
+    } else {
+      setAreaError(undefined);
+    }
+  }, [dienTich, totalRelevantFields]);
+
   return (
     <Box
       sx={{
@@ -46,9 +81,9 @@ const Dientichhientrang = ({ register, errors }: ThongtintaisanProps) => {
             placeholder="m²"
             type="number"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("dienTich", { required: "Bạn phải nhập diện tích" })}
-            error={!!errors.dienTich}
-            helperText={errors.dienTich?.message}
+            {...register("dienTich")}
+            error={!!areaError}
+            helperText={areaError}
           />
         </Grid>
 

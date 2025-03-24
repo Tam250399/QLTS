@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
 import Thongtintaisan from "./Thongtintaisan";
-import { Alert, Box, Button, Typography } from "@mui/material";
-import Dientichhientrang from "./Dientichhientrang";
+import { Box, Button, Typography } from "@mui/material";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Thongtinchung } from "../../validateform/thongtinchung";
 import SaveIcon from "@mui/icons-material/Save";
+import Dientichhientrang from "./Dientichhientrang";
 
 const SubmitHandlers = () => {
   const {
@@ -16,63 +15,15 @@ const SubmitHandlers = () => {
     setValue,
     setError,
     clearErrors,
-    watch,
+    getValues,
   } = useForm<Thongtinchung>({
     defaultValues: {
       QUOC_GIA_ID: undefined,
       DIA_CHI: "",
-      dienTich: "",
-      HIEN_TRANG_SU_DUNG: {
-        TRU_SO_LAM_VIEC: "",
-        deO: "",
-        BO_TRONG: "",
-        BI_LAN_CHIEM: "",
-        SU_DUNG_HON_HOP: "",
-        SU_DUNG_KHAC: "",
-      },
     },
   });
 
-  const [areaError, setAreaError] = useState<string | null>(null);
-  const dienTich = watch("dienTich");
-  const {
-    TRU_SO_LAM_VIEC,
-    deO,
-    BO_TRONG,
-    BI_LAN_CHIEM,
-    SU_DUNG_HON_HOP,
-    SU_DUNG_KHAC,
-  } = watch("HIEN_TRANG_SU_DUNG");
-
-  const totalRelevantFields = [
-    TRU_SO_LAM_VIEC,
-    deO,
-    BO_TRONG,
-    BI_LAN_CHIEM,
-    SU_DUNG_HON_HOP,
-    SU_DUNG_KHAC,
-  ].reduce<number>((sum, value) => sum + (Number(value) || 0), 0);
-
-  useEffect(() => {
-    if (dienTich && totalRelevantFields !== Number(dienTich)) {
-      setAreaError("Diện tích đất phải bằng tổng của Hiện trạng sử dụng.");
-    } else {
-      setAreaError(null);
-    }
-  }, [
-    TRU_SO_LAM_VIEC,
-    deO,
-    BO_TRONG,
-    BI_LAN_CHIEM,
-    SU_DUNG_HON_HOP,
-    SU_DUNG_KHAC,
-  ]);
-
   const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
-    if (dienTich && totalRelevantFields !== Number(dienTich)) {
-      setAreaError("Diện tích đất phải bằng tổng của Hiện trạng sử dụng.");
-      return;
-    }
     console.log("Dữ liệu form:", data);
   };
 
@@ -103,12 +54,11 @@ const SubmitHandlers = () => {
           />
         </div>
         <div className="pb-10">
-          <Dientichhientrang register={register} errors={errors} />
-          {areaError && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {areaError}
-            </Alert>
-          )}
+          <Dientichhientrang
+            register={register}
+            errors={errors}
+            getValues={getValues}
+          />
         </div>
 
         <div className="pb-10">
