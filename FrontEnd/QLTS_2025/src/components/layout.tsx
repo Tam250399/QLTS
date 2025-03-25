@@ -109,9 +109,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Layout: React.FC = () => {
-  const dispatch = useDispatch();
-
   const { message, type } = useSelector((state: RootState) => state.toast);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     showToast(message, type);

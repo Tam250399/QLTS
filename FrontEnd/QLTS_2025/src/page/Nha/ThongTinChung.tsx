@@ -56,11 +56,11 @@ const ThongTinChung = ({
   const [openChonDat, setOpenChonDat] = useState(false);
   const [openThemBP, setOpenThemBP] = useState(false);
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
-  const [selectedTinh, setSelectedTinh] = useState<string | null>(null);
-  const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
+  const [selectedTinh] = useState<string | null>(null);
+  const [selectedQuocGia] = useState<number | null>(null);
   const [quocGia, setQuocGia] = useState<quocgia[]>([]);
   const [quans, setQuans] = useState<Huyen[]>([]);
-  const [selectedQuan, setSelectedQuan] = useState<string | null>(null);
+  const [selectedQuan] = useState<string | null>(null);
   const [phuongs, setPhuongs] = useState<Phuong[]>([]);
 
   useEffect(() => {
@@ -344,7 +344,6 @@ const ThongTinChung = ({
                           const selected = quocGia.find(
                             (quocGia) => quocGia.TEN === value
                           );
-                          setSelectedQuocGia(selected?.ID || -1);
                           setValue("QUOC_GIA_ID", selected?.ID || -1);
                           clearErrors("QUOC_GIA_ID");
                         }
@@ -392,7 +391,6 @@ const ThongTinChung = ({
                           const selected = quans.find(
                             (quans) => quans.TEN === value
                           );
-                          setSelectedQuan(selected?.MA || "");
                           setValue("QUAN_HUYEN_ID", selected?.ID || -1);
                           clearErrors("QUAN_HUYEN_ID");
                         }
@@ -627,7 +625,6 @@ const ThongTinChung = ({
                             const selected = tinhTPs.find(
                               (tinh) => tinh.TEN === value
                             );
-                            setSelectedTinh(selected?.MA || "");
                             setValue("TINH_THANH_PHO_ID", selected?.ID || -1);
                             clearErrors("TINH_THANH_PHO_ID");
                           }

@@ -36,6 +36,10 @@ const SubmitHandlers = () => {
     },
   });
 
+  const onHandleHome = () => {
+    navigate("/trangchu");
+  };
+
   const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
     setLoading(true);
     try {
@@ -60,7 +64,10 @@ const SubmitHandlers = () => {
           </Typography>
           <div className="flex items-center gap-2">
             <FaRegArrowAltCircleLeft className="text-xl text-blue-600" />
-            <div className="text-base text-blue-600 cursor-pointer hover:underline">
+            <div
+              onClick={onHandleHome}
+              className="text-base text-blue-600 cursor-pointer hover:underline"
+            >
               Quay lại danh sách
             </div>
           </div>
@@ -82,7 +89,10 @@ const SubmitHandlers = () => {
             ) : null}
             {loading ? "Đang xử lý" : "Lưu dữ liệu"}
           </Button>
-          <button className="border border-gray-400 text-gray-600 px-4 py-2 rounded hover:bg-gray-200">
+          <button
+            onClick={onHandleHome}
+            className="border border-gray-400 text-gray-600 px-4 py-2 rounded hover:bg-gray-200"
+          >
             Đóng
           </button>
         </div>

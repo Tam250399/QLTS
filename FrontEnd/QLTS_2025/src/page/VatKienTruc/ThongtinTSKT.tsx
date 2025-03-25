@@ -35,7 +35,7 @@ const ThongtinTSKT = ({
   setValue,
 }: ThongtintaisanVktProps) => {
   const [openThemBP, setOpenThemBP] = useState(false);
-  const [lyDoTangDat, setLyDoTangDats] = useState<LyDoTangDat[]>([]);
+  const [lyDoTangDat] = useState<LyDoTangDat[]>([]);
   const [quocGia, setQuocGia] = useState<quocgia[]>([]);
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const ThongtinTSKT = ({
             </Typography>
             <Autocomplete
               className="pt-[1px]"
-              options={quocGia.map((quocGias) => quocGias.ten)}
+              options={quocGia.map((quocGias) => quocGias.TEN)}
               getOptionLabel={(option) => option}
               renderInput={(params) => (
                 <TextField
@@ -314,12 +314,12 @@ const ThongtinTSKT = ({
               <Autocomplete
                 className="pt-[2px] pb-5"
                 options={lyDoTangDat}
-                getOptionLabel={(option) => option.ten}
+                getOptionLabel={(option) => option.TEN}
                 onChange={(_, value) => {
                   const selected = lyDoTangDat.find(
-                    (lydo) => lydo.id === value?.id
+                    (lydo) => lydo.ID === value?.ID
                   );
-                  setValue("BO_PHAN_ID", selected?.id || -1);
+                  setValue("BO_PHAN_ID", selected?.ID || -1);
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -337,7 +337,7 @@ const ThongtinTSKT = ({
                 noOptionsText="Không tìm thấy bộ phận sử dụng"
                 renderOption={(props, option) => (
                   <li {...props} style={{ fontSize: "14px" }}>
-                    {option.ten}
+                    {option.TEN}
                   </li>
                 )}
               />
