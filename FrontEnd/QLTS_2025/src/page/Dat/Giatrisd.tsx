@@ -46,7 +46,7 @@ const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
       shouldValidate: true,
     });
     console.log(getValues("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH"));
-    if (NGUON_NGAN_SACH < 1) {
+    if (NGUYEN_GIA && NGUYEN_GIA < NGUON_KHAC) {
       setNguonKhacError("Tổng các nguồn vốn phải bằng nguyên giá.");
     } else {
       setNguonKhacError(undefined);
