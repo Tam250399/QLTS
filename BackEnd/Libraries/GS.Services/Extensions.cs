@@ -2,9 +2,11 @@
 using GS.Core.Infrastructure;
 using GS.Services.HeThong;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace GS.Services
 {
@@ -106,6 +108,28 @@ namespace GS.Services
             }
             return ListString;
 
+        }
+        //config auto add scoped service and repository
+        public static IServiceCollection RegisterAssemblyServices(this IServiceCollection services)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var serviceTypes = assembly.GetExportedTypes()
+                .Where(t => t.IsClass);
+
+            foreach (var serviceType in serviceTypes)
+            {
+                var interfaces = serviceType.GetInterfaces();
+                var mainInterface = interfaces.FirstOrDefault(i =>
+                    (i.Name.StartsWith("I") && i.Name.EndsWith("Service") && i.Name.EndsWith(serviceType.Name))
+                    || (i.Name.StartsWith("I") && i.Name.EndsWith("Repository") && i.Name.EndsWith(serviceType.Name))
+                );
+                if (mainInterface != null)
+                {
+                    services.AddScoped(mainInterface, serviceType);
+                }
+            }
+
+            return services;
         }
     }
 }

@@ -1,41 +1,110 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GS.NewAPI.Middleware;
+using GS.Web.Framework.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using NLog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GS.NewAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        #region Fields
+
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        #endregion Fields
+
+        #region Ctor
+
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            Configuration = configuration;
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
+            LogManager.LoadConfiguration(System.String.Concat(hostingEnvironment.ContentRootPath, "/nlog.config"));
         }
 
-        public IConfiguration Configuration { get; }
+        #endregion Ctor
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        /// <summary>
+        /// Add services to the application and configure service provider
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+            // add swagger
+            services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+               {
+                   {
+                       new OpenApiSecurityScheme
+                       {
+                           Reference = new OpenApiReference
+                           {
+                               Type=ReferenceType.SecurityScheme,
+                               Id="Bearer"
+                           }
+                       },
+                       new string[]{}
+                   }
+               });
+            });
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            return services.ConfigureApplicationServices(_configuration);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder application, IHostingEnvironment env)
         {
+            application.ConfigureRequestPipeline();
+            application.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            application.UseSession();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                application.UseDeveloperExceptionPage();
+                application.UseSwagger();
+                application.UseSwaggerUI();
+                //application.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo API v1");
+                //    c.RoutePrefix = "swagger"; // Truy cập tại /swagger
+                //});
             }
-
-            app.UseMvc();
+            else
+            {
+                application.UseExceptionHandler("/Home/Error");
+                application.UseHsts();
+            }
+            application.UseMiddleware<ValidationExceptionMiddleware>();
+            
+           
         }
     }
 }

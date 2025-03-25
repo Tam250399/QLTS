@@ -16,6 +16,7 @@ namespace GS.Services.DanhMuc
         IList<LyDoBienDong> GetAllLyDoBienDongs();
         IList<LyDoBienDong> GetAllLyDoBienDongsChuaDb();
         IList<LyDoBienDong> GetLyDoBienDongs(decimal? LoaiHinhTaiSanId = 0, decimal? loailydoId = 0);
+        IList<LyDoBienDong> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false);
         IPagedList<LyDoBienDong> SearchLyDoBienDongs(int pageIndex = 0, int pageSize = int.MaxValue, string Keysearch = null, Decimal? loaiHinhTSId = -1, Decimal? loaiLyDoId = 0, string strLoaiHinhTSIds = null);
         LyDoBienDong GetLyDoBienDongById(decimal Id);
         IList<LyDoBienDong> GetLyDoBienDongByIds(decimal[] newsIds);
