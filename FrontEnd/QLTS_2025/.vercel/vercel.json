@@ -1,6 +1,11 @@
 {
     "redirects": [
-      { "source": "/", "destination": "/home", "permanent": true }
+      {  "source": "/(.*)",
+      "destination": "/index.html", "permanent": true },
+      {
+        "source": "/api/(.*)",
+        "destination": "/api/$1"
+      }
     ]
     
   }

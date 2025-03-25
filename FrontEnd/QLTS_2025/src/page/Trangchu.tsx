@@ -33,7 +33,7 @@ const Trangchu = () => {
     },
   ];
 
-  const handleCardClick = (title) => {
+  const handleCardClick = (title: string) => {
     switch (title) {
       case "Đất":
         navigate("/home");
