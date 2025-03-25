@@ -8,6 +8,7 @@ import {
   Thongtinchung,
   Tinh,
 } from "../validateform/thongtinchung";
+import { handleAxiosError } from "../helpers/axiosHelpers";
 const API_URL = `${environment.apiUrl}`;
 
 export async function GetDMQuocGia(): Promise<quocgia[]> {
@@ -79,18 +80,14 @@ export async function GetDMLyDoTangDat(
     throw error;
   }
 }
-export async function PostThongTinTaiSan(data: Thongtinchung): Promise<void> {
+export async function PostThongTinTaiSan(
+  data: Thongtinchung
+): Promise<Thongtinchung | null> {
   try {
     const response = await axios.post(`${API_URL}/TaiSan`, data);
     return response.data;
-    // console.log("aaa", response);
-    // if (response.data.Success) {
-    //   console.log("Gửi dữ liệu thành công:", response.data);
-    // } else {
-    //   throw new Error(response.data.message || "Gửi dữ liệu thất bại");
-    // }
   } catch (error) {
-    console.error("Lỗi khi gửi dữ liệu:", error);
-    throw error;
+    handleAxiosError(error);
+    return null;
   }
 }

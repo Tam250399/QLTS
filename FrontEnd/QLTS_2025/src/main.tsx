@@ -11,7 +11,7 @@ import Layout from "./components/layout.tsx";
 import SubmitHandlerHouses from "./page/Nha/SubmitHandlersNha.tsx";
 import SubmitHandlersVKT from "./page/VatKienTruc/SubmitHandlersVKT.tsx";
 import Trangchu from "./page/Trangchu.tsx";
-
+import { ToastContainer } from "react-toastify";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,5 +40,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <RouterProvider router={router} />
+    <ToastContainer />
   </Provider>
 );

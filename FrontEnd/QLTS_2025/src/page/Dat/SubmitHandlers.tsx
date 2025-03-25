@@ -1,5 +1,5 @@
 import Thongtintaisan from "./Thongtintaisan";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,10 +10,12 @@ import { PostThongTinTaiSan } from "../../service/ServiceDat";
 import { setToast } from "../../redux/toastLice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const SubmitHandlers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -29,31 +31,22 @@ const SubmitHandlers = () => {
       GIA_TRI_SU_DUNG_DAT: {
         NGUON_KHAC: 0,
       },
+      LOAI_HINH_TAI_SAN_ID: 1,
     },
   });
 
-  // const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
-  //   setLoading(true)
-  //   try {
-  //     dispatch(setToast({message:'Đăng nhập thành công' , type:'success'}))
-  //     PostThongTinTaiSan(data);
-  //     console.log("Dữ liệu form:", data);
-  //     if (logger) {
-  //       navigate('/dashboard');
-  //     }
-  //   } catch (error) {
-
-  //   }
-
-  // };
-
   const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
+    setLoading(true);
     try {
       await PostThongTinTaiSan(data);
-      dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
+      dispatch(
+        setToast({ message: "Lưu dữ liệu thành công", type: "success" })
+      );
       navigate("/trangchu");
     } catch (error) {
       // Xử lý lỗi ở đây
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,13 +58,17 @@ const SubmitHandlers = () => {
 
       <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
         <Button
+          disabled={loading}
           variant="contained"
           color="primary"
           type="submit"
           onClick={handleSubmit(onSubmit)}
           startIcon={<SaveIcon />}
         >
-          Lưu
+          {loading ? (
+            <CircularProgress size={24} className="mr-2 h-4 w-4 animate-spin" />
+          ) : null}
+          {loading ? "Đang xử lý" : "Lưu dữ liệu"}
         </Button>
       </Box>
       <form>
@@ -106,13 +103,20 @@ const SubmitHandlers = () => {
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button
+            disabled={loading}
             variant="contained"
             color="primary"
             type="submit"
             onClick={handleSubmit(onSubmit)}
             startIcon={<SaveIcon />}
           >
-            Lưu
+            {loading ? (
+              <CircularProgress
+                size={24}
+                className="mr-2 h-4 w-4 animate-spin"
+              />
+            ) : null}
+            {loading ? "Đang xử lý" : "Lưu dữ liệu"}
           </Button>
         </Box>
       </form>
