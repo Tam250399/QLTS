@@ -27,7 +27,6 @@ const SubmitHandlers = () => {
     getValues,
   } = useForm<Thongtinchung>({
     defaultValues: {
-      LOAI_HINH_TAI_SAN_ID: 1,
       QUOC_GIA_ID: undefined,
       DIA_CHI: "",
       GIA_TRI_SU_DUNG_DAT: {
