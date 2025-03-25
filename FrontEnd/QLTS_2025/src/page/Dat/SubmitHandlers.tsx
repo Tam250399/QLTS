@@ -1,5 +1,5 @@
 import Thongtintaisan from "./Thongtintaisan";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,10 +10,13 @@ import { PostThongTinTaiSan } from "../../service/ServiceDat";
 import { setToast } from "../../redux/toastLice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 
 const SubmitHandlers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -30,51 +33,63 @@ const SubmitHandlers = () => {
       GIA_TRI_SU_DUNG_DAT: {
         NGUON_KHAC: 0,
       },
+      LOAI_HINH_TAI_SAN_ID: 1,
     },
   });
 
-  // const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
-  //   setLoading(true)
-  //   try {
-  //     dispatch(setToast({message:'Đăng nhập thành công' , type:'success'}))
-  //     PostThongTinTaiSan(data);
-  //     console.log("Dữ liệu form:", data);
-  //     if (logger) {
-  //       navigate('/dashboard');
-  //     }
-  //   } catch (error) {
-
-  //   }
-
-  // };
-
   const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
+    setLoading(true);
     try {
       await PostThongTinTaiSan(data);
-      dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
+      dispatch(
+        setToast({ message: "Lưu dữ liệu thành công", type: "success" })
+      );
       navigate("/trangchu");
     } catch (error) {
       // Xử lý lỗi ở đây
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <Typography variant="h5" gutterBottom className="pb-10">
-        Nhập số dư tài sản đất
-      </Typography>
+      <div className="flex justify-between items-center p-4 bg-gray-100">
+        <div className="flex items-center gap-2">
+          <Typography variant="h5" className="text-black font-bold">
+            Nhập số dư tài sản đất
+          </Typography>
+          <div className="flex items-center gap-2">
+            <FaRegArrowAltCircleLeft className="text-xl text-blue-600" />
+            <div className="text-base text-blue-600 cursor-pointer hover:underline">
+              Quay lại danh sách
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            startIcon={<SaveIcon />}
+          >
+            {loading ? (
+              <CircularProgress
+                size={24}
+                className="mr-2 h-4 w-4 animate-spin"
+              />
+            ) : null}
+            {loading ? "Đang xử lý" : "Lưu dữ liệu"}
+          </Button>
+          <button className="border border-gray-400 text-gray-600 px-4 py-2 rounded hover:bg-gray-200">
+            Đóng
+          </button>
+        </div>
+      </div>
 
-      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-          startIcon={<SaveIcon />}
-        >
-          Lưu
-        </Button>
-      </Box>
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}></Box>
       <form>
         <div className="pb-10">
           <Thongtintaisan
@@ -108,13 +123,20 @@ const SubmitHandlers = () => {
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
           <Button
+            disabled={loading}
             variant="contained"
             color="primary"
             type="submit"
             onClick={handleSubmit(onSubmit)}
             startIcon={<SaveIcon />}
           >
-            Lưu
+            {loading ? (
+              <CircularProgress
+                size={24}
+                className="mr-2 h-4 w-4 animate-spin"
+              />
+            ) : null}
+            {loading ? "Đang xử lý" : "Lưu dữ liệu"}
           </Button>
         </Box>
       </form>

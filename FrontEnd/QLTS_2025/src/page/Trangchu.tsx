@@ -58,7 +58,7 @@ const Trangchu = () => {
         {cards.map((card, index) => (
           <div
             key={index}
-            className="card "
+            className="card cursor-pointer"
             onClick={() => handleCardClick(card.text)}
           >
             <div className="icon" style={{ color: card.color }}>
