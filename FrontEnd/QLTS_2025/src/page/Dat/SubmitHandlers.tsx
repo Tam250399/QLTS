@@ -11,6 +11,7 @@ import { setToast } from "../../redux/toastLice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 
 const SubmitHandlers = () => {
   const dispatch = useDispatch();
@@ -52,25 +53,42 @@ const SubmitHandlers = () => {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom className="pb-10">
-        Nhập số dư tài sản đất
-      </Typography>
+      <div className="flex justify-between items-center p-4 bg-gray-100">
+        <div className="flex items-center gap-2">
+          <Typography variant="h5" className="text-black font-bold">
+            Nhập số dư tài sản đất
+          </Typography>
+          <div className="flex items-center gap-2">
+            <FaRegArrowAltCircleLeft className="text-xl text-blue-600" />
+            <div className="text-base text-blue-600 cursor-pointer hover:underline">
+              Quay lại danh sách
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            startIcon={<SaveIcon />}
+          >
+            {loading ? (
+              <CircularProgress
+                size={24}
+                className="mr-2 h-4 w-4 animate-spin"
+              />
+            ) : null}
+            {loading ? "Đang xử lý" : "Lưu dữ liệu"}
+          </Button>
+          <button className="border border-gray-400 text-gray-600 px-4 py-2 rounded hover:bg-gray-200">
+            Đóng
+          </button>
+        </div>
+      </div>
 
-      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
-        <Button
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-          startIcon={<SaveIcon />}
-        >
-          {loading ? (
-            <CircularProgress size={24} className="mr-2 h-4 w-4 animate-spin" />
-          ) : null}
-          {loading ? "Đang xử lý" : "Lưu dữ liệu"}
-        </Button>
-      </Box>
+      <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}></Box>
       <form>
         <div className="pb-10">
           <Thongtintaisan
