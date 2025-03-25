@@ -6,7 +6,7 @@ interface HienTrangSuDungProps {
   register: UseFormRegister<ThongTinNha>;
   errors: FieldErrors<ThongTinNha>;
 }
-const HienTrangSuDung = ({ register, errors }: HienTrangSuDungProps) => {
+const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
   return (
     <Box
       sx={{

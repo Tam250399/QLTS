@@ -13,15 +13,15 @@ export interface ThongtinchungVkt {
   MO_TA: string;
 }
 export interface LyDoTangDat {
-  ma: string;
-  ten: string;
-  id: number;
+  MA: string;
+  TEN: string;
+  ID: number;
   loaI_HINH_TAI_SAN_ID: number;
   loaI_LY_DO_ID: number;
   loaI_LY_DO_BIEN_DONG_ID: number;
 }
 export interface quocgia {
-  ma: string;
-  ten: string;
-  id: number;
+  MA: string;
+  TEN: string;
+  ID: number;
 }

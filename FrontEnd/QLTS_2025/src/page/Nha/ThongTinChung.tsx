@@ -56,11 +56,11 @@ const ThongTinChung = ({
   const [openChonDat, setOpenChonDat] = useState(false);
   const [openThemBP, setOpenThemBP] = useState(false);
   const [tinhTPs, setTinhTPs] = useState<Tinh[]>([]);
-  const [selectedTinh, setselectedTinh] = useState<string | null>(null);
-  const [selectedQuocGia, setSelectedQuocGia] = useState<number | null>(null);
+  const [selectedTinh] = useState<string | null>(null);
+  const [selectedQuocGia] = useState<number | null>(null);
   const [quocGia, setQuocGia] = useState<quocgia[]>([]);
   const [quans, setQuans] = useState<Huyen[]>([]);
-  const [selectedQuan, setselectedQuan] = useState<string | null>(null);
+  const [selectedQuan] = useState<string | null>(null);
   const [phuongs, setPhuongs] = useState<Phuong[]>([]);
 
   useEffect(() => {
@@ -334,7 +334,7 @@ const ThongTinChung = ({
                   <FormControl fullWidth margin="dense">
                     <Autocomplete
                       className="pt-[1px]"
-                      options={quocGia.map((quocGias) => quocGias.ten)}
+                      options={quocGia.map((quocGias) => quocGias.TEN)}
                       {...register("QUOC_GIA_ID", {
                         required: "Bạn phải chọn Quốc gia",
                       })}
@@ -342,9 +342,9 @@ const ThongTinChung = ({
                       onChange={(_, value) => {
                         if (value) {
                           const selected = quocGia.find(
-                            (quocGia) => quocGia.ten === value
+                            (quocGia) => quocGia.TEN === value
                           );
-                          setValue("QUOC_GIA_ID", selected?.id || -1);
+                          setValue("QUOC_GIA_ID", selected?.ID || -1);
                           clearErrors("QUOC_GIA_ID");
                         }
                       }}
@@ -380,7 +380,7 @@ const ThongTinChung = ({
                   <FormControl fullWidth margin="dense" size="small">
                     <Autocomplete
                       className="pt-[1px]"
-                      options={quans.map((quan) => quan.ten)}
+                      options={quans.map((quan) => quan.TEN)}
                       {...register("QUAN_HUYEN_ID", {
                         required: "Bạn phải chọn Quận/Huyện",
                       })}
@@ -389,9 +389,9 @@ const ThongTinChung = ({
                       onChange={(_, value) => {
                         if (value) {
                           const selected = quans.find(
-                            (quans) => quans.ten === value
+                            (quans) => quans.TEN === value
                           );
-                          setValue("QUAN_HUYEN_ID", selected?.id || -1);
+                          setValue("QUAN_HUYEN_ID", selected?.ID || -1);
                           clearErrors("QUAN_HUYEN_ID");
                         }
                       }}
@@ -428,16 +428,16 @@ const ThongTinChung = ({
               <Autocomplete
                 className="pt-[1px]"
                 options={lyDoTangDat}
-                getOptionLabel={(option) => option.ten}
+                getOptionLabel={(option) => option.TEN}
                 {...register("LY_DO_TANG_ID", {
                   required: "Bạn phải chọn lý do tăng",
                 })}
                 onChange={(_, value) => {
                   if (value) {
                     const selected = lyDoTangDat.find(
-                      (lydo) => lydo.id === value?.id
+                      (lydo) => lydo.ID === value?.ID
                     );
-                    setValue("LY_DO_TANG_ID", selected?.id || -1);
+                    setValue("LY_DO_TANG_ID", selected?.ID || -1);
                     clearErrors("LY_DO_TANG_ID");
                   }
                 }}
@@ -456,7 +456,7 @@ const ThongTinChung = ({
                 noOptionsText="Không tìm thấy lý do tăng đất"
                 renderOption={(props, option) => (
                   <li {...props} style={{ fontSize: "14px" }}>
-                    {option.ten}
+                    {option.TEN}
                   </li>
                 )}
               />
@@ -472,16 +472,16 @@ const ThongTinChung = ({
               <Autocomplete
                 className="pt-[1px]"
                 options={lyDoTangDat}
-                getOptionLabel={(option) => option.ten}
+                getOptionLabel={(option) => option.TEN}
                 {...register("CAP_NHA_ID", {
                   required: "Bạn phải chọn cấp nhà",
                 })}
                 onChange={(_, value) => {
                   if (value) {
                     const selected = lyDoTangDat.find(
-                      (lydo) => lydo.id === value?.id
+                      (lydo) => lydo.ID === value?.ID
                     );
-                    setValue("CAP_NHA_ID", selected?.id || -1);
+                    setValue("CAP_NHA_ID", selected?.ID || -1);
                     clearErrors("CAP_NHA_ID");
                   }
                 }}
@@ -500,7 +500,7 @@ const ThongTinChung = ({
                 noOptionsText="Không tìm thấy cấp nhà"
                 renderOption={(props, option) => (
                   <li {...props} style={{ fontSize: "14px" }}>
-                    {option.ten}
+                    {option.TEN}
                   </li>
                 )}
               />
@@ -548,16 +548,16 @@ const ThongTinChung = ({
                 <Autocomplete
                   className="pt-[1px]"
                   options={lyDoTangDat}
-                  getOptionLabel={(option) => option.ten}
+                  getOptionLabel={(option) => option.TEN}
                   {...register("BO_PHAN_SD_ID", {
                     required: "Bạn phải chọn bộ phận sử dụng",
                   })}
                   onChange={(_, value) => {
                     if (value) {
                       const selected = lyDoTangDat.find(
-                        (lydo) => lydo.id === value?.id
+                        (lydo) => lydo.ID === value?.ID
                       );
-                      setValue("BO_PHAN_SD_ID", selected?.id || -1);
+                      setValue("BO_PHAN_SD_ID", selected?.ID || -1);
                       clearErrors("BO_PHAN_SD_ID");
                     }
                   }}
@@ -577,7 +577,7 @@ const ThongTinChung = ({
                   noOptionsText="Không tìm thấy bộ phận sử dụng"
                   renderOption={(props, option) => (
                     <li {...props} style={{ fontSize: "14px" }}>
-                      {option.ten}
+                      {option.TEN}
                     </li>
                   )}
                 />
@@ -613,7 +613,7 @@ const ThongTinChung = ({
                     <FormControl fullWidth margin="dense" size="small">
                       <Autocomplete
                         className="pt-[1px]"
-                        options={tinhTPs.map((tinh) => tinh.ten)}
+                        options={tinhTPs.map((tinh) => tinh.TEN)}
                         getOptionLabel={(option) => option}
                         disabled={!selectedQuocGia}
                         {...register("TINH_THANH_PHO_ID", {
@@ -623,9 +623,9 @@ const ThongTinChung = ({
                         onChange={(_, value) => {
                           if (value) {
                             const selected = tinhTPs.find(
-                              (tinh) => tinh.ten === value
+                              (tinh) => tinh.TEN === value
                             );
-                            setValue("TINH_THANH_PHO_ID", selected?.id || -1);
+                            setValue("TINH_THANH_PHO_ID", selected?.ID || -1);
                             clearErrors("TINH_THANH_PHO_ID");
                           }
                         }}
@@ -661,7 +661,7 @@ const ThongTinChung = ({
                     <FormControl fullWidth margin="dense" size="small">
                       <Autocomplete
                         className="pt-[1px]"
-                        options={phuongs.map((phuong) => phuong.ten)}
+                        options={phuongs.map((phuong) => phuong.TEN)}
                         getOptionLabel={(option) => option}
                         disabled={!selectedQuan}
                         {...register("XA_PHUONG_ID", {
@@ -670,9 +670,9 @@ const ThongTinChung = ({
                         onChange={(_, value) => {
                           if (value) {
                             const selected = phuongs.find(
-                              (phuong) => phuong.ten === value
+                              (phuong) => phuong.TEN === value
                             );
-                            setValue("XA_PHUONG_ID", selected?.id || -1);
+                            setValue("XA_PHUONG_ID", selected?.ID || -1);
                             clearErrors("XA_PHUONG_ID");
                           }
                         }}
