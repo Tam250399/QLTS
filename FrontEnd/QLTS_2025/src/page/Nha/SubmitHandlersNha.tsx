@@ -1,15 +1,25 @@
 import { Box, Button, Typography } from "@mui/material";
-import {
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import ThongTinChung from "./ThongTinChung";
 import GiaTriHaoMon from "./GiaTriHaoMon";
 import HienTrangSuDung from "./HienTrangSuDung";
 import { ThongTinNha } from "../../validateform/thongtinnha";
 import SaveIcon from "@mui/icons-material/Save";
+import { useEffect } from "react";
+import { showToast } from "../../helpers/myHelper";
+import { clearToast } from "../../redux/toastLice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const SubmitHandlerHouses = () => {
+  const { message, type } = useSelector((state: RootState) => state.toast);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    showToast(message, type);
+    dispatch(clearToast());
+  }, [message, type]);
+
   const {
     register,
     handleSubmit,

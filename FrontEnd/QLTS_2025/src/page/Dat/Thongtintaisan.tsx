@@ -169,9 +169,9 @@ const Thongtintaisan = ({
             margin="dense"
             placeholder="Nhập số nhà, đường phố, tổ/thôn/xóm"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("DIA_CHI", { required: true })}
+            {...register("TEN", { required: true })}
           />
-          {errors.DIA_CHI && (
+          {errors.TEN && (
             <span className="text-red-500 text-xs">Bạn phải nhập địa chỉ</span>
           )}
         </Grid>
@@ -184,7 +184,7 @@ const Thongtintaisan = ({
           <FormControl fullWidth margin="dense">
             <Autocomplete
               className="pt-[1px]"
-              options={quocGia.map((quocGias) => quocGias.ten)}
+              options={quocGia.map((quocGias) => quocGias.TEN)}
               getOptionLabel={(option) => option}
               {...register("QUOC_GIA_ID", {
                 required: "Bạn phải chọn quốc gia",
@@ -192,10 +192,10 @@ const Thongtintaisan = ({
               onChange={(_, value) => {
                 if (value) {
                   const selected = quocGia.find(
-                    (quocGia) => quocGia.ten === value
+                    (quocGia) => quocGia.TEN === value
                   );
-                  setSelectedQuocGia(selected?.id || null);
-                  setValue("QUOC_GIA_ID", selected?.id || -1);
+                  setSelectedQuocGia(selected?.ID || null);
+                  setValue("QUOC_GIA_ID", selected?.ID || -1);
                   clearErrors("QUOC_GIA_ID");
                 }
               }}
@@ -231,7 +231,7 @@ const Thongtintaisan = ({
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={quans.map((quan) => quan.ten)}
+              options={quans.map((quan) => quan.TEN)}
               getOptionLabel={(option) => option}
               disabled={!selectedTinh}
               {...register("QUAN_HUYEN_ID", {
@@ -239,9 +239,9 @@ const Thongtintaisan = ({
               })}
               onChange={(_, value) => {
                 if (value) {
-                  const selected = quans.find((quan) => quan.ten === value);
-                  setselectedQuan(selected?.ma || null);
-                  setValue("QUAN_HUYEN_ID", selected?.id || -1);
+                  const selected = quans.find((quan) => quan.TEN === value);
+                  setselectedQuan(selected?.MA || null);
+                  setValue("QUAN_HUYEN_ID", selected?.ID || -1);
                   clearErrors("QUAN_HUYEN_ID");
                 }
               }}
@@ -278,16 +278,16 @@ const Thongtintaisan = ({
             <Autocomplete
               className="pt-[1px]"
               options={lyDoTangDat}
-              getOptionLabel={(option) => option.ten}
+              getOptionLabel={(option) => option.TEN}
               {...register("LY_DO_TANG_ID", {
                 required: "Bạn phải chọn lý do tăng đất",
               })}
               onChange={(_, value) => {
                 if (value) {
                   const selected = lyDoTangDat.find(
-                    (lydo) => lydo.id === value?.id
+                    (lydo) => lydo.ID === value?.ID
                   );
-                  setValue("LY_DO_TANG_ID", selected?.id || -1);
+                  setValue("LY_DO_TANG_ID", selected?.ID || -1);
                   clearErrors("LY_DO_TANG_ID");
                 }
               }}
@@ -306,7 +306,7 @@ const Thongtintaisan = ({
               noOptionsText="Không tìm thấy quận huyện"
               renderOption={(props, option) => (
                 <li {...props} style={{ fontSize: "14px" }}>
-                  {option.ten}
+                  {option.TEN}
                 </li>
               )}
             />
@@ -343,7 +343,7 @@ const Thongtintaisan = ({
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={tinhTPs.map((tinh) => tinh.ten)}
+              options={tinhTPs.map((tinh) => tinh.TEN)}
               getOptionLabel={(option) => option}
               disabled={!selectedQuocGia}
               {...register("TINH_THANH_PHO_ID", {
@@ -352,9 +352,9 @@ const Thongtintaisan = ({
               // onChange={(_, value) => setValue("tinhthanhpho", value || "")}
               onChange={(_, value) => {
                 if (value) {
-                  const selected = tinhTPs.find((tinh) => tinh.ten === value);
-                  setselectedTinh(selected?.ma || null);
-                  setValue("TINH_THANH_PHO_ID", selected?.id || -1);
+                  const selected = tinhTPs.find((tinh) => tinh.TEN === value);
+                  setselectedTinh(selected?.MA || null);
+                  setValue("TINH_THANH_PHO_ID", selected?.ID || -1);
                   clearErrors("TINH_THANH_PHO_ID");
                 }
               }}
@@ -390,7 +390,7 @@ const Thongtintaisan = ({
           <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={phuongs.map((phuong) => phuong.ten)}
+              options={phuongs.map((phuong) => phuong.TEN)}
               getOptionLabel={(option) => option}
               disabled={!selectedQuan}
               {...register("XA_PHUONG_ID", {
@@ -399,9 +399,9 @@ const Thongtintaisan = ({
               onChange={(_, value) => {
                 if (value) {
                   const selected = phuongs.find(
-                    (phuong) => phuong.ten === value
+                    (phuong) => phuong.TEN === value
                   );
-                  setValue("XA_PHUONG_ID", selected?.id || -1);
+                  setValue("XA_PHUONG_ID", selected?.ID || -1);
                   clearErrors("XA_PHUONG_ID");
                 }
               }}
@@ -438,17 +438,17 @@ const Thongtintaisan = ({
             <Autocomplete
               className="pt-[1px]"
               options={mucDichTS}
-              getOptionLabel={(option) => `${option.ma} - ${option.ten}`}
-              {...register("MUC_DICH_ID", {
+              getOptionLabel={(option) => `${option.MA} - ${option.TEN}`}
+              {...register("LOAI_TAI_SAN_ID", {
                 required: "Bạn phải chọn mục đích sử dụng",
               })}
               onChange={(_, value) => {
                 if (value) {
                   const selected = mucDichTS.find(
-                    (mucdich) => mucdich.id === value?.id
+                    (mucdich) => mucdich.ID === value?.ID
                   );
-                  setValue("MUC_DICH_ID", selected?.id || -1);
-                  clearErrors("MUC_DICH_ID");
+                  setValue("LOAI_TAI_SAN_ID", selected?.ID || -1);
+                  clearErrors("LOAI_TAI_SAN_ID");
                 }
               }}
               renderInput={(params) => (
@@ -466,13 +466,13 @@ const Thongtintaisan = ({
               noOptionsText="Không tìm thấy mục đích sử dụng"
               renderOption={(props, option) => (
                 <li {...props} style={{ fontSize: "14px" }}>
-                  {option.ma} - {option.ten}
+                  {option.MA} - {option.TEN}
                 </li>
               )}
             />
-            {errors?.MUC_DICH_ID && (
+            {errors?.LOAI_TAI_SAN_ID && (
               <span className="text-red-500 text-xs">
-                {errors?.MUC_DICH_ID?.message}
+                {errors?.LOAI_TAI_SAN_ID?.message}
               </span>
             )}
           </FormControl>

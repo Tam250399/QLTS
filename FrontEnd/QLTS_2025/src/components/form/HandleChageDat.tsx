@@ -57,7 +57,7 @@ export const createHandleChangeQSD =
 export const handleChangeDienTichs = (
   setValue: UseFormSetValue<Thongtinchung>,
   setDisplayValue: (value: string) => void
-) => createHandleChange("dienTich", setValue, setDisplayValue);
+) => createHandleChange("DIEN_TICH", setValue, setDisplayValue);
 
 export const handleChangeTruSoLamViec = (
   setValue: UseFormSetValue<Thongtinchung>,
@@ -72,7 +72,7 @@ export const handleChangeTruSoLamViec = (
 export const handleChangeDeo = (
   setValue: UseFormSetValue<Thongtinchung>,
   setDisplayValue: (value: string) => void
-) => createHandleChange("HIEN_TRANG_SU_DUNG.deO", setValue, setDisplayValue);
+) => createHandleChange("HIEN_TRANG_SU_DUNG.DE_O", setValue, setDisplayValue);
 
 export const handleChangeBoTrong = (
   setValue: UseFormSetValue<Thongtinchung>,

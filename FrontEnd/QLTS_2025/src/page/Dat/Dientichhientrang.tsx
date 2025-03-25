@@ -30,7 +30,7 @@ const Dientichhientrang = ({
   getValues,
   setValue,
 }: ThongtintaisanProps) => {
-  const dienTich = getValues("dienTich");
+  const dienTich = getValues("DIEN_TICH");
 
   const [displayValues, setDisplayValues] = useState<Record<string, string>>(
     {}
@@ -39,7 +39,7 @@ const Dientichhientrang = ({
   const [areaError, setAreaError] = useState<string | undefined>(undefined);
   const {
     TRU_SO_LAM_VIEC,
-    deO,
+    DE_O,
     BO_TRONG,
     BI_LAN_CHIEM,
     SU_DUNG_HON_HOP,
@@ -48,7 +48,7 @@ const Dientichhientrang = ({
 
   const totalRelevantFields = [
     TRU_SO_LAM_VIEC,
-    deO,
+    DE_O,
     BO_TRONG,
     BI_LAN_CHIEM,
     SU_DUNG_HON_HOP,
@@ -67,7 +67,7 @@ const Dientichhientrang = ({
     const fields = {
       dienTich,
       TRU_SO_LAM_VIEC,
-      deO,
+      DE_O,
       BO_TRONG,
       BI_LAN_CHIEM,
       SU_DUNG_HON_HOP,
@@ -85,7 +85,7 @@ const Dientichhientrang = ({
   }, [
     dienTich,
     TRU_SO_LAM_VIEC,
-    deO,
+    DE_O,
     BO_TRONG,
     BI_LAN_CHIEM,
     SU_DUNG_HON_HOP,
@@ -133,9 +133,9 @@ const Dientichhientrang = ({
             margin="dense"
             type="text"
             placeholder="m²"
-            value={displayValues.dienTich || ""}
+            value={displayValues.DIEN_TICH || ""}
             onChange={handleChangeDienTichs(setValue, (value) =>
-              setDisplayValues((prev) => ({ ...prev, dienTich: value }))
+              setDisplayValues((prev) => ({ ...prev, DIEN_TICH: value }))
             )}
             error={!!areaError}
             helperText={areaError}
@@ -181,7 +181,7 @@ const Dientichhientrang = ({
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.hdSnKhongKd")}
+            {...register("HIEN_TRANG_SU_DUNG.HD_SN_KHONG_KINH_DOANH")}
           />
         </Grid>
 

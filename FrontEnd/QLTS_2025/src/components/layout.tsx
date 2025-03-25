@@ -19,7 +19,11 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { Outlet } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { showToast } from "../helpers/myHelper";
+import { clearToast } from "../redux/toastLice";
+import { useEffect } from "react";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -104,7 +108,16 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-export default function Layout() {
+const Layout: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const { message, type } = useSelector((state: RootState) => state.toast);
+
+  useEffect(() => {
+    showToast(message, type);
+    dispatch(clearToast());
+  }, [message, type]);
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -268,4 +281,5 @@ export default function Layout() {
       </Box>
     </Box>
   );
-}
+};
+export default Layout;

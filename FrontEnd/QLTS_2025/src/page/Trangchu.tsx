@@ -1,4 +1,3 @@
-import React from "react";
 import "../App.css";
 import {
   FaGlobe,
@@ -15,6 +14,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const Trangchu = () => {
+  const navigate = useNavigate();
+
   const cards = [
     { icon: <FaGlobe />, text: "Đất", color: "#00C4B4" },
     { icon: <FaHome />, text: "Nhà", color: "#1E90FF" },
@@ -32,8 +33,6 @@ const Trangchu = () => {
     },
   ];
 
-  const navigate = useNavigate();
-
   const handleCardClick = (title) => {
     switch (title) {
       case "Đất":
@@ -41,6 +40,7 @@ const Trangchu = () => {
         break;
       case "Nhà":
         navigate("/nha");
+
         break;
       case "Vật kiến trúc":
         navigate("/taisanvkt");

@@ -6,8 +6,14 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Thongtinchung } from "../../validateform/thongtinchung";
 import SaveIcon from "@mui/icons-material/Save";
 import Dientichhientrang from "./Dientichhientrang";
+import { PostThongTinTaiSan } from "../../service/ServiceDat";
+import { setToast } from "../../redux/toastLice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SubmitHandlers = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,11 +26,35 @@ const SubmitHandlers = () => {
     defaultValues: {
       QUOC_GIA_ID: undefined,
       DIA_CHI: "",
+      GIA_TRI_SU_DUNG_DAT: {
+        NGUON_KHAC: 0,
+      },
     },
   });
 
-  const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
-    console.log("Dữ liệu form:", data);
+  // const onSubmit: SubmitHandler<Thongtinchung> = (data) => {
+  //   setLoading(true)
+  //   try {
+  //     dispatch(setToast({message:'Đăng nhập thành công' , type:'success'}))
+  //     PostThongTinTaiSan(data);
+  //     console.log("Dữ liệu form:", data);
+  //     if (logger) {
+  //       navigate('/dashboard');
+  //     }
+  //   } catch (error) {
+
+  //   }
+
+  // };
+
+  const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
+    try {
+      await PostThongTinTaiSan(data);
+      dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
+      navigate("/trangchu");
+    } catch (error) {
+      // Xử lý lỗi ở đây
+    }
   };
 
   return (

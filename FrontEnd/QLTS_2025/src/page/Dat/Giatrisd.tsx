@@ -45,7 +45,7 @@ const Giatrisd = ({
     const value = parseFloat(event.target.value) || 0;
 
     setNGUYEN_GIA(value);
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", value, { shouldValidate: true });
+    setValue("NGUYEN_GIA", value, { shouldValidate: true });
     const updatedNGUON_NGAN_SACH = Math.max(0, value - NGUON_KHAC);
     setNGUON_NGAN_SACH(updatedNGUON_NGAN_SACH);
     setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", updatedNGUON_NGAN_SACH);
@@ -169,16 +169,16 @@ const Giatrisd = ({
             margin="dense"
             type="number"
             placeholder="đ̲"
-            {...register("GIA_TRI_SU_DUNG_DAT.NGUYEN_GIA", {
+            {...register("NGUYEN_GIA", {
               required: "Bạn phải nhập giá trị nguyên giá",
             })}
             value={NGUYEN_GIA || ""}
             onChange={handleNGUYEN_GIAChange}
             onBlur={handleNGUYEN_GIABlur}
           />
-          {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA && (
+          {errors?.NGUYEN_GIA && (
             <span className="text-red-500 text-xs">
-              {errors?.GIA_TRI_SU_DUNG_DAT?.NGUYEN_GIA.message}
+              {errors?.NGUYEN_GIA.message}
             </span>
           )}
 
