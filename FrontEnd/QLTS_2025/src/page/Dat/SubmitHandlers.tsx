@@ -124,6 +124,7 @@ const SubmitHandlers = () => {
             setValue={setValue}
             setError={setError}
             clearErrors={clearErrors}
+            getValues={getValues}
           />
         </div>
 
