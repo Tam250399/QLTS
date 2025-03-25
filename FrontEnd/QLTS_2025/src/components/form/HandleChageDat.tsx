@@ -119,3 +119,28 @@ export const handleChangeGiaTriQSD = (
     setValue,
     setDisplayValue
   );
+
+export const handleChangeNguyenGia = (
+  setValue: UseFormSetValue<Thongtinchung>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("NGUYEN_GIA", setValue, setDisplayValue);
+
+export const handleChangeNguonNganSach = (
+  setValue: UseFormSetValue<Thongtinchung>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChangeQSD(
+    "GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH",
+    setValue,
+    setDisplayValue
+  );
+
+export const handleChangeNguonKhac = (
+  setValue: UseFormSetValue<Thongtinchung>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChangeQSD(
+    "GIA_TRI_SU_DUNG_DAT.NGUON_KHAC",
+    setValue,
+    setDisplayValue
+  );
