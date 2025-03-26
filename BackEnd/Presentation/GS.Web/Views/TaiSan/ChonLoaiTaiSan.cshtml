@@ -56,7 +56,7 @@
 		</h4>
 	}
 	<div class="card-body">
-        <div class="container">
+        <div >
             @if (Model[0].isTangMoi == true)
             {
                 <div class="row div_ListTSChung">
@@ -408,7 +408,10 @@
             }
             else
             {
-                <iframe id="myIframe" src="http://localhost:5173/trangchu" title="Full Screen Iframe"></iframe>
+                <div className="iframe-container">
+                    <iframe id="myIframe"  className="fullscreen-iframe" src="http://172.30.16.1:5173/trangchu" title="Full Screen Iframe"></iframe>
+                </div>
+               
             }
         </div>
         </div>
@@ -501,6 +504,7 @@
 
 
 <style>
+    
 	.hoverlight:hover:before {
 		transform: scale(1.2);
 		box-shadow: 0 0 15px #85b2d5;
@@ -511,10 +515,7 @@
 		color: #ffa502;
 		box-shadow: 0 0 15px #85b2d5;
 	}
-    .row 
-    {
-        justify-content: space-between;
-    }
+  
 	/*#rowLoaiHinh{
 		align-items: center;
 		display: flex;
@@ -556,6 +557,7 @@
         width: 100%;
         height: calc(100vh - 100px); /* Chiếm toàn bộ chiều cao trừ footer */
         border: none;
+        scroll:none;
     }
 
     #busy-holder {
@@ -565,4 +567,5 @@
         height: 0;
         overflow: hidden;
     }
+  
 </style>
