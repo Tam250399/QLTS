@@ -1,4 +1,5 @@
-//----------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------
+//-------------------------------------------------
 // Create by       : GS template 1.0 
 // Template create : GS
 // Create date     : 13/12/2019
@@ -53,6 +54,17 @@ namespace GS.Services.DanhMuc
             {
                 return _itemRepository.Table.ToList();
             });
+        }
+        public virtual IList<MucDichSuDung> GetMucDichSuDungsByLoaiHinhTSId(decimal? loaiHinhTaiSanId)
+        {
+            if (loaiHinhTaiSanId == null)
+            {
+                return new List<MucDichSuDung>();
+            }
+            var query = GetTable()
+                .Where(c => c.LOAI_HINH_TAI_SAN_ID == loaiHinhTaiSanId)
+                .OrderBy(x => x.TEN);
+            return query.ToList();
         }
         public virtual IList<MucDichSuDung> GetMucDichSuDungChuaDb()
         {

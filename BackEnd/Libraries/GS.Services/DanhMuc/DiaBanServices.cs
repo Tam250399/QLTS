@@ -75,7 +75,7 @@ namespace GS.Services.DanhMuc
                 }
             }
             return query.ToList();
-        }
+        }       
         public virtual IList<DiaBan> GetDiaBansChuaDb()
         {
             var query = _itemRepository.Table.Where(c => c.DB_ID == null);
@@ -130,6 +130,16 @@ namespace GS.Services.DanhMuc
             if (String.IsNullOrEmpty(Ma))
                 return null;
             return _itemRepository.Table.Where(c => c.MA == Ma).FirstOrDefault();
+        }
+        public virtual IList<DiaBan> GetDiaBansByMaCha(string maCha)
+        {
+            if (String.IsNullOrEmpty(maCha))
+                return null;
+            return _itemRepository.Table
+                .Where(c => c.MA_CHA == maCha 
+                && c.TRANG_THAI_ID == (int)enumTRANG_THAI_DIABAN.KHADUNG)
+                .OrderBy(x =>x.MA_CHA)
+                .ToList();
         }
         public virtual IList<DiaBan> GetDiaBanByIds(decimal[] Ids)
         {
@@ -216,6 +226,8 @@ namespace GS.Services.DanhMuc
                 return null;
             return GetTable().Where(c => c.MA == Ma).FirstOrDefault();
         }
+
+      
         #endregion
     }
 }

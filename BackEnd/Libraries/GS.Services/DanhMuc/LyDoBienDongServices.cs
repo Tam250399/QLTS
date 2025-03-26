@@ -21,14 +21,14 @@ namespace GS.Services.DanhMuc
     public partial class LyDoBienDongService : ILyDoBienDongService
     {
         #region Fields
-        private readonly CauHinhChung _cauhinhChung;
-        private readonly ICacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
+        //private readonly CauHinhChung _cauhinhChung;
+        //private readonly ICacheManager _cacheManager;
+        //private readonly IDataProvider _dataProvider;
+        //private readonly IDbContext _dbContext;
         private readonly IWorkContext _workContext;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IRepository<LyDoBienDong> _itemRepository;
-        private readonly IRepository<LoaiDonVi> _loaiDonViRepository;
+        ///private readonly IRepository<LoaiDonVi> _loaiDonViRepository;
         private readonly IRepository<DonVi> _donViRepository;
         private readonly ILoaiLyDoBienDongService _loaiLyDoBienDongService;
         #endregion
@@ -36,25 +36,25 @@ namespace GS.Services.DanhMuc
         #region Ctor
 
         public LyDoBienDongService(CauHinhChung cauhinhChung,
-            ICacheManager cacheManager,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
+            //ICacheManager cacheManager,
+            //IDataProvider dataProvider,
+            //IDbContext dbContext,
             IStaticCacheManager staticCacheManager,
             IRepository<LyDoBienDong> itemRepository,
             IWorkContext workContext,
-            IRepository<LoaiDonVi> loaiDonViRepository,
+           // IRepository<LoaiDonVi> loaiDonViRepository,
             IRepository<DonVi> donViRepository,
             ILoaiLyDoBienDongService loaiLyDoBienDongService
             )
         {
-            this._cauhinhChung = cauhinhChung;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
+            //this._cauhinhChung = cauhinhChung;
+            //this._cacheManager = cacheManager;
+            //this._dataProvider = dataProvider;
+            //this._dbContext = dbContext;
             this._staticCacheManager = staticCacheManager;
             this._itemRepository = itemRepository;
             this._workContext = workContext;
-            this._loaiDonViRepository = loaiDonViRepository;
+            //this._loaiDonViRepository = loaiDonViRepository;
             this._donViRepository = donViRepository;
             this._loaiLyDoBienDongService = loaiLyDoBienDongService;
         }
@@ -106,6 +106,34 @@ namespace GS.Services.DanhMuc
                     string str = $",{currentDV.LOAI_DON_VI_ID},";
                     query = query.Where(c => c.LOAI_DON_VI == null || c.LOAI_DON_VI.Contains(str));
                 }
+            }
+
+            return query.ToList();
+        }
+        public virtual IList<LyDoBienDong> GetLyDoTangGiams(decimal? loaiLyDoBienDongId = 0, decimal? loaiHinhTaiSanId = 0, Boolean isTangMoi = false)
+        {
+            var query = GetTable().AsQueryable<LyDoBienDong>();
+
+            if (loaiHinhTaiSanId > 0)
+            {
+                //var strloai_hinh_tai_san = LoaiHinhTaiSanId.ToString();
+                //query = query.Where(c => c.LOAI_HINH_TAI_SAN_AP_DUNG_ID == null || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloai_hinh_tai_san)).OrderByDescending(c => c.LOAI_HINH_TAI_SAN_ID);
+
+
+                var strloaiHinhTSId = "," + loaiHinhTaiSanId + ",";
+                var strloaiHinhTSId1 = "[" + loaiHinhTaiSanId;
+                var strloaiHinhTSId2 = loaiHinhTaiSanId + "]";
+                query = query.Where(c => c.LOAI_HINH_TAI_SAN_AP_DUNG_ID == null || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId.ToString())
+                                                                                || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId1.ToString())
+                                                                                || c.LOAI_HINH_TAI_SAN_AP_DUNG_ID.Contains(strloaiHinhTSId2.ToString()));
+            }
+            if (loaiLyDoBienDongId > 0 && loaiLyDoBienDongId != 12)
+            {
+                query = query.Where(c => c.LOAI_LY_DO_ID == loaiLyDoBienDongId);
+            }
+            if (isTangMoi == true)
+            {
+                query = query.Where(c => c.MA != "001");
             }
 
             return query.ToList();

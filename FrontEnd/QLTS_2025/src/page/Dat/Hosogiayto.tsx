@@ -84,7 +84,12 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
                   fontSize: "14px",
                   backgroundColor: "#e3e3e3",
                   textAlign: "center",
-                  borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
+                  minWidth: "60px", // Đặt chiều rộng tối thiểu
+                  padding: "0px", // Tránh padding làm thu nhỏ nội dung
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopRightRadius: 0,
                   borderBottomRightRadius: 0,
                   "& fieldset": {
                     borderTopRightRadius: 0,
@@ -149,7 +154,12 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
                   fontSize: "14px",
                   backgroundColor: "#e3e3e3",
                   textAlign: "center",
-                  borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
+                  minWidth: "60px", // Đặt chiều rộng tối thiểu
+                  padding: "0px", // Tránh padding làm thu nhỏ nội dung
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopRightRadius: 0,
                   borderBottomRightRadius: 0,
                   "& fieldset": {
                     borderTopRightRadius: 0,
@@ -214,7 +224,12 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
                   fontSize: "14px",
                   backgroundColor: "#e3e3e3",
                   textAlign: "center",
-                  borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
+                  minWidth: "60px", // Đặt chiều rộng tối thiểu
+                  padding: "0px", // Tránh padding làm thu nhỏ nội dung
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopRightRadius: 0,
                   borderBottomRightRadius: 0,
                   "& fieldset": {
                     borderTopRightRadius: 0,
@@ -279,7 +294,12 @@ const HO_SO_GIAY_TO = ({ register, setValue }: ThongtintaisanProps) => {
                   fontSize: "14px",
                   backgroundColor: "#e3e3e3",
                   textAlign: "center",
-                  borderTopRightRadius: 0, // Bỏ góc bo tròn bên phải
+                  minWidth: "60px", // Đặt chiều rộng tối thiểu
+                  padding: "0px", // Tránh padding làm thu nhỏ nội dung
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopRightRadius: 0,
                   borderBottomRightRadius: 0,
                   "& fieldset": {
                     borderTopRightRadius: 0,

@@ -126,7 +126,7 @@ namespace GS.Web.Controllers
         private readonly ITaiSanImportModelFactory _taiSanImportModelFactory;
         private readonly ITaiSanHienTrangSuDungModelFactory _taiSanHienTrangSuDungModelFactory;
         private readonly IHinhThucMuaSamService _hinhThucMuaSamService;
-        private readonly IQuocGiaService _quocGiaService;
+        private readonly IQuocGiaService _quocGiaService; 
         private readonly ITaiSanKhauHaoService _taiSanKhauHaoService;
         #region KT
         private readonly IHaoMonTaiSanModelFactory _haoMonTaiSanModelFactory;

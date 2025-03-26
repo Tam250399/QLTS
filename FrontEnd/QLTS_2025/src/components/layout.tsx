@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { showToast } from "../helpers/myHelper";
 import { clearToast } from "../redux/toastLice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -117,6 +117,19 @@ const Layout: React.FC = () => {
     dispatch(clearToast());
   }, [message, type]);
 
+  // useEffect(() => {
+  //   window.addEventListener("message", (event) => {
+  //     const { token, name, assets } = event.data;
+
+  //     console.log("Received data:", token, name, assets);
+
+  //     // Lưu vào localStorage hoặc state của React
+  //     if (token && name) {
+  //       localStorage.setItem("token", token);
+  //     }
+  //   });
+  // }, []);
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -136,7 +149,7 @@ const Layout: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+      {/* <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
@@ -284,9 +297,9 @@ const Layout: React.FC = () => {
             )
           )}
         </List>
-      </Drawer>
+      </Drawer> */}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
+        {/* <DrawerHeader /> */}
         <Outlet />
       </Box>
     </Box>
