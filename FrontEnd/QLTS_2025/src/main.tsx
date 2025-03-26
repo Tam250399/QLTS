@@ -12,6 +12,7 @@ import SubmitHandlerHouses from "./page/Nha/SubmitHandlersNha.tsx";
 import SubmitHandlersVKT from "./page/VatKienTruc/SubmitHandlersVKT.tsx";
 import Trangchu from "./page/Trangchu.tsx";
 import { ToastContainer } from "react-toastify";
+import AssetList from "./page/DanhSachTS.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,10 +30,14 @@ const router = createBrowserRouter([
         path: "/taisanvkt",
         element: <SubmitHandlersVKT />,
       },
-
       {
         path: "/trangchu",
         element: <Trangchu />,
+      },
+
+      {
+        path: "/list",
+        element: <AssetList />,
       },
     ],
   },

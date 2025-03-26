@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 
-const HienTrangSD = ({ control }) => {
+const HienTrangSD = (control: any) => {
   return (
     <Box
       sx={{

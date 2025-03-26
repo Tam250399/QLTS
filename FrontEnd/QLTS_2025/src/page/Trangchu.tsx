@@ -33,10 +33,10 @@ const Trangchu = () => {
     },
   ];
 
-  const handleCardClick = (title) => {
+  const handleCardClick = (title: string) => {
     switch (title) {
       case "Đất":
-        navigate("/home");
+        navigate("/home", { state: { id: 123 } });
         break;
       case "Nhà":
         navigate("/nha");
@@ -52,7 +52,7 @@ const Trangchu = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container ">
       <h2 className="title pb-10">Nhập số dư đầu kỳ - Mới chọn nhóm tài sản</h2>
       <div className="grid">
         {cards.map((card, index) => (
