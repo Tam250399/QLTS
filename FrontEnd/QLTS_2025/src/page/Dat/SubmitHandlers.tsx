@@ -38,7 +38,7 @@ const SubmitHandlers = () => {
       GIA_TRI_SU_DUNG_DAT: {
         NGUON_KHAC: 0,
       },
-      LOAI_HINH_TAI_SAN_ID: 1,
+      LOAI_HINH_TAI_SAN_ID: id,
     },
   });
 

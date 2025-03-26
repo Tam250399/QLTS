@@ -11,10 +11,13 @@ import { clearToast } from "../../redux/toastLice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { FaRegArrowAltCircleLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SubmitHandlerHouses = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = location.state || {};
+
   const [loading, setLoading] = useState(false);
   const { message, type } = useSelector((state: RootState) => state.toast);
   const dispatch = useDispatch();
@@ -34,7 +37,9 @@ const SubmitHandlerHouses = () => {
     setError,
     clearErrors,
   } = useForm<ThongTinNha>({
-    defaultValues: {},
+    defaultValues: {
+      LOAI_HINH_TAI_SAN_ID: id,
+    },
   });
 
   const onSubmit: SubmitHandler<ThongTinNha> = (data) => {
