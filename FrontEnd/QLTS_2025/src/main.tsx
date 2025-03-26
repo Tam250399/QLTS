@@ -7,7 +7,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SubmitHandlers from "./page/Dat/SubmitHandlers.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.tsx";
-// import Layout from "./components/layout.tsx";
+import Layout from "./components/layout.tsx";
 import SubmitHandlerHouses from "./page/Nha/SubmitHandlersNha.tsx";
 import SubmitHandlersVKT from "./page/VatKienTruc/SubmitHandlersVKT.tsx";
 import Trangchu from "./page/Trangchu.tsx";
@@ -16,7 +16,7 @@ import AssetList from "./page/DanhSachTS.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Trangchu />,
+    element: <Layout />,
     children: [
       {
         path: "/home",
@@ -29,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/taisanvkt",
         element: <SubmitHandlersVKT />,
+      },
+      {
+        path: "/trangchu",
+        element: <Trangchu />,
       },
 
       {

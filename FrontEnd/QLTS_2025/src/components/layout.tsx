@@ -18,7 +18,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { showToast } from "../helpers/myHelper";
@@ -128,6 +128,12 @@ const Layout: React.FC = () => {
     setOpen(false);
   };
 
+  const navigate = useNavigate();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -172,6 +178,11 @@ const Layout: React.FC = () => {
           ].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
+                onClick={() => {
+                  if (text === "Nhập số dư đầu kỳ") {
+                    handleNavigate("/trangchu");
+                  }
+                }}
                 sx={[
                   {
                     minHeight: 48,
