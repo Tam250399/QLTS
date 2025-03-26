@@ -55,92 +55,125 @@
 			Ghi tăng tài sản - Mời chọn nhóm tài sản
 		</h4>
 	}
-	else
-	{
-		<h4 class="card-header">
-
-			Nhập số dư đầu kỳ - Mời chọn nhóm tài sản
-		</h4>
-	}
 	<div class="card-body">
         <div class="container">
-            <div class="row div_ListTSChung">
-                @if (Model[0].isTSQL)
-                {
-                    @foreach (LoaiHinhTaiSanModel _model in ListTSChung)
+            @if (Model[0].isTangMoi == true)
+            {
+                <div class="row div_ListTSChung">
+                    @if (Model[0].isTSQL)
                     {
-                        var loaihinhTsId = _model.Id;
-                        var iconClass = "";
-
-                        switch (loaihinhTsId)
+                        @foreach (LoaiHinhTaiSanModel _model in ListTSChung)
                         {
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT:
-                                iconClass = "ion ion-md-globe display-4 text-info";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA:
-                                iconClass = "ion ion-md-home display-4 text-default";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.OTO:
-                                iconClass = "ion ion-ios-car display-4 text-danger";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
-                                iconClass = "fas fa-tree icon-tree text-success";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
-                                iconClass = "ion ion-md-desktop display-4 text-warning";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
-                                iconClass = "ion ion-md-analytics display-4 text-primary";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.VO_HINH:
-                                iconClass = "ion ion-ios-color-filter display-4 text-danger";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
-                                iconClass = "ion ion-ios-boat display-4 text-default";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
-                                iconClass = "ion ion-md-cube display-4 text-dark";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAC_THU:
-                                iconClass = "ion ion-ios-pie display-4 text-primary";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TSCD_KHAC:
-                                iconClass = "ion ion-ios-keypad display-4 text-primary";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD:
-                                iconClass = "ion ion-md-options display-4 text-primary";
-                                break;
-                            case 0:
-                                iconClass = "ion ion-md-globe display-4 text-info";
-                                break;
-                        }
+                            var loaihinhTsId = _model.Id;
+                            var iconClass = "";
 
-                        if (loaihinhTsId > 0 && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.TSCD_KHAC
-                            && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD
-                            && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.VO_HINH
-                            && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
-                        {
-                            <div class="col-md-3 col-xs-4 test">
-                                <div class="card mb-4">
-                                    <div class="card-body hoverlight">
-                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
-                                            <div class="d-flex align-items-center">
-                                                <div class="@iconClass "></div>
-                                                <div class="ml-3">
-                                                    <div class="text-muted small"></div>
-                                                    <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
+                            switch (loaihinhTsId)
+                            {
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT:
+                                    iconClass = "ion ion-md-globe display-4 text-info";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA:
+                                    iconClass = "ion ion-md-home display-4 text-default";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.OTO:
+                                    iconClass = "ion ion-ios-car display-4 text-danger";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
+                                    iconClass = "fas fa-tree icon-tree text-success";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
+                                    iconClass = "ion ion-md-desktop display-4 text-warning";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
+                                    iconClass = "ion ion-md-analytics display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.VO_HINH:
+                                    iconClass = "ion ion-ios-color-filter display-4 text-danger";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
+                                    iconClass = "ion ion-ios-boat display-4 text-default";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
+                                    iconClass = "ion ion-md-cube display-4 text-dark";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAC_THU:
+                                    iconClass = "ion ion-ios-pie display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TSCD_KHAC:
+                                    iconClass = "ion ion-ios-keypad display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD:
+                                    iconClass = "ion ion-md-options display-4 text-primary";
+                                    break;
+                                case 0:
+                                    iconClass = "ion ion-md-globe display-4 text-info";
+                                    break;
+                            }
+
+                            if (loaihinhTsId > 0 && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.TSCD_KHAC
+                                && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD
+                                && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.VO_HINH
+                                && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.DAC_THU)
+                            {
+                                <div class="col-md-3 col-xs-4 test">
+                                    <div class="card mb-4">
+                                        <div class="card-body hoverlight">
+                                            <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="@iconClass "></div>
+                                                    <div class="ml-3">
+                                                        <div class="text-muted small"></div>
+                                                        <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                        else if ((loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD
-                            || loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH
-                            || loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.DAC_THU) && Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
-                        {
-                            if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD)
+                            }
+                            else if ((loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD
+                                || loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH
+                                || loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.DAC_THU) && Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
+                            {
+                                if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD)
+                                {
+                                    <div class="col-md-4 col-xs-4 test">
+                                        <div class="card mb-4">
+                                            <div class="card-body hoverlight">
+                                                <a id="btn_@loaihinhTsId" data-id="@loaihinhTsId" href="javascript:void(0)">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="@iconClass "></div>
+                                                        <div class="ml-3">
+                                                            <div class="text-muted small"></div>
+                                                            <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-4 col-xs-4 test">
+                                        <div class="card mb-4">
+                                            <div class="card-body hoverlight">
+                                                <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="@iconClass "></div>
+                                                        <div class="ml-3">
+                                                            <div class="text-muted small"></div>
+                                                            <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+                            else if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD && !Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
                             {
                                 <div class="col-md-4 col-xs-4 test">
                                     <div class="card mb-4">
@@ -157,8 +190,86 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-2 col-xs-4 test"></div>
+                            }
+                            else if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH && !Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
+                            {
+                                if (Model[0].isTSQL)
+                                {
+                                    <div class="col-md-2 col-xs-4 test"></div>
+                                }
+                                <div class="col-md-4 col-xs-4 test">
+                                    <div class="card mb-4">
+                                        <div class="card-body hoverlight">
+                                            <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="@iconClass "></div>
+                                                    <div class="ml-3">
+                                                        <div class="text-muted small"></div>
+                                                        <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                             else
+                            {
+                                <div class="col-md-3 col-xs-4 test"></div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (LoaiHinhTaiSanModel _model in ListTSChung)
+                        {
+                            var loaihinhTsId = _model.Id;
+                            var iconClass = "";
+
+                            switch (loaihinhTsId)
+                            {
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT:
+                                    iconClass = "ion ion-md-globe display-4 text-info";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA:
+                                    iconClass = "ion ion-md-home display-4 text-default";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.OTO:
+                                    iconClass = "ion ion-ios-car display-4 text-danger";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
+                                    iconClass = "fas fa-tree icon-tree text-success";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
+                                    iconClass = "ion ion-md-desktop display-4 text-warning";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
+                                    iconClass = "ion ion-md-analytics display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.VO_HINH:
+                                    iconClass = "ion ion-ios-color-filter display-4 text-danger";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
+                                    iconClass = "ion ion-ios-boat display-4 text-default";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
+                                    iconClass = "ion ion-md-cube display-4 text-dark";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAC_THU:
+                                    iconClass = "ion ion-ios-pie display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TSCD_KHAC:
+                                    iconClass = "ion ion-ios-keypad display-4 text-primary";
+                                    break;
+                                case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD:
+                                    iconClass = "ion ion-md-options display-4 text-primary";
+                                    break;
+                                case 0:
+                                    iconClass = "ion ion-md-globe display-4 text-info";
+                                    break;
+                            }
+                            if (loaihinhTsId > 0)
                             {
                                 <div class="col-md-4 col-xs-4 test">
                                     <div class="card mb-4">
@@ -176,62 +287,23 @@
                                     </div>
                                 </div>
                             }
-
-                        }
-                        else if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD && !Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
-                        {
-                            <div class="col-md-4 col-xs-4 test">
-                                <div class="card mb-4">
-                                    <div class="card-body hoverlight">
-                                        <a id="btn_@loaihinhTsId" data-id="@loaihinhTsId" href="javascript:void(0)">
-                                            <div class="d-flex align-items-center">
-                                                <div class="@iconClass "></div>
-                                                <div class="ml-3">
-                                                    <div class="text-muted small"></div>
-                                                    <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-xs-4 test"></div>
-                        }
-                        else if (loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH && !Model.Where(c => c.Id == (int)enumLOAI_HINH_TAI_SAN.DAC_THU).Any())
-                        {
-                            if (Model[0].isTSQL)
-                            {
-                                <div class="col-md-2 col-xs-4 test"></div>
-                            }
-                            <div class="col-md-4 col-xs-4 test">
-                                <div class="card mb-4">
-                                    <div class="card-body hoverlight">
-                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
-                                            <div class="d-flex align-items-center">
-                                                <div class="@iconClass "></div>
-                                                <div class="ml-3">
-                                                    <div class="text-muted small"></div>
-                                                    <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-3 col-xs-4 test"></div>
                         }
                     }
-                }
-                else
-                {
-                    foreach (LoaiHinhTaiSanModel _model in ListTSChung)
+                </div>
+
+                <div class="row div_ListTSQL" style="display:none;">
+                    <div class="col-md-12" id="div_back_ListTSQL" style="display:flex; margin-bottom:10px; margin-left:20px">
+                        @*<i class="ion ion-md-arrow-round-back d-block" style="font-size:20px; color:#2673b4; cursor:pointer"></i>
+                        <a href="javascript:void(0);" style="padding:unset; margin-left:5px" id="btnBack" class="divLoaiHinh nav-link">Trở lại</a>*@
+                        <small>
+                            <i class="fa fa-arrow-circle-left"></i>
+                            <a href="javascript:void(0)">Quay lại danh sách</a>
+                        </small>
+                    </div>
+                    @foreach (LoaiHinhTaiSanModel _model in ListTSQL)
                     {
                         var loaihinhTsId = _model.Id;
                         var iconClass = "";
-
                         switch (loaihinhTsId)
                         {
                             case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT:
@@ -259,27 +331,22 @@
                                 iconClass = "ion ion-ios-boat display-4 text-default";
                                 break;
                             case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
-                                iconClass = "ion ion-md-cube display-4 text-dark";
+                                iconClass = "ion ion-md-cube display-4 text-green";
                                 break;
                             case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAC_THU:
                                 iconClass = "ion ion-ios-pie display-4 text-primary";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TSCD_KHAC:
-                                iconClass = "ion ion-ios-keypad display-4 text-primary";
-                                break;
-                            case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_QUAN_LY_NHU_TSCD:
-                                iconClass = "ion ion-md-options display-4 text-primary";
                                 break;
                             case 0:
                                 iconClass = "ion ion-md-globe display-4 text-info";
                                 break;
                         }
-                        if (loaihinhTsId > 0)
+
+                        if (loaihinhTsId > 0 && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.VO_HINH && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC)
                         {
-                            <div class="col-md-4 col-xs-4 test">
+                            <div class=" col-md-4 col-xs-6 test">
                                 <div class="card mb-4">
                                     <div class="card-body hoverlight">
-                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),false)" href="javascript:void(0);">
+                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
                                             <div class="d-flex align-items-center">
                                                 <div class="@iconClass "></div>
                                                 <div class="ml-3">
@@ -292,126 +359,59 @@
                                 </div>
                             </div>
                         }
-                    }
-                }
-            </div>
-
-                        <div class="row div_ListTSQL" style="display:none;">
-                            <div class="col-md-12" id="div_back_ListTSQL" style="display:flex; margin-bottom:10px; margin-left:20px">
-                                @*<i class="ion ion-md-arrow-round-back d-block" style="font-size:20px; color:#2673b4; cursor:pointer"></i>
-                        <a href="javascript:void(0);" style="padding:unset; margin-left:5px" id="btnBack" class="divLoaiHinh nav-link">Trở lại</a>*@
-                                <small>
-                                    <i class="fa fa-arrow-circle-left"></i>
-                                    <a href="javascript:void(0)">Quay lại danh sách</a>
-                                </small>
+                        else if (loaihinhTsId > 0 && loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH)
+                        {
+                            <div class=" col-md-4 col-xs-6 test">
+                                <div class="card mb-4">
+                                    <div class="card-body hoverlight">
+                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
+                                            <div class="d-flex align-items-center">
+                                                <div class="@iconClass "></div>
+                                                <div class="ml-3">
+                                                    <div class="text-muted small"></div>
+                                                    <div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản vô hình khác</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            @foreach (LoaiHinhTaiSanModel _model in ListTSQL)
-                            {
-                                var loaihinhTsId = _model.Id;
-                                var iconClass = "";
-                                switch (loaihinhTsId)
-                                {
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAT:
-                                        iconClass = "ion ion-md-globe display-4 text-info";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.NHA:
-                                        iconClass = "ion ion-md-home display-4 text-default";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.OTO:
-                                        iconClass = "ion ion-ios-car display-4 text-danger";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_CAY_LAU_NAM_SVLV:
-                                        iconClass = "fas fa-tree icon-tree text-success";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_MAY_MOC_THIET_BI:
-                                        iconClass = "ion ion-md-desktop display-4 text-warning";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.TAI_SAN_VAT_KIEN_TRUC:
-                                        iconClass = "ion ion-md-analytics display-4 text-primary";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.VO_HINH:
-                                        iconClass = "ion ion-ios-color-filter display-4 text-danger";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.PHUONG_TIEN_KHAC:
-                                        iconClass = "ion ion-ios-boat display-4 text-default";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC:
-                                        iconClass = "ion ion-md-cube display-4 text-green";
-                                        break;
-                                    case (int)GS.Core.Domain.DanhMuc.enumLOAI_HINH_TAI_SAN.DAC_THU:
-                                        iconClass = "ion ion-ios-pie display-4 text-primary";
-                                        break;
-                                    case 0:
-                                        iconClass = "ion ion-md-globe display-4 text-info";
-                                        break;
-                                }
-
-                                if (loaihinhTsId > 0 && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.VO_HINH && loaihinhTsId != (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC)
-                                {
-                                    <div class=" col-md-4 col-xs-6 test">
-                                        <div class="card mb-4">
-                                            <div class="card-body hoverlight">
-                                                <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="@iconClass "></div>
-                                                        <div class="ml-3">
-                                                            <div class="text-muted small"></div>
-                                                            <div style="font-size:15px;color:darkslategrey;font-weight:600">@_model.Name</div>
-                                                        </div>
-                                                    </div>
-                                                </a>
+                            <div class=" col-md-2 col-xs-6 test"></div>
+                        }
+                        else if (loaihinhTsId > 0 && loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC)
+                        {
+                            <div class=" col-md-2 col-xs-6 test"></div>
+                            <div class=" col-md-4 col-xs-6 test">
+                                <div class="card mb-4">
+                                    <div class="card-body hoverlight">
+                                        <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
+                                            <div class="d-flex align-items-center">
+                                                <div class="@iconClass "></div>
+                                                <div class="ml-3">
+                                                    <div class="text-muted small"></div>
+                                                    <div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản hữu hình khác</div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
-                                }
-                                else if (loaihinhTsId > 0 && loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.VO_HINH)
-                                {
-                                    <div class=" col-md-4 col-xs-6 test">
-                                        <div class="card mb-4">
-                                            <div class="card-body hoverlight">
-                                                <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="@iconClass "></div>
-                                                        <div class="ml-3">
-                                                            <div class="text-muted small"></div>
-                                                            <div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản vô hình khác</div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class=" col-md-2 col-xs-6 test"></div>
-                                }
-                                else if (loaihinhTsId > 0 && loaihinhTsId == (int)enumLOAI_HINH_TAI_SAN.HUU_HINH_KHAC)
-                                {
-                                    <div class=" col-md-2 col-xs-6 test"></div>
-                                    <div class=" col-md-4 col-xs-6 test">
-                                        <div class="card mb-4">
-                                            <div class="card-body hoverlight">
-                                                <a onclick="goToLink(@_model.Id,@Model[0].isCreateTSDA.ToString().ToLower(),true)" href="javascript:void(0);">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="@iconClass "></div>
-                                                        <div class="ml-3">
-                                                            <div class="text-muted small"></div>
-                                                            <div style="font-size:15px;color:darkslategrey;font-weight:600">Tài sản hữu hình khác</div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class=" col-md-4 col-xs-8 test"></div>
-                                }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class=" col-md-4 col-xs-8 test"></div>
+                        }
 
 
-                            }
-                        </div>
-                    </div>
-	</div>
+                    }
+                </div>
+            }
+            else
+            {
+                <iframe id="myIframe" src="http://localhost:5173/trangchu" title="Full Screen Iframe"></iframe>
+            }
+        </div>
+        </div>
 </div>
 
 <script>
@@ -523,5 +523,46 @@
 	#rowLoaiHinh test {
 		flex: 1;
 	}*/
-</style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Cho phép cuộn khi nội dung quá lớn */
+    }
 
+    /* Container chính giữ iframe và footer */
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Card chứa nội dung và iframe */
+    .card {
+        flex-grow: 1; /* Cho phép mở rộng chiếm toàn bộ phần còn lại của màn hình */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .card-body {
+        flex-grow: 1;
+        overflow: hidden; /* Không làm tràn layout nhưng vẫn đảm bảo iframe hiển thị */
+    }
+
+    /* Cập nhật iframe */
+    iframe {
+        width: 100%;
+        height: calc(100vh - 100px); /* Chiếm toàn bộ chiều cao trừ footer */
+        border: none;
+    }
+
+    #busy-holder {
+        display: none !important; /* Ẩn hoàn toàn nếu không cần thiết */
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+</style>
