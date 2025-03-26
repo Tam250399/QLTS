@@ -32,6 +32,26 @@ export const createHandleChange =
     }
   };
 
+  export const createHandleGTHM =
+  (
+    fieldName: FieldNameGTHM,
+    setValue: UseFormSetValue<ThongTinNha>,
+    setDisplayValue: (value: string) => void
+  ) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value;
+    const cleanValue = rawValue.replace(/[^0-9]/g, "");
+    const numberValue = parseInt(cleanValue, 10);
+
+    if (!isNaN(numberValue)) {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue(formatCurrencyVND(numberValue, "m²"));
+    } else {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue("");
+    }
+  };
+
 // Tạo các hàm handleChange cho từng field
 export const handleChangeDienTichXD = (
   setValue: UseFormSetValue<ThongTinNha>,
@@ -47,3 +67,18 @@ export const handleChangeDTSanSuDung = (
   setValue: UseFormSetValue<ThongTinNha>,
   setDisplayValue: (value: string) => void
 ) => createHandleChange("DT_SAN_SU_DUNG", setValue, setDisplayValue);
+
+export const handleChangeNguyenGia = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleGTHM("GIA_TRI_HAO_MON.NGUYEN_GIA", setValue, setDisplayValue);
+
+export const handleChangeNguonKhac = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleGTHM("GIA_TRI_HAO_MON.NGUON_KHAC", setValue, setDisplayValue);
+
+export const handleChangeGiaTriConLai = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleGTHM("GIA_TRI_HAO_MON.GIA_TRI_CON_LAI", setValue, setDisplayValue);

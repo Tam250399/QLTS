@@ -109,6 +109,7 @@ const SubmitHandlerHouses = () => {
               setValue={setValue}
               setError={setError}
               clearErrors={clearErrors}
+              getValues={getValues}
             />
           </div>
 
