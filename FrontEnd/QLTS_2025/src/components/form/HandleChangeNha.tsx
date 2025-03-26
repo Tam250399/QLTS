@@ -1,0 +1,49 @@
+import { UseFormSetValue } from "react-hook-form";
+import { ThongTinNha } from "../../validateform/thongtinnha";
+import formatCurrencyVND from "../Format/FormatVND";
+
+// Định nghĩa kiểu cho fieldName để TypeScript có thể suy ra chính xác
+type FieldName =
+  | keyof ThongTinNha
+  | `HIEN_TRANG_SU_DUNG.${keyof ThongTinNha["HIEN_TRANG_SU_DUNG"]}`;
+
+type FieldNameGTHM =
+  | keyof ThongTinNha
+  | `GIA_TRI_HAO_MON.${keyof ThongTinNha["GIA_TRI_HAO_MON"]}`;
+
+// Hàm createHandleChange với kiểu chính xác
+export const createHandleChange =
+  (
+    fieldName: FieldName,
+    setValue: UseFormSetValue<ThongTinNha>,
+    setDisplayValue: (value: string) => void
+  ) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value;
+    const cleanValue = rawValue.replace(/[^0-9]/g, "");
+    const numberValue = parseInt(cleanValue, 10);
+
+    if (!isNaN(numberValue)) {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue(formatCurrencyVND(numberValue, "m²"));
+    } else {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue("");
+    }
+  };
+
+// Tạo các hàm handleChange cho từng field
+export const handleChangeDienTichXD = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("DIEN_TICH_XD", setValue, setDisplayValue);
+
+export const handleChangeSoTang = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("SO_TANG", setValue, setDisplayValue);
+
+export const handleChangeDTSanSuDung = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("DT_SAN_SU_DUNG", setValue, setDisplayValue);
