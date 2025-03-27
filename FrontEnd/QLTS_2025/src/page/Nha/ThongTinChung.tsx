@@ -601,18 +601,19 @@ const ThongTinChung = ({
                   maxLength: 4, // Giới hạn tối đa 4 ký tự
                   inputMode: "numeric", // Chỉ cho phép nhập số
                 }}
+                {...register("NAM_XAY_DUNG", {
+                  required: "Bạn phải nhập năm xây dựng",
+                })}
+                value={displayValues.NAM_XAY_DUNG || ""}
                 onChange={handleChangeNamXD(setValue, (value) =>
                   setDisplayValues((prev) => ({
                     ...prev,
                     NAM_XAY_DUNG: value,
                   }))
                 )}
+                error={!!errors.NAM_XAY_DUNG}
+                helperText={errors.NAM_XAY_DUNG?.message}
               />
-              {errors?.NAM_XAY_DUNG && (
-                <span className="text-red-500 text-xs">
-                  {errors?.NAM_XAY_DUNG?.message}
-                </span>
-              )}
               <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                 Bộ phận sử dụng
               </Typography>

@@ -32,6 +32,26 @@ export const createHandleChange =
     }
   };
 
+export const createHandleChangeNamXD =
+  (
+    fieldName: FieldName,
+    setValue: UseFormSetValue<ThongTinNha>,
+    setDisplayValue: (value: string) => void
+  ) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value;
+    const cleanValue = rawValue.replace(/[^0-9]/g, "");
+    const numberValue = parseInt(cleanValue, 10);
+
+    if (!isNaN(numberValue)) {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue(numberValue.toString());
+    } else {
+      setValue(fieldName, numberValue, { shouldValidate: true });
+      setDisplayValue("");
+    }
+  };
+
 export const createHandleGTHM =
   (
     fieldName: FieldNameGTHM,
@@ -61,7 +81,7 @@ export const handleChangeDienTichXD = (
 export const handleChangeNamXD = (
   setValue: UseFormSetValue<ThongTinNha>,
   setDisplayValue: (value: string) => void
-) => createHandleChange("NAM_XAY_DUNG", setValue, setDisplayValue);
+) => createHandleChangeNamXD("NAM_XAY_DUNG", setValue, setDisplayValue);
 
 export const handleChangeSoTang = (
   setValue: UseFormSetValue<ThongTinNha>,
