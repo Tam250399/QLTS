@@ -106,3 +106,13 @@ export interface LyDoTangDat {
   loaI_LY_DO_ID: number;
   loaI_LY_DO_BIEN_DONG_ID: number;
 }
+
+export interface BoPhanSuDung {
+  MA: string;
+  TEN: string;
+  DON_VI_ID: number;
+  PARENT_ID: number;
+  TREE_NODE: string;
+  TREE_LEVEL: number;
+  ID: number;
+}

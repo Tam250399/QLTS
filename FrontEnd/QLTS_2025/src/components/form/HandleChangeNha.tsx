@@ -32,7 +32,7 @@ export const createHandleChange =
     }
   };
 
-  export const createHandleGTHM =
+export const createHandleGTHM =
   (
     fieldName: FieldNameGTHM,
     setValue: UseFormSetValue<ThongTinNha>,
@@ -58,6 +58,11 @@ export const handleChangeDienTichXD = (
   setDisplayValue: (value: string) => void
 ) => createHandleChange("DIEN_TICH_XD", setValue, setDisplayValue);
 
+export const handleChangeNamXD = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("NAM_XAY_DUNG", setValue, setDisplayValue);
+
 export const handleChangeSoTang = (
   setValue: UseFormSetValue<ThongTinNha>,
   setDisplayValue: (value: string) => void
@@ -81,7 +86,12 @@ export const handleChangeNguonKhac = (
 export const handleChangeGiaTriConLai = (
   setValue: UseFormSetValue<ThongTinNha>,
   setDisplayValue: (value: string) => void
-) => createHandleGTHM("GIA_TRI_HAO_MON.GIA_TRI_CON_LAI", setValue, setDisplayValue);
+) =>
+  createHandleGTHM(
+    "GIA_TRI_HAO_MON.GIA_TRI_CON_LAI",
+    setValue,
+    setDisplayValue
+  );
 
 export const handleChangeTruSoLamViec = (
   setValue: UseFormSetValue<ThongTinNha>,

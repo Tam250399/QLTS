@@ -1,6 +1,7 @@
 import {
   Huyen,
   LyDoTangDat,
+  MucDichTS,
   Phuong,
   quocgia,
   Tinh,
@@ -28,21 +29,24 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { ThongTinNha } from "../../validateform/thongtinnha";
+import { BoPhanSuDung, ThongTinNha } from "../../validateform/thongtinnha";
 import ThemMoiBoPhan from "../../components/form/ThemMoiBoPhan";
 import ChonDat from "../../components/form/ChonDat";
 import {
   GetDMDuoiTinh,
   GetDMLyDoTangDat,
+  GetDMMucDichTS,
   GetDMQuocGia,
   GetDMTinhTP,
 } from "../../service/ServiceDat";
 import {
   handleChangeDienTichXD,
   handleChangeDTSanSuDung,
+  handleChangeNamXD,
   handleChangeSoTang,
 } from "../../components/form/HandleChangeNha";
 import formatCurrencyVND from "../../components/Format/FormatVND";
+import { GetListBoPhanSD } from "../../service/ServiceNha";
 
 interface ThongtinnhaProps {
   register: UseFormRegister<ThongTinNha>;
@@ -60,6 +64,8 @@ const ThongTinChung = ({
   getValues,
 }: ThongtinnhaProps) => {
   const [lyDoTangDat, setLyDoTangDats] = useState<LyDoTangDat[]>([]);
+  const [boPhanSuDung, setBoPhanSuDung] = useState<BoPhanSuDung[]>([]);
+  const [capNha, setCapNha] = useState<MucDichTS[]>([]);
   const [quanLyDat, setQuanLyDat] = useState("co");
   const [khuonVienDat, setKhuonVienDat] = useState("");
   const [openChonDat, setOpenChonDat] = useState(false);
@@ -80,6 +86,7 @@ const ThongTinChung = ({
   const DIEN_TICH_XD = getValues("DIEN_TICH_XD") || 0;
   const SO_TANG = getValues("SO_TANG") || 0;
   const DT_SAN_SU_DUNG = getValues("DT_SAN_SU_DUNG") || 0;
+  const loaiHinhTsId = getValues("LOAI_HINH_TAI_SAN_ID");
 
   useEffect(() => {
     const fields = {
@@ -105,12 +112,18 @@ const ThongTinChung = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [quocGiaData, lyDoTangDat] = await Promise.all([
-          GetDMQuocGia(),
-          GetDMLyDoTangDat(1),
-        ]);
+        const param = { donViId: 1 };
+        const [quocGiaData, lyDoTangDat, boPhanSuDung, capNha] =
+          await Promise.all([
+            GetDMQuocGia(),
+            GetDMLyDoTangDat(loaiHinhTsId),
+            GetListBoPhanSD(param),
+            GetDMMucDichTS(loaiHinhTsId),
+          ]);
         setQuocGia(quocGiaData);
         setLyDoTangDats(lyDoTangDat);
+        setBoPhanSuDung(boPhanSuDung);
+        setCapNha(capNha);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);
       }
@@ -520,14 +533,14 @@ const ThongTinChung = ({
               </Typography>
               <Autocomplete
                 className="pt-[1px]"
-                options={lyDoTangDat}
+                options={capNha}
                 getOptionLabel={(option) => option.TEN}
                 {...register("CAP_NHA_ID", {
                   required: "Bạn phải chọn cấp nhà",
                 })}
                 onChange={(_, value) => {
                   if (value) {
-                    const selected = lyDoTangDat.find(
+                    const selected = capNha.find(
                       (lydo) => lydo.ID === value?.ID
                     );
                     setValue("CAP_NHA_ID", selected?.ID || -1);
@@ -588,9 +601,12 @@ const ThongTinChung = ({
                   maxLength: 4, // Giới hạn tối đa 4 ký tự
                   inputMode: "numeric", // Chỉ cho phép nhập số
                 }}
-                {...register("NAM_XAY_DUNG", {
-                  required: "Bạn phải nhập năm xây dựng",
-                })}
+                onChange={handleChangeNamXD(setValue, (value) =>
+                  setDisplayValues((prev) => ({
+                    ...prev,
+                    NAM_XAY_DUNG: value,
+                  }))
+                )}
               />
               {errors?.NAM_XAY_DUNG && (
                 <span className="text-red-500 text-xs">
@@ -603,14 +619,14 @@ const ThongTinChung = ({
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Autocomplete
                   className="pt-[1px]"
-                  options={lyDoTangDat}
+                  options={boPhanSuDung}
                   getOptionLabel={(option) => option.TEN}
                   {...register("BO_PHAN_SD_ID", {
                     required: "Bạn phải chọn bộ phận sử dụng",
                   })}
                   onChange={(_, value) => {
                     if (value) {
-                      const selected = lyDoTangDat.find(
+                      const selected = boPhanSuDung.find(
                         (lydo) => lydo.ID === value?.ID
                       );
                       setValue("BO_PHAN_SD_ID", selected?.ID || -1);

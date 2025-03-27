@@ -1,8 +1,9 @@
 import axios from "axios";
 import { IBaseRequest } from "../interfaces/axios";
+import { environment } from "../environments/environment";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE,
+  baseURL: `${environment.apiUrl}`,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",

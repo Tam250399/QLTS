@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
 
 interface BoPhan {
   donvi: string;
@@ -242,7 +243,13 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleSave} color="success" variant="contained">
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSave}
+          startIcon={<SaveIcon />}
+        >
           Lưu
         </Button>
       </DialogActions>
