@@ -1,12 +1,64 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { ThongTinNha } from "../../validateform/thongtinnha";
+import { useEffect, useState } from "react";
+import formatCurrencyVND from "../../components/Format/FormatVND";
+import { handleChangeBiLanChiem, handleChangeBoTrong, handleChangeDeo, handleChangeSuDungHonHop, handleChangeSuDungKhac, handleChangeTruSoLamViec } from "../../components/form/HandleChangeNha";
 interface HienTrangSuDungProps {
   register: UseFormRegister<ThongTinNha>;
   errors: FieldErrors<ThongTinNha>;
+  getValues: UseFormGetValues<ThongTinNha>;
+  setValue: UseFormSetValue<ThongTinNha>;
 }
-const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
+const HienTrangSuDung = ({
+  register,
+  getValues,
+  setValue,
+}: HienTrangSuDungProps) => {
+  const [displayValues, setDisplayValues] = useState<Record<string, string>>(
+    {}
+  );
+  const {
+    TRU_SO_LAM_VIEC,
+    DE_O,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  } = getValues("HIEN_TRANG_SU_DUNG") || {};
+
+  useEffect(() => {
+    const fields = {
+      TRU_SO_LAM_VIEC,
+      DE_O,
+      BO_TRONG,
+      BI_LAN_CHIEM,
+      SU_DUNG_HON_HOP,
+      SU_DUNG_KHAC,
+    };
+
+    const newDisplayValues: Record<string, string> = {};
+    Object.entries(fields).forEach(([fieldName, value]) => {
+      if (value !== undefined) {
+        newDisplayValues[fieldName] = formatCurrencyVND(value, "m²");
+      }
+    });
+
+    setDisplayValues((prev) => ({ ...prev, ...newDisplayValues }));
+  }, [
+    TRU_SO_LAM_VIEC,
+    DE_O,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+  ]);
   return (
     <Box
       sx={{
@@ -39,14 +91,17 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
             Trụ sở làm việc
           </Typography>
+
           <TextField
             fullWidth
             size="small"
             margin="dense"
+            type="text"
             placeholder="m²"
-            type="number"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.TRU_SO_LAM_VIEC")}
+            value={displayValues.TRU_SO_LAM_VIEC || ""}
+            onChange={handleChangeTruSoLamViec(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, TRU_SO_LAM_VIEC: value }))
+            )}
           />
         </Grid>
 
@@ -63,7 +118,7 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             disabled
             className="bg-slate-200"
             InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.hdSnKhongKd")}
+            {...register("HIEN_TRANG_SU_DUNG.HD_SN_KHONG_KINH_DOANH")}
           />
         </Grid>
 
@@ -126,10 +181,12 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             fullWidth
             size="small"
             margin="dense"
+            type="text"
             placeholder="m²"
-            type="number"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.deO")}
+            value={displayValues.deO || ""}
+            onChange={handleChangeDeo(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, deO: value }))
+            )}
           />
         </Grid>
 
@@ -141,10 +198,12 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             fullWidth
             size="small"
             margin="dense"
-            type="number"
+            type="text"
             placeholder="m²"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.BO_TRONG")}
+            value={displayValues.BO_TRONG || ""}
+            onChange={handleChangeBoTrong(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, BO_TRONG: value }))
+            )}
           />
         </Grid>
 
@@ -156,10 +215,12 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             fullWidth
             size="small"
             margin="dense"
+            type="text"
             placeholder="m²"
-            type="number"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.BI_LAN_CHIEM")}
+            value={displayValues.BI_LAN_CHIEM || ""}
+            onChange={handleChangeBiLanChiem(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, BI_LAN_CHIEM: value }))
+            )}
           />
         </Grid>
 
@@ -171,10 +232,12 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             fullWidth
             size="small"
             margin="dense"
+            type="text"
             placeholder="m²"
-            type="number"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.SU_DUNG_HON_HOP")}
+            value={displayValues.SU_DUNG_HON_HOP || ""}
+            onChange={handleChangeSuDungHonHop(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, SU_DUNG_HON_HOP: value }))
+            )}
           />
         </Grid>
 
@@ -186,10 +249,12 @@ const HienTrangSuDung = ({ register }: HienTrangSuDungProps) => {
             fullWidth
             size="small"
             margin="dense"
+            type="text"
             placeholder="m²"
-            type="number"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("HIEN_TRANG_SU_DUNG.SU_DUNG_KHAC")}
+            value={displayValues.SU_DUNG_KHAC || ""}
+            onChange={handleChangeSuDungKhac(setValue, (value) =>
+              setDisplayValues((prev) => ({ ...prev, SU_DUNG_KHAC: value }))
+            )}
           />
         </Grid>
       </Grid>

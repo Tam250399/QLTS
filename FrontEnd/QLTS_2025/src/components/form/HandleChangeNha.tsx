@@ -1,6 +1,6 @@
 import { UseFormSetValue } from "react-hook-form";
-import { ThongTinNha } from "../../validateform/thongtinnha";
 import formatCurrencyVND from "../Format/FormatVND";
+import { ThongTinNha } from "../../validateform/thongtinnha";
 
 // Định nghĩa kiểu cho fieldName để TypeScript có thể suy ra chính xác
 type FieldName =
@@ -82,3 +82,54 @@ export const handleChangeGiaTriConLai = (
   setValue: UseFormSetValue<ThongTinNha>,
   setDisplayValue: (value: string) => void
 ) => createHandleGTHM("GIA_TRI_HAO_MON.GIA_TRI_CON_LAI", setValue, setDisplayValue);
+
+export const handleChangeTruSoLamViec = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChange(
+    "HIEN_TRANG_SU_DUNG.TRU_SO_LAM_VIEC",
+    setValue,
+    setDisplayValue
+  );
+
+export const handleChangeDeo = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) => createHandleChange("HIEN_TRANG_SU_DUNG.DE_O", setValue, setDisplayValue);
+
+export const handleChangeBoTrong = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChange("HIEN_TRANG_SU_DUNG.BO_TRONG", setValue, setDisplayValue);
+
+export const handleChangeBiLanChiem = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChange(
+    "HIEN_TRANG_SU_DUNG.BI_LAN_CHIEM",
+    setValue,
+    setDisplayValue
+  );
+
+export const handleChangeSuDungHonHop = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChange(
+    "HIEN_TRANG_SU_DUNG.SU_DUNG_HON_HOP",
+    setValue,
+    setDisplayValue
+  );
+
+export const handleChangeSuDungKhac = (
+  setValue: UseFormSetValue<ThongTinNha>,
+  setDisplayValue: (value: string) => void
+) =>
+  createHandleChange(
+    "HIEN_TRANG_SU_DUNG.SU_DUNG_KHAC",
+    setValue,
+    setDisplayValue
+  );

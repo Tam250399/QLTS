@@ -36,7 +36,7 @@ const SubmitHandlerHouses = () => {
     setValue,
     setError,
     clearErrors,
-    getValues
+    getValues,
   } = useForm<ThongTinNha>({
     defaultValues: {
       LOAI_HINH_TAI_SAN_ID: id,
@@ -114,7 +114,12 @@ const SubmitHandlerHouses = () => {
           </div>
 
           <div className="pb-10">
-            <HienTrangSuDung register={register} errors={errors} />
+            <HienTrangSuDung
+              register={register}
+              errors={errors}
+              getValues={getValues}
+              setValue={setValue}
+            />
           </div>
 
           <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>

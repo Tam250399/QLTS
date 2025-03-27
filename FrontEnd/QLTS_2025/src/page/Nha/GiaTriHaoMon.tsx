@@ -148,6 +148,10 @@ const GiaTriHaoMon = ({
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUON_NGAN_SACH || ""}
+            InputProps={{
+              readOnly: true,
+              sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
+            }}
             disabled
           />
 
