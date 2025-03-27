@@ -82,11 +82,23 @@ const ThongTinChung = ({
   );
 
   const [areaError] = useState<string | undefined>(undefined);
+  const [ngaySDError, setNgaySDError] = useState<string | undefined>(undefined);
 
   const DIEN_TICH_XD = getValues("DIEN_TICH_XD") || 0;
   const SO_TANG = getValues("SO_TANG") || 0;
   const DT_SAN_SU_DUNG = getValues("DT_SAN_SU_DUNG") || 0;
   const loaiHinhTsId = getValues("LOAI_HINH_TAI_SAN_ID");
+  const NGAY_TANG = getValues("NGAY_TANG");
+  const NGAY_DUA_VAO_SD = getValues("NGAY_DUA_VAO_SD");
+
+  const handleChangeNgaySD = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (NGAY_TANG < event.target.value) {
+      setNgaySDError("Ngày sử dụng phải nhỏ hơn hoặc bằng ngày kê khai.");
+    } else {
+      setValue("NGAY_DUA_VAO_SD", event.target.value);
+      setNgaySDError(undefined);
+    }
+  };
 
   useEffect(() => {
     const fields = {
@@ -792,12 +804,8 @@ const ThongTinChung = ({
                     {...register("NGAY_TANG", {
                       required: "Bạn phải chọn ngày tăng",
                     })}
+                    disabled
                   />
-                  {errors?.NGAY_TANG && (
-                    <span className="text-red-500 text-xs">
-                      {errors?.NGAY_TANG?.message}
-                    </span>
-                  )}
                   <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                     Số tầng <span style={{ color: "red" }}>*</span>
                   </Typography>
@@ -850,10 +858,11 @@ const ThongTinChung = ({
                     {...register("NGAY_DUA_VAO_SD", {
                       required: "Bạn phải chọn ngày đưa vào sử dụng",
                     })}
+                    onChange={handleChangeNgaySD}
                   />
-                  {errors?.NGAY_DUA_VAO_SD && (
+                  {(errors?.NGAY_DUA_VAO_SD || ngaySDError) && (
                     <span className="text-red-500 text-xs">
-                      {errors?.NGAY_DUA_VAO_SD?.message}
+                      {errors?.NGAY_DUA_VAO_SD?.message || ngaySDError}
                     </span>
                   )}
                 </Stack>

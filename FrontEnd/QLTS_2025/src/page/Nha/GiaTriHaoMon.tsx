@@ -37,8 +37,6 @@ const GiaTriHaoMon = ({
   register,
   errors,
   setValue,
-  setError,
-  clearErrors,
   getValues,
 }: GiaTriHaoMonProps) => {
   const [isCalculateKH, setIsCalculateKH] = useState(false);
