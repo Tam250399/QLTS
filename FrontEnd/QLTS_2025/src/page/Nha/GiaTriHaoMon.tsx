@@ -39,8 +39,6 @@ const GiaTriHaoMon = ({
   setValue,
   getValues,
 }: GiaTriHaoMonProps) => {
-  const [isCalculateKH, setIsCalculateKH] = useState(false);
-
   const [displayValues, setDisplayValues] = useState<Record<string, string>>(
     {}
   );
@@ -212,72 +210,6 @@ const GiaTriHaoMon = ({
             <span className="text-red-500 text-xs">
               {errors.GIA_TRI_HAO_MON?.TY_LE_HAO_MON?.message}
             </span>
-          )}
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isCalculateKH}
-                  onChange={(e) => setIsCalculateKH(e.target.checked)}
-                />
-              }
-              label={
-                <Typography sx={{ fontWeight: 600 }}>Tính khấu hao</Typography>
-              }
-            />
-          </FormGroup>
-
-          {isCalculateKH && (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-                  Tỷ lệ KH theo QĐ (%) <span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  type="number"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-                  KH tháng theo QĐ <span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  type="number"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-                  Tỷ lệ % NG tính KH <span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  type="number"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-                  Ngày bắt đầu tính KH <span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
           )}
         </Grid>
       </Grid>
