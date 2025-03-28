@@ -813,10 +813,13 @@ const ThongTinChung = ({
                     margin="dense"
                     InputLabelProps={{ shrink: true }}
                     defaultValue="2017-12-31"
-                    InputProps={{ sx: { fontSize: "14px" } }}
                     {...register("NGAY_TANG", {
                       required: "Bạn phải chọn ngày tăng",
                     })}
+                    InputProps={{
+                      readOnly: true,
+                      sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
+                    }}
                     disabled
                   />
                   <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>

@@ -42,18 +42,24 @@ const GiaTriHaoMon = ({
   const [displayValues, setDisplayValues] = useState<Record<string, string>>(
     {}
   );
-  const { NGUYEN_GIA, NGUON_KHAC, GIA_TRI_CON_LAI } =
-    getValues("GIA_TRI_HAO_MON") || {};
+  const { NGUON_KHAC, GIA_TRI_CON_LAI } = getValues("GIA_TRI_HAO_MON") || {};
+  const NGUYEN_GIA = getValues("GIA_TRI_HAO_MON.NGUYEN_GIA");
   const [nguonKhacError, setNguonKhacError] = useState<string | undefined>(
     undefined
   );
-  const NGUON_NGAN_SACH =
-    NGUYEN_GIA - NGUON_KHAC > 0 ? NGUYEN_GIA - NGUON_KHAC : 0;
+
+  let NGUON_NGAN_SACH = 0;
 
   useEffect(() => {
+    NGUON_NGAN_SACH = !NGUON_KHAC
+      ? NGUYEN_GIA
+      : NGUYEN_GIA - NGUON_KHAC > 0
+      ? NGUYEN_GIA - NGUON_KHAC
+      : 0;
     setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", NGUON_NGAN_SACH, {
       shouldValidate: true,
     });
+
     if (NGUYEN_GIA && NGUYEN_GIA < NGUON_KHAC) {
       setNguonKhacError("Tổng các nguồn vốn phải bằng nguyên giá.");
     } else {
@@ -118,14 +124,11 @@ const GiaTriHaoMon = ({
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUYEN_GIA || ""}
-            {...register("GIA_TRI_HAO_MON.NGUYEN_GIA", {
-              required: "Bạn phải nhập nguyên giá",
-            })}
             onChange={handleChangeNguyenGia(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUYEN_GIA: value }))
             )}
-            error={!!errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA}
-            helperText={errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA?.message}
+            error={!!errors.GIA_TRI_HAO_MON?.NGUYEN_GIA}
+            helperText={errors.GIA_TRI_HAO_MON?.NGUYEN_GIA?.message}
           />
 
           <Typography
