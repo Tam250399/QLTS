@@ -118,9 +118,14 @@ const GiaTriHaoMon = ({
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUYEN_GIA || ""}
+            {...register("GIA_TRI_HAO_MON.NGUYEN_GIA", {
+              required: "Bạn phải nhập nguyên giá",
+            })}
             onChange={handleChangeNguyenGia(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUYEN_GIA: value }))
             )}
+            error={!!errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA}
+            helperText={errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA?.message}
           />
 
           <Typography
