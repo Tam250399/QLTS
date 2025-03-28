@@ -15,6 +15,7 @@ import {
   Checkbox,
   TablePagination,
   Autocomplete,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,18 +34,21 @@ interface Row {
   date: string;
   idType: number;
 }
+
+interface AssetTypeOption {
+  type: string;
+  id: number;
+}
+
+// Định nghĩa các tùy chọn loại tài sản
+const assetTypeOptions: AssetTypeOption[] = [
+  { type: "Tất cả", id: 0 },
+  { type: "Nhà cấp I", id: 1 },
+  { type: "Nhà cấp II", id: 2 },
+  { type: "Nhà cấp III", id: 3 },
+];
+
 const AssetList = () => {
-  const [keyword, setKeyword] = useState("");
-  const [assetType, setAssetType] = useState("");
-  const [department, setDepartment] = useState("");
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = React.useState<number[]>([]);
-
-  const allOption = { type: "Tất cả", id: 0 };
-  const [selectedOptions, setSelectedOptions] = useState([allOption]);
-
   // Data fake
   const rows: Row[] = [
     {
@@ -168,7 +172,17 @@ const AssetList = () => {
       date: "01/01/1918",
     },
   ];
-  const [filteredData, setFilteredData] = useState(rows);
+
+  const [keyword, setKeyword] = useState("");
+  const [department, setDepartment] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [selectedAssetTypes, setSelectedAssetTypes] = useState<
+    AssetTypeOption[]
+  >([assetTypeOptions[0]]);
+  const [filteredData, setFilteredData] = useState<Row[]>(rows);
+
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.map((row) => row.id);
@@ -198,7 +212,7 @@ const AssetList = () => {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (_: any, newPage: any) => setPage(newPage);
+  const handleChangePage = (_: unknown, newPage: number) => setPage(newPage);
 
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -211,16 +225,73 @@ const AssetList = () => {
 
   //hàm tìm kiếm chung
   const handleSearch = () => {
-    const results = rows.filter(
-      (item) =>
-        item.name.toLowerCase().includes(keyword.toLowerCase().trim()) &&
-        (assetType === "" || item.idType === Number(assetType)) &&
-        (selectedOptions.length === 0 ||
-          selectedOptions.some((opt) => opt.type === item.type))
-    );
+    const results = rows.filter((item) => {
+      const matchesKeyword = item.name
+        .toLowerCase()
+        .includes(keyword.toLowerCase().trim());
+      const matchesAssetType = selectedAssetTypes.some(
+        (selected) => selected.id === 0 || selected.id === item.idType
+      );
+      const matchesDepartment = !department || item.department === department;
+
+      return matchesKeyword && matchesAssetType && matchesDepartment;
+    });
 
     setFilteredData(results);
     setPage(0);
+  };
+
+  // Xử lý khi thay đổi loại tài sản
+  const handleAssetTypeChange = (
+    _: React.SyntheticEvent,
+    newValue: AssetTypeOption[]
+  ) => {
+    // Nếu không có lựa chọn nào, mặc định chọn "Tất cả"
+    if (newValue.length === 0) {
+      setSelectedAssetTypes([assetTypeOptions[0]]);
+      return;
+    }
+
+    // Kiểm tra xem có đang chọn "Tất cả" không
+    const hasAllOption = newValue.some((option) => option.id === 0);
+
+    // Nếu đang chọn "Tất cả" và có thêm lựa chọn khác
+    if (hasAllOption && newValue.length > 1) {
+      // Bỏ "Tất cả" và chỉ giữ lại các lựa chọn khác
+      const filteredOptions = newValue.filter((option) => option.id !== 0);
+      setSelectedAssetTypes(filteredOptions);
+    }
+
+    // Nếu chọn "Tất cả" khi đã có lựa chọn khác
+    else if (hasAllOption) {
+      // Chỉ giữ lại "Tất cả"
+      setSelectedAssetTypes([assetTypeOptions[0]]);
+    }
+    // Nếu chọn các lựa chọn khác
+    else {
+      setSelectedAssetTypes(newValue);
+    }
+
+    // Tự động tìm kiếm khi thay đổi loại tài sản
+    handleSearch();
+  };
+
+  // Xử lý khi thay đổi từ khóa
+  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    handleSearch();
+  };
+
+  // Xử lý khi thay đổi bộ phận
+  const handleDepartmentChange = (e: SelectChangeEvent) => {
+    setDepartment(e.target.value);
+    handleSearch();
+  };
+
+  // Xử lý khi thay đổi trạng thái
+  const handleStatusChange = (status: "pending" | "rejected" | "approved") => {
+    setCurrentStatus(status);
+    handleSearch();
   };
 
   return (
@@ -234,38 +305,24 @@ const AssetList = () => {
               variant="outlined"
               size="small"
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={handleKeywordChange}
               className="w-64"
             />
           </div>
 
           <div>
             <label className="block mb-1">Loại tài sản:</label>
-            {/* <Select
-              value={assetType}
-              onChange={(e) => {
-                setAssetType(e.target.value);
-                handleSearch();
-              }}
-              displayEmpty
-              variant="outlined"
-              size="small"
-              className="w-64"
-            >
-              <MenuItem value="">Tất cả</MenuItem>
-              <MenuItem value="1">Nhà cấp I</MenuItem>
-              <MenuItem value="2">Nhà cấp II</MenuItem>
-              <MenuItem value="3">Nhà cấp III</MenuItem>
-            </Select> */}
             <Autocomplete
               multiple
               limitTags={1}
               id="multiple-limit-tags"
-              options={[allOption, ...rows]}
+              options={assetTypeOptions}
               getOptionLabel={(option) => option.type}
-              defaultValue={[allOption]}
-              value={selectedOptions}
-              onChange={(event, newValue) => setSelectedOptions(newValue)}
+              value={selectedAssetTypes}
+              onChange={handleAssetTypeChange}
+              isOptionEqualToValue={(option, value) =>
+                option.type === value.type && option.id === value.id
+              }
               renderInput={(params) => <TextField {...params} />}
               sx={{ width: "400px", height: "10px" }}
             />
@@ -295,7 +352,7 @@ const AssetList = () => {
             <label className="block mb-1">Bộ phận sử dụng</label>
             <Select
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={handleDepartmentChange}
               displayEmpty
               variant="outlined"
               size="small"

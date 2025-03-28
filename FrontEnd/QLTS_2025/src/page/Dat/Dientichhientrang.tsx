@@ -2,12 +2,13 @@ import { Box, Grid, TextField, Typography } from "@mui/material";
 
 import {
   FieldErrors,
+  UseFormClearErrors,
   UseFormGetValues,
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
 import { Thongtinchung } from "../../validateform/thongtinchung";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import formatCurrencyVND from "../../components/Format/FormatVND";
 import {
   handleChangeBiLanChiem,
@@ -23,6 +24,7 @@ interface ThongtintaisanProps {
   errors: FieldErrors<Thongtinchung>;
   getValues: UseFormGetValues<Thongtinchung>;
   setValue: UseFormSetValue<Thongtinchung>;
+  clearErrors: UseFormClearErrors<Thongtinchung>;
 }
 
 const Dientichhientrang = ({
@@ -30,6 +32,7 @@ const Dientichhientrang = ({
   getValues,
   setValue,
   errors,
+  clearErrors,
 }: ThongtintaisanProps) => {
   const dienTich = getValues("DIEN_TICH");
 
@@ -38,6 +41,7 @@ const Dientichhientrang = ({
   );
 
   const [areaError, setAreaError] = useState<string | undefined>(undefined);
+
   const {
     TRU_SO_LAM_VIEC,
     DE_O,
@@ -47,23 +51,39 @@ const Dientichhientrang = ({
     SU_DUNG_KHAC,
   } = getValues("HIEN_TRANG_SU_DUNG") || {};
 
-  const totalRelevantFields = [
+  const totalRelevantFields = useMemo(() => {
+    const values = [
+      TRU_SO_LAM_VIEC,
+      DE_O,
+      BO_TRONG,
+      BI_LAN_CHIEM,
+      SU_DUNG_HON_HOP,
+      SU_DUNG_KHAC,
+    ].map((value) => Number(value) || 0);
+    return values.reduce((sum, val) => sum + val, 0);
+  }, [
     TRU_SO_LAM_VIEC,
     DE_O,
     BO_TRONG,
     BI_LAN_CHIEM,
     SU_DUNG_HON_HOP,
     SU_DUNG_KHAC,
-  ].reduce<number>((sum, value) => sum + (Number(value) || 0), 0);
+  ]);
 
   useEffect(() => {
-    if (dienTich && totalRelevantFields !== Number(dienTich)) {
+    if (Number(dienTich) !== totalRelevantFields) {
       setAreaError("Diện tích đất phải bằng tổng hiện trạng sử dụng.");
     } else {
       setAreaError(undefined);
     }
   }, [dienTich, totalRelevantFields]);
 
+  useEffect(() => {
+    const dienTichNumber = parseFloat(String(dienTich).replace(/[^\d.]/g, ""));
+    if (dienTichNumber === totalRelevantFields) {
+      clearErrors("DIEN_TICH");
+    }
+  }, [clearErrors, dienTich, totalRelevantFields]);
   useEffect(() => {
     const fields = {
       dienTich,
@@ -134,24 +154,26 @@ const Dientichhientrang = ({
             margin="dense"
             type="text"
             placeholder="m²"
+            value={displayValues.DIEN_TICH || ""}
             {...register("DIEN_TICH", {
               required: "Bạn phải nhập diện tích đất",
+              validate: (value) => {
+                const numericValue = Number(value) || 0;
+                if (numericValue !== totalRelevantFields) {
+                  return "Diện tích đất phải bằng tổng hiện trạng sử dụng.";
+                }
+                if (!numericValue) {
+                  return "Bạn phải nhập diện tích";
+                }
+                return true;
+              },
             })}
-            value={displayValues.DIEN_TICH || ""}
             onChange={handleChangeDienTichs(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, DIEN_TICH: value }))
             )}
-            error={!!areaError || !!errors.DIEN_TICH}
+            error={!!errors.DIEN_TICH}
+            helperText={errors.DIEN_TICH?.message}
           />
-          {areaError && (
-            <span className="text-red-500 text-xs">{areaError}</span>
-          )}
-
-          {errors.DIEN_TICH && !areaError && (
-            <span className="text-red-500 text-xs">
-              {errors.DIEN_TICH.message}
-            </span>
-          )}
         </Grid>
 
         {/* Hiện trạng sử dụng - Tiêu đề */}

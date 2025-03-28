@@ -1,11 +1,5 @@
 import Thongtintaisan from "./Thongtintaisan";
-import {
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -134,6 +128,7 @@ const SubmitHandlers = () => {
               errors={errors}
               setValue={setValue}
               getValues={getValues}
+              clearErrors={clearErrors}
             />
           </div>
 
