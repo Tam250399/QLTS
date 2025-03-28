@@ -26,6 +26,7 @@ import {
   UseFormClearErrors,
   UseFormGetValues,
   UseFormRegister,
+  UseFormSetError,
   UseFormSetValue,
 } from "react-hook-form";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -84,12 +85,12 @@ const ThongTinChung = ({
   const [areaError] = useState<string | undefined>(undefined);
   const [ngaySDError, setNgaySDError] = useState<string | undefined>(undefined);
 
-  const DIEN_TICH_XD = getValues("DIEN_TICH_XD") || 0;
-  const SO_TANG = getValues("SO_TANG") || 0;
-  const DT_SAN_SU_DUNG = getValues("DT_SAN_SU_DUNG") || 0;
+  const DIEN_TICH_XD = getValues("DIEN_TICH_XD");
+  const SO_TANG = getValues("SO_TANG");
+  const DT_SAN_SU_DUNG = getValues("DT_SAN_SU_DUNG");
   const loaiHinhTsId = getValues("LOAI_HINH_TAI_SAN_ID");
   const NGAY_TANG = getValues("NGAY_TANG");
-  const NGAY_DUA_VAO_SD = getValues("NGAY_DUA_VAO_SD");
+  const ngayDuaVaoSD = getValues("NGAY_DUA_VAO_SD");
 
   const handleChangeNgaySD = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (NGAY_TANG < event.target.value) {
@@ -613,10 +614,22 @@ const ThongTinChung = ({
                   maxLength: 4, // Giới hạn tối đa 4 ký tự
                   inputMode: "numeric", // Chỉ cho phép nhập số
                 }}
+                value={displayValues.NAM_XAY_DUNG || ""}
                 {...register("NAM_XAY_DUNG", {
                   required: "Bạn phải nhập năm xây dựng",
+                  validate: (value) => {
+                    if (
+                      ngayDuaVaoSD !== "" &&
+                      value > new Date(ngayDuaVaoSD).getFullYear()
+                    ) {
+                      return "Năm xây dựng không được lớn hơn năm đưa vào sử dụng";
+                    }
+                    if (!value) {
+                      return "Bạn phải nhập năm xây dựng";
+                    }
+                    return true;
+                  },
                 })}
-                value={displayValues.NAM_XAY_DUNG || ""}
                 onChange={handleChangeNamXD(setValue, (value) =>
                   setDisplayValues((prev) => ({
                     ...prev,
@@ -816,14 +829,17 @@ const ThongTinChung = ({
                     type="text"
                     placeholder="m²"
                     value={displayValues.SO_TANG || ""}
+                    {...register("SO_TANG", {
+                      required: "Bạn phải nhập số tầng",
+                    })}
                     onChange={handleChangeSoTang(setValue, (value) =>
                       setDisplayValues((prev) => ({
                         ...prev,
                         SO_TANG: value,
                       }))
                     )}
-                    error={!!areaError}
-                    helperText={areaError}
+                    error={!!errors.SO_TANG}
+                    helperText={errors.SO_TANG?.message}
                   />
                   <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                     DT sàn sử dụng <span style={{ color: "red" }}>*</span>
@@ -835,14 +851,17 @@ const ThongTinChung = ({
                     type="text"
                     placeholder="m²"
                     value={displayValues.DT_SAN_SU_DUNG || ""}
+                    {...register("DT_SAN_SU_DUNG", {
+                      required: "Bạn phải nhập diện tích sàn sử dụng",
+                    })}
                     onChange={handleChangeDTSanSuDung(setValue, (value) =>
                       setDisplayValues((prev) => ({
                         ...prev,
                         DT_SAN_SU_DUNG: value,
                       }))
                     )}
-                    error={!!areaError}
-                    helperText={areaError}
+                    error={!!errors.DT_SAN_SU_DUNG}
+                    helperText={errors.DT_SAN_SU_DUNG?.message}
                   />
                   <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                     Ngày đưa vào sử dụng <span style={{ color: "red" }}>*</span>
