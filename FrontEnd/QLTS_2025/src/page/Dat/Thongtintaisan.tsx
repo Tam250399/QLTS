@@ -122,6 +122,7 @@ const Thongtintaisan = ({
         border: "1px solid #007bff",
         borderRadius: 2,
         p: 3,
+
         bgcolor: "white",
         boxShadow: 2,
         position: "relative",

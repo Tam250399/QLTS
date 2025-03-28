@@ -3,8 +3,10 @@ import { toast } from "react-toastify";
 
 const handleAxiosError = (error: unknown): void => {
   if (axios.isAxiosError(error)) {
-    if (error.response && error.response.data && error.response.data.error) {
-      toast.error(error.response.data.error);
+    console.log("error", error);
+
+    if (error.response && error.response.data && error.response.data.message) {
+      toast.error(error.response.data.message);
     } else {
       toast.error("Network Error");
     }

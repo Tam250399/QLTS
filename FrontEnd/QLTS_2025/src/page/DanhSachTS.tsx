@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Box,
   TextField,
@@ -13,6 +13,8 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  TablePagination,
+  Autocomplete,
 } from "@mui/material";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -21,21 +23,36 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+interface Row {
+  id: number;
+  code: string;
+  name: string;
+  type: string;
+  value: string;
+  department: string;
+  date: string;
+  idType: number;
+}
 const AssetList = () => {
   const [keyword, setKeyword] = useState("");
   const [assetType, setAssetType] = useState("");
   const [department, setDepartment] = useState("");
 
-  const [page] = useState(0);
-  const [rowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selected, setSelected] = React.useState<number[]>([]);
+
+  const allOption = { type: "Tất cả", id: 0 };
+  const [selectedOptions, setSelectedOptions] = useState([allOption]);
 
   // Data fake
-  const rows = [
+  const rows: Row[] = [
     {
       id: 1,
       code: "011008-203-901685",
       name: "Nhà số 3 (C), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
+      idType: 2,
       value: "6,068,825,000",
       department: "Nhà cấp II",
       date: "13/03/2019",
@@ -44,7 +61,8 @@ const AssetList = () => {
       id: 2,
       code: "011008-204-901689",
       name: "Nhà số 8 (M) - SG2 Lê Thạch",
-      type: "Nhà cấp III",
+      type: "Nhà cấp 3",
+      idType: 3,
       value: "21,852,000",
       department: "Nhà cấp III",
       date: "01/01/1993",
@@ -53,7 +71,8 @@ const AssetList = () => {
       id: 3,
       code: "011008-204-901671",
       name: "Nhà số 9 (N), SG2 Lê Thạch",
-      type: "Nhà cấp III",
+      type: "Nhà cấp 3",
+      idType: 3,
       value: "10,926,000",
       department: "Nhà cấp III",
       date: "01/01/1992",
@@ -62,7 +81,8 @@ const AssetList = () => {
       id: 4,
       code: "011008-203-901686",
       name: "Nhà số 4 (D), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
+      idType: 2,
       value: "874,676,545",
       department: "Nhà cấp II",
       date: "01/01/1982",
@@ -71,7 +91,8 @@ const AssetList = () => {
       id: 5,
       code: "011008-204-901670",
       name: "Nhà số 7 (H), SG2 Lê Thạch",
-      type: "Nhà cấp III",
+      type: "Nhà cấp 3",
+      idType: 3,
       value: "25,092,000",
       department: "Nhà cấp III",
       date: "01/01/1978",
@@ -80,7 +101,8 @@ const AssetList = () => {
       id: 6,
       code: "011008-204-901684",
       name: "Nhà số 2 (B), SG2 Lê Thạch",
-      type: "Nhà cấp I",
+      type: "Nhà cấp 1",
+      idType: 1,
       value: "11,334,281,095",
       department: "Nhà cấp I",
       date: "01/01/1975",
@@ -89,7 +111,8 @@ const AssetList = () => {
       id: 7,
       code: "011008-204-901688",
       name: "Nhà số 6 (F) - SG2 Lê Thạch",
-      type: "Nhà cấp III",
+      type: "Nhà cấp 3",
+      idType: 3,
       value: "36,393,000",
       department: "Nhà cấp III",
       date: "01/01/1975",
@@ -98,8 +121,9 @@ const AssetList = () => {
       id: 8,
       code: "011008-203-901669",
       name: "Nhà số 1 (A), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
       value: "4,980,549,000",
+      idType: 0,
       department: "Nhà cấp II",
       date: "01/01/1919",
     },
@@ -107,48 +131,97 @@ const AssetList = () => {
       id: 9,
       code: "011008-203-901687",
       name: "Nhà số 5 (E), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      idType: 2,
+      type: "Nhà cấp 2",
       value: "2,050,880,818",
       department: "Nhà cấp II",
       date: "01/01/1918",
     },
     {
-      id: 9,
+      id: 11,
       code: "011008-203-901687",
       name: "Nhà số 5 (E), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
+      idType: 2,
       value: "2,050,880,818",
       department: "Nhà cấp II",
       date: "01/01/1918",
     },
     {
-      id: 9,
+      id: 12,
       code: "011008-203-901687",
       name: "Nhà số 5 (E), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
+      idType: 2,
       value: "2,050,880,818",
       department: "Nhà cấp II",
       date: "01/01/1918",
     },
     {
-      id: 9,
+      id: 10,
       code: "011008-203-901687",
       name: "Nhà số 5 (E), SG2 Lê Thạch",
-      type: "Nhà cấp II",
+      type: "Nhà cấp 2",
+      idType: 2,
       value: "2,050,880,818",
       department: "Nhà cấp II",
       date: "01/01/1918",
     },
   ];
+  const [filteredData, setFilteredData] = useState(rows);
+  const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = rows.map((row) => row.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
 
-  //   const handleChangePage = (event, newPage) => {
-  //     setPage(newPage);
-  //   };
+  const handleClick = (_event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: number[] = [];
 
-  //   const handleChangeRowsPerPage = (event) => {
-  //     setRowsPerPage(parseInt(event.target.value, 10));
-  //     setPage(0);
-  //   };
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (_: any, newPage: any) => setPage(newPage);
+
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const isSelected = (id: number): boolean => selected.indexOf(id) !== -1;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  //hàm tìm kiếm chung
+  const handleSearch = () => {
+    const results = rows.filter(
+      (item) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase().trim()) &&
+        (assetType === "" || item.idType === Number(assetType)) &&
+        (selectedOptions.length === 0 ||
+          selectedOptions.some((opt) => opt.type === item.type))
+    );
+
+    setFilteredData(results);
+    setPage(0);
+  };
 
   return (
     <div className="p-4">
@@ -168,19 +241,34 @@ const AssetList = () => {
 
           <div>
             <label className="block mb-1">Loại tài sản:</label>
-            <Select
+            {/* <Select
               value={assetType}
-              onChange={(e) => setAssetType(e.target.value)}
+              onChange={(e) => {
+                setAssetType(e.target.value);
+                handleSearch();
+              }}
               displayEmpty
               variant="outlined"
               size="small"
               className="w-64"
             >
               <MenuItem value="">Tất cả</MenuItem>
-              <MenuItem value="Nhà cấp I">Nhà cấp I</MenuItem>
-              <MenuItem value="Nhà cấp II">Nhà cấp II</MenuItem>
-              <MenuItem value="Nhà cấp III">Nhà cấp III</MenuItem>
-            </Select>
+              <MenuItem value="1">Nhà cấp I</MenuItem>
+              <MenuItem value="2">Nhà cấp II</MenuItem>
+              <MenuItem value="3">Nhà cấp III</MenuItem>
+            </Select> */}
+            <Autocomplete
+              multiple
+              limitTags={1}
+              id="multiple-limit-tags"
+              options={[allOption, ...rows]}
+              getOptionLabel={(option) => option.type}
+              defaultValue={[allOption]}
+              value={selectedOptions}
+              onChange={(event, newValue) => setSelectedOptions(newValue)}
+              renderInput={(params) => <TextField {...params} />}
+              sx={{ width: "400px", height: "10px" }}
+            />
           </div>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -219,6 +307,18 @@ const AssetList = () => {
               <MenuItem value="Nhà cấp III">Nhà cấp III</MenuItem>
             </Select>
           </div>
+          <Button
+            variant="contained"
+            sx={{
+              marginTop: "30px",
+              height: "30px",
+              fontWeight: "200",
+              textTransform: "none",
+            }}
+            onClick={handleSearch}
+          >
+            Tìm kiếm
+          </Button>
         </div>
       </Box>
 
@@ -253,8 +353,18 @@ const AssetList = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#2673b4", color: "white" }}>
-                <TableCell>
-                  <Checkbox />
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    color="primary"
+                    indeterminate={
+                      selected.length > 0 && selected.length < rows.length
+                    }
+                    checked={rows.length > 0 && selected.length === rows.length}
+                    onChange={handleSelectAllClick}
+                    inputProps={{
+                      "aria-label": "select all assets",
+                    }}
+                  />
                 </TableCell>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                   STT
@@ -283,45 +393,79 @@ const AssetList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
+              {filteredData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => (
-                  <TableRow key={row.id}>
-                    <TableCell>
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                    <TableCell>{row.code}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.value}</TableCell>
-                    <TableCell>{row.department}</TableCell>
-                    <TableCell>{row.date}</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<VisibilityIcon />}
-                      >
-                        Xem
-                      </Button>
-                      <Button variant="outlined" size="small" className="ml-2">
-                        In thẻ
-                      </Button>
-                      <Button variant="outlined" size="small" className="ml-2">
-                        Sửa
-                      </Button>
-                      <Button variant="outlined" size="small" className="ml-2">
-                        Xóa
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                .map((row) => {
+                  const isItemSelected = isSelected(row.id);
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": `checkbox-${row.id}`,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>{row.id}</TableCell>
+                      <TableCell>{row.code}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.type}</TableCell>
+                      <TableCell>{row.value}</TableCell>
+                      <TableCell>{row.department}</TableCell>
+                      <TableCell>{row.date}</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<VisibilityIcon />}
+                        >
+                          Xem
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          className="ml-2"
+                        >
+                          In thẻ
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          className="ml-2"
+                        >
+                          Sửa
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          className="ml-2"
+                        >
+                          Xóa
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {/* <TablePagination
+        <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
@@ -333,7 +477,7 @@ const AssetList = () => {
           labelDisplayedRows={({ from, to, count }) =>
             `Hiển thị từ ${from} đến ${to} của ${count} bản ghi`
           }
-        /> */}
+        />
       </Box>
     </div>
   );

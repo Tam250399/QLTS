@@ -1,5 +1,11 @@
 import Thongtintaisan from "./Thongtintaisan";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import Giatrisd from "./Giatrisd";
 import Hosogiayto from "./Hosogiayto";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -23,6 +29,7 @@ const SubmitHandlers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -49,11 +56,16 @@ const SubmitHandlers = () => {
   const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
     setLoading(true);
     try {
-      await PostThongTinTaiSan(data);
-      dispatch(
-        setToast({ message: "Lưu dữ liệu thành công", type: "success" })
-      );
-      navigate("/trangchu");
+      const postTT = await PostThongTinTaiSan(data);
+      console.log("postTT", postTT);
+      if (postTT == null) {
+        navigate("/home");
+      } else {
+        dispatch(
+          setToast({ message: "Lưu dữ liệu thành công", type: "success" })
+        );
+        navigate("/trangchu");
+      }
     } catch (error) {
       // Xử lý lỗi ở đây
     } finally {
@@ -63,14 +75,14 @@ const SubmitHandlers = () => {
 
   return (
     <>
-      <div className="hide-scrollbar overflow-y-auto ">
+      <div className=" overflow-y-auto scrollbar-hide">
         <div className="flex justify-between items-center p-4 bg-gray-100">
           <div className="flex items-center gap-2">
-            <Typography variant="h5" className="text-black font-bold">
+            <Typography variant="h6" className="text-black font-bold">
               Nhập số dư tài sản đất
             </Typography>
             <div className="flex items-center gap-2">
-              <FaRegArrowAltCircleLeft className="text-xl text-blue-600" />
+              <FaRegArrowAltCircleLeft className="text-xs text-blue-600" />
               <div
                 onClick={onHandleHome}
                 className="text-base text-blue-600 cursor-pointer hover:underline"
@@ -96,6 +108,7 @@ const SubmitHandlers = () => {
               ) : null}
               {loading ? "Đang xử lý" : "Lưu dữ liệu"}
             </Button>
+
             <button
               onClick={onHandleHome}
               className="border border-gray-400 text-gray-600 px-4 py-2 rounded hover:bg-gray-200"

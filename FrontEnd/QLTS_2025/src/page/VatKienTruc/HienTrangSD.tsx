@@ -5,9 +5,11 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
-
-const HienTrangSD = (control: any) => {
+import { Control, Controller } from "react-hook-form";
+interface HienTrangSDProps {
+  control: Control<any>; // Hoặc Control<FormType> nếu bạn có định nghĩa FormType
+}
+const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
   return (
     <Box
       sx={{
@@ -59,7 +61,7 @@ const HienTrangSD = (control: any) => {
             />
           }
           label="Quan lý nhà nước"
-          sx={{ marginRight: 0 }} // Removes default margin for better spacing control
+          sx={{ marginRight: 0 }}
         />
         <FormControlLabel
           control={

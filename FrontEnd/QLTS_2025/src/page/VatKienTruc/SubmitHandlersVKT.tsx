@@ -4,6 +4,7 @@ import {
   SubmitHandler,
   useForm,
   UseFormClearErrors,
+  UseFormGetValues,
   UseFormRegister,
   UseFormSetError,
   UseFormSetValue,
@@ -24,6 +25,7 @@ const SubmitHandlersVKT = () => {
     setValue,
     setError,
     clearErrors,
+    getValues,
     formState: { errors },
   } = useForm<ThongtinchungVkt>({
     defaultValues: {},
@@ -64,6 +66,7 @@ const SubmitHandlersVKT = () => {
             setValue={setValue as unknown as UseFormSetValue<ThongTinNha>}
             setError={setError as UseFormSetError<ThongTinNha>}
             clearErrors={clearErrors as UseFormClearErrors<ThongTinNha>}
+            getValues={getValues as unknown as UseFormGetValues<ThongTinNha>}
           />
         </div>
         <div className="pb-10">

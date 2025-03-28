@@ -29,6 +29,7 @@ const Dientichhientrang = ({
   register,
   getValues,
   setValue,
+  errors,
 }: ThongtintaisanProps) => {
   const dienTich = getValues("DIEN_TICH");
 
@@ -133,13 +134,24 @@ const Dientichhientrang = ({
             margin="dense"
             type="text"
             placeholder="m²"
+            {...register("DIEN_TICH", {
+              required: "Bạn phải nhập diện tích đất",
+            })}
             value={displayValues.DIEN_TICH || ""}
             onChange={handleChangeDienTichs(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, DIEN_TICH: value }))
             )}
-            error={!!areaError}
-            helperText={areaError}
+            error={!!areaError || !!errors.DIEN_TICH}
           />
+          {areaError && (
+            <span className="text-red-500 text-xs">{areaError}</span>
+          )}
+
+          {errors.DIEN_TICH && !areaError && (
+            <span className="text-red-500 text-xs">
+              {errors.DIEN_TICH.message}
+            </span>
+          )}
         </Grid>
 
         {/* Hiện trạng sử dụng - Tiêu đề */}
