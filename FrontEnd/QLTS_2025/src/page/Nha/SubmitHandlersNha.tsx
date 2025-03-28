@@ -18,7 +18,7 @@ const SubmitHandlerHouses = () => {
   const location = useLocation();
   const { id } = location.state || {};
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const { message, type } = useSelector((state: RootState) => state.toast);
   const dispatch = useDispatch();
 

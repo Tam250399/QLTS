@@ -26,7 +26,6 @@ import {
   UseFormClearErrors,
   UseFormGetValues,
   UseFormRegister,
-  UseFormSetError,
   UseFormSetValue,
 } from "react-hook-form";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
