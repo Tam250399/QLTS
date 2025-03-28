@@ -56,7 +56,7 @@ export async function GetDMMucDichTS(
 ): Promise<MucDichTS[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/DanhMuc/mucDichSuDung?loaiHinhTaiSanId=${loaiHinhTaiSanId}`
+      `${API_URL}/DanhMuc/loaiTaiSan?loaiHinhTaiSanId=${loaiHinhTaiSanId}`
     );
     console.log("response", response.data.Data.Results);
     return response.data.Data.Results;

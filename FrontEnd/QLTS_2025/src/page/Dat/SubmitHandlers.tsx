@@ -45,7 +45,7 @@ const SubmitHandlers = () => {
       GIA_TRI_SU_DUNG_DAT: {
         NGUON_KHAC: 0,
       },
-      LOAI_HINH_TAI_SAN_ID: 1,
+      LOAI_HINH_TAI_SAN_ID: id,
     },
   });
 
@@ -56,11 +56,16 @@ const SubmitHandlers = () => {
   const onSubmit: SubmitHandler<Thongtinchung> = async (data) => {
     setLoading(true);
     try {
-      await PostThongTinTaiSan(data);
-      dispatch(
-        setToast({ message: "Lưu dữ liệu thành công", type: "success" })
-      );
-      navigate("/trangchu");
+      const postTT = await PostThongTinTaiSan(data);
+      console.log("postTT", postTT);
+      if (postTT == null) {
+        navigate("/home");
+      } else {
+        dispatch(
+          setToast({ message: "Lưu dữ liệu thành công", type: "success" })
+        );
+        navigate("/trangchu");
+      }
     } catch (error) {
       // Xử lý lỗi ở đây
     } finally {

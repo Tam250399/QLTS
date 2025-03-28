@@ -11,15 +11,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
+import { BoPhanSuDung } from "../../validateform/thongtinnha";
+import { GetListBoPhanSD } from "../../service/ServiceNha";
 
 interface BoPhan {
   donvi: string;
   tenBoPhan: string;
   address: string;
   phone: string;
-  trucThuoc: string;
+  trucThuoc: number;
 }
 
 interface ThemMoiBoPhanProps {
@@ -58,7 +61,23 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
   const [tenBoPhan, setTenBoPhan] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [trucThuoc, setTrucThuoc] = useState("");
+  const [formatPhone, setFormatPhone] = useState("");
+  const [trucThuoc, setTrucThuoc] = useState(0);
+  const [boPhanSuDung, setBoPhanSuDung] = useState<BoPhanSuDung[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const param = { donViId: 1 };
+        const boPhanSuDung = await GetListBoPhanSD(param);
+
+        setBoPhanSuDung(boPhanSuDung);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const handleSave = () => {
     const formData: BoPhan = {
       donvi,
@@ -67,12 +86,54 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
       phone,
       trucThuoc,
     };
+    if (!validatePhone(phone)) {
+      setError(true); // Báo lỗi nếu chưa đủ 10 số hoặc không hợp lệ
+    } else {
+      console.log("Dữ liệu form:", formData);
+      handleClose();
+    }
+  };
+  const [error, setError] = useState(false);
 
-    console.log("Dữ liệu form:", formData);
+  const validatePhone = (value: string) => {
+    const phoneRegex = /^[0-9]{10}$/; // Chỉ chấp nhận đúng 10 số
+    return phoneRegex.test(value);
+  };
+
+  const handleChange = (e: any) => {
+    const value = e.target.value;
+    let cleanedPhone = value.replace(/\D/g, "");
+    let formatted = cleanedPhone;
+
+    // Chỉ cho phép nhập số và không vượt quá 10 ký tự
+    if (/^[0-9]*$/.test(cleanedPhone) && cleanedPhone.length <= 12) {
+      if (cleanedPhone.length > 6) {
+        formatted = `${cleanedPhone.slice(0, 3)}-${cleanedPhone.slice(
+          3,
+          6
+        )}-${cleanedPhone.slice(6)}`;
+      } else if (cleanedPhone.length > 3) {
+        formatted = `${cleanedPhone.slice(0, 3)}-${cleanedPhone.slice(3)}`;
+      }
+      setFormatPhone(formatted);
+      setPhone(cleanedPhone);
+      setError(false); // Reset lỗi khi người dùng đang nhập
+    }
+  };
+
+  const handleBlur = () => {
+    if (!validatePhone(phone)) {
+      setError(true);
+    }
+  };
+
+  const handleCloseForm = () => {
+    setError(false);
+    setPhone("");
     handleClose();
   };
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleCloseForm}>
       <DialogTitle
         sx={{
           display: "flex",
@@ -84,7 +145,7 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
         }}
       >
         Thêm mới bộ phận của đơn vị
-        <IconButton onClick={handleClose} size="small">
+        <IconButton onClick={handleCloseForm} size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -187,10 +248,15 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
               <TextField
                 fullWidth
                 size="small"
+                value={formatPhone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={error}
+                helperText={error ? "Số điện thoại không hợp lệ" : ""}
+                inputProps={{ maxLength: 12 }}
                 InputProps={{
                   sx: { fontSize: "14px" },
                 }}
-                onChange={(e) => setPhone(e.target.value)}
               />
             </Grid>
 
@@ -209,11 +275,11 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
               </Typography>
               <Autocomplete
                 className="pt-[1px]"
-                options={data}
-                getOptionLabel={(option) => option.ten}
+                options={boPhanSuDung}
+                getOptionLabel={(option) => option.TEN}
                 onChange={(_, value) => {
                   if (value) {
-                    setTrucThuoc(value.ten);
+                    setTrucThuoc(value.ID);
                   }
                 }}
                 renderInput={(params) => (
@@ -230,8 +296,8 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
                 )}
                 noOptionsText="Không tìm thấy đơn vị"
                 renderOption={(props, option) => (
-                  <li {...props} key={option.id} style={{ fontSize: "14px" }}>
-                    {option.ten}
+                  <li {...props} key={option.ID} style={{ fontSize: "14px" }}>
+                    {option.TEN}
                   </li>
                 )}
                 sx={{ height: "36px", width: "100%" }}
@@ -242,7 +308,13 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleSave} color="success" variant="contained">
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleSave}
+          startIcon={<SaveIcon />}
+        >
           Lưu
         </Button>
       </DialogActions>

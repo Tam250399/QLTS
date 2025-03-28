@@ -43,7 +43,7 @@ const AssetList = () => {
   const [selected, setSelected] = React.useState<number[]>([]);
 
   const allOption = { type: "Tất cả", id: 0 };
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([allOption]);
 
   // Data fake
   const rows: Row[] = [

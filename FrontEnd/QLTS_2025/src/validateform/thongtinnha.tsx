@@ -30,11 +30,11 @@ export interface ThongTinNha {
   dienTich: number; // Diện tích (m²) - Bắt buộc
   HIEN_TRANG_SU_DUNG: {
     TRU_SO_LAM_VIEC: number; // Trụ sở làm việc (m²)
-    hdSnKhongKd: number; // HDSN-Không KD (m²)
+    HD_SN_KHONG_KINH_DOANH: number; // HDSN-Không KD (m²)
     HD_SD_KINH_DOANH: number; // HDSN-Kinh doanh (m²)
     HD_SD_CHO_THUE: number; // HDSN-Cho thuê (m²)
     HD_SD_KINH_DOANH_LK: number; // HDSN-LDLK (m²)
-    deO: number; // Để ở (m²)
+    DE_O: number; // Để ở (m²)
     BO_TRONG: number; // Bỏ trống (m²)
     BI_LAN_CHIEM: number; // Bị lấn chiếm (m²)
     SU_DUNG_HON_HOP: number; // Sử dụng hỗn hợp (m²)
@@ -105,4 +105,14 @@ export interface LyDoTangDat {
   loaI_HINH_TAI_SAN_ID: number;
   loaI_LY_DO_ID: number;
   loaI_LY_DO_BIEN_DONG_ID: number;
+}
+
+export interface BoPhanSuDung {
+  MA: string;
+  TEN: string;
+  DON_VI_ID: number;
+  PARENT_ID: number;
+  TREE_NODE: string;
+  TREE_LEVEL: number;
+  ID: number;
 }
