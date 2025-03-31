@@ -34,24 +34,14 @@ const GiaTriHaoMon = ({
   const [displayValues, setDisplayValues] = useState<Record<string, string>>(
     {}
   );
-  const { NGUYEN_GIA, NGUON_KHAC, GIA_TRI_CON_LAI } =
+  const { NGUON_KHAC, GIA_TRI_CON_LAI, NGUON_NGAN_SACH } =
     getValues("GIA_TRI_HAO_MON") || {};
+  const NGUYEN_GIA = getValues("GIA_TRI_HAO_MON.NGUYEN_GIA");
   const [nguonKhacError, setNguonKhacError] = useState<string | undefined>(
     undefined
   );
-  const NGUON_NGAN_SACH =
-    NGUYEN_GIA - NGUON_KHAC > 0 ? NGUYEN_GIA - NGUON_KHAC : 0;
-
-  useEffect(() => {
-    setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", NGUON_NGAN_SACH, {
-      shouldValidate: true,
-    });
-    if (NGUYEN_GIA && NGUYEN_GIA < NGUON_KHAC) {
-      setNguonKhacError("Tổng các nguồn vốn phải bằng nguyên giá.");
-    } else {
-      setNguonKhacError(undefined);
-    }
-  }, [NGUYEN_GIA, NGUON_KHAC]);
+  const [nguonKhac, setNguonKhac] = useState(0);
+  const [nguyenGia, setNguyenGia] = useState(0);
 
   useEffect(() => {
     const fields = {
@@ -112,12 +102,32 @@ const GiaTriHaoMon = ({
             value={displayValues.NGUYEN_GIA || ""}
             {...register("GIA_TRI_HAO_MON.NGUYEN_GIA", {
               required: "Bạn phải nhập nguyên giá",
+              validate: (value) => {
+                setNguyenGia(value);
+                if (!value) {
+                  return "Bạn phải nhập nguyên giá";
+                }
+                if (!isNaN(nguonKhac) && nguonKhac > value) {
+                  setNguonKhacError(
+                    "Tổng nguồn vốn không được lớn hơn nguyên giá"
+                  );
+                  setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", 0, {
+                    shouldValidate: true,
+                  });
+                  return true;
+                }
+                setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", value - nguonKhac, {
+                  shouldValidate: true,
+                });
+                setNguonKhacError(undefined);
+                return true;
+              },
             })}
             onChange={handleChangeNguyenGia(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUYEN_GIA: value }))
             )}
-            error={!!errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA}
-            helperText={errors?.GIA_TRI_HAO_MON?.NGUYEN_GIA?.message}
+            error={!!errors.GIA_TRI_HAO_MON?.NGUYEN_GIA}
+            helperText={errors.GIA_TRI_HAO_MON?.NGUYEN_GIA?.message}
           />
 
           <Typography
@@ -141,6 +151,7 @@ const GiaTriHaoMon = ({
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUON_NGAN_SACH || ""}
+            {...register("GIA_TRI_HAO_MON.NGUON_NGAN_SACH")}
             InputProps={{
               readOnly: true,
               sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
@@ -162,6 +173,29 @@ const GiaTriHaoMon = ({
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUON_KHAC || ""}
+            {...register("GIA_TRI_HAO_MON.NGUON_KHAC", {
+              validate: (value) => {
+                setNguonKhac(value);
+                if (!isNaN(nguyenGia) && Number(value) > nguyenGia) {
+                  setNguonKhacError(
+                    "Tổng nguồn vốn không được lớn hơn nguyên giá"
+                  );
+                  setValue("GIA_TRI_HAO_MON.NGUON_NGAN_SACH", 0, {
+                    shouldValidate: true,
+                  });
+                  return true;
+                }
+                setValue(
+                  "GIA_TRI_HAO_MON.NGUON_NGAN_SACH",
+                  isNaN(nguyenGia) ? 0 : nguyenGia - value,
+                  {
+                    shouldValidate: true,
+                  }
+                );
+                setNguonKhacError(undefined);
+                return true;
+              },
+            })}
             onChange={handleChangeNguonKhac(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUON_KHAC: value }))
             )}

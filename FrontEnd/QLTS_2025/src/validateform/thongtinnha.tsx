@@ -17,7 +17,7 @@ export interface ThongTinNha {
   QUAN_HUYEN_ID: number;
   XA_PHUONG_ID: number;
   TEN_NGOI_NHA: string;
-  KHUON_VIEN_DAT: string;
+  KHUON_VIEN_DAT: number;
   DIA_CHI_NHA: string;
   CAP_NHA_ID: number;
   SO_TANG: number;
@@ -114,5 +114,13 @@ export interface BoPhanSuDung {
   PARENT_ID: number;
   TREE_NODE: string;
   TREE_LEVEL: number;
+  ID: number;
+}
+
+export interface KhuonVienDat {
+  DIA_CHI: string;
+  LOAI_TAI_SAN: string;
+  TRANG_THAI: number;
+  CustomProperties: object;
   ID: number;
 }
