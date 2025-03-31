@@ -18,8 +18,6 @@ const SubmitHandlers = () => {
 
   const { id } = location.state || {};
 
-  console.log("test", id);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
