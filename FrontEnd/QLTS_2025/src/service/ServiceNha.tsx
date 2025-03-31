@@ -1,6 +1,7 @@
 import { BoPhanSuDung, KhuonVienDat } from "../validateform/thongtinnha";
 import { requestAuth } from "../config/axiosConfig";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GetListBoPhanSD(param: any): Promise<BoPhanSuDung[]> {
   try {
     const response = await requestAuth({

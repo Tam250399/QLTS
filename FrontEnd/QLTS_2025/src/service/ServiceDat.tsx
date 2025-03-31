@@ -67,11 +67,12 @@ export async function GetDMMucDichTS(
 }
 
 export async function GetDMLyDoTangDat(
-  loaiHinhTaiSanId: number
+  loaiHinhTaiSanId: number,
+  isTangMoi: boolean = false
 ): Promise<LyDoTangDat[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/DanhMuc/lyDoTangGiam?loaiHinhTaiSanId=${loaiHinhTaiSanId}`
+      `${API_URL}/DanhMuc/lyDoTangGiam?loaiHinhTaiSanId=${loaiHinhTaiSanId}&isTangMoi=${isTangMoi}`
     );
     console.log("response", response.data.Data.Results);
     return response.data.Data.Results;
@@ -80,6 +81,7 @@ export async function GetDMLyDoTangDat(
     throw error;
   }
 }
+
 export async function PostThongTinTaiSan(
   data: Thongtinchung
 ): Promise<Thongtinchung | null> {

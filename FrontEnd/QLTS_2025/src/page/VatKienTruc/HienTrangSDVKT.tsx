@@ -6,10 +6,13 @@ import {
   Box,
 } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
+import { ThongtinchungVkt } from "../../validateform/thongtinVkt";
+
 interface HienTrangSDProps {
-  control: Control<any>; // Hoặc Control<FormType> nếu bạn có định nghĩa FormType
+  control: Control<ThongtinchungVkt>;
 }
-const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
+
+const HienTrangSDVKT: React.FC<HienTrangSDProps> = ({ control }) => {
   return (
     <Box
       sx={{
@@ -30,7 +33,7 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
           backgroundColor: "white",
           padding: "0 8px",
           color: "#007bff",
-          fontSize: "14px", // Giảm kích thước tiêu đề
+          fontSize: "14px",
           fontWeight: "bold",
         }}
       >
@@ -48,14 +51,14 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="stateManagement"
+              name="HIEN_TRANG_SU_DUNG.TRU_SO_LAM_VIEC"
               control={control}
               disabled
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -66,13 +69,13 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="businessNotOperating"
+              name="HIEN_TRANG_SU_DUNG.HD_SN_KHONG_KINH_DOANH"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -83,13 +86,13 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="businessOperating"
+              name="HIEN_TRANG_SU_DUNG.HD_SD_KINH_DOANH"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -100,13 +103,13 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="businessJointVenture"
+              name="HIEN_TRANG_SU_DUNG.HD_SD_KINH_DOANH_LK"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -117,13 +120,13 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="businessLeased"
+              name="HIEN_TRANG_SU_DUNG.HD_SD_CHO_THUE"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -134,13 +137,13 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
         <FormControlLabel
           control={
             <Controller
-              name="otherUse"
+              name="HIEN_TRANG_SU_DUNG.SU_DUNG_KHAC"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   {...field}
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value > 0}
+                  onChange={(e) => field.onChange(e.target.checked ? 1 : 0)}
                 />
               )}
             />
@@ -153,4 +156,4 @@ const HienTrangSD: React.FC<HienTrangSDProps> = ({ control }) => {
   );
 };
 
-export default HienTrangSD;
+export default HienTrangSDVKT;

@@ -1,3 +1,12 @@
+export interface HienTrangSuDung {
+  TRU_SO_LAM_VIEC: number;
+  HD_SN_KHONG_KINH_DOANH: number;
+  HD_SD_KINH_DOANH: number;
+  HD_SD_KINH_DOANH_LK: number;
+  HD_SD_CHO_THUE: number;
+  SU_DUNG_KHAC: number;
+}
+
 export interface ThongtinchungVkt {
   TEN: string;
   LY_DO_TANG_ID: number;
@@ -10,7 +19,9 @@ export interface ThongtinchungVkt {
   BO_PHAN_ID: number;
   DIEN_TICH: number;
   NAM_SX: number;
+  THE_TICH: number;
   MO_TA: string;
+  HIEN_TRANG_SU_DUNG: HienTrangSuDung;
 }
 export interface LyDoTangDat {
   MA: string;

@@ -10,45 +10,74 @@ import {
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
+import { MucDichTS, quocgia } from "../../validateform/thongtinchung";
 import {
-  LyDoTangDat,
-  quocgia,
-  ThongtinchungVkt,
-} from "../../validateform/thongtinVkt";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { useEffect, useState } from "react";
 import ThemMoiBoPhan from "../../components/form/ThemMoiBoPhan";
-import { GetDMQuocGia } from "../../service/ServiceDat";
+import {
+  GetDMQuocGia,
+  GetDMLyDoTangDat,
+  GetDMMucDichTS,
+} from "../../service/ServiceDat";
+import {
+  handleChangeChieuDai,
+  handleChangeDienTich,
+  handleChangeTheTich,
+} from "../../components/form/HandleChaneVKT";
+import { ThongtinchungVkt } from "../../validateform/thongtinVkt";
+import { GetListBoPhanSD } from "../../service/ServiceNha";
+import { BoPhanSuDung } from "../../validateform/thongtinnha";
 
 interface ThongtintaisanVktProps {
   register: UseFormRegister<ThongtinchungVkt>;
   errors: FieldErrors<ThongtinchungVkt>;
   setValue: UseFormSetValue<ThongtinchungVkt>;
+  clearErrors: UseFormClearErrors<ThongtinchungVkt>;
 }
-const options = [
-  { label: "The Godfather", id: 1 },
-  { label: "Pulp Fiction", id: 2 },
-];
+
 const ThongtinTSKT = ({
   register,
   errors,
   setValue,
+  clearErrors,
 }: ThongtintaisanVktProps) => {
   const [openThemBP, setOpenThemBP] = useState(false);
-  const [lyDoTangDat] = useState<LyDoTangDat[]>([]);
   const [quocGia, setQuocGia] = useState<quocgia[]>([]);
+  const [lyDoTang, setLyDoTangs] = useState<MucDichTS[]>([]);
+  const [mucDichTS, setMucDichTSs] = useState<MucDichTS[]>([]);
+  const [boPhanSuDung, setBoPhanSuDung] = useState<BoPhanSuDung[]>([]);
+  const [displayValues, setDisplayValues] = useState<Record<string, string>>(
+    {}
+  );
 
   useEffect(() => {
-    const fetchNuocSX = async () => {
+    const fetchData = async () => {
+      const param = { donViId: 1 };
       try {
-        const data = await GetDMQuocGia();
-        setQuocGia(data || []);
+        const [quocGiaData, mucDichTS, boPhanSuDung, lyDoTangDat] =
+          await Promise.all([
+            GetDMQuocGia(),
+            GetDMMucDichTS(3),
+            GetListBoPhanSD(param),
+            GetDMLyDoTangDat(3), // Using 1 as default loaiHinhTaiSanId
+          ]);
+        setQuocGia(quocGiaData || []);
+        setMucDichTSs(mucDichTS);
+        setLyDoTangs(lyDoTangDat || []);
+        setBoPhanSuDung(boPhanSuDung || []);
       } catch (error) {
-        console.error("Lỗi khi ", error);
+        console.error("Lỗi khi tải dữ liệu:", error);
         setQuocGia([]);
+        setLyDoTangs([]);
       }
     };
-    fetchNuocSX();
+
+    fetchData();
   }, []);
 
   const handleThemBoPhan = () => {
@@ -115,21 +144,30 @@ const ThongtinTSKT = ({
           )}
 
           {/* Lý do tăng */}
-          <FormControl
-            fullWidth
-            variant="outlined"
-            sx={{ marginBottom: 2 }}
-            size="small"
-          >
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Lý do tăng <span style={{ color: "red" }}>*</span>
-            </Typography>
+          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+            Lý do tăng<span style={{ color: "red" }}>*</span>
+          </Typography>
+          <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
+              options={lyDoTang}
+              getOptionLabel={(option) => option.TEN}
+              {...register("LY_DO_TANG_ID", {
+                required: "Bạn phải chọn lý do tăng ",
+              })}
+              onChange={(_, value) => {
+                if (value) {
+                  const selected = lyDoTang.find(
+                    (lydo) => lydo.ID === value?.ID
+                  );
+                  setValue("LY_DO_TANG_ID", selected?.ID || -1);
+                  clearErrors("LY_DO_TANG_ID");
+                }
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Đăng ký lần đầu"
+                  placeholder="-- Chọn lý do tăng --"
                   sx={{
                     fontSize: "14px",
                     "& .MuiInputBase-root": {
@@ -138,11 +176,16 @@ const ThongtinTSKT = ({
                   }}
                 />
               )}
-              options={[]}
+              noOptionsText="Không tìm thấy lý do tăng"
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option.TEN}
+                </li>
+              )}
             />
-            {errors.LY_DO_TANG_ID && (
+            {errors?.LY_DO_TANG_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn lý do tăng
+                {errors?.LY_DO_TANG_ID?.message}
               </span>
             )}
           </FormControl>
@@ -152,18 +195,26 @@ const ThongtinTSKT = ({
             </span>
           )} */}
           {/* Loại tài sản */}
-          <FormControl
-            fullWidth
-            variant="outlined"
-            sx={{ marginBottom: 2 }}
-            size="small"
-          >
-            <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-              Loại tài sản <span style={{ color: "red" }}>*</span>
-            </Typography>
+          <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+            Loại tài sản <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <FormControl fullWidth margin="dense" size="small">
             <Autocomplete
               className="pt-[1px]"
-              options={options}
+              options={mucDichTS}
+              getOptionLabel={(option) => `${option.MA} - ${option.TEN}`}
+              {...register("LOAI_TAI_SAN_ID", {
+                required: "Bạn phải chọn loại tài sản",
+              })}
+              onChange={(_, value) => {
+                if (value) {
+                  const selected = mucDichTS.find(
+                    (mucdich) => mucdich.ID === value?.ID
+                  );
+                  setValue("LOAI_TAI_SAN_ID", selected?.ID || -1);
+                  clearErrors("LOAI_TAI_SAN_ID");
+                }
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -177,13 +228,15 @@ const ThongtinTSKT = ({
                 />
               )}
               noOptionsText="Không tìm thấy loại tài sản"
-              renderOption={(props) => (
-                <li {...props} style={{ fontSize: "14px" }}></li>
+              renderOption={(props, option) => (
+                <li {...props} style={{ fontSize: "14px" }}>
+                  {option.MA} - {option.TEN}
+                </li>
               )}
             />
-            {errors.LOAI_TAI_SAN_ID && (
+            {errors?.LOAI_TAI_SAN_ID && (
               <span className="text-red-500 text-xs">
-                Bạn phải chọn loại tài sản
+                {errors?.LOAI_TAI_SAN_ID?.message}
               </span>
             )}
           </FormControl>
@@ -200,7 +253,13 @@ const ThongtinTSKT = ({
                 variant="outlined"
                 sx={{ marginBottom: 2 }}
                 InputProps={{ endAdornment: <span>m</span> }}
-                {...register("CHIEU_DAI", { required: true })}
+                value={displayValues.CHIEU_DAI || ""}
+                onChange={handleChangeChieuDai(setValue, (value) =>
+                  setDisplayValues((prev) => ({
+                    ...prev,
+                    CHIEU_DAI: value,
+                  }))
+                )}
               />
             </Grid>
             <Grid item xs={6}>
@@ -213,7 +272,13 @@ const ThongtinTSKT = ({
                 variant="outlined"
                 sx={{ marginBottom: 2 }}
                 InputProps={{ endAdornment: <span>m²</span> }}
-                {...register("DIEN_TICH", { required: true })}
+                value={displayValues.DIEN_TICH || ""}
+                onChange={handleChangeDienTich(setValue, (value) =>
+                  setDisplayValues((prev) => ({
+                    ...prev,
+                    DIEN_TICH: value,
+                  }))
+                )}
               />
             </Grid>
           </Grid>
@@ -263,9 +328,24 @@ const ThongtinTSKT = ({
             size="small"
             margin="dense"
             InputLabelProps={{ shrink: true }}
-            defaultValue="2017-12-31"
-            InputProps={{ sx: { fontSize: "14px" } }}
-            {...register("NGAY_DU_VAO_SD", { required: true })}
+            InputProps={{
+              sx: { fontSize: "14px" },
+              inputProps: {
+                max: new Date().toISOString().split("T")[0], // Prevents future dates
+              },
+            }}
+            {...register("NGAY_DU_VAO_SD", {
+              required: "Bạn phải nhập ngày đưa vào sử dụng",
+              validate: (value) => {
+                if (!value) return "Bạn phải nhập ngày đưa vào sử dụng";
+                const selectedDate = new Date(value);
+                const today = new Date();
+                if (selectedDate > today) {
+                  return "Ngày đưa vào sử dụng không được lớn hơn ngày hiện tại";
+                }
+                return true;
+              },
+            })}
           />
           {errors?.NGAY_DU_VAO_SD && (
             <span className="text-red-500 text-xs">
@@ -313,13 +393,14 @@ const ThongtinTSKT = ({
               </Typography>
               <Autocomplete
                 className="pt-[2px] pb-5"
-                options={lyDoTangDat}
+                options={boPhanSuDung}
                 getOptionLabel={(option) => option.TEN}
                 onChange={(_, value) => {
-                  const selected = lyDoTangDat.find(
+                  const selected = boPhanSuDung.find(
                     (lydo) => lydo.ID === value?.ID
                   );
                   setValue("BO_PHAN_ID", selected?.ID || -1);
+                  clearErrors("BO_PHAN_ID");
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -345,11 +426,17 @@ const ThongtinTSKT = ({
             <Grid item xs={6}>
               <IconButton
                 sx={{
-                  right: 85,
-                  top: "30%",
+                  width: "40px",
+                  height: "40px",
+                  position: "absolute",
+                  right: "27%",
+                  top: "35%",
                   transform: "translateX(-100%)",
+                  "& .MuiSvgIcon-root": {
+                    fontSize: "24px",
+                  },
                 }}
-                onClick={handleThemBoPhan} // Gọi hàm khi bấm "+"
+                onClick={handleThemBoPhan}
               >
                 <AddCircleOutlineIcon color="primary" />
               </IconButton>
@@ -367,6 +454,13 @@ const ThongtinTSKT = ({
             variant="outlined"
             sx={{ marginBottom: 2 }}
             InputProps={{ endAdornment: <span>m³</span> }}
+            value={displayValues.THE_TICH || ""}
+            onChange={handleChangeTheTich(setValue, (value) =>
+              setDisplayValues((prev) => ({
+                ...prev,
+                THE_TICH: value,
+              }))
+            )}
           />
 
           {/* Năm sản xuất */}
