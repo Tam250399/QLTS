@@ -15,12 +15,14 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GetListChonDats } from "../../service/ServiceNha";
+import { KhuonVienDat } from "../../validateform/thongtinnha";
 
 interface ChonDatProps {
   open: boolean;
   handleClose: () => void;
-  handleChonKhuonVienDat: (address: string) => void;
+  handleChonKhuonVienDat: (id: number, address: string) => void;
 }
 
 const ChonDat: React.FC<ChonDatProps> = ({
@@ -28,67 +30,84 @@ const ChonDat: React.FC<ChonDatProps> = ({
   handleClose,
   handleChonKhuonVienDat,
 }) => {
-  const data = [
-    {
-      id: 1,
-      address: "Văn phòng Chủ tịch nước, Phường Ngọc Hà, Ba Đình, Hà Nội",
-      type: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 2,
-      address: "Văn phòng Chủ tịch nước, Số 1 Hoàng Hoa Thám, Ba Đình, Hà Nội",
-      type: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 3,
-      address:
-        "Văn phòng Chủ tịch nước, Số 1 ngõ 123A phố Thụy Khuê, Tây Hồ, Hà Nội",
-      type: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 4,
-      address:
-        "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
-      type: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-    {
-      id: 5,
-      address:
-        "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
-      type: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-    {
-      id: 6,
-      address:
-        "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
-      type: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-    {
-      id: 7,
-      address:
-        "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
-      type: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = {
+          KeySearch: "",
+          donViId: 3,
+          pageIndex: 1,
+          pageSize: 100,
+        };
+        const response = await GetListChonDats(data);
+        setFilteredData(response);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // const data = [
+  //   {
+  //     id: 1,
+  //     address: "Văn phòng Chủ tịch nước, Phường Ngọc Hà, Ba Đình, Hà Nội",
+  //     type: "Đất trụ sở",
+  //     status: "Đã duyệt",
+  //   },
+  //   {
+  //     id: 2,
+  //     address: "Văn phòng Chủ tịch nước, Số 1 Hoàng Hoa Thám, Ba Đình, Hà Nội",
+  //     type: "Đất trụ sở",
+  //     status: "Đã duyệt",
+  //   },
+  //   {
+  //     id: 3,
+  //     address:
+  //       "Văn phòng Chủ tịch nước, Số 1 ngõ 123A phố Thụy Khuê, Tây Hồ, Hà Nội",
+  //     type: "Đất trụ sở",
+  //     status: "Đã duyệt",
+  //   },
+  //   {
+  //     id: 4,
+  //     address:
+  //       "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
+  //     type: "Đất hoạt động sự nghiệp",
+  //     status: "Chờ duyệt",
+  //   },
+  //   {
+  //     id: 5,
+  //     address:
+  //       "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
+  //     type: "Đất hoạt động sự nghiệp",
+  //     status: "Chờ duyệt",
+  //   },
+  //   {
+  //     id: 6,
+  //     address:
+  //       "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
+  //     type: "Đất hoạt động sự nghiệp",
+  //     status: "Chờ duyệt",
+  //   },
+  //   {
+  //     id: 7,
+  //     address:
+  //       "Nhà khách Chính phủ - Bộ Ngoại giao, Tràng Tiền, Hoàn Kiếm, Hà Nội",
+  //     type: "Đất hoạt động sự nghiệp",
+  //     status: "Chờ duyệt",
+  //   },
+  // ];
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState<KhuonVienDat[]>([]);
   const handleSearch = () => {
-    console.log("click tìm kiếm");
-    const results = data.filter((item) =>
-      item.address.toLowerCase().includes(searchText.toLowerCase())
+    const results = filteredData.filter((item) =>
+      item.DIA_CHI.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilteredData(results);
-    setPage(0); // Reset về trang đầu
+    setPage(0);
   };
 
   const handleChangePage = (_: any, newPage: any) => setPage(newPage);
@@ -206,7 +225,7 @@ const ChonDat: React.FC<ChonDatProps> = ({
               {filteredData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.ID}>
                     <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                     <TableCell>
                       <Typography
@@ -217,13 +236,15 @@ const ChonDat: React.FC<ChonDatProps> = ({
                             color: "blue",
                           },
                         }}
-                        onClick={() => handleChonKhuonVienDat(row.address)}
+                        onClick={() =>
+                          handleChonKhuonVienDat(row.ID, row.DIA_CHI)
+                        }
                       >
-                        {row.address}
+                        {row.DIA_CHI}
                       </Typography>
                     </TableCell>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.status}</TableCell>
+                    <TableCell>{row.LOAI_TAI_SAN}</TableCell>
+                    <TableCell>{row.TRANG_THAI}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

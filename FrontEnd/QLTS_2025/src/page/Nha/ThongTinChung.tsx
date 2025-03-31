@@ -195,16 +195,16 @@ const ThongTinChung = ({
   const handleChonDat = () => {
     setOpenChonDat(true);
   };
-  const handleChonKhuonVienDat = (diachi: string) => {
+  const handleChonKhuonVienDat = (id: number, diachi: string) => {
     setKhuonVienDat(diachi);
-    setValue("KHUON_VIEN_DAT", diachi);
+    setValue("KHUON_VIEN_DAT", id);
     clearErrors("KHUON_VIEN_DAT");
     setOpenChonDat(false);
   };
 
   const handleBoChonKhuonVienDat = () => {
     setKhuonVienDat("");
-    setValue("KHUON_VIEN_DAT", "");
+    setValue("KHUON_VIEN_DAT", 0);
     setOpenChonDat(false);
   };
 
