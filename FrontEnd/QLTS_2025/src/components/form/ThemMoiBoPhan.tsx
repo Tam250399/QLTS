@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Autocomplete,
   Box,
@@ -68,13 +69,15 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
           toast.error("Tạo mới bộ phận sử dụng thất bại");
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Lỗi khi tạo mới bộ phận sử dụng");
+    }
   };
   const [error, setError] = useState(false);
 
   const handleChange = (e: any) => {
     const value = e.target.value;
-    let cleanedPhone = value.replace(/\D/g, "");
+    const cleanedPhone = value.replace(/\D/g, "");
     let formatted = cleanedPhone;
 
     // Chỉ cho phép nhập số và không vượt quá 10 ký tự

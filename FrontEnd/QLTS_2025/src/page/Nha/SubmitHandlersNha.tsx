@@ -26,9 +26,11 @@ const SubmitHandlerHouses = () => {
     showToast(message, type);
     dispatch(clearToast());
   }, [message, type]);
+
   const onHandleHome = () => {
     navigate("/trangchu");
   };
+
   const {
     register,
     handleSubmit,
