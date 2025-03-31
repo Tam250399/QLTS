@@ -40,6 +40,7 @@ const SubmitHandlers = () => {
         NGUON_KHAC: 0,
       },
       LOAI_HINH_TAI_SAN_ID: id,
+      DON_VI_ID: 25417,
     },
   });
 

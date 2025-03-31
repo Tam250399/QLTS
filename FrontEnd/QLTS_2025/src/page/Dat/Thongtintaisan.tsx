@@ -304,7 +304,7 @@ const Thongtintaisan = ({
                   }}
                 />
               )}
-              noOptionsText="Không tìm thấy quận huyện"
+              noOptionsText="Không tìm thấy lý do tăng đất"
               renderOption={(props, option) => (
                 <li {...props} style={{ fontSize: "14px" }}>
                   {option.TEN}

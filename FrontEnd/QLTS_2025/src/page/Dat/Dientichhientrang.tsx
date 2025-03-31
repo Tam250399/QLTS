@@ -43,13 +43,24 @@ const Dientichhientrang = ({
   const [areaError, setAreaError] = useState<string | undefined>(undefined);
 
   const {
-    TRU_SO_LAM_VIEC,
-    DE_O,
-    BO_TRONG,
-    BI_LAN_CHIEM,
-    SU_DUNG_HON_HOP,
-    SU_DUNG_KHAC,
+    TRU_SO_LAM_VIEC = "",
+    DE_O = "",
+    BO_TRONG = "",
+    BI_LAN_CHIEM = "",
+    SU_DUNG_HON_HOP = "",
+    SU_DUNG_KHAC = "",
   } = getValues("HIEN_TRANG_SU_DUNG") || {};
+
+  const parseNumber = (value: string | number | undefined | null): number => {
+    if (!value || value === "") return 0;
+    // Remove the unit 'm²' and any whitespace first
+    const withoutUnit = String(value).replace(/ m²/g, "");
+    // Convert to string and remove all non-digit characters
+    const strValue = withoutUnit.replace(/[^0-9]/g, "");
+    // Parse as integer
+    const parsedValue = parseInt(strValue, 10);
+    return isNaN(parsedValue) ? 0 : parsedValue;
+  };
 
   const totalRelevantFields = useMemo(() => {
     const values = [
@@ -59,7 +70,7 @@ const Dientichhientrang = ({
       BI_LAN_CHIEM,
       SU_DUNG_HON_HOP,
       SU_DUNG_KHAC,
-    ].map((value) => Number(value) || 0);
+    ].map(parseNumber);
     return values.reduce((sum, val) => sum + val, 0);
   }, [
     TRU_SO_LAM_VIEC,
@@ -71,28 +82,69 @@ const Dientichhientrang = ({
   ]);
 
   useEffect(() => {
-    if (Number(dienTich) !== totalRelevantFields) {
-      setAreaError("Diện tích đất phải bằng tổng hiện trạng sử dụng.");
-    } else {
-      setAreaError(undefined);
-    }
-  }, [dienTich, totalRelevantFields]);
-
-  useEffect(() => {
-    const dienTichNumber = parseFloat(String(dienTich).replace(/[^\d.]/g, ""));
-    if (dienTichNumber === totalRelevantFields) {
-      clearErrors("DIEN_TICH");
-    }
-  }, [clearErrors, dienTich, totalRelevantFields]);
-  useEffect(() => {
-    const fields = {
+    console.log(
+      "dienTich:",
       dienTich,
+      "parsed:",
+      parseNumber(dienTich),
+      "total:",
+      totalRelevantFields,
+      "register",
+      register
+    );
+    const dienTichNumber = parseNumber(dienTich);
+    const totalFields = [
       TRU_SO_LAM_VIEC,
       DE_O,
       BO_TRONG,
       BI_LAN_CHIEM,
       SU_DUNG_HON_HOP,
       SU_DUNG_KHAC,
+    ]
+      .map(parseNumber)
+      .reduce((sum, val) => sum + val, 0);
+
+    if (totalFields > dienTichNumber) {
+      setAreaError(
+        "Tổng diện tích hiện trạng sử dụng không được lớn hơn diện tích đất"
+      );
+      setValue("DIEN_TICH", dienTich, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    } else if (totalFields !== dienTichNumber) {
+      setAreaError("Diện tích đất phải bằng tổng hiện trạng sử dụng");
+      setValue("DIEN_TICH", dienTich, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    } else {
+      clearErrors("DIEN_TICH");
+      setAreaError(undefined);
+    }
+  }, [
+    clearErrors,
+    dienTich,
+    TRU_SO_LAM_VIEC,
+    DE_O,
+    BO_TRONG,
+    BI_LAN_CHIEM,
+    SU_DUNG_HON_HOP,
+    SU_DUNG_KHAC,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const fields = {
+      dienTich: parseNumber(dienTich),
+      TRU_SO_LAM_VIEC: parseNumber(TRU_SO_LAM_VIEC),
+      DE_O: parseNumber(DE_O),
+      BO_TRONG: parseNumber(BO_TRONG),
+      BI_LAN_CHIEM: parseNumber(BI_LAN_CHIEM),
+      SU_DUNG_HON_HOP: parseNumber(SU_DUNG_HON_HOP),
+      SU_DUNG_KHAC: parseNumber(SU_DUNG_KHAC),
     };
 
     const newDisplayValues: Record<string, string> = {};
@@ -113,6 +165,20 @@ const Dientichhientrang = ({
     SU_DUNG_KHAC,
   ]);
 
+  // Thêm hàm để lấy giá trị số sạch cho API
+  const getCleanNumberForAPI = (
+    value: string | number | undefined | null
+  ): number => {
+    if (!value) return 0;
+    // Remove the unit 'm²' and any whitespace first
+    const withoutUnit = String(value).replace(/ m²/g, "");
+    // Remove thousand separators but keep decimal point
+    const cleanValue = withoutUnit.replace(/,/g, "");
+    // Parse as float to handle decimal numbers
+    const parsedValue = parseFloat(cleanValue);
+    return isNaN(parsedValue) ? 0 : parsedValue;
+  };
+
   //check onchange khi nhập dữ liệu số
 
   return (
@@ -126,11 +192,6 @@ const Dientichhientrang = ({
         position: "relative",
       }}
     >
-      {areaError && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {areaError}
-        </Typography>
-      )}
       {/* Tiêu đề "Thông tin tài sản đất" */}
       <Typography
         sx={{
@@ -162,13 +223,28 @@ const Dientichhientrang = ({
             value={displayValues.DIEN_TICH || ""}
             {...register("DIEN_TICH", {
               required: "Bạn phải nhập diện tích đất",
+              setValueAs: (value) => getCleanNumberForAPI(value),
               validate: (value) => {
-                const numericValue = Number(value) || 0;
-                if (numericValue !== totalRelevantFields) {
-                  return "Diện tích đất phải bằng tổng hiện trạng sử dụng.";
-                }
+                const numericValue = parseNumber(value);
                 if (!numericValue) {
                   return "Bạn phải nhập diện tích";
+                }
+                const totalFields = [
+                  TRU_SO_LAM_VIEC,
+                  DE_O,
+                  BO_TRONG,
+                  BI_LAN_CHIEM,
+                  SU_DUNG_HON_HOP,
+                  SU_DUNG_KHAC,
+                ]
+                  .map(parseNumber)
+                  .reduce((sum, val) => sum + val, 0);
+
+                if (totalFields > numericValue) {
+                  return "Tổng diện tích hiện trạng sử dụng không được lớn hơn diện tích đất";
+                }
+                if (totalFields !== numericValue) {
+                  return "Diện tích đất phải bằng tổng hiện trạng sử dụng";
                 }
                 return true;
               },
