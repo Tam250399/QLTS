@@ -11,7 +11,7 @@ import {
 } from "react-hook-form";
 import ThongtinTSKT from "./ThongtinTSKT";
 import { ThongtinchungVkt } from "../../validateform/thongtinVkt";
-import HienTrangSD from "./HienTrangSD";
+import HienTrangSDVKT from "./HienTrangSDVKT";
 
 import GiaTriHaoMon from "../Nha/GiaTriHaoMon";
 import { ThongTinNha } from "../../validateform/thongtinnha";
@@ -40,7 +40,16 @@ const SubmitHandlersVKT = () => {
     getValues,
     formState: { errors },
   } = useForm<ThongtinchungVkt>({
-    defaultValues: {},
+    defaultValues: {
+      HIEN_TRANG_SU_DUNG: {
+        TRU_SO_LAM_VIEC: 0,
+        HD_SN_KHONG_KINH_DOANH: 0,
+        HD_SD_KINH_DOANH: 0,
+        HD_SD_KINH_DOANH_LK: 0,
+        HD_SD_CHO_THUE: 0,
+        SU_DUNG_KHAC: 0,
+      },
+    },
   });
 
   useEffect(() => {
@@ -104,6 +113,7 @@ const SubmitHandlersVKT = () => {
             register={register}
             errors={errors}
             setValue={setValue}
+            clearErrors={clearErrors}
           />
         </div>
         <div className="pb-10">
@@ -117,7 +127,7 @@ const SubmitHandlersVKT = () => {
           />
         </div>
         <div className="pb-10">
-          <HienTrangSD control={control} />
+          <HienTrangSDVKT control={control} />
         </div>
         <Box sx={{ mt: 2, textAlign: "right", mb: 2 }}>
           <Button

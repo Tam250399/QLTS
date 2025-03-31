@@ -126,6 +126,11 @@ const Dientichhientrang = ({
         position: "relative",
       }}
     >
+      {areaError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {areaError}
+        </Typography>
+      )}
       {/* Tiêu đề "Thông tin tài sản đất" */}
       <Typography
         sx={{
