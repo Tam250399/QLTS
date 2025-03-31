@@ -46,3 +46,17 @@ export async function Login(data: any) {
     throw error;
   }
 }
+
+export async function CreateDonViBoPhan(data: any) {
+  try {
+    const response = await requestAuth({
+      url: `danhmuc/createDonViBoPhan`,
+      method: "POST",
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    console.error("Không lấy được dữ liệu:", error);
+    throw error;
+  }
+}

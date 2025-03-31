@@ -15,34 +15,27 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import { BoPhanSuDung } from "../../validateform/thongtinnha";
-import { GetListBoPhanSD } from "../../service/ServiceNha";
-
-interface BoPhan {
-  donvi: string;
-  tenBoPhan: string;
-  address: string;
-  phone: string;
-  trucThuoc: number;
-}
+import { CreateDonViBoPhan, GetListBoPhanSD } from "../../service/ServiceNha";
+import { toast } from "react-toastify";
 
 interface ThemMoiBoPhanProps {
   open: boolean;
   handleClose: () => void;
 }
 const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
-  const [donvi] = useState("Chi cục Thuế khu vực Thạch Hà - Lộc Hà");
+  const [donvi] = useState(25417);
   const [tenBoPhan, setTenBoPhan] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [formatPhone, setFormatPhone] = useState("");
   const [trucThuoc, setTrucThuoc] = useState(0);
   const [boPhanSuDung, setBoPhanSuDung] = useState<BoPhanSuDung[]>([]);
+  const [tenError, setTenError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const param = { donViId: 1 };
+        const param = { donViId: donvi };
         const boPhanSuDung = await GetListBoPhanSD(param);
-
         setBoPhanSuDung(boPhanSuDung);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);
@@ -51,27 +44,33 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
 
     fetchData();
   }, []);
-  const handleSave = () => {
-    const formData: BoPhan = {
-      donvi,
-      tenBoPhan,
-      address,
-      phone,
-      trucThuoc,
+  const handleChangeTenBP = (e: any) => {
+    setTenBoPhan(e.target.value);
+    setTenError(e.target.value.trim() === "");
+  };
+  const handleSave = async () => {
+    const formData = {
+      DON_VI_ID: donvi,
+      TEN: tenBoPhan,
+      TREE_NODE: null,
+      TREE_LEVEL: 0,
+      PARENT_ID: trucThuoc,
     };
-    if (!validatePhone(phone)) {
-      setError(true); // Báo lỗi nếu chưa đủ 10 số hoặc không hợp lệ
-    } else {
-      console.log("Dữ liệu form:", formData);
-      handleClose();
-    }
+    try {
+      if (!tenBoPhan.trim()) {
+        setTenError(true);
+      } else {
+        const response = await CreateDonViBoPhan(formData);
+        if (response?.StatusCode === 200) {
+          toast.success("Tạo mới bộ phận sử dụng thành công");
+          handleCloseForm();
+        } else {
+          toast.error("Tạo mới bộ phận sử dụng thất bại");
+        }
+      }
+    } catch (error) {}
   };
   const [error, setError] = useState(false);
-
-  const validatePhone = (value: string) => {
-    const phoneRegex = /^[0-9]{10}$/; // Chỉ chấp nhận đúng 10 số
-    return phoneRegex.test(value);
-  };
 
   const handleChange = (e: any) => {
     const value = e.target.value;
@@ -94,15 +93,9 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
     }
   };
 
-  const handleBlur = () => {
-    if (!validatePhone(phone)) {
-      setError(true);
-    }
-  };
-
   const handleCloseForm = () => {
-    setError(false);
-    setPhone("");
+    setTenError(false);
+    setTenBoPhan("");
     handleClose();
   };
   return (
@@ -178,7 +171,9 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
                 InputProps={{
                   sx: { fontSize: "14px" },
                 }}
-                onChange={(e) => setTenBoPhan(e.target.value)}
+                error={tenError}
+                helperText={tenError ? "Tên bộ phận không được để trống" : ""}
+                onChange={handleChangeTenBP}
               />
             </Grid>
 
@@ -223,7 +218,6 @@ const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
                 size="small"
                 value={formatPhone}
                 onChange={handleChange}
-                onBlur={handleBlur}
                 error={error}
                 helperText={error ? "Số điện thoại không hợp lệ" : ""}
                 inputProps={{ maxLength: 12 }}
