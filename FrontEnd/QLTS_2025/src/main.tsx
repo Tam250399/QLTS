@@ -13,6 +13,7 @@ import SubmitHandlersVKT from "./page/VatKienTruc/SubmitHandlersVKT.tsx";
 import Trangchu from "./page/Trangchu.tsx";
 import { ToastContainer } from "react-toastify";
 import AssetList from "./page/DanhSachTS.tsx";
+import CarAssetForm from "./page/Oto/Thongtinchung.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/list",
         element: <AssetList />,
+      },
+      {
+        path: "/oto",
+        element: <CarAssetForm />,
       },
     ],
   },

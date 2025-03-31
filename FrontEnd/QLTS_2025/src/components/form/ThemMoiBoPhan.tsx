@@ -30,33 +30,6 @@ interface ThemMoiBoPhanProps {
   handleClose: () => void;
 }
 const ThemMoiBoPhan: React.FC<ThemMoiBoPhanProps> = ({ open, handleClose }) => {
-  const data = [
-    {
-      id: 1,
-      ten: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 2,
-      ten: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 3,
-      ten: "Đất trụ sở",
-      status: "Đã duyệt",
-    },
-    {
-      id: 4,
-      ten: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-    {
-      id: 5,
-      ten: "Đất hoạt động sự nghiệp",
-      status: "Chờ duyệt",
-    },
-  ];
   const [donvi] = useState("Chi cục Thuế khu vực Thạch Hà - Lộc Hà");
   const [tenBoPhan, setTenBoPhan] = useState("");
   const [address, setAddress] = useState("");
