@@ -288,11 +288,11 @@ const AssetList = () => {
     handleSearch();
   };
 
-  // Xử lý khi thay đổi trạng thái
-  const handleStatusChange = (status: "pending" | "rejected" | "approved") => {
-    setCurrentStatus(status);
-    handleSearch();
-  };
+  // // Xử lý khi thay đổi trạng thái
+  // const handleStatusChange = (status: "pending" | "rejected" | "approved") => {
+  //   setCurrentStatus(status);
+  //   handleSearch();
+  // };
 
   return (
     <div className="p-4">
