@@ -25,40 +25,25 @@ interface GiaTriSuDungDatProps {
   getValues: UseFormGetValues<Thongtinchung>;
 }
 
-const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
+const Giatrisd = ({
+  register,
+  errors,
+  setValue,
+  getValues,
+}: GiaTriSuDungDatProps) => {
   const [displayValues, setDisplayValues] = useState<Record<string, string>>(
     {}
   );
-
-  const [qsdError, setQsdError] = useState<string | undefined>(undefined);
+  const { NGUON_KHAC, GIA_TRI_QUYEN_SD_DAT, NGUON_NGAN_SACH } =
+    getValues("GIA_TRI_SU_DUNG_DAT") || {};
+  const NGUYEN_GIA = getValues("NGUYEN_GIA");
   const [nguonKhacError, setNguonKhacError] = useState<string | undefined>(
     undefined
   );
-  const { GIA_TRI_QUYEN_SD_DAT, NGUON_KHAC } =
-    getValues("GIA_TRI_SU_DUNG_DAT") || {};
-
-  const NGUYEN_GIA = getValues("NGUYEN_GIA");
-  const NGUON_NGAN_SACH =
-    NGUYEN_GIA - NGUON_KHAC > 0 ? NGUYEN_GIA - NGUON_KHAC : 0;
-
-  useEffect(() => {
-    setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", NGUON_NGAN_SACH, {
-      shouldValidate: true,
-    });
-    if (NGUYEN_GIA && NGUYEN_GIA < NGUON_KHAC) {
-      setNguonKhacError("Tổng các nguồn vốn phải bằng nguyên giá.");
-    } else {
-      setNguonKhacError(undefined);
-    }
-  }, [NGUYEN_GIA, NGUON_KHAC]);
-
-  useEffect(() => {
-    if (NGUYEN_GIA < GIA_TRI_QUYEN_SD_DAT) {
-      setQsdError("Giá trị quyền sử dụng đất không được lớn hơn nguyên giá.");
-    } else {
-      setQsdError(undefined);
-    }
-  }, [NGUYEN_GIA, GIA_TRI_QUYEN_SD_DAT]);
+  const [qsdError, setQsdError] = useState<string | undefined>(undefined);
+  const [nguonKhac, setNguonKhac] = useState(0);
+  const [nguyenGia, setNguyenGia] = useState(0);
+  const [qsdDat, setQsdDat] = useState(0);
 
   useEffect(() => {
     const fields = {
@@ -117,14 +102,40 @@ const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
             type="text"
             placeholder="đ̲"
             value={displayValues.GIA_TRI_QUYEN_SD_DAT || ""}
+            {...register("GIA_TRI_SU_DUNG_DAT.GIA_TRI_QUYEN_SD_DAT", {
+              required: "Bạn phải nhập quyền sử dụng đất",
+              validate: (value) => {
+                setQsdDat(value);
+                if (!value) {
+                  return "Bạn phải nhập quyền sử dụng đất";
+                }
+                if (
+                  !isNaN(nguyenGia) &&
+                  Number(value) > nguyenGia &&
+                  nguyenGia > 0
+                ) {
+                  setQsdError(
+                    "Quyền sử dụng đất không được lớn hơn nguyên giá"
+                  );
+                  return true;
+                }
+                setQsdError(undefined);
+                return true;
+              },
+            })}
             onChange={handleChangeGiaTriQSD(setValue, (value) =>
               setDisplayValues((prev) => ({
                 ...prev,
                 GIA_TRI_QUYEN_SD_DAT: value,
               }))
             )}
-            error={!!qsdError}
-            helperText={qsdError}
+            error={
+              !!errors.GIA_TRI_SU_DUNG_DAT?.GIA_TRI_QUYEN_SD_DAT || !!qsdError
+            }
+            helperText={
+              errors.GIA_TRI_SU_DUNG_DAT?.GIA_TRI_QUYEN_SD_DAT?.message ||
+              qsdError
+            }
           />
           {/* Nguyên giá */}
           <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
@@ -137,9 +148,45 @@ const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUYEN_GIA || ""}
+            {...register("NGUYEN_GIA", {
+              required: "Bạn phải nhập nguyên giá",
+              validate: (value) => {
+                setNguyenGia(value);
+                if (!value) {
+                  return "Bạn phải nhập nguyên giá";
+                }
+                if (!isNaN(qsdDat) && qsdDat > value) {
+                  setQsdError(
+                    "Quyền sử dụng đất không được lớn hơn nguyên giá"
+                  );
+                  return true;
+                }
+                if (!isNaN(nguonKhac) && nguonKhac > value) {
+                  setNguonKhacError(
+                    "Tổng nguồn vốn không được lớn hơn nguyên giá"
+                  );
+                  setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", 0, {
+                    shouldValidate: true,
+                  });
+                  return true;
+                }
+                setValue(
+                  "GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH",
+                  value - nguonKhac,
+                  {
+                    shouldValidate: true,
+                  }
+                );
+                setNguonKhacError(undefined);
+                setQsdError(undefined);
+                return true;
+              },
+            })}
             onChange={handleChangeNguyenGia(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUYEN_GIA: value }))
             )}
+            error={!!errors.NGUYEN_GIA}
+            helperText={errors.NGUYEN_GIA?.message}
           />
 
           <Typography
@@ -163,6 +210,11 @@ const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUON_NGAN_SACH || ""}
+            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH")}
+            InputProps={{
+              readOnly: true,
+              sx: { fontSize: "14px", backgroundColor: "#e9ecef" },
+            }}
             disabled
           />
 
@@ -180,6 +232,33 @@ const Giatrisd = ({ setValue, getValues }: GiaTriSuDungDatProps) => {
             type="text"
             placeholder="đ̲"
             value={displayValues.NGUON_KHAC || ""}
+            {...register("GIA_TRI_SU_DUNG_DAT.NGUON_KHAC", {
+              validate: (value) => {
+                setNguonKhac(value);
+                if (
+                  !isNaN(nguyenGia) &&
+                  Number(value) > nguyenGia &&
+                  nguyenGia > 0
+                ) {
+                  setNguonKhacError(
+                    "Tổng nguồn vốn không được lớn hơn nguyên giá"
+                  );
+                  setValue("GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH", 0, {
+                    shouldValidate: true,
+                  });
+                  return true;
+                }
+                setValue(
+                  "GIA_TRI_SU_DUNG_DAT.NGUON_NGAN_SACH",
+                  isNaN(nguyenGia) ? 0 : nguyenGia - value,
+                  {
+                    shouldValidate: true,
+                  }
+                );
+                setNguonKhacError(undefined);
+                return true;
+              },
+            })}
             onChange={handleChangeNguonKhac(setValue, (value) =>
               setDisplayValues((prev) => ({ ...prev, NGUON_KHAC: value }))
             )}
