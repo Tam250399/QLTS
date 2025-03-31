@@ -30,3 +30,18 @@ export async function GetListChonDats(data: any): Promise<KhuonVienDat[]> {
     throw error;
   }
 }
+
+export async function Login(data: any) {
+  try {
+    const response = await requestAuth({
+      url: `Login`,
+      method: "POST",
+      data: data,
+    });
+    const restponses = response.Data;
+    return restponses;
+  } catch (error) {
+    console.error("Không lấy được dữ liệu:", error);
+    throw error;
+  }
+}

@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { GetListIdLoaiHinhTS } from "../service/LoaiHinhTaiSanService";
 import { LoaiHinhTSId } from "../validateform/loaihinhtaisanid";
+import { Login } from "../service/ServiceNha";
 
 const Trangchu = () => {
   const navigate = useNavigate();
@@ -23,6 +24,12 @@ const Trangchu = () => {
     const fetchData = async () => {
       try {
         const response = await GetListIdLoaiHinhTS();
+        const data = {
+          Username: "admin",
+          Password: "AD@csdlqgtsc2022",
+        };
+        const access_token = await Login(data);
+        localStorage.setItem("access_token", access_token);
         setListIdLhts(response);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);
